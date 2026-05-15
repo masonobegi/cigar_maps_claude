@@ -1,0 +1,11 @@
+node_modules/
+server/data/
+scraper/results/
+scraper/node_modules/
+.env
+*.db
+*.db-shm
+*.db-wal
+dist/
+.DS_Store
+Thumbs.db

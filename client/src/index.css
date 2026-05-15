@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-stone-950 text-stone-100 antialiased;
+    background-color: #0f0a07;
+    /* Prevent iOS bounce scroll */
+    overscroll-behavior: none;
+  }
+  /* Better tap behavior on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  /* Allow text selection where needed */
+  p, span, h1, h2, h3, h4, textarea, input {
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+}
+
+@layer components {
+  /* Buttons — min 44px height for touch targets */
+  .btn-primary {
+    @apply bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-semibold py-3 px-5 rounded-xl transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] flex items-center justify-center;
+  }
+  .btn-secondary {
+    @apply bg-stone-800 hover:bg-stone-700 active:bg-stone-900 text-stone-200 font-medium py-3 px-5 rounded-xl transition-colors duration-150 border border-stone-700 min-h-[44px] flex items-center justify-center;
+  }
+  .btn-ghost {
+    @apply hover:bg-stone-800 active:bg-stone-900 text-stone-400 hover:text-stone-200 font-medium py-2 px-4 rounded-xl transition-colors duration-150;
+  }
+  /* Input — min 44px height */
+  .input {
+    @apply bg-stone-900 border border-stone-700 text-stone-100 placeholder-stone-500 rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all min-h-[44px];
+  }
+  .card {
+    @apply bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+}
+
+/* Mobile-optimized scrollbars (hidden on mobile, subtle on desktop) */
+@media (hover: hover) {
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #1c1008; }
+  ::-webkit-scrollbar-thumb { background: #4a3020; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6a4830; }
+}
+
+/* Safe area insets for iOS notch/home indicator */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.pt-safe { padding-top: env(safe-area-inset-top); }

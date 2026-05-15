@@ -1,0 +1,19 @@
+{
+  "name": "cigarbuddy-scraper",
+  "version": "1.0.0",
+  "description": "Find cigar store contacts for CigarBuddy outreach — no paid APIs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "send-emails": "node email-sender.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cheerio": "^1.0.0-rc.12",
+    "csv-writer": "^1.6.0",
+    "csv-parse": "^5.5.5",
+    "csv-stringify": "^6.4.6",
+    "nodemailer": "^6.9.13",
+    "chalk": "^4.1.2"
+  }
+}
