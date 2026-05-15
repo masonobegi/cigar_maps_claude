@@ -1,6 +1,9 @@
 {
   "name": "habano",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "start": "node server/src/index.js",
     "build": "cd server && npm install",
