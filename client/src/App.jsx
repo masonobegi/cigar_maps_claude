@@ -14,6 +14,7 @@ import StoreDashboard from './pages/StoreDashboard';
 import Deals from './pages/Deals';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
+import InstallPrompt from './components/InstallPrompt';
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -47,6 +48,7 @@ function AppLayout() {
         </Routes>
       </main>
       <BottomNav />
+      <InstallPrompt />
     </div>
   );
 }

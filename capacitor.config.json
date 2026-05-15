@@ -1,0 +1,34 @@
+{
+  "appId": "com.cigarbuddy.app",
+  "appName": "CigarBuddy",
+  "webDir": "client/dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#0f0a07",
+    "statusBarStyle": "dark",
+    "allowsLinkPreview": false
+  },
+  "android": {
+    "backgroundColor": "#0f0a07",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#0f0a07",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#d97706"
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#0f0a07"
+    }
+  }
+}

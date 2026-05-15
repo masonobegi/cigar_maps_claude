@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#0f0a07"/>
+  <!-- Outer glow ring -->
+  <rect width="512" height="512" rx="112" fill="url(#grad)" opacity="0.15"/>
+  <defs>
+    <radialGradient id="grad" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#0f0a07"/>
+    </radialGradient>
+    <linearGradient id="cigar" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#7c3d12"/>
+      <stop offset="70%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fef3c7" stop-opacity="0.8"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Cigar body -->
+  <rect x="80" y="232" width="310" height="48" rx="24" fill="url(#cigar)"/>
+  <!-- Cap (dark tip) -->
+  <rect x="80" y="232" width="52" height="48" rx="24" fill="#3d1c08"/>
+  <!-- Band ring -->
+  <rect x="180" y="232" width="28" height="48" fill="#d97706" opacity="0.7"/>
+  <rect x="182" y="238" width="24" height="36" rx="2" fill="none" stroke="#fef3c7" stroke-width="1.5" opacity="0.5"/>
+  <!-- Lit end -->
+  <ellipse cx="390" cy="256" rx="12" ry="22" fill="#7c3d12"/>
+  <ellipse cx="390" cy="256" rx="8" ry="16" fill="#dc2626" opacity="0.6" filter="url(#glow)"/>
+  <ellipse cx="390" cy="256" rx="4" ry="8" fill="#fbbf24" filter="url(#glow)"/>
+  <!-- Smoke wisps -->
+  <path d="M406 240 Q418 220 412 200 Q406 180 420 165" stroke="#e7e5e4" stroke-width="3" fill="none" opacity="0.25" stroke-linecap="round"/>
+  <path d="M416 244 Q432 218 424 194 Q418 174 434 155" stroke="#e7e5e4" stroke-width="2.5" fill="none" opacity="0.18" stroke-linecap="round"/>
+  <path d="M424 250 Q444 228 434 200 Q426 178 442 158" stroke="#e7e5e4" stroke-width="2" fill="none" opacity="0.12" stroke-linecap="round"/>
+  <!-- Brand text -->
+  <text x="256" y="360" font-family="Georgia, serif" font-size="52" font-weight="bold" fill="#d97706" text-anchor="middle" letter-spacing="2">CIGAR</text>
+  <text x="256" y="408" font-family="Georgia, serif" font-size="34" fill="#92400e" text-anchor="middle" letter-spacing="6">BUDDY</text>
+</svg>

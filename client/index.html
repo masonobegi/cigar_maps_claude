@@ -3,13 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+    <!-- PWA / Theme -->
     <meta name="theme-color" content="#0f0a07" />
+    <meta name="background-color" content="#0f0a07" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- iOS PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CigarBuddy" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192.png" />
+
+    <!-- iOS Splash Screens (iPhone 14 Pro, 13/12, SE) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Standard -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png" />
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+
     <title>CigarBuddy — Find Your Next Smoke</title>
     <meta name="description" content="Discover premium cigars, find local retailers with live inventory, track your collection, log your smokes, and share your experience." />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚬</text></svg>" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CigarBuddy" />
+    <meta property="og:description" content="Weedmaps for cigars. Search live inventory at local cigar shops." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icons/icon-512.png" />
   </head>
   <body>
     <div id="root"></div>
