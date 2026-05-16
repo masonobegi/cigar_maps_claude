@@ -247,6 +247,7 @@ router.post('/:id/reviews', requireAuth, (req, res) => {
   const existing = db.prepare('SELECT id FROM reviews WHERE user_id=? AND cigar_id=? AND vitola_id=?').get(req.user.id, req.params.id, vitola_id);
   if (existing) return res.status(409).json({ error: 'You already logged this cigar in this size. Edit your existing entry.' });
 
+  const n = v => v ?? null;
   const result = db.prepare(`
     INSERT INTO reviews (
       user_id, cigar_id, vitola_id, store_id, logged_date, rating,
@@ -259,14 +260,14 @@ router.post('/:id/reviews', requireAuth, (req, res) => {
       pairing, occasion, review_text
     ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).run(
-    req.user.id, req.params.id, vitola_id, store_id || null, logged_date || null, rating,
-    draw_rating, burn_rating, appearance_rating, flavor_intensity,
+    req.user.id, req.params.id, n(vitola_id), n(store_id), n(logged_date), rating,
+    n(draw_rating), n(burn_rating), n(appearance_rating), n(flavor_intensity),
     JSON.stringify(first_third_notes || []), JSON.stringify(second_third_notes || []), JSON.stringify(final_third_notes || []),
-    first_third_text, second_third_text, final_third_text,
-    ash_color, finish_length, retrohale_notes,
-    would_buy_again, strength_start, strength_end,
-    JSON.stringify(flavor_notes || []), strength_experienced, smoke_time,
-    pairing, occasion, review_text
+    n(first_third_text), n(second_third_text), n(final_third_text),
+    n(ash_color), n(finish_length), n(retrohale_notes),
+    n(would_buy_again), n(strength_start), n(strength_end),
+    JSON.stringify(flavor_notes || []), n(strength_experienced), n(smoke_time),
+    n(pairing), n(occasion), n(review_text)
   );
 
   res.json({ id: result.lastInsertRowid });

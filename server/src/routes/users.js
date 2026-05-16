@@ -38,21 +38,23 @@ router.post('/me/humidor', requireAuth, (req, res) => {
   const { cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
   if (!cigar_id) return res.status(400).json({ error: 'cigar_id required' });
 
+  const n = v => v ?? null;
   const result = db.prepare(`
     INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(req.user.id, cigar_id, vitola_id, status || 'humidor', quantity || 1,
-    purchase_price, purchase_date, notes, aging_goal_date);
+  `).run(req.user.id, cigar_id, n(vitola_id), status || 'humidor', quantity || 1,
+    n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date));
 
   res.json({ id: result.lastInsertRowid });
 });
 
 router.put('/me/humidor/:id', requireAuth, (req, res) => {
   const { status, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
+  const n = v => v ?? null;
   db.prepare(`
     UPDATE user_cigars SET status=?, quantity=?, purchase_price=?, purchase_date=?, notes=?, aging_goal_date=?
     WHERE id=? AND user_id=?
-  `).run(status, quantity, purchase_price, purchase_date, notes, aging_goal_date, req.params.id, req.user.id);
+  `).run(n(status), n(quantity), n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date), req.params.id, req.user.id);
   res.json({ success: true });
 });
 

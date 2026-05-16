@@ -217,10 +217,11 @@ router.post('/', requireAuth, (req, res) => {
     has_lounge, has_walk_in_humidor, tags } = req.body;
   if (!name || !city || !state) return res.status(400).json({ error: 'Name, city, and state required' });
 
+  const n = v => v ?? null;
   const result = db.prepare(`
     INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, setup_complete)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
-  `).run(req.user.id, name, description, address, city, state, zip, phone, website,
+  `).run(req.user.id, name, n(description), n(address), city, state, n(zip), n(phone), n(website),
     typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
     has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0,
     JSON.stringify(tags || []));
@@ -237,10 +238,11 @@ router.put('/:id', requireAuth, (req, res) => {
   const { name, description, address, city, state, zip, phone, website, hours,
     has_lounge, has_walk_in_humidor, tags } = req.body;
 
+  const n = v => v ?? null;
   db.prepare(`
     UPDATE stores SET name=?, description=?, address=?, city=?, state=?, zip=?, phone=?, website=?,
     hours=?, has_lounge=?, has_walk_in_humidor=?, tags=?, setup_complete=1 WHERE id=?
-  `).run(name, description, address, city, state, zip, phone, website,
+  `).run(name, n(description), n(address), city, state, n(zip), n(phone), n(website),
     typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
     has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0,
     JSON.stringify(tags || []), req.params.id);
@@ -505,10 +507,11 @@ router.post('/:id/verification-request', requireAuth, (req, res) => {
   const { business_name, business_ein, business_phone, business_address, business_website, license_number, notes } = req.body;
   if (!business_name) return res.status(400).json({ error: 'Business name required' });
 
+  const n = v => v ?? null;
   const result = db.prepare(`
     INSERT INTO verification_requests (store_id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(req.params.id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes);
+  `).run(req.params.id, business_name, n(business_ein), n(business_phone), n(business_address), n(business_website), n(license_number), n(notes));
 
   res.json({ id: result.lastInsertRowid });
 });

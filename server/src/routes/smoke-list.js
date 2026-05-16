@@ -32,13 +32,13 @@ router.post('/', requireAuth, (req, res) => {
   const { cigar_id, priority, notes, recommended_by } = req.body;
   if (!cigar_id) return res.status(400).json({ error: 'cigar_id required' });
 
-  const existing = db.prepare('SELECT id FROM smoke_list WHERE user_id = ? AND cigar_id = ? AND status = "pending"').get(req.user.id, cigar_id);
+  const existing = db.prepare("SELECT id FROM smoke_list WHERE user_id = ? AND cigar_id = ? AND status = 'pending'").get(req.user.id, cigar_id);
   if (existing) return res.status(409).json({ error: 'Already on your smoke list' });
 
   const result = db.prepare(`
     INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by)
     VALUES (?, ?, ?, ?, ?)
-  `).run(req.user.id, cigar_id, priority || 'medium', notes, recommended_by);
+  `).run(req.user.id, cigar_id, priority || 'medium', notes ?? null, recommended_by ?? null);
 
   res.json({ id: result.lastInsertRowid });
 });
@@ -49,8 +49,9 @@ router.put('/:id', requireAuth, (req, res) => {
   if (!item) return res.status(404).json({ error: 'Not found' });
 
   const { priority, notes, recommended_by, status, smoked_on } = req.body;
+  const n = v => v ?? null;
   db.prepare('UPDATE smoke_list SET priority=?, notes=?, recommended_by=?, status=?, smoked_on=? WHERE id=?')
-    .run(priority, notes, recommended_by, status, smoked_on, req.params.id);
+    .run(n(priority), n(notes), n(recommended_by), n(status), n(smoked_on), req.params.id);
 
   res.json({ success: true });
 });
