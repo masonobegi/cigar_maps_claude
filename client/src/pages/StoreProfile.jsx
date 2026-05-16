@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import BackButton from '../components/BackButton';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -22,10 +24,12 @@ function StarRating({ value, onChange, size = 'md' }) {
 export default function StoreProfile() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [followLoading, setFollowLoading] = useState(false);
   const [following, setFollowing] = useState(false);
   const [followPrefs, setFollowPrefs] = useState({ notify_broadcasts: 1, notify_deals: 1, notify_new_arrivals: 1 });
   const [tab, setTab] = useState('inventory');
@@ -39,7 +43,6 @@ export default function StoreProfile() {
   const [reqCigarResults, setReqCigarResults] = useState([]);
   const [reqSelectedCigar, setReqSelectedCigar] = useState(null);
   const [reqSubmitted, setReqSubmitted] = useState(false);
-  const [toast, setToast] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -54,9 +57,13 @@ export default function StoreProfile() {
   }, [id]);
 
   async function handleFollow() {
-    if (!user) return;
-    const res = await api.followStore(id);
-    setFollowing(res.following);
+    if (!user) return navigate('/login');
+    setFollowLoading(true);
+    try {
+      const res = await api.followStore(id);
+      setFollowing(res.following);
+      toast(res.following ? `Following ${data?.store?.name}` : 'Unfollowed');
+    } finally { setFollowLoading(false); }
   }
 
   async function updatePrefs(key, val) {
@@ -88,8 +95,7 @@ export default function StoreProfile() {
       message: requestForm.message || null,
     });
     setReqSubmitted(true);
-    setToast('Request sent to the store!');
-    setTimeout(() => setToast(''), 3000);
+    toast('Request sent to the store!');
     setRequestModal(false);
     setReqSelectedCigar(null);
     setReqCigarSearch('');
@@ -150,11 +156,7 @@ export default function StoreProfile() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
-      {toast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-stone-800 border border-stone-700 text-stone-100 text-sm px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />{toast}
-        </div>
-      )}
+      <BackButton label="Stores" to="/stores" />
 
       {/* Store header card */}
       <div className="card mb-4 overflow-hidden">
@@ -203,8 +205,11 @@ export default function StoreProfile() {
         {/* Follow button area */}
         {user && user.account_type === 'user' && (
           <div className="mt-4 pt-4 border-t border-stone-800 flex flex-wrap items-center gap-3 px-5 pb-4">
-            <button onClick={handleFollow} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${following ? 'bg-amber-900/30 border border-amber-700 text-amber-400' : 'btn-primary'}`}>
-              <Heart className={`w-4 h-4 ${following ? 'fill-amber-400' : ''}`} />
+            <button onClick={handleFollow} disabled={followLoading} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-60 ${following ? 'bg-amber-900/30 border border-amber-700 text-amber-400' : 'btn-primary'}`}>
+              {followLoading
+                ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                : <Heart className={`w-4 h-4 ${following ? 'fill-amber-400' : ''}`} />
+              }
               {following ? 'Following' : 'Follow'}
             </button>
 

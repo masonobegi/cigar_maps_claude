@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const HOURS_TEMPLATE = { Mon: '10am-8pm', Tue: '10am-8pm', Wed: '10am-8pm', Thu: '10am-8pm', Fri: '10am-9pm', Sat: '10am-9pm', Sun: '11am-6pm' };
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -18,15 +19,6 @@ const NOTIF_TYPES = [
   { value: 'event', label: 'Event', icon: Star, desc: 'In-store events' },
 ];
 
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => { const t = setTimeout(onClose, 3500); return () => clearTimeout(t); }, []);
-  return (
-    <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-stone-800 border border-stone-700 text-stone-100 text-sm px-4 py-2.5 rounded-xl shadow-2xl">
-      {type === 'success' ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <AlertCircle className="w-4 h-4 text-red-400" />}
-      {message}
-    </div>
-  );
-}
 
 // Setup Wizard Component
 function SetupWizard({ onComplete }) {
@@ -1120,12 +1112,12 @@ function SetupChecklist({ store, onTabChange }) {
 
 export default function StoreDashboard() {
   const { user, store: storeCtx, refreshStore } = useAuth();
+  const { toast: globalToast } = useToast();
   const [store, setStore] = useState(storeCtx);
   const [tab, setTab] = useState('inventory');
-  const [toast, setToast] = useState(null);
   const [analyticsData, setAnalyticsData] = useState(null);
 
-  const showToast = (message, type = 'success') => setToast({ message, type });
+  const showToast = (message, type = 'success') => globalToast(message, type);
 
   useEffect(() => {
     if (storeCtx) setStore(storeCtx);
@@ -1147,7 +1139,6 @@ export default function StoreDashboard() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
       {!store ? (
         <div>

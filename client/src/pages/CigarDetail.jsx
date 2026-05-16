@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff, ChevronRight } from 'lucide-react';
+import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import ReviewCard from '../components/ReviewCard';
 import ReviewLogbookForm from '../components/ReviewLogbookForm';
 import ShareButton from '../components/ShareButton';
+import BackButton from '../components/BackButton';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
 const STRENGTH_LABEL = { 'mild': 'Mild', 'mild-medium': 'Mild-Medium', 'medium': 'Medium', 'medium-full': 'Medium-Full', 'full': 'Full' };
@@ -46,6 +48,7 @@ function ScoreGauge({ value }) {
 export default function CigarDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { add: addRecentlyViewed } = useRecentlyViewed();
   const [data, setData] = useState(null);
@@ -58,7 +61,6 @@ export default function CigarDetail() {
   const [humidorForm, setHumidorForm] = useState({ vitola_id: '', status: 'humidor', quantity: 1, purchase_price: '', purchase_date: '', notes: '' });
   const [stores, setStores] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState('');
   const [following, setFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
 
@@ -89,10 +91,10 @@ export default function CigarDetail() {
     try {
       await api.addToHumidor({ cigar_id: id, ...humidorForm });
       setHumidorModal(false);
-      setMsg('Added to your collection!');
-      setTimeout(() => setMsg(''), 3000);
+      toast('Added to your collection');
+      
     } catch (e) {
-      setMsg(e.message);
+      toast(e.message, 'error');
     } finally { setSaving(false); }
   }
 
@@ -104,10 +106,10 @@ export default function CigarDetail() {
       const rev = await api.getCigarReviews(id, { limit: 20 });
       setReviews(rev.reviews);
       setReviewModal(false);
-      setMsg('Logged to your cigar journal!');
-      setTimeout(() => setMsg(''), 3000);
+      toast('Saved to your journal');
+      
     } catch (e) {
-      setMsg(e.message);
+      toast(e.message, 'error');
     } finally { setSaving(false); }
   }
 
@@ -115,10 +117,10 @@ export default function CigarDetail() {
     if (!user) return navigate('/login');
     try {
       await api.addToSmokeList({ cigar_id: id });
-      setMsg('Added to your Smoke List!');
-      setTimeout(() => setMsg(''), 3000);
+      toast('Added to Smoke List');
+      
     } catch (e) {
-      setMsg(e.message);
+      toast(e.message, 'error');
     }
   }
 
@@ -127,8 +129,7 @@ export default function CigarDetail() {
     const { following: newVal } = await api.followCigar(id);
     setFollowing(newVal);
     setFollowerCount(c => newVal ? c + 1 : Math.max(0, c - 1));
-    setMsg(newVal ? 'Following — you\'ll be notified when stores stock this.' : 'Unfollowed.');
-    setTimeout(() => setMsg(''), 3000);
+    toast(newVal ? "Following — you'll be notified when stores stock this." : 'Unfollowed.');
   }
 
   if (loading) return (
@@ -147,12 +148,7 @@ export default function CigarDetail() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
-      {/* Toast */}
-      {msg && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-stone-800 border border-stone-700 text-stone-100 text-sm px-4 py-2.5 rounded-xl shadow-xl">
-          {msg}
-        </div>
-      )}
+      <BackButton />
 
       {/* Header */}
       <div className="flex items-start gap-4 mb-6">

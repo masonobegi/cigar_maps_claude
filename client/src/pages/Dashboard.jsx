@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square } from 'lucide-react';
+import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import ReviewCard from '../components/ReviewCard';
 import { useSmokeTimer } from '../hooks/useSmokeTimer';
 
@@ -303,6 +304,7 @@ function timeAgo(dateStr) {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const timer = useSmokeTimer();
   const [tab, setTab] = useState('collection');
   const [statusFilter, setStatusFilter] = useState('humidor');
@@ -346,23 +348,32 @@ export default function Dashboard() {
 
   async function deleteItem(id) {
     if (!confirm('Remove from collection?')) return;
-    await api.deleteHumidorItem(id);
-    setHumidor(h => h.filter(i => i.id !== id));
+    try {
+      await api.deleteHumidorItem(id);
+      setHumidor(h => h.filter(i => i.id !== id));
+      toast('Removed from collection', 'info');
+    } catch { toast('Could not remove item', 'error'); }
   }
 
   async function saveEdit() {
     setSaving(true);
-    await api.updateHumidorItem(editItem.id, editItem);
-    setHumidor(h => h.map(i => i.id === editItem.id ? { ...i, ...editItem } : i));
-    setEditItem(null);
-    setSaving(false);
+    try {
+      await api.updateHumidorItem(editItem.id, editItem);
+      setHumidor(h => h.map(i => i.id === editItem.id ? { ...i, ...editItem } : i));
+      setEditItem(null);
+      toast('Collection updated');
+    } catch { toast('Could not save changes', 'error'); }
+    finally { setSaving(false); }
   }
 
   async function saveProfile() {
     setSaving(true);
-    await api.updateProfile(profileForm);
-    setEditProfile(false);
-    setSaving(false);
+    try {
+      await api.updateProfile(profileForm);
+      setEditProfile(false);
+      toast('Profile saved');
+    } catch { toast('Could not save profile', 'error'); }
+    finally { setSaving(false); }
   }
 
   async function markAllRead() {
@@ -422,19 +433,23 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-stone-800 mb-5 gap-0 overflow-x-auto">
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            className={`relative flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${tab === t.key ? 'text-amber-400 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}>
-            {t.label}
-            {t.badge > 0 && (
-              <span className="w-4 h-4 bg-amber-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
-                {t.badge > 9 ? '9+' : t.badge}
-              </span>
-            )}
-          </button>
-        ))}
+      {/* Tabs — scrollable with right-fade indicator */}
+      <div className="relative mb-5">
+        <div className="tab-bar border-b border-stone-800">
+          {TABS.map(t => (
+            <button key={t.key} onClick={() => setTab(t.key)}
+              className={`tab-btn gap-1.5 ${tab === t.key ? 'tab-btn-active' : 'tab-btn-inactive'}`}>
+              {t.label}
+              {t.badge > 0 && (
+                <span className="min-w-[18px] h-[18px] bg-amber-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1">
+                  {t.badge > 9 ? '9+' : t.badge}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+        {/* Fade hint that more tabs exist */}
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-stone-950 to-transparent" />
       </div>
 
       {/* Collection */}
