@@ -14,6 +14,7 @@ import StoreDashboard from './pages/StoreDashboard';
 import Deals from './pages/Deals';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
+import Passport from './pages/Passport';
 import InstallPrompt from './components/InstallPrompt';
 
 function RequireAuth({ children }) {
@@ -43,6 +44,7 @@ function AppLayout() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path="/store-dashboard" element={<RequireAuth><StoreDashboard /></RequireAuth>} />
+          <Route path="/passport" element={<RequireAuth><Passport /></RequireAuth>} />
           <Route path="/admin" element={<RequireAuth><AdminPanel /></RequireAuth>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

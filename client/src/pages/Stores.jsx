@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Store, MapPin, Package, Search, CheckCircle, Star, Users, Filter, X, Clock, Navigation } from 'lucide-react';
+import { Store, MapPin, Package, Search, CheckCircle, Star, Users, Filter, X, Clock, Navigation, Map, List } from 'lucide-react';
 import { api } from '../services/api';
 import { getStoreStatus } from '../utils/hours';
+
+const StoreMap = lazy(() => import('../components/StoreMap'));
 
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,6 +18,8 @@ export default function Stores() {
   const [hasHumidor, setHasHumidor] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('list'); // 'list' | 'map'
+  const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => { api.getStoreCities().then(setCities); }, []);
 
@@ -44,8 +48,12 @@ export default function Stores() {
     setGeoLoading(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setUserLocation(loc);
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${loc.lat}&lon=${loc.lng}&format=json`, {
+            headers: { 'User-Agent': 'CigarBuddy/1.0' }
+          });
           const data = await res.json();
           const detectedCity = data.address?.city || data.address?.town || data.address?.village || '';
           if (detectedCity) setCity(detectedCity);
@@ -59,11 +67,39 @@ export default function Stores() {
 
   const hasFilters = q || city || openNow || hasLounge || hasHumidor;
 
+  // Map view — full screen
+  if (viewMode === 'map') {
+    return (
+      <div className="fixed inset-0 z-40" style={{ top: '56px', bottom: '64px' }}>
+        <Suspense fallback={<div className="w-full h-full bg-stone-950 flex items-center justify-center"><div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" /></div>}>
+          <StoreMap
+            stores={stores}
+            userLocation={userLocation}
+            onClose={() => setViewMode('list')}
+          />
+        </Suspense>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="mb-5">
-        <h1 className="font-serif text-2xl font-bold text-stone-100 mb-1">Cigar Retailers</h1>
-        <p className="text-stone-500 text-sm">Find premium cigar shops with real-time inventory and store pages</p>
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h1 className="font-serif text-2xl font-bold text-stone-100 mb-1">Cigar Retailers</h1>
+          <p className="text-stone-500 text-sm">Find premium cigar shops with real-time inventory</p>
+        </div>
+        {/* Map / List toggle */}
+        <div className="flex bg-stone-800 rounded-xl p-1 gap-1">
+          <button onClick={() => setViewMode('list')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-stone-700 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}>
+            <List className="w-4 h-4" /> List
+          </button>
+          <button onClick={() => { setViewMode('map'); if (!userLocation) useMyLocation(); }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === 'map' ? 'bg-amber-600 text-white' : 'text-stone-500 hover:text-stone-300'}`}>
+            <Map className="w-4 h-4" /> Map
+          </button>
+        </div>
       </div>
 
       {/* Search + filter */}

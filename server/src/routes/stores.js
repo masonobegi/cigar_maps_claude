@@ -1,6 +1,27 @@
 const router = require('express').Router();
 const db = require('../database/db');
+const https = require('https');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
+
+// Geocode a store address via Nominatim (free, no key)
+async function geocode(address, city, state) {
+  const q = [address, city, state].filter(Boolean).join(', ');
+  return new Promise((resolve) => {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1&countrycodes=us`;
+    const options = { headers: { 'User-Agent': 'CigarBuddy/1.0 (mason.obegi@gmail.com)' } };
+    https.get(url, options, (res) => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        try {
+          const results = JSON.parse(d);
+          if (results[0]) resolve({ lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) });
+          else resolve(null);
+        } catch { resolve(null); }
+      });
+    }).on('error', () => resolve(null));
+  });
+}
 
 // List / search stores with rich filters
 router.get('/', (req, res) => {
@@ -555,6 +576,38 @@ router.get('/:id/top-requests', (req, res) => {
     LIMIT 5
   `).all(req.params.id);
   res.json(rows);
+});
+
+// Geocode a store (called lazily when the map needs coordinates)
+router.post('/:id/geocode', async (req, res) => {
+  const store = db.prepare('SELECT * FROM stores WHERE id = ?').get(req.params.id);
+  if (!store) return res.status(404).json({ error: 'Not found' });
+
+  // Return cached coords if we have them
+  if (store.lat && store.lng) return res.json({ lat: store.lat, lng: store.lng });
+
+  const coords = await geocode(store.address, store.city, store.state);
+  if (coords) {
+    db.prepare('UPDATE stores SET lat=?, lng=? WHERE id=?').run(coords.lat, coords.lng, store.id);
+    return res.json(coords);
+  }
+  res.status(404).json({ error: 'Could not geocode' });
+});
+
+// Bulk geocode all stores missing coordinates (admin use)
+router.post('/admin/geocode-all', requireAuth, async (req, res) => {
+  if (req.user.account_type !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const stores = db.prepare('SELECT * FROM stores WHERE lat IS NULL OR lat = 0').all();
+  let done = 0;
+  for (const s of stores) {
+    const coords = await geocode(s.address, s.city, s.state);
+    if (coords) {
+      db.prepare('UPDATE stores SET lat=?, lng=? WHERE id=?').run(coords.lat, coords.lng, s.id);
+      done++;
+    }
+    await new Promise(r => setTimeout(r, 1100)); // Nominatim rate limit: 1 req/sec
+  }
+  res.json({ geocoded: done, total: stores.length });
 });
 
 module.exports = router;

@@ -29,6 +29,8 @@ function initSchema() {
       logo_url TEXT,
       cover_url TEXT,
       instagram TEXT,
+      lat REAL,
+      lng REAL,
       hours TEXT,
       tags TEXT,
       has_lounge INTEGER DEFAULT 0,
