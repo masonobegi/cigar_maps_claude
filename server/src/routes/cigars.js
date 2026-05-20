@@ -88,7 +88,7 @@ router.get('/brands', (req, res) => {
 
 // Filter options
 router.get('/filters', (req, res) => {
-  const strengths = db.prepare('SELECT DISTINCT strength FROM cigars WHERE strength IS NOT NULL ORDER BY CASE strength WHEN "mild" THEN 1 WHEN "mild-medium" THEN 2 WHEN "medium" THEN 3 WHEN "medium-full" THEN 4 WHEN "full" THEN 5 END').all().map(r => r.strength);
+  const strengths = db.prepare("SELECT DISTINCT strength FROM cigars WHERE strength IS NOT NULL ORDER BY CASE strength WHEN 'mild' THEN 1 WHEN 'mild-medium' THEN 2 WHEN 'medium' THEN 3 WHEN 'medium-full' THEN 4 WHEN 'full' THEN 5 END").all().map(r => r.strength);
   const countries = db.prepare('SELECT DISTINCT country FROM cigars WHERE country IS NOT NULL ORDER BY country').all().map(r => r.country);
   const wrappers = db.prepare('SELECT DISTINCT wrapper FROM cigars WHERE wrapper IS NOT NULL ORDER BY wrapper').all().map(r => r.wrapper);
   res.json({ strengths, countries, wrappers });

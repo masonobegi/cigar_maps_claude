@@ -98,8 +98,9 @@ router.get('/me/followed-stores', requireAuth, (req, res) => {
 // My profile update
 router.put('/me/profile', requireAuth, (req, res) => {
   const { name, bio, location_city, location_state } = req.body;
+  const n = v => v ?? null;
   db.prepare('UPDATE users SET name=?, bio=?, location_city=?, location_state=? WHERE id=?')
-    .run(name, bio, location_city, location_state, req.user.id);
+    .run(n(name), n(bio), n(location_city), n(location_state), req.user.id);
   res.json({ success: true });
 });
 
