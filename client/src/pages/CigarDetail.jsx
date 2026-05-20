@@ -144,7 +144,7 @@ export default function CigarDetail() {
 
   if (!data) return <div className="text-center py-20 text-stone-500">Cigar not found</div>;
 
-  const { cigar, vitolas, stats, top_flavors } = data;
+  const { cigar, vitolas, stats, top_flavors, similar = [] } = data;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
@@ -397,6 +397,27 @@ export default function CigarDetail() {
           {reviews.length === 0 ? (
             <p className="text-stone-500 text-center py-10">No reviews yet. Be the first!</p>
           ) : reviews.map(r => <ReviewCard key={r.id} review={r} />)}
+        </div>
+      )}
+
+      {/* Similar cigars */}
+      {similar.length > 0 && (
+        <div className="mt-8 mb-2">
+          <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">You Might Also Like</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {similar.map(s => (
+              <Link key={s.id} to={`/cigars/${s.id}`}
+                className="card p-3 hover:border-stone-600 transition-colors group">
+                <p className="text-[10px] text-amber-500/80 font-medium uppercase tracking-wider truncate">{s.brand}</p>
+                <p className="text-xs font-semibold text-stone-200 group-hover:text-amber-300 transition-colors leading-tight mt-0.5 line-clamp-2">{s.name}</p>
+                {s.avg_rating > 0 && (
+                  <p className="text-[10px] text-stone-500 mt-1.5 flex items-center gap-1">
+                    <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />{Math.round(s.avg_rating)}
+                  </p>
+                )}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 

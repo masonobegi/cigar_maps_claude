@@ -1,11 +1,21 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, Store, BookMarked, LayoutDashboard } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 
 export default function BottomNav() {
   const location = useLocation();
   const { user } = useAuth();
   const path = location.pathname;
+  const [notifCount, setNotifCount] = useState(0);
+
+  useEffect(() => {
+    if (!user || user.account_type === 'store') return;
+    api.getNotificationCount().then(d => setNotifCount(d.count)).catch(() => {});
+    const iv = setInterval(() => api.getNotificationCount().then(d => setNotifCount(d.count)).catch(() => {}), 30000);
+    return () => clearInterval(iv);
+  }, [user]);
 
   const isStore = user?.account_type === 'store';
 
@@ -31,10 +41,18 @@ export default function BottomNav() {
       <div className="flex">
         {items.map(({ to, icon: Icon, label }) => {
           const active = path === to || (to !== '/' && path.startsWith(to));
+          const showBadge = label === 'Humidor' && notifCount > 0;
           return (
             <Link key={to} to={to}
-              className={`flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] transition-colors ${active ? 'text-amber-400' : 'text-stone-500'}`}>
-              <Icon className="w-5 h-5" />
+              className={`flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] transition-colors relative ${active ? 'text-amber-400' : 'text-stone-500'}`}>
+              <div className="relative">
+                <Icon className="w-5 h-5" />
+                {showBadge && (
+                  <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-amber-500 rounded-full text-[8px] font-bold text-white flex items-center justify-center">
+                    {notifCount > 9 ? '9+' : notifCount}
+                  </span>
+                )}
+              </div>
               <span className="text-[9px] font-medium leading-none">{label}</span>
             </Link>
           );

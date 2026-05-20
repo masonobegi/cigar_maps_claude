@@ -141,7 +141,7 @@ function LogbookEntry({ review, expanded, onToggle }) {
   );
 }
 
-function SmokeListTab({ smokeList, smokeFilter, setSmokeFilter, onMarkSmoked, onDelete, onUpdatePriority }) {
+function SmokeListTab({ smokeList, setSmokeList, smokeFilter, setSmokeFilter, onMarkSmoked, onDelete, onUpdatePriority }) {
   const [addSearch, setAddSearch] = useState('');
   const [addResults, setAddResults] = useState([]);
   const [adding, setAdding] = useState(false);
@@ -157,13 +157,14 @@ function SmokeListTab({ smokeList, smokeFilter, setSmokeFilter, onMarkSmoked, on
   async function addToList() {
     if (!selectedCigar) return;
     try {
-      await api.addToSmokeList({ cigar_id: selectedCigar.id, ...addForm });
+      const res = await api.addToSmokeList({ cigar_id: selectedCigar.id, ...addForm });
+      const newItem = { id: res.id, cigar_id: selectedCigar.id, brand: selectedCigar.brand, cigar_name: selectedCigar.name, status: 'pending', priority: addForm.priority, notes: addForm.notes, recommended_by: addForm.recommended_by, avg_rating: Math.round(selectedCigar.avg_rating || 0), store_count: 0, min_price: 0 };
+      setSmokeList(sl => [newItem, ...sl]);
       setAdding(false);
       setSelectedCigar(null);
       setAddSearch('');
       setAddResults([]);
       setAddForm({ priority: 'medium', notes: '', recommended_by: '' });
-      window.location.reload(); // simple refresh to show new item
     } catch (e) { alert(e.message); }
   }
 
@@ -240,8 +241,13 @@ function SmokeListTab({ smokeList, smokeFilter, setSmokeFilter, onMarkSmoked, on
       {filtered.length === 0 ? (
         <div className="text-center py-12">
           <ListChecks className="w-10 h-10 text-stone-700 mx-auto mb-3" />
-          <p className="text-stone-400 font-medium">Your smoke list is empty</p>
-          <p className="text-stone-600 text-sm mt-1">Add cigars you want to try from any cigar page or search.</p>
+          <p className="text-stone-400 font-medium">
+            {smokeFilter === 'all' ? 'Your smoke list is empty' : smokeFilter === 'smoked' ? 'No smoked cigars yet' : 'Nothing queued to try'}
+          </p>
+          <p className="text-stone-600 text-sm mt-1">Discover cigars and add them to your queue.</p>
+          <Link to="/search" className="btn-primary mt-4 inline-flex items-center gap-2">
+            Browse Cigars <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -555,6 +561,7 @@ export default function Dashboard() {
       {tab === 'smokelist' && (
         <SmokeListTab
           smokeList={smokeList}
+          setSmokeList={setSmokeList}
           smokeFilter={smokeFilter}
           setSmokeFilter={setSmokeFilter}
           onMarkSmoked={async (id) => {
