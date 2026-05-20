@@ -5,7 +5,9 @@ const { requireAuth, optionalAuth } = require('../middleware/auth');
 // Search and browse cigars
 router.get('/', (req, res) => {
   const { q, brand, strength, wrapper, country, city, state, min_price, max_price,
-    vitola_size, in_stock_only, sort = 'popular', page = 1, limit = 24 } = req.query;
+    vitola_size, in_stock_only, sort = 'popular' } = req.query;
+  const page  = Math.max(1, parseInt(req.query.page)  || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 24));
   const offset = (page - 1) * limit;
 
   let where = ['1=1'];
@@ -87,6 +89,24 @@ router.get('/brands', (req, res) => {
 });
 
 // Filter options
+// Must be registered before /:id to avoid shadow
+router.get('/followed', requireAuth, (req, res) => {
+  const cigars = db.prepare(`
+    SELECT c.*, cf.created_at as followed_at,
+      COUNT(DISTINCT i.store_id) as store_count,
+      MIN(i.price) as min_price,
+      COALESCE(AVG(r.rating), 0) as avg_rating
+    FROM cigar_follows cf
+    JOIN cigars c ON c.id = cf.cigar_id
+    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+    LEFT JOIN reviews r ON r.cigar_id = c.id
+    WHERE cf.user_id = ?
+    GROUP BY c.id
+    ORDER BY cf.created_at DESC
+  `).all(req.user.id);
+  res.json(cigars.map(c => ({ ...c, flavor_notes: JSON.parse(c.flavor_notes || '[]'), avg_rating: Math.round(c.avg_rating) })));
+});
+
 router.get('/filters', (req, res) => {
   const strengths = db.prepare("SELECT DISTINCT strength FROM cigars WHERE strength IS NOT NULL ORDER BY CASE strength WHEN 'mild' THEN 1 WHEN 'mild-medium' THEN 2 WHEN 'medium' THEN 3 WHEN 'medium-full' THEN 4 WHEN 'full' THEN 5 END").all().map(r => r.strength);
   const countries = db.prepare('SELECT DISTINCT country FROM cigars WHERE country IS NOT NULL ORDER BY country').all().map(r => r.country);
@@ -96,7 +116,9 @@ router.get('/filters', (req, res) => {
 
 // Single cigar
 router.get('/:id', optionalAuth, (req, res) => {
-  const cigar = db.prepare('SELECT * FROM cigars WHERE id = ?').get(req.params.id);
+  const id = parseInt(req.params.id);
+  if (!id) return res.status(404).json({ error: 'Cigar not found' });
+  const cigar = db.prepare('SELECT * FROM cigars WHERE id = ?').get(id);
   if (!cigar) return res.status(404).json({ error: 'Cigar not found' });
 
   const vitolas = db.prepare('SELECT * FROM vitolas WHERE cigar_id = ? ORDER BY ring_gauge').all(cigar.id);
@@ -292,24 +314,6 @@ router.get('/:id/follow-status', optionalAuth, (req, res) => {
     following = !!db.prepare('SELECT 1 FROM cigar_follows WHERE user_id=? AND cigar_id=?').get(req.user.id, req.params.id);
   }
   res.json({ following, follower_count });
-});
-
-// Get user's followed cigars
-router.get('/followed', requireAuth, (req, res) => {
-  const cigars = db.prepare(`
-    SELECT c.*, cf.created_at as followed_at,
-      COUNT(DISTINCT i.store_id) as store_count,
-      MIN(i.price) as min_price,
-      COALESCE(AVG(r.rating), 0) as avg_rating
-    FROM cigar_follows cf
-    JOIN cigars c ON c.id = cf.cigar_id
-    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
-    LEFT JOIN reviews r ON r.cigar_id = c.id
-    WHERE cf.user_id = ?
-    GROUP BY c.id
-    ORDER BY cf.created_at DESC
-  `).all(req.user.id);
-  res.json(cigars.map(c => ({ ...c, flavor_notes: JSON.parse(c.flavor_notes || '[]'), avg_rating: Math.round(c.avg_rating) })));
 });
 
 module.exports = router;

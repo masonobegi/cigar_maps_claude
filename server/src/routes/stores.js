@@ -378,11 +378,8 @@ router.post('/:id/broadcast', requireAuth, (req, res) => {
   res.json({ id: result.lastInsertRowid, sent_to: followerCount });
 });
 
-// Get store's broadcast history
-router.get('/:id/broadcasts', requireAuth, (req, res) => {
-  const store = db.prepare('SELECT id FROM stores WHERE id = ? AND user_id = ?').get(req.params.id, req.user.id);
-  if (!store) return res.status(403).json({ error: 'Forbidden' });
-
+// Get store's broadcast history (public — followers can view past broadcasts)
+router.get('/:id/broadcasts', (req, res) => {
   const broadcasts = db.prepare(`
     SELECT n.*, COUNT(nr.user_id) as read_count,
       (SELECT COUNT(*) FROM store_follows WHERE store_id = n.store_id) as total_followers
@@ -484,12 +481,13 @@ router.post('/:id/rate', requireAuth, (req, res) => {
   const { rating, comment } = req.body;
   if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
 
+  const c = comment ?? null;
   try {
     db.prepare('INSERT OR REPLACE INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)')
-      .run(req.user.id, req.params.id, rating, comment);
+      .run(req.user.id, req.params.id, rating, c);
   } catch {
     db.prepare('UPDATE store_ratings SET rating=?, comment=? WHERE user_id=? AND store_id=?')
-      .run(rating, comment, req.user.id, req.params.id);
+      .run(rating, c, req.user.id, req.params.id);
   }
   res.json({ success: true });
 });
