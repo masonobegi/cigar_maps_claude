@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { initSchema } = require('./database/schema');
 
 const app = express();
@@ -18,6 +19,11 @@ app.use('/api/smoke-list', require('./routes/smoke-list'));
 app.use('/api/admin', require('./routes/admin'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
+
+// Serve React build in production
+const clientDist = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientDist));
+app.get('*', (_, res) => res.sendFile(path.join(clientDist, 'index.html')));
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
