@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { initSchema } = require('./database/schema');
 
 const app = express();
@@ -22,8 +23,17 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' })
 
 // Serve React build in production
 const clientDist = path.join(__dirname, '../../client/dist');
+console.log(`[static] clientDist path: ${clientDist}`);
+console.log(`[static] clientDist exists: ${fs.existsSync(clientDist)}`);
 app.use(express.static(clientDist));
-app.get('*', (_, res) => res.sendFile(path.join(clientDist, 'index.html')));
+app.get('*', (req, res) => {
+  const indexPath = path.join(clientDist, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    console.error(`[static] index.html not found at: ${indexPath}`);
+    return res.status(404).send(`index.html not found. clientDist resolved to: ${clientDist}`);
+  }
+  res.sendFile(indexPath);
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
