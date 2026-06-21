@@ -16,6 +16,9 @@ import Deals from './pages/Deals';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import Passport from './pages/Passport';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Footer from './components/Footer';
 import InstallPrompt from './components/InstallPrompt';
 
 function RequireAuth({ children }) {
@@ -48,6 +51,8 @@ function AnimatedRoutes() {
       <Route path="/store-dashboard" element={<RequireAuth><StoreDashboard /></RequireAuth>} />
       <Route path="/passport" element={<RequireAuth><Passport /></RequireAuth>} />
       <Route path="/admin" element={<RequireAuth><AdminPanel /></RequireAuth>} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
@@ -61,6 +66,7 @@ function AppLayout() {
       <main className="flex-1 pb-20 md:pb-6 page-enter">
         <AnimatedRoutes />
       </main>
+      <Footer />
       <BottomNav />
       <InstallPrompt />
     </div>
