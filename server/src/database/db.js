@@ -1,12 +1,40 @@
-const { DatabaseSync } = require('node:sqlite');
-const path = require('path');
-const fs = require('fs');
+const { Pool } = require('pg');
 
-const dbDir = process.env.DB_PATH || path.join(__dirname, '../../data');
-if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+});
 
-const db = new DatabaseSync(path.join(dbDir, 'habano.db'));
-db.exec('PRAGMA journal_mode = WAL');
-db.exec('PRAGMA foreign_keys = ON');
+function toPositional(sql) {
+  let i = 0;
+  return sql.replace(/\?/g, () => `$${++i}`);
+}
+
+const db = {
+  all: (sql, params = []) =>
+    pool.query(toPositional(sql), params).then(r => r.rows),
+
+  get: (sql, params = []) =>
+    pool.query(toPositional(sql), params).then(r => r.rows[0]),
+
+  // For INSERT ... RETURNING id: lastInsertRowid is populated. For UPDATE/DELETE: null.
+  run: (sql, params = []) =>
+    pool.query(toPositional(sql), params).then(r => ({
+      lastInsertRowid: r.rows[0]?.id ?? null,
+      changes: r.rowCount,
+    })),
+
+  exec: async (sql) => {
+    const stmts = sql.split(';').map(s => s.trim()).filter(Boolean);
+    for (const stmt of stmts) await pool.query(stmt);
+  },
+
+  pool,
+};
+
+// Wrap async route handlers so thrown errors reach the Express error handler
+db.asyncRoute = fn => async (req, res, next) => {
+  try { await fn(req, res, next); } catch (e) { next(e); }
+};
 
 module.exports = db;

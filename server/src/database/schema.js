@@ -1,9 +1,9 @@
 const db = require('./db');
 
-function initSchema() {
-  db.exec(`
+async function initSchema() {
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       name TEXT NOT NULL,
@@ -12,11 +12,11 @@ function initSchema() {
       bio TEXT,
       location_city TEXT,
       location_state TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS stores (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id),
       name TEXT NOT NULL,
       description TEXT,
@@ -29,19 +29,19 @@ function initSchema() {
       logo_url TEXT,
       cover_url TEXT,
       instagram TEXT,
-      lat REAL,
-      lng REAL,
+      lat FLOAT,
+      lng FLOAT,
       hours TEXT,
       tags TEXT,
       has_lounge INTEGER DEFAULT 0,
       has_walk_in_humidor INTEGER DEFAULT 0,
       verified INTEGER DEFAULT 0,
       setup_complete INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS verification_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
       business_name TEXT NOT NULL,
       business_ein TEXT,
@@ -52,12 +52,12 @@ function initSchema() {
       notes TEXT,
       status TEXT DEFAULT 'pending',
       admin_notes TEXT,
-      submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      reviewed_at DATETIME
+      submitted_at TIMESTAMP DEFAULT NOW(),
+      reviewed_at TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS cigars (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       brand TEXT NOT NULL,
       name TEXT NOT NULL,
       country TEXT,
@@ -69,47 +69,47 @@ function initSchema() {
       description TEXT,
       image_url TEXT,
       year_introduced INTEGER,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS vitolas (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       cigar_id INTEGER NOT NULL REFERENCES cigars(id) ON DELETE CASCADE,
       name TEXT NOT NULL,
-      length REAL,
+      length FLOAT,
       ring_gauge INTEGER,
-      msrp REAL
+      msrp FLOAT
     );
 
     CREATE TABLE IF NOT EXISTS inventory (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
       cigar_id INTEGER NOT NULL REFERENCES cigars(id),
       vitola_id INTEGER REFERENCES vitolas(id),
-      price REAL NOT NULL,
+      price FLOAT NOT NULL,
       quantity INTEGER DEFAULT 0,
       in_stock INTEGER DEFAULT 1,
       is_featured INTEGER DEFAULT 0,
       is_new_arrival INTEGER DEFAULT 0,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      updated_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS user_cigars (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       cigar_id INTEGER NOT NULL REFERENCES cigars(id),
       vitola_id INTEGER REFERENCES vitolas(id),
       status TEXT NOT NULL DEFAULT 'humidor',
       quantity INTEGER DEFAULT 1,
-      purchase_price REAL,
+      purchase_price FLOAT,
       purchase_date TEXT,
       notes TEXT,
       aging_goal_date TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS smoke_list (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       cigar_id INTEGER NOT NULL REFERENCES cigars(id),
       priority TEXT DEFAULT 'medium',
@@ -117,11 +117,11 @@ function initSchema() {
       recommended_by TEXT,
       status TEXT DEFAULT 'pending',
       smoked_on TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS reviews (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       cigar_id INTEGER NOT NULL REFERENCES cigars(id),
       vitola_id INTEGER REFERENCES vitolas(id),
@@ -150,19 +150,19 @@ function initSchema() {
       pairing TEXT,
       occasion TEXT,
       review_text TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS deals (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
       title TEXT NOT NULL,
       description TEXT,
       discount_percent INTEGER,
-      deal_price REAL,
+      deal_price FLOAT,
       cigar_id INTEGER REFERENCES cigars(id),
-      expires_at DATETIME,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      expires_at TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS store_follows (
@@ -171,41 +171,60 @@ function initSchema() {
       notify_broadcasts INTEGER DEFAULT 1,
       notify_deals INTEGER DEFAULT 1,
       notify_new_arrivals INTEGER DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW(),
       PRIMARY KEY (user_id, store_id)
     );
 
     CREATE TABLE IF NOT EXISTS notifications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
       title TEXT NOT NULL,
       message TEXT NOT NULL,
       type TEXT DEFAULT 'announcement',
       cigar_id INTEGER REFERENCES cigars(id),
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS notification_reads (
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       notification_id INTEGER NOT NULL REFERENCES notifications(id) ON DELETE CASCADE,
-      read_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      read_at TIMESTAMP DEFAULT NOW(),
       PRIMARY KEY (user_id, notification_id)
     );
 
     CREATE TABLE IF NOT EXISTS store_ratings (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
       rating INTEGER NOT NULL,
       comment TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW(),
       UNIQUE(user_id, store_id)
     );
 
     CREATE TABLE IF NOT EXISTS store_views (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
-      viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      viewed_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS cigar_follows (
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      cigar_id INTEGER NOT NULL REFERENCES cigars(id) ON DELETE CASCADE,
+      notify_in_stock INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT NOW(),
+      PRIMARY KEY (user_id, cigar_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS inventory_requests (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      cigar_id INTEGER REFERENCES cigars(id),
+      cigar_name_free TEXT,
+      message TEXT,
+      status TEXT DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT NOW()
     );
 
     CREATE INDEX IF NOT EXISTS idx_cigars_brand ON cigars(brand);
@@ -213,25 +232,6 @@ function initSchema() {
     CREATE INDEX IF NOT EXISTS idx_inventory_store ON inventory(store_id);
     CREATE INDEX IF NOT EXISTS idx_inventory_cigar ON inventory(cigar_id);
     CREATE INDEX IF NOT EXISTS idx_reviews_cigar ON reviews(cigar_id);
-    CREATE TABLE IF NOT EXISTS cigar_follows (
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      cigar_id INTEGER NOT NULL REFERENCES cigars(id) ON DELETE CASCADE,
-      notify_in_stock INTEGER DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (user_id, cigar_id)
-    );
-
-    CREATE TABLE IF NOT EXISTS inventory_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
-      cigar_id INTEGER REFERENCES cigars(id),
-      cigar_name_free TEXT,
-      message TEXT,
-      status TEXT DEFAULT 'pending',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
     CREATE INDEX IF NOT EXISTS idx_reviews_user ON reviews(user_id);
     CREATE INDEX IF NOT EXISTS idx_user_cigars_user ON user_cigars(user_id);
     CREATE INDEX IF NOT EXISTS idx_smoke_list_user ON smoke_list(user_id);
@@ -242,7 +242,7 @@ function initSchema() {
     CREATE INDEX IF NOT EXISTS idx_verif_store ON verification_requests(store_id);
     CREATE INDEX IF NOT EXISTS idx_verif_status ON verification_requests(status);
     CREATE INDEX IF NOT EXISTS idx_cigar_follows_user ON cigar_follows(user_id);
-    CREATE INDEX IF NOT EXISTS idx_inv_requests_store ON inventory_requests(store_id);
+    CREATE INDEX IF NOT EXISTS idx_inv_requests_store ON inventory_requests(store_id)
   `);
 }
 

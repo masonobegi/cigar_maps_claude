@@ -1,15 +1,15 @@
 const router = require('express').Router();
 const db = require('../database/db');
 const { requireAuth } = require('../middleware/auth');
+const { asyncRoute } = db;
 
 function requireAdmin(req, res, next) {
   if (req.user.account_type !== 'admin') return res.status(403).json({ error: 'Admin only' });
   next();
 }
 
-// App-wide stats
-router.get('/stats', requireAuth, requireAdmin, (req, res) => {
-  const stats = db.prepare(`
+router.get('/stats', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const stats = await db.get(`
     SELECT
       (SELECT COUNT(*) FROM users WHERE account_type = 'user') as total_users,
       (SELECT COUNT(*) FROM users WHERE account_type = 'store') as total_stores,
@@ -22,29 +22,28 @@ router.get('/stats', requireAuth, requireAdmin, (req, res) => {
       (SELECT COUNT(*) FROM verification_requests WHERE status = 'pending') as pending_verifications,
       (SELECT COUNT(*) FROM store_follows) as total_follows,
       (SELECT COUNT(*) FROM notifications) as total_broadcasts
-  `).get();
+  `, []);
 
-  const recentUsers = db.prepare(`
+  const recentUsers = await db.all(`
     SELECT id, name, email, account_type, created_at FROM users ORDER BY created_at DESC LIMIT 10
-  `).all();
+  `, []);
 
-  const recentReviews = db.prepare(`
+  const recentReviews = await db.all(`
     SELECT r.id, r.rating, r.created_at, u.name as user_name, c.brand, c.name as cigar_name
     FROM reviews r JOIN users u ON u.id = r.user_id JOIN cigars c ON c.id = r.cigar_id
     ORDER BY r.created_at DESC LIMIT 10
-  `).all();
+  `, []);
 
   res.json({ stats, recent_users: recentUsers, recent_reviews: recentReviews });
-});
+}));
 
-// List verification requests
-router.get('/verifications', requireAuth, requireAdmin, (req, res) => {
+router.get('/verifications', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   const { status } = req.query;
   let where = '1=1';
   const params = [];
   if (status) { where = 'vr.status = ?'; params.push(status); }
 
-  const requests = db.prepare(`
+  const requests = await db.all(`
     SELECT vr.*, s.name as store_name, s.city, s.state, s.verified as store_verified,
       u.email as owner_email, u.name as owner_name
     FROM verification_requests vr
@@ -53,39 +52,34 @@ router.get('/verifications', requireAuth, requireAdmin, (req, res) => {
     WHERE ${where}
     ORDER BY CASE vr.status WHEN 'pending' THEN 1 WHEN 'approved' THEN 2 WHEN 'rejected' THEN 3 END,
              vr.submitted_at DESC
-  `).all(...params);
+  `, params);
 
   res.json(requests);
-});
+}));
 
-// Approve verification
-router.post('/verifications/:id/approve', requireAuth, requireAdmin, (req, res) => {
+router.post('/verifications/:id/approve', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   const { admin_notes } = req.body;
-  const vr = db.prepare('SELECT * FROM verification_requests WHERE id = ?').get(req.params.id);
+  const vr = await db.get('SELECT * FROM verification_requests WHERE id = ?', [req.params.id]);
   if (!vr) return res.status(404).json({ error: 'Not found' });
 
-  db.prepare("UPDATE verification_requests SET status='approved', admin_notes=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?")
-    .run(admin_notes || null, req.params.id);
-  db.prepare('UPDATE stores SET verified=1 WHERE id=?').run(vr.store_id);
-
+  await db.run("UPDATE verification_requests SET status='approved', admin_notes=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?",
+    [admin_notes || null, req.params.id]);
+  await db.run('UPDATE stores SET verified=1 WHERE id=?', [vr.store_id]);
   res.json({ success: true });
-});
+}));
 
-// Reject verification
-router.post('/verifications/:id/reject', requireAuth, requireAdmin, (req, res) => {
+router.post('/verifications/:id/reject', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   const { admin_notes } = req.body;
-  const vr = db.prepare('SELECT * FROM verification_requests WHERE id = ?').get(req.params.id);
+  const vr = await db.get('SELECT * FROM verification_requests WHERE id = ?', [req.params.id]);
   if (!vr) return res.status(404).json({ error: 'Not found' });
 
-  db.prepare("UPDATE verification_requests SET status='rejected', admin_notes=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?")
-    .run(admin_notes || 'Verification rejected by admin.', req.params.id);
-
+  await db.run("UPDATE verification_requests SET status='rejected', admin_notes=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?",
+    [admin_notes || 'Verification rejected by admin.', req.params.id]);
   res.json({ success: true });
-});
+}));
 
-// List all stores (admin view)
-router.get('/stores', requireAuth, requireAdmin, (req, res) => {
-  const stores = db.prepare(`
+router.get('/stores', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const stores = await db.all(`
     SELECT s.*, u.email as owner_email,
       COUNT(DISTINCT i.id) as inventory_count,
       COUNT(DISTINCT sf.user_id) as followers,
@@ -96,24 +90,23 @@ router.get('/stores', requireAuth, requireAdmin, (req, res) => {
     LEFT JOIN verification_requests vr ON vr.store_id = s.id AND vr.id = (
       SELECT id FROM verification_requests WHERE store_id = s.id ORDER BY submitted_at DESC LIMIT 1
     )
-    GROUP BY s.id ORDER BY s.created_at DESC
-  `).all();
+    GROUP BY s.id, u.id, vr.id, vr.status, vr.submitted_at
+    ORDER BY s.created_at DESC
+  `, []);
   res.json(stores);
-});
+}));
 
-// Toggle verified status directly
-router.patch('/stores/:id/verified', requireAuth, requireAdmin, (req, res) => {
+router.patch('/stores/:id/verified', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   const { verified } = req.body;
-  db.prepare('UPDATE stores SET verified=? WHERE id=?').run(verified ? 1 : 0, req.params.id);
+  await db.run('UPDATE stores SET verified=? WHERE id=?', [verified ? 1 : 0, req.params.id]);
   res.json({ success: true });
-});
+}));
 
-// List all users (admin view)
-router.get('/users', requireAuth, requireAdmin, (req, res) => {
-  const users = db.prepare(`
+router.get('/users', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const users = await db.all(`
     SELECT id, name, email, account_type, location_city, location_state, created_at FROM users ORDER BY created_at DESC
-  `).all();
+  `, []);
   res.json(users);
-});
+}));
 
 module.exports = router;

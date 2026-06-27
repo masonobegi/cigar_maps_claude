@@ -8,8 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-initSchema();
-
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/cigars', require('./routes/cigars'));
 app.use('/api/stores', require('./routes/stores'));
@@ -35,5 +33,17 @@ app.get('*', (req, res) => {
   res.sendFile(indexPath);
 });
 
+// Global async error handler (catches errors thrown from asyncRoute-wrapped handlers)
+app.use((err, req, res, next) => {
+  console.error(err.stack || err.message || err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
+
+async function start() {
+  await initSchema();
+  app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
+}
+
+start().catch(err => { console.error('Failed to start:', err); process.exit(1); });
