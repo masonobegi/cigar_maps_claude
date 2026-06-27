@@ -4,8 +4,12 @@
 
 @layer base {
   body {
-    @apply bg-stone-950 text-stone-100 antialiased;
-    background-color: #0f0a07;
+    @apply text-stone-100 antialiased;
+    background-color: #1a1008;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(120, 60, 10, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(80, 30, 5, 0.15) 0%, transparent 55%);
+    background-attachment: fixed;
     overscroll-behavior-y: none;
   }
 
@@ -77,7 +81,10 @@
 
   /* ── Cards ──────────────────────────────────────────────────────────────────*/
   .card {
-    @apply bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden;
+    @apply border rounded-2xl overflow-hidden;
+    background-color: rgba(30, 18, 8, 0.85);
+    border-color: rgba(80, 50, 20, 0.5);
+    backdrop-filter: blur(4px);
   }
 
   /* ── Tabs ───────────────────────────────────────────────────────────────────
@@ -129,9 +136,9 @@
 /* ── Scrollbars (desktop only) ──────────────────────────────────────────────── */
 @media (hover: hover) {
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #1c1008; }
-  ::-webkit-scrollbar-thumb { background: #4a3020; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6a4830; }
+  ::-webkit-scrollbar-track { background: #1a1008; }
+  ::-webkit-scrollbar-thumb { background: #5a3818; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #7a5030; }
 }
 
 /* ── Safe areas (iPhone notch / home indicator) ─────────────────────────────── */
@@ -140,8 +147,8 @@
 
 /* ── Loading skeleton shimmer ───────────────────────────────────────────────── */
 .skeleton {
-  @apply bg-stone-800 rounded-xl;
-  background: linear-gradient(90deg, #1c1008 25%, #2a1a0e 50%, #1c1008 75%);
+  @apply rounded-xl;
+  background: linear-gradient(90deg, #221408 25%, #3a2010 50%, #221408 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

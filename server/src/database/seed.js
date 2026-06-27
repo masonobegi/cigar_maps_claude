@@ -3,91 +3,220 @@ const { initSchema } = require('./schema');
 const bcrypt = require('bcryptjs');
 
 const cigars = [
-  { brand: 'Arturo Fuente', name: 'Hemingway Short Story', country: 'Dominican Republic', wrapper: 'Cameroon', binder: 'Dominican', filler: 'Dominican', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'cream', 'nuts', 'coffee', 'leather']), description: 'One of the most iconic figurados in the world. The Hemingway series is a testament to the Fuente family\'s artistry. Complex, creamy, and perfectly balanced.', year_introduced: 1982 },
-  { brand: 'Arturo Fuente', name: 'Opus X', country: 'Dominican Republic', wrapper: 'Dominican Rosado', binder: 'Dominican', filler: 'Dominican', strength: 'medium-full', flavor_notes: JSON.stringify(['spice', 'cedar', 'chocolate', 'leather', 'coffee']), description: 'The holy grail of Dominican cigars. Carlos Fuente Jr. broke the mold by growing wrapper tobacco in the Dominican Republic — something many said was impossible.', year_introduced: 1995 },
-  { brand: 'Padron', name: '1964 Anniversary', country: 'Nicaragua', wrapper: 'Nicaragua Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['chocolate', 'coffee', 'earth', 'pepper', 'leather']), description: 'Released in 1994 to celebrate the company\'s 30th anniversary. Widely regarded as one of the finest cigars ever made.', year_introduced: 1994 },
-  { brand: 'Padron', name: '1926 Serie No. 1', country: 'Nicaragua', wrapper: 'Nicaragua Natural', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['cocoa', 'espresso', 'nuts', 'spice', 'earth']), description: 'Named for Jose Orlando Padron\'s birth year. The pinnacle of the Padron portfolio, released only for special occasions.', year_introduced: 1994 },
-  { brand: 'Liga Privada', name: 'No. 9', country: 'Nicaragua', wrapper: 'Connecticut Habano Stalk-Cut', binder: 'Honduran', filler: 'Nicaraguan/Honduran', strength: 'full', flavor_notes: JSON.stringify(['dark chocolate', 'espresso', 'earth', 'leather', 'pepper', 'cream']), description: 'Originally crafted for Drew Estate\'s private smoking club. Its complex, dark flavor profile has made it a modern classic.', year_introduced: 2008 },
-  { brand: 'Liga Privada', name: 'T52', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Stalk-Cut', binder: 'Costa Rican', filler: 'Nicaraguan', strength: 'full', flavor_notes: JSON.stringify(['dark fruit', 'cocoa', 'leather', 'espresso', 'earth']), description: 'Features a rare stalk-cut Connecticut Broadleaf wrapper. Rich, complex, and undeniably impressive.', year_introduced: 2009 },
-  { brand: 'My Father', name: 'Le Bijou 1922', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['black pepper', 'cocoa', 'coffee', 'cedar', 'leather']), description: 'Named for the year of Jose "Pepin" Garcia\'s grandfather\'s birth. Exceptional construction and flavor.', year_introduced: 2010 },
-  { brand: 'My Father', name: 'Flor de las Antillas', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['cedar', 'cream', 'leather', 'coffee', 'spice']), description: 'Cigar Aficionado\'s Cigar of the Year in 2012. Complex and refined at an approachable price point.', year_introduced: 2011 },
-  { brand: 'Davidoff', name: 'Millennium Blend', country: 'Dominican Republic', wrapper: 'Ecuador', binder: 'Dominican', filler: 'Dominican', strength: 'mild-medium', flavor_notes: JSON.stringify(['cream', 'nuts', 'cedar', 'floral', 'honey']), description: 'A refined, elegant cigar representing the best of Dominican craftsmanship. Creamy, nuanced, and impeccably constructed.', year_introduced: 2000 },
-  { brand: 'Davidoff', name: 'Escurio', country: 'Dominican Republic', wrapper: 'Brazil Mata Fina Maduro', binder: 'Dominican', filler: 'Brazilian/Dominican/Peruvian', strength: 'medium-full', flavor_notes: JSON.stringify(['cocoa', 'coffee', 'dark fruit', 'leather', 'earth']), description: 'Davidoff\'s bold departure into darker territory. Features a Brazilian Mata Fina maduro wrapper.', year_introduced: 2015 },
-  { brand: 'Romeo y Julieta', name: 'Reserva Real', country: 'Honduras', wrapper: 'Ecuador', binder: 'Honduras', filler: 'Honduras/Nicaragua', strength: 'mild-medium', flavor_notes: JSON.stringify(['cedar', 'cream', 'nuts', 'honey', 'floral']), description: 'A refined, accessible smoke perfect for newer cigar enthusiasts. Consistently smooth with excellent construction.', year_introduced: 1997 },
-  { brand: 'Oliva', name: 'Serie V Melanio', country: 'Nicaragua', wrapper: 'Ecuador Sumatra', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['dark chocolate', 'pepper', 'coffee', 'leather', 'nuts']), description: 'Named after Melanio Oliva. Won Cigar Aficionado\'s Cigar of the Year in 2013.', year_introduced: 2012 },
-  { brand: 'Oliva', name: 'Serie G Maduro', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['chocolate', 'coffee', 'cedar', 'earth', 'cream']), description: 'Fantastic value for a top-tier Nicaraguan puro. Rich and complex with Oliva\'s signature backbone.', year_introduced: 2004 },
-  { brand: 'Cohiba', name: 'Blue', country: 'Dominican Republic', wrapper: 'Ecuador', binder: 'Dominican', filler: 'Dominican', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'leather', 'spice', 'cream', 'nuts']), description: 'The US Cohiba offers a refined, medium-bodied smoke with excellent Dominican tobaccos.', year_introduced: 1997 },
-  { brand: 'Rocky Patel', name: 'Vintage 1990', country: 'Honduras', wrapper: 'Ecuador', binder: 'Nicaragua', filler: 'Honduras/Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'coffee', 'leather', 'spice', 'nuts']), description: 'Named for the year the filler tobacco was harvested. A staple known for its balance and smoothness.', year_introduced: 2001 },
-  { brand: 'Perdomo', name: 'Reserve 10th Anniversary Maduro', country: 'Nicaragua', wrapper: 'Nicaragua Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['chocolate', 'coffee', 'earth', 'leather', 'spice']), description: 'Celebrating Perdomo\'s 10th anniversary with one of their finest Nicaraguan puros. Rich and bold.', year_introduced: 2002 },
-  { brand: 'Ashton', name: 'VSG', country: 'Dominican Republic', wrapper: 'Ecuador Sungrown', binder: 'Dominican', filler: 'Dominican', strength: 'medium-full', flavor_notes: JSON.stringify(['cedar', 'leather', 'cocoa', 'spice', 'earth']), description: 'Ashton\'s Vintage Sungrown stands among the finest Dominican blends. Complex, elegant, and richly satisfying.', year_introduced: 1997 },
-  { brand: 'Macanudo', name: 'Inspirado White', country: 'Dominican Republic', wrapper: 'Ecuador Connecticut', binder: 'Dominican', filler: 'Dominican', strength: 'mild', flavor_notes: JSON.stringify(['cream', 'honey', 'cedar', 'floral', 'nuts']), description: 'A silky smooth introduction to premium cigars. The Inspirado White is approachable and beautifully constructed.', year_introduced: 2015 },
+  // Pacific Premium (5)
+  { brand: 'Pacific Premium', name: 'Morning Mist Robusto', country: 'Nicaragua', wrapper: 'Connecticut Shade', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'mild', flavor_notes: JSON.stringify(['cream', 'cedar', 'honey', 'floral']), description: 'A silky smooth morning smoke. Light and creamy with delicate cedar and floral notes. Perfect for beginners or those who prefer a relaxed smoke.', year_introduced: 2018 },
+  { brand: 'Pacific Premium', name: 'Coastline Toro', country: 'Honduras', wrapper: 'Ecuador Connecticut', binder: 'Honduras', filler: 'Honduras/Dominican', strength: 'mild-medium', flavor_notes: JSON.stringify(['cream', 'nuts', 'cedar', 'honey', 'coffee']), description: 'Named for the rugged Pacific coastline. Balanced and approachable with creamy nuts and light coffee. Excellent construction at an everyday price.', year_introduced: 2016 },
+  { brand: 'Pacific Premium', name: 'Reserve Maduro', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['dark chocolate', 'espresso', 'earth', 'leather', 'cedar']), description: 'Rich and complex with a beautiful oily maduro wrapper. Dark chocolate and espresso throughout, finishing with a satisfying leather note.', year_introduced: 2019 },
+  { brand: 'Pacific Premium', name: 'Grand Churchill', country: 'Dominican Republic', wrapper: 'Ecuador Habano', binder: 'Dominican', filler: 'Dominican', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'coffee', 'leather', 'nuts', 'spice']), description: 'An elegant full-sized smoke blended for the long haul. Cedar and coffee up front giving way to a spicy leather finish. Ideal for a relaxed afternoon.', year_introduced: 2014 },
+  { brand: 'Pacific Premium', name: 'Torpedo Select', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['spice', 'cedar', 'nuts', 'coffee', 'earth']), description: 'A well-constructed torpedo with a Habano wrapper that delivers a consistent medium-bodied experience. Earthy with subtle spice.', year_introduced: 2020 },
+
+  // Cascade Valley (5)
+  { brand: 'Cascade Valley', name: 'Harvest Robusto', country: 'Nicaragua', wrapper: 'Nicaragua Natural', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['earth', 'leather', 'nuts', 'pepper', 'cedar']), description: 'Inspired by harvest season in the Pacific Northwest. A hearty, satisfying robusto with earthy leather notes and a peppery kick.', year_introduced: 2017 },
+  { brand: 'Cascade Valley', name: 'Ridge Runner Toro', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua/Honduras', strength: 'medium-full', flavor_notes: JSON.stringify(['cocoa', 'leather', 'earth', 'black pepper', 'cedar']), description: 'Named for the ridge trails of the Cascades. A bold toro with plenty of complexity — cocoa and leather with a lingering pepper finish.', year_introduced: 2015 },
+  { brand: 'Cascade Valley', name: 'Summit Maduro', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['dark chocolate', 'coffee', 'earth', 'leather', 'molasses']), description: 'The boldest offering from Cascade Valley. Full-bodied with rich dark chocolate, deep earth, and a sweet molasses note on the retrohale.', year_introduced: 2016 },
+  { brand: 'Cascade Valley', name: 'Classic Lonsdale', country: 'Honduras', wrapper: 'Ecuador Connecticut', binder: 'Honduras', filler: 'Honduras', strength: 'mild-medium', flavor_notes: JSON.stringify(['cream', 'cedar', 'nuts', 'floral', 'honey']), description: 'A classic Honduran lonsdale for those who appreciate elegance over power. Creamy, smooth, and consistent from foot to nub.', year_introduced: 2013 },
+  { brand: 'Cascade Valley', name: 'Late Season Corona', country: 'Dominican Republic', wrapper: 'Ecuador Connecticut', binder: 'Dominican', filler: 'Dominican', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'cream', 'coffee', 'nuts', 'honey']), description: 'A relaxed shorter smoke ideal for those with limited time. Dominican tobaccos in a smooth Ecuador Connecticut — easy and enjoyable.', year_introduced: 2021 },
+
+  // Northwest Blend (5)
+  { brand: 'Northwest Blend', name: 'Toro No.1', country: 'Nicaragua', wrapper: 'Nicaragua Natural', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'earth', 'leather', 'pepper', 'nuts']), description: 'The flagship of the Northwest Blend line. An accessible, versatile toro that pairs well with coffee or craft beer. A solid everyday smoke.', year_introduced: 2018 },
+  { brand: 'Northwest Blend', name: 'Robusto No.2', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['nuts', 'earth', 'spice', 'cedar', 'cream']), description: 'Slightly lighter than the No.1. Creamy nuts and light spice make this great for enthusiasts stepping up from mild smokes.', year_introduced: 2019 },
+  { brand: 'Northwest Blend', name: 'Belicoso Reserve', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua/Dominican', strength: 'medium-full', flavor_notes: JSON.stringify(['dark chocolate', 'leather', 'cedar', 'pepper', 'coffee']), description: 'The premium offering in the Northwest Blend line. Chocolate and leather in the first third, shifting to cedar and pepper through the finish.', year_introduced: 2020 },
+  { brand: 'Northwest Blend', name: 'Gran Toro', country: 'Nicaragua', wrapper: 'Nicaragua Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['espresso', 'dark chocolate', 'earth', 'leather', 'pepper']), description: 'The most powerful stick in the lineup. A full-strength Nicaraguan puro with a dark maduro leaf. Bold and unapologetic.', year_introduced: 2021 },
+  { brand: 'Northwest Blend', name: 'Morning Churchill', country: 'Dominican Republic', wrapper: 'Connecticut Shade', binder: 'Dominican', filler: 'Dominican', strength: 'mild', flavor_notes: JSON.stringify(['cream', 'floral', 'honey', 'cedar', 'tea']), description: 'A long, slow morning smoke with a creamy Connecticut wrapper. Floral and honey throughout, exceptionally smooth with zero harshness.', year_introduced: 2017 },
+
+  // Pioneer Leaf (5)
+  { brand: 'Pioneer Leaf', name: 'Natural Toro', country: 'Honduras', wrapper: 'Ecuador Natural', binder: 'Honduras', filler: 'Honduras/Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'leather', 'earth', 'nuts', 'coffee']), description: 'A solid, dependable Honduran toro. Earthy and straightforward — the kind of cigar that never lets you down. Great everyday value.', year_introduced: 2016 },
+  { brand: 'Pioneer Leaf', name: 'Maduro Robusto', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Maduro', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'full', flavor_notes: JSON.stringify(['dark chocolate', 'espresso', 'leather', 'earth', 'black pepper']), description: 'Big, bold, and unapologetically full-bodied. The Maduro Robusto packs rich espresso and dark chocolate into every puff.', year_introduced: 2014 },
+  { brand: 'Pioneer Leaf', name: 'Connecticut Corona', country: 'Dominican Republic', wrapper: 'Connecticut Shade', binder: 'Dominican', filler: 'Dominican', strength: 'mild', flavor_notes: JSON.stringify(['cream', 'honey', 'cedar', 'floral', 'vanilla']), description: 'Classic Connecticut construction. Smooth, creamy, and elegant. A reliable smoke that appeals to a wide range of palates.', year_introduced: 2012 },
+  { brand: 'Pioneer Leaf', name: 'Habano Torpedo', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['spice', 'leather', 'cedar', 'cocoa', 'coffee']), description: 'A pointed torpedo with a punchy Habano wrapper. Spice-forward with cocoa and coffee notes developing beautifully through the second third.', year_introduced: 2018 },
+  { brand: 'Pioneer Leaf', name: 'Reserve Churchill', country: 'Dominican Republic', wrapper: 'Ecuador Habano', binder: 'Dominican', filler: 'Dominican/Nicaraguan', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'nuts', 'cream', 'leather', 'spice']), description: 'An elegant long smoke with refined Dominican character. Cedary and creamy with light spice on the finish. Made for a quiet evening.', year_introduced: 2019 },
+
+  // Columbia Select (5)
+  { brand: 'Columbia Select', name: 'Corojo Robusto', country: 'Nicaragua', wrapper: 'Ecuador Corojo', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium-full', flavor_notes: JSON.stringify(['red pepper', 'cedar', 'leather', 'coffee', 'earth']), description: 'A bold, spicy robusto built around an Ecuador Corojo wrapper. Red pepper and cedar up front, softening into rich leather and coffee by the final third.', year_introduced: 2017 },
+  { brand: 'Columbia Select', name: 'Broadleaf Maduro', country: 'Nicaragua', wrapper: 'Connecticut Broadleaf Maduro', binder: 'Nicaragua', filler: 'Nicaragua/Honduras', strength: 'full', flavor_notes: JSON.stringify(['dark chocolate', 'molasses', 'coffee', 'earth', 'leather']), description: 'Rich and indulgent. The Broadleaf Maduro rewards patience — flavors evolve and deepen as you smoke toward the nub.', year_introduced: 2015 },
+  { brand: 'Columbia Select', name: 'Sun Grown Toro', country: 'Nicaragua', wrapper: 'Ecuador Sun Grown', binder: 'Nicaragua', filler: 'Nicaragua', strength: 'medium', flavor_notes: JSON.stringify(['earth', 'leather', 'nuts', 'coffee', 'spice']), description: 'A sun-grown Ecuador wrapper gives this toro unique rustic character. Well-rounded medium body with an earthy, leathery core.', year_introduced: 2019 },
+  { brand: 'Columbia Select', name: 'Natural Lonsdale', country: 'Dominican Republic', wrapper: 'Ecuador Natural', binder: 'Dominican', filler: 'Dominican', strength: 'mild-medium', flavor_notes: JSON.stringify(['cream', 'cedar', 'nuts', 'honey', 'floral']), description: 'An elegant, understated lonsdale for those who like things smooth and refined. Light and airy with cream, cedar, and gentle floral notes.', year_introduced: 2016 },
+  { brand: 'Columbia Select', name: 'Perfecto Reserve', country: 'Nicaragua', wrapper: 'Ecuador Habano', binder: 'Nicaragua', filler: 'Nicaragua/Dominican', strength: 'medium', flavor_notes: JSON.stringify(['cedar', 'leather', 'earth', 'nuts', 'coffee']), description: 'A rare perfecto shape that showcases the blender\'s art. The tapered ends create a unique draw profile — tighter up front, opening beautifully in the middle.', year_introduced: 2022 },
 ];
 
 const vitolasMap = {
-  'Arturo Fuente - Hemingway Short Story': [{ name: 'Short Story', length: 4.0, ring_gauge: 49, msrp: 12 }, { name: 'Masterpiece', length: 9.0, ring_gauge: 52, msrp: 28 }, { name: 'Best Seller', length: 6.0, ring_gauge: 47, msrp: 15 }],
-  'Arturo Fuente - Opus X': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 42 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 50 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 58 }, { name: 'Perfecxion No. 2', length: 6.0, ring_gauge: 52, msrp: 55 }],
-  'Padron - 1964 Anniversary': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 22 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 26 }, { name: 'Imperial', length: 7.0, ring_gauge: 54, msrp: 30 }, { name: 'Hermoso', length: 5.75, ring_gauge: 52, msrp: 25 }, { name: 'Presidente', length: 8.5, ring_gauge: 52, msrp: 35 }],
-  'Padron - 1926 Serie No. 1': [{ name: 'No. 1', length: 6.25, ring_gauge: 54, msrp: 35 }, { name: 'No. 2', length: 5.5, ring_gauge: 54, msrp: 32 }, { name: 'No. 9', length: 5.0, ring_gauge: 56, msrp: 30 }, { name: '80 Anos', length: 6.0, ring_gauge: 54, msrp: 55 }],
-  'Liga Privada - No. 9': [{ name: 'Robusto', length: 5.0, ring_gauge: 52, msrp: 20 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 23 }, { name: 'Churchill', length: 7.0, ring_gauge: 50, msrp: 28 }, { name: 'Corona Viva', length: 5.75, ring_gauge: 46, msrp: 19 }],
-  'Liga Privada - T52': [{ name: 'Robusto', length: 5.0, ring_gauge: 52, msrp: 20 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 23 }, { name: 'Flying Pig', length: 4.5, ring_gauge: 60, msrp: 22 }],
-  'My Father - Le Bijou 1922': [{ name: 'Robusto', length: 5.0, ring_gauge: 52, msrp: 15 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 18 }, { name: 'Churchill', length: 7.0, ring_gauge: 50, msrp: 22 }, { name: 'Torpedo', length: 6.25, ring_gauge: 54, msrp: 19 }],
-  'My Father - Flor de las Antillas': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 11 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 13 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 15 }, { name: 'Gran Toro', length: 6.5, ring_gauge: 54, msrp: 14 }],
-  'Davidoff - Millennium Blend': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 22 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 28 }, { name: 'Lonsdale', length: 6.75, ring_gauge: 44, msrp: 25 }],
-  'Davidoff - Escurio': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 26 }, { name: 'Gran Toro', length: 6.0, ring_gauge: 54, msrp: 32 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 36 }],
-  'Romeo y Julieta - Reserva Real': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 }, { name: 'Toro', length: 6.0, ring_gauge: 50, msrp: 11 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 13 }],
-  'Oliva - Serie V Melanio': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 18 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 21 }, { name: 'Figurado', length: 6.5, ring_gauge: 52, msrp: 22 }, { name: 'Churchill', length: 7.0, ring_gauge: 47, msrp: 24 }, { name: 'Gran Reserva', length: 7.0, ring_gauge: 58, msrp: 30 }],
-  'Oliva - Serie G Maduro': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 11 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 13 }],
-  'Cohiba - Blue': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 12 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 14 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 18 }],
-  'Rocky Patel - Vintage 1990': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 10 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 12 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 14 }, { name: 'Torpedo', length: 6.5, ring_gauge: 52, msrp: 13 }],
-  'Perdomo - Reserve 10th Anniversary Maduro': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 11 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 13 }, { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 15 }],
-  'Ashton - VSG': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 18 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 22 }, { name: 'Churchill', length: 7.25, ring_gauge: 52, msrp: 25 }, { name: 'Torpedo', length: 6.0, ring_gauge: 52, msrp: 22 }],
-  'Macanudo - Inspirado White': [{ name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 }, { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 11 }, { name: 'Corona', length: 5.5, ring_gauge: 42, msrp: 8 }],
+  'Pacific Premium - Morning Mist Robusto': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 8 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 10 },
+  ],
+  'Pacific Premium - Coastline Toro': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 11 },
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 14 },
+  ],
+  'Pacific Premium - Reserve Maduro': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 12 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 15 },
+    { name: 'Gran Toro', length: 6.5, ring_gauge: 54, msrp: 17 },
+  ],
+  'Pacific Premium - Grand Churchill': [
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 16 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 14 },
+  ],
+  'Pacific Premium - Torpedo Select': [
+    { name: 'Torpedo', length: 6.0, ring_gauge: 52, msrp: 11 },
+    { name: 'Short Torpedo', length: 5.0, ring_gauge: 52, msrp: 9 },
+  ],
+  'Cascade Valley - Harvest Robusto': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 10 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 12 },
+  ],
+  'Cascade Valley - Ridge Runner Toro': [
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 14 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 12 },
+    { name: 'Torpedo', length: 6.25, ring_gauge: 52, msrp: 15 },
+  ],
+  'Cascade Valley - Summit Maduro': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 13 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 16 },
+    { name: 'Double Toro', length: 6.0, ring_gauge: 60, msrp: 18 },
+  ],
+  'Cascade Valley - Classic Lonsdale': [
+    { name: 'Lonsdale', length: 6.5, ring_gauge: 44, msrp: 10 },
+    { name: 'Corona', length: 5.5, ring_gauge: 44, msrp: 8 },
+  ],
+  'Cascade Valley - Late Season Corona': [
+    { name: 'Corona', length: 5.5, ring_gauge: 42, msrp: 7 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 },
+  ],
+  'Northwest Blend - Toro No.1': [
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 10 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 8 },
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 13 },
+  ],
+  'Northwest Blend - Robusto No.2': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 9 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 11 },
+  ],
+  'Northwest Blend - Belicoso Reserve': [
+    { name: 'Belicoso', length: 5.5, ring_gauge: 52, msrp: 14 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 15 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 13 },
+  ],
+  'Northwest Blend - Gran Toro': [
+    { name: 'Gran Toro', length: 6.0, ring_gauge: 60, msrp: 16 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 14 },
+  ],
+  'Northwest Blend - Morning Churchill': [
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 13 },
+    { name: 'Lonsdale', length: 6.5, ring_gauge: 44, msrp: 11 },
+  ],
+  'Pioneer Leaf - Natural Toro': [
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 9 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 7 },
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 11 },
+  ],
+  'Pioneer Leaf - Maduro Robusto': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 11 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 13 },
+    { name: 'Short Robusto', length: 4.5, ring_gauge: 50, msrp: 9 },
+  ],
+  'Pioneer Leaf - Connecticut Corona': [
+    { name: 'Corona', length: 5.5, ring_gauge: 42, msrp: 7 },
+    { name: 'Petit Corona', length: 4.5, ring_gauge: 42, msrp: 6 },
+    { name: 'Lonsdale', length: 6.5, ring_gauge: 44, msrp: 9 },
+  ],
+  'Pioneer Leaf - Habano Torpedo': [
+    { name: 'Torpedo', length: 6.0, ring_gauge: 52, msrp: 12 },
+    { name: 'Belicoso', length: 5.5, ring_gauge: 52, msrp: 11 },
+  ],
+  'Pioneer Leaf - Reserve Churchill': [
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 14 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 12 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 10 },
+  ],
+  'Columbia Select - Corojo Robusto': [
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 13 },
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 15 },
+    { name: 'Torpedo', length: 6.25, ring_gauge: 52, msrp: 16 },
+  ],
+  'Columbia Select - Broadleaf Maduro': [
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 16 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 14 },
+    { name: 'Gran Toro', length: 6.5, ring_gauge: 54, msrp: 18 },
+  ],
+  'Columbia Select - Sun Grown Toro': [
+    { name: 'Toro', length: 6.0, ring_gauge: 52, msrp: 12 },
+    { name: 'Robusto', length: 5.0, ring_gauge: 50, msrp: 10 },
+  ],
+  'Columbia Select - Natural Lonsdale': [
+    { name: 'Lonsdale', length: 6.5, ring_gauge: 44, msrp: 9 },
+    { name: 'Corona', length: 5.5, ring_gauge: 42, msrp: 7 },
+    { name: 'Churchill', length: 7.0, ring_gauge: 48, msrp: 12 },
+  ],
+  'Columbia Select - Perfecto Reserve': [
+    { name: 'Perfecto', length: 5.5, ring_gauge: 50, msrp: 15 },
+    { name: 'Gran Perfecto', length: 6.5, ring_gauge: 52, msrp: 18 },
+  ],
 };
 
 async function seed() {
   console.log('Seeding database...');
 
-  // Wipe everything and reset sequences
-  await db.exec(`
-    TRUNCATE TABLE users RESTART IDENTITY CASCADE
-  `);
+  await db.exec('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
 
   const hash = bcrypt.hashSync('password123', 10);
   const adminHash = bcrypt.hashSync('admin123', 10);
 
-  const adminR = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['admin@cigarbuddy.com', adminHash, 'CigarBuddy Admin', 'admin', null, null, null]);
-  const demoR = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['smoker@demo.com', hash, 'Marcus Rivera', 'user', 'Passionate about Nicaraguan puros and aged Dominican blends. Humidor capacity: 200.', 'New Orleans', 'LA']);
-  const user2R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['jane@demo.com', hash, 'Jane Calloway', 'user', 'New to cigars. Love mild to medium sticks. Always looking for recommendations.', 'Atlanta', 'GA']);
-  const su1R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['store1@demo.com', hash, 'The Cigar Vault', 'store', null, null, null]);
-  const su2R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['store2@demo.com', hash, 'Smoke & Ember Lounge', 'store', null, null, null]);
-  const su3R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['store3@demo.com', hash, "Hemingway's Tobacconist", 'store', null, null, null]);
-  const su4R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`, ['store4@demo.com', hash, 'The Smoking Jacket', 'store', null, null, null]);
+  const adminR = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`,
+    ['admin@cigarbuddy.com', adminHash, 'CigarBuddy Admin', 'admin']);
+  const demoR = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+    ['smoker@demo.com', hash, 'Marcus Rivera', 'user', 'Passionate about medium-bodied blends and the occasional maduro. Portland native.', 'Portland', 'OR']);
+  const user2R = await db.run(`INSERT INTO users (email, password_hash, name, account_type, bio, location_city, location_state) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+    ['jane@demo.com', hash, 'Jane Calloway', 'user', 'New to cigars, learning fast. Love mild to medium sticks with coffee.', 'Vancouver', 'WA']);
+
+  const su1R = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`, ['store1@demo.com', hash, 'The Portland Humidor', 'store']);
+  const su2R = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`, ['store2@demo.com', hash, 'Cascade Smoke Shop', 'store']);
+  const su3R = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`, ['store3@demo.com', hash, 'Pearl District Tobacco', 'store']);
+  const su4R = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`, ['store4@demo.com', hash, 'Columbia Cigar Co.', 'store']);
+  const su5R = await db.run(`INSERT INTO users (email, password_hash, name, account_type) VALUES (?, ?, ?, ?) RETURNING id`, ['store5@demo.com', hash, 'Lake Grove Cigars', 'store']);
 
   const uid = demoR.lastInsertRowid, uid2 = user2R.lastInsertRowid;
 
-  const hoursWeekday = JSON.stringify({ Mon: '10am-8pm', Tue: '10am-8pm', Wed: '10am-8pm', Thu: '10am-10pm', Fri: '10am-10pm', Sat: '9am-10pm', Sun: '11am-7pm' });
-  const hoursLounge = JSON.stringify({ Mon: 'Closed', Tue: '2pm-11pm', Wed: '2pm-11pm', Thu: '2pm-12am', Fri: '12pm-2am', Sat: '12pm-2am', Sun: '1pm-9pm' });
-  const hoursMiami = JSON.stringify({ Mon: '10am-9pm', Tue: '10am-9pm', Wed: '10am-9pm', Thu: '10am-9pm', Fri: '10am-10pm', Sat: '9am-11pm', Sun: '10am-8pm' });
-  const hoursChicago = JSON.stringify({ Mon: '11am-7pm', Tue: '11am-7pm', Wed: '11am-7pm', Thu: '11am-8pm', Fri: '11am-9pm', Sat: '10am-9pm', Sun: '12pm-6pm' });
+  const hoursDowntown = JSON.stringify({ Mon: '10am-8pm', Tue: '10am-8pm', Wed: '10am-8pm', Thu: '10am-9pm', Fri: '10am-10pm', Sat: '9am-10pm', Sun: '11am-7pm' });
+  const hoursSE = JSON.stringify({ Mon: '11am-7pm', Tue: '11am-7pm', Wed: '11am-7pm', Thu: '11am-8pm', Fri: '11am-9pm', Sat: '10am-9pm', Sun: '12pm-6pm' });
+  const hoursPearl = JSON.stringify({ Mon: 'Closed', Tue: '1pm-10pm', Wed: '1pm-10pm', Thu: '1pm-11pm', Fri: '12pm-12am', Sat: '11am-12am', Sun: '12pm-8pm' });
+  const hoursVancouver = JSON.stringify({ Mon: '10am-7pm', Tue: '10am-7pm', Wed: '10am-7pm', Thu: '10am-7pm', Fri: '10am-8pm', Sat: '9am-8pm', Sun: '11am-5pm' });
+  const hoursLakeGrove = JSON.stringify({ Mon: '11am-8pm', Tue: '11am-8pm', Wed: '11am-8pm', Thu: '11am-9pm', Fri: '11am-10pm', Sat: '10am-10pm', Sun: '12pm-7pm' });
 
-  const s1R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1) RETURNING id`, [su1R.lastInsertRowid, 'The Cigar Vault', 'Premium cigars and accessories in the heart of downtown. Our walk-in humidor houses over 2,000 SKUs. Weekly smoke nights every Thursday at 7pm.', '142 Bourbon Street', 'New Orleans', 'LA', '70130', '(504) 555-0142', 'thecigarvault.com', hoursWeekday, 0, 1, JSON.stringify(['Walk-in Humidor', 'Accessories', 'Events']), 1]);
-  const s2R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1) RETURNING id`, [su2R.lastInsertRowid, 'Smoke & Ember Lounge', 'A world-class cigar lounge with a full craft cocktail bar. Monthly pairing events, exclusive releases, and a curated walk-in humidor. Our lounge seats 40 guests.', '88 Peachtree Pl NW', 'Atlanta', 'GA', '30309', '(404) 555-0088', 'smokeandemberatl.com', hoursLounge, 1, 1, JSON.stringify(['Lounge', 'Bar', 'Walk-in Humidor', 'Events', 'Rare Finds']), 1]);
-  const s3R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1) RETURNING id`, [su3R.lastInsertRowid, "Hemingway's Tobacconist", 'Old-world tobacconist with roots going back to 1978. Specializing in rare and vintage cigars, custom humidors, and expert consultations. The most knowledgeable staff in South Florida.', '2240 Collins Ave', 'Miami Beach', 'FL', '33139', '(305) 555-2240', 'hemingwaystobacconist.com', hoursMiami, 0, 1, JSON.stringify(['Rare Finds', 'Walk-in Humidor', 'Accessories', 'Custom Humidors']), 1]);
-  const s4R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1) RETURNING id`, [su4R.lastInsertRowid, 'The Smoking Jacket', 'Chicago\'s premier cigar boutique and lounge. Curated selection of premium sticks, whiskey lounge, and a private members club. Home to the monthly "Gentleman\'s Night" tasting event.', '875 N Michigan Ave', 'Chicago', 'IL', '60611', '(312) 555-0875', 'thesmokingjacket.com', hoursChicago, 1, 1, JSON.stringify(['Lounge', 'Members Club', 'Whiskey Bar', 'Walk-in Humidor']), 1]);
+  const s1R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?) RETURNING id`,
+    [su1R.lastInsertRowid, 'The Portland Humidor', 'Downtown Portland\'s premier cigar destination. Our 2,000 sq ft walk-in humidor is the largest in the Pacific Northwest. Weekly smoke nights every Thursday. Expert staff who actually smoke cigars.', '927 SW Morrison St', 'Portland', 'OR', '97205', '(503) 555-0927', 'portlandhumidor.com', hoursDowntown, 1, 1, JSON.stringify(['Walk-in Humidor', 'Lounge', 'Events', 'Accessories']), 1, 45.5193, -122.6817]);
 
-  const store1Id = s1R.lastInsertRowid, store2Id = s2R.lastInsertRowid, store3Id = s3R.lastInsertRowid, store4Id = s4R.lastInsertRowid;
+  const s2R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?) RETURNING id`,
+    [su2R.lastInsertRowid, 'Cascade Smoke Shop', 'A no-frills neighborhood smoke shop on Hawthorne. Great prices, solid selection of everyday smokes. The kind of place where regulars have their own shelf. Cold beer in the fridge.', '3412 SE Hawthorne Blvd', 'Portland', 'OR', '97214', '(503) 555-3412', null, hoursSE, 0, 1, JSON.stringify(['Walk-in Humidor', 'Budget-Friendly', 'Neighborhood Vibe']), 0, 45.5121, -122.6317]);
+
+  const s3R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?) RETURNING id`,
+    [su3R.lastInsertRowid, 'Pearl District Tobacco', 'Upscale cigar lounge and retail shop in the Pearl. Craft cocktail bar, private lockers, and a curated humidor focused on boutique and limited-edition blends. Members get early access to new arrivals.', '1242 NW Everett St', 'Portland', 'OR', '97209', '(503) 555-1242', 'pearldistrict.tobacco', hoursPearl, 1, 1, JSON.stringify(['Lounge', 'Craft Cocktails', 'Private Lockers', 'Boutique Blends', 'Members Club']), 1, 45.5284, -122.6822]);
+
+  const s4R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?) RETURNING id`,
+    [su4R.lastInsertRowid, 'Columbia Cigar Co.', 'Vancouver\'s go-to cigar shop for over 15 years. Friendly staff, fair prices, and a solid everyday selection. No pretension — just good cigars. Walk-in humidor with over 150 SKUs.', '512 W 8th St', 'Vancouver', 'WA', '98660', '(360) 555-0512', 'columbiacigars.com', hoursVancouver, 0, 1, JSON.stringify(['Walk-in Humidor', 'Everyday Value', 'Accessories']), 1, 45.6275, -122.6739]);
+
+  const s5R = await db.run(`INSERT INTO stores (user_id, name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, verified, setup_complete, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?) RETURNING id`,
+    [su5R.lastInsertRowid, 'Lake Grove Cigars', 'A refined neighborhood lounge in Lake Oswego serving Portland\'s south suburbs. Whiskey selection, comfortable leather seating, and a focus on premium smokes. Monthly pairing events.', '15820 Boones Ferry Rd', 'Lake Oswego', 'OR', '97035', '(503) 555-5820', 'lakegrovecigars.com', hoursLakeGrove, 1, 1, JSON.stringify(['Lounge', 'Whiskey Bar', 'Walk-in Humidor', 'Events', 'Premium Selection']), 1, 45.4201, -122.7051]);
+
+  const store1Id = s1R.lastInsertRowid, store2Id = s2R.lastInsertRowid, store3Id = s3R.lastInsertRowid;
+  const store4Id = s4R.lastInsertRowid, store5Id = s5R.lastInsertRowid;
 
   // Insert cigars + vitolas
   const cigarIds = {}, vitolaIds = {};
   for (const c of cigars) {
-    const r = await db.run(`INSERT INTO cigars (brand, name, country, wrapper, binder, filler, strength, flavor_notes, description, year_introduced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
-      [c.brand, c.name, c.country, c.wrapper, c.binder, c.filler, c.strength, c.flavor_notes, c.description, c.year_introduced]);
+    const r = await db.run(
+      `INSERT INTO cigars (brand, name, country, wrapper, binder, filler, strength, flavor_notes, description, year_introduced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+      [c.brand, c.name, c.country, c.wrapper, c.binder, c.filler, c.strength, c.flavor_notes, c.description, c.year_introduced]
+    );
     const key = `${c.brand} - ${c.name}`;
     cigarIds[key] = r.lastInsertRowid;
     vitolaIds[key] = [];
     for (const v of (vitolasMap[key] || [])) {
-      const vr = await db.run(`INSERT INTO vitolas (cigar_id, name, length, ring_gauge, msrp) VALUES (?, ?, ?, ?, ?) RETURNING id`,
-        [r.lastInsertRowid, v.name, v.length, v.ring_gauge, v.msrp]);
+      const vr = await db.run(
+        `INSERT INTO vitolas (cigar_id, name, length, ring_gauge, msrp) VALUES (?, ?, ?, ?, ?) RETURNING id`,
+        [r.lastInsertRowid, v.name, v.length, v.ring_gauge, v.msrp]
+      );
       vitolaIds[key].push({ id: vr.lastInsertRowid, name: v.name, msrp: v.msrp });
     }
   }
@@ -96,134 +225,200 @@ async function seed() {
     const cid = cigarIds[key];
     const vs = vitolaIds[key] || [];
     for (const v of vs) {
-      const price = +(v.msrp * (0.92 + Math.random() * 0.18)).toFixed(2);
-      await db.run(`INSERT INTO inventory (store_id, cigar_id, vitola_id, price, quantity, in_stock, is_featured, is_new_arrival) VALUES (?, ?, ?, ?, ?, 1, ?, ?)`,
-        [storeId, cid, v.id, price, Math.floor(Math.random() * 35) + 5, featured, newArrival]);
+      const price = +(v.msrp * (0.9 + Math.random() * 0.2)).toFixed(2);
+      await db.run(
+        `INSERT INTO inventory (store_id, cigar_id, vitola_id, price, quantity, in_stock, is_featured, is_new_arrival) VALUES (?, ?, ?, ?, ?, 1, ?, ?)`,
+        [storeId, cid, v.id, price, Math.floor(Math.random() * 30) + 5, featured, newArrival]
+      );
     }
   }
 
-  await addToStore(store1Id, 'Arturo Fuente - Hemingway Short Story', 1);
-  await addToStore(store1Id, 'Arturo Fuente - Opus X', 1);
-  await addToStore(store1Id, 'Padron - 1964 Anniversary', 1);
-  await addToStore(store1Id, 'Liga Privada - No. 9');
-  await addToStore(store1Id, 'My Father - Flor de las Antillas');
-  await addToStore(store1Id, 'Oliva - Serie V Melanio');
-  await addToStore(store1Id, 'Rocky Patel - Vintage 1990');
-  await addToStore(store1Id, 'Macanudo - Inspirado White');
-  await addToStore(store1Id, 'Romeo y Julieta - Reserva Real');
-  await addToStore(store1Id, 'Perdomo - Reserve 10th Anniversary Maduro', 0, 1);
+  // Store 1: The Portland Humidor — premium, broad selection
+  await addToStore(store1Id, 'Pacific Premium - Reserve Maduro', 1);
+  await addToStore(store1Id, 'Pacific Premium - Grand Churchill', 1);
+  await addToStore(store1Id, 'Pacific Premium - Torpedo Select');
+  await addToStore(store1Id, 'Pacific Premium - Coastline Toro');
+  await addToStore(store1Id, 'Northwest Blend - Belicoso Reserve', 1);
+  await addToStore(store1Id, 'Northwest Blend - Gran Toro');
+  await addToStore(store1Id, 'Northwest Blend - Toro No.1');
+  await addToStore(store1Id, 'Cascade Valley - Ridge Runner Toro', 0, 1);
+  await addToStore(store1Id, 'Cascade Valley - Summit Maduro');
+  await addToStore(store1Id, 'Columbia Select - Corojo Robusto', 1);
+  await addToStore(store1Id, 'Columbia Select - Broadleaf Maduro', 1);
+  await addToStore(store1Id, 'Columbia Select - Perfecto Reserve', 0, 1);
+  await addToStore(store1Id, 'Pioneer Leaf - Reserve Churchill');
+  await addToStore(store1Id, 'Pioneer Leaf - Habano Torpedo');
 
-  await addToStore(store2Id, 'Liga Privada - No. 9', 1);
-  await addToStore(store2Id, 'Liga Privada - T52', 1, 1);
-  await addToStore(store2Id, 'My Father - Le Bijou 1922', 1);
-  await addToStore(store2Id, 'Padron - 1964 Anniversary');
-  await addToStore(store2Id, 'Oliva - Serie G Maduro');
-  await addToStore(store2Id, 'Davidoff - Escurio');
-  await addToStore(store2Id, 'Romeo y Julieta - Reserva Real');
-  await addToStore(store2Id, 'Ashton - VSG', 0, 1);
-  await addToStore(store2Id, 'Cohiba - Blue');
+  // Store 2: Cascade Smoke Shop — everyday smokes, budget-friendly
+  await addToStore(store2Id, 'Pacific Premium - Morning Mist Robusto', 1);
+  await addToStore(store2Id, 'Pacific Premium - Coastline Toro', 1);
+  await addToStore(store2Id, 'Cascade Valley - Harvest Robusto', 1);
+  await addToStore(store2Id, 'Cascade Valley - Classic Lonsdale');
+  await addToStore(store2Id, 'Cascade Valley - Late Season Corona');
+  await addToStore(store2Id, 'Cascade Valley - Ridge Runner Toro');
+  await addToStore(store2Id, 'Northwest Blend - Toro No.1', 0, 1);
+  await addToStore(store2Id, 'Northwest Blend - Robusto No.2');
+  await addToStore(store2Id, 'Northwest Blend - Morning Churchill');
+  await addToStore(store2Id, 'Pioneer Leaf - Natural Toro', 1);
+  await addToStore(store2Id, 'Pioneer Leaf - Connecticut Corona');
+  await addToStore(store2Id, 'Pioneer Leaf - Maduro Robusto');
 
-  await addToStore(store3Id, 'Padron - 1926 Serie No. 1', 1);
-  await addToStore(store3Id, 'Arturo Fuente - Opus X', 1);
-  await addToStore(store3Id, 'Davidoff - Millennium Blend', 1);
-  await addToStore(store3Id, 'Davidoff - Escurio');
-  await addToStore(store3Id, 'My Father - Le Bijou 1922');
-  await addToStore(store3Id, 'Cohiba - Blue');
-  await addToStore(store3Id, 'Oliva - Serie V Melanio');
-  await addToStore(store3Id, 'Ashton - VSG', 0, 1);
-  await addToStore(store3Id, 'Rocky Patel - Vintage 1990');
+  // Store 3: Pearl District Tobacco — boutique, lounge-focused, bold selections
+  await addToStore(store3Id, 'Columbia Select - Corojo Robusto', 1);
+  await addToStore(store3Id, 'Columbia Select - Broadleaf Maduro', 1);
+  await addToStore(store3Id, 'Columbia Select - Sun Grown Toro', 1, 1);
+  await addToStore(store3Id, 'Columbia Select - Natural Lonsdale');
+  await addToStore(store3Id, 'Columbia Select - Perfecto Reserve', 1);
+  await addToStore(store3Id, 'Pacific Premium - Reserve Maduro');
+  await addToStore(store3Id, 'Pacific Premium - Torpedo Select', 0, 1);
+  await addToStore(store3Id, 'Northwest Blend - Belicoso Reserve', 1);
+  await addToStore(store3Id, 'Northwest Blend - Gran Toro');
+  await addToStore(store3Id, 'Pioneer Leaf - Habano Torpedo');
+  await addToStore(store3Id, 'Pioneer Leaf - Reserve Churchill');
+  await addToStore(store3Id, 'Cascade Valley - Summit Maduro', 0, 1);
 
-  await addToStore(store4Id, 'Arturo Fuente - Opus X', 1);
-  await addToStore(store4Id, 'Padron - 1926 Serie No. 1', 1);
-  await addToStore(store4Id, 'Liga Privada - No. 9', 1);
-  await addToStore(store4Id, 'Davidoff - Millennium Blend', 0, 1);
-  await addToStore(store4Id, 'My Father - Le Bijou 1922');
-  await addToStore(store4Id, 'Ashton - VSG');
-  await addToStore(store4Id, 'Oliva - Serie V Melanio');
-  await addToStore(store4Id, 'Perdomo - Reserve 10th Anniversary Maduro');
-  await addToStore(store4Id, 'Cohiba - Blue');
+  // Store 4: Columbia Cigar Co. (Vancouver, WA) — value-focused, everyday variety
+  await addToStore(store4Id, 'Pioneer Leaf - Natural Toro', 1);
+  await addToStore(store4Id, 'Pioneer Leaf - Connecticut Corona', 1);
+  await addToStore(store4Id, 'Pioneer Leaf - Maduro Robusto');
+  await addToStore(store4Id, 'Pioneer Leaf - Reserve Churchill');
+  await addToStore(store4Id, 'Cascade Valley - Harvest Robusto', 1);
+  await addToStore(store4Id, 'Cascade Valley - Classic Lonsdale');
+  await addToStore(store4Id, 'Cascade Valley - Late Season Corona');
+  await addToStore(store4Id, 'Cascade Valley - Ridge Runner Toro');
+  await addToStore(store4Id, 'Northwest Blend - Toro No.1', 1);
+  await addToStore(store4Id, 'Northwest Blend - Robusto No.2');
+  await addToStore(store4Id, 'Northwest Blend - Morning Churchill', 0, 1);
+  await addToStore(store4Id, 'Pacific Premium - Morning Mist Robusto');
+  await addToStore(store4Id, 'Pacific Premium - Coastline Toro');
+
+  // Store 5: Lake Grove Cigars — premium suburban lounge, curated
+  await addToStore(store5Id, 'Pacific Premium - Grand Churchill', 1);
+  await addToStore(store5Id, 'Pacific Premium - Reserve Maduro', 1);
+  await addToStore(store5Id, 'Pacific Premium - Torpedo Select');
+  await addToStore(store5Id, 'Columbia Select - Broadleaf Maduro', 1);
+  await addToStore(store5Id, 'Columbia Select - Corojo Robusto', 1, 1);
+  await addToStore(store5Id, 'Columbia Select - Perfecto Reserve');
+  await addToStore(store5Id, 'Columbia Select - Sun Grown Toro');
+  await addToStore(store5Id, 'Pioneer Leaf - Maduro Robusto');
+  await addToStore(store5Id, 'Pioneer Leaf - Reserve Churchill', 0, 1);
+  await addToStore(store5Id, 'Cascade Valley - Ridge Runner Toro');
+  await addToStore(store5Id, 'Cascade Valley - Summit Maduro', 1);
+  await addToStore(store5Id, 'Northwest Blend - Belicoso Reserve');
+  await addToStore(store5Id, 'Northwest Blend - Gran Toro', 0, 1);
 
   // Reviews
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid, cigarIds['Padron - 1964 Anniversary'], vitolaIds['Padron - 1964 Anniversary'][0].id, 97, 5, 5, 5, JSON.stringify(['dark chocolate', 'espresso', 'earth', 'leather']), 'full', 75, 'Aged Rum', 'Absolutely magnificent from start to finish. The construction is flawless — an even, razor-thin burn line throughout. Dark chocolate and espresso notes that just get richer through the second third. This is why Padron is legendary.']);
+    [uid, cigarIds['Pacific Premium - Reserve Maduro'], vitolaIds['Pacific Premium - Reserve Maduro'][0].id, 92, 5, 5, 4, JSON.stringify(['dark chocolate', 'espresso', 'leather']), 'medium-full', 65, 'Stumptown cold brew', 'Really solid maduro for the price. Dark chocolate up front, leather comes in around halfway. Burn was razor sharp. Pairs perfectly with cold brew — became one of my regular smokes.']);
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid, cigarIds['Liga Privada - No. 9'], vitolaIds['Liga Privada - No. 9'][0].id, 95, 4, 5, 5, JSON.stringify(['dark chocolate', 'espresso', 'cream', 'pepper']), 'full', 65, 'Bourbon', 'The No. 9 remains one of the most consistent smokes on the market. Rich cream and dark chocolate opening, transitioning to a peppery finish. Paired beautifully with a Woodford Reserve.']);
+    [uid, cigarIds['Columbia Select - Corojo Robusto'], vitolaIds['Columbia Select - Corojo Robusto'][0].id, 94, 5, 4, 5, JSON.stringify(['red pepper', 'cedar', 'leather', 'coffee']), 'medium-full', 60, 'Rye whiskey', 'The Corojo wrapper is the star here — punchy red pepper right away then settles into gorgeous leather and coffee. Construction was near perfect. Great with a rye whiskey.']);
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid, cigarIds['Arturo Fuente - Opus X'], vitolaIds['Arturo Fuente - Opus X'][0].id, 98, 5, 5, 5, JSON.stringify(['cedar', 'spice', 'chocolate', 'leather', 'coffee']), 'medium-full', 90, 'Espresso', 'One of the best cigars I have ever smoked. The Rosado wrapper is stunning and the complexity just keeps evolving. If you can find one, buy it.']);
+    [uid, cigarIds['Cascade Valley - Ridge Runner Toro'], vitolaIds['Cascade Valley - Ridge Runner Toro'][0].id, 90, 4, 5, 4, JSON.stringify(['cocoa', 'leather', 'black pepper', 'earth']), 'medium-full', 70, 'Black coffee', 'Smoked this on my back porch during a rainy Portland evening. Exactly the right cigar for the mood. Cocoa and earth throughout, good construction, never went out on me.']);
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid2, cigarIds['Romeo y Julieta - Reserva Real'], vitolaIds['Romeo y Julieta - Reserva Real'][0].id, 88, 4, 4, 5, JSON.stringify(['cedar', 'cream', 'honey']), 'mild-medium', 50, 'Coffee', 'Perfect for someone newer to cigars like me. Very approachable, no harshness, lovely creamy notes. Will definitely buy a box.']);
+    [uid, cigarIds['Northwest Blend - Toro No.1'], vitolaIds['Northwest Blend - Toro No.1'][0].id, 87, 5, 4, 4, JSON.stringify(['cedar', 'earth', 'nuts', 'pepper']), 'medium', 55, 'IPA', 'Great everyday smoke. Nothing flashy but reliable and consistent. Picked it up at Cascade Smoke Shop on a whim and was pleasantly surprised. Would buy a bundle.']);
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid2, cigarIds['Macanudo - Inspirado White'], vitolaIds['Macanudo - Inspirado White'][0].id, 86, 5, 5, 4, JSON.stringify(['cream', 'honey', 'cedar', 'floral']), 'mild', 45, 'Cappuccino', 'Incredibly smooth and forgiving. Great evening smoke when I want something relaxing. The construction is impressive at this price point.']);
+    [uid2, cigarIds['Pacific Premium - Morning Mist Robusto'], vitolaIds['Pacific Premium - Morning Mist Robusto'][0].id, 88, 5, 5, 4, JSON.stringify(['cream', 'cedar', 'honey', 'floral']), 'mild', 45, 'Latte', 'My first ever cigar and it was amazing. So smooth, no harshness at all. The honey and floral notes were something I did not expect. The staff at Columbia Cigar helped me pick this one and they nailed it.']);
   await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [uid, cigarIds['Davidoff - Escurio'], vitolaIds['Davidoff - Escurio'][0].id, 93, 5, 5, 5, JSON.stringify(['cocoa', 'dark fruit', 'coffee', 'leather']), 'medium-full', 70, 'Single Malt Scotch', 'Davidoff proves they can do bold. The Mata Fina wrapper gives it an incredible oiliness and the dark fruit notes are captivating. World-class construction as expected from Davidoff.']);
+    [uid2, cigarIds['Cascade Valley - Classic Lonsdale'], vitolaIds['Cascade Valley - Classic Lonsdale'][0].id, 85, 4, 4, 5, JSON.stringify(['cream', 'cedar', 'nuts', 'honey']), 'mild-medium', 55, 'Herbal tea', 'Beautiful looking cigar. Smells amazing before you even light it. I am still new to this but the creamy nut flavors were exactly what I was looking for. Very forgiving smoke.']);
+  await db.run(`INSERT INTO reviews (user_id, cigar_id, vitola_id, rating, draw_rating, burn_rating, appearance_rating, flavor_notes, strength_experienced, smoke_time, pairing, review_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Columbia Select - Broadleaf Maduro'], vitolaIds['Columbia Select - Broadleaf Maduro'][0].id, 96, 5, 5, 5, JSON.stringify(['dark chocolate', 'molasses', 'coffee', 'leather']), 'full', 80, 'Aged bourbon', 'Best maduro I have had in a long time. The molasses note on the retrohale is something else. Picked this up at Pearl District and the staff decanted it perfectly. Pairs unbelievably with bourbon.']);
 
-  // Humidor
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid, cigarIds['Padron - 1926 Serie No. 1'], vitolaIds['Padron - 1926 Serie No. 1'][0].id, 'humidor', 10, 33.00, '2025-10-15', 'Aging these for special occasions. Already showing wonderful depth.', '2027-01-01']);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid, cigarIds['Arturo Fuente - Opus X'], vitolaIds['Arturo Fuente - Opus X'][0].id, 'humidor', 5, 45.00, '2026-01-20', "Lucky grab from Hemingway's. These are hard to find.", null]);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid, cigarIds['Liga Privada - No. 9'], vitolaIds['Liga Privada - No. 9'][1].id, 'smoked', 1, 22.00, '2026-03-01', 'Smoked on the porch watching the sunset. One of the best sessions of the year.', null]);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid, cigarIds['Davidoff - Millennium Blend'], vitolaIds['Davidoff - Millennium Blend'][0].id, 'humidor', 3, 22.00, '2026-04-01', 'Gifted from a friend. Saving for a special dinner.', null]);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid, cigarIds['Padron - 1964 Anniversary'], vitolaIds['Padron - 1964 Anniversary'][2].id, 'wishlist', 1, null, null, 'Imperial size — the white whale. Need to track down a box.', null]);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid2, cigarIds['Macanudo - Inspirado White'], vitolaIds['Macanudo - Inspirado White'][0].id, 'humidor', 5, 8.50, '2026-04-10', 'My everyday smoke. Love these.', null]);
-  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [uid2, cigarIds['Romeo y Julieta - Reserva Real'], vitolaIds['Romeo y Julieta - Reserva Real'][1].id, 'humidor', 3, 10.00, '2026-04-20', 'Picked up after my first review. Great value.', null]);
+  // Humidor items for demo users
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Pacific Premium - Reserve Maduro'], vitolaIds['Pacific Premium - Reserve Maduro'][1].id, 'humidor', 10, 14.50, '2026-05-10', 'Box purchase from Portland Humidor. Letting these rest a few months.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Columbia Select - Corojo Robusto'], vitolaIds['Columbia Select - Corojo Robusto'][0].id, 'humidor', 5, 13.00, '2026-06-01', 'Great after-dinner smoke.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Northwest Blend - Belicoso Reserve'], vitolaIds['Northwest Blend - Belicoso Reserve'][0].id, 'humidor', 3, 13.50, '2026-06-10', 'Picked up at a Thursday smoke night.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Cascade Valley - Ridge Runner Toro'], vitolaIds['Cascade Valley - Ridge Runner Toro'][0].id, 'smoked', 1, 13.00, '2026-05-25', 'Rainy porch smoke. Perfect.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid, cigarIds['Columbia Select - Broadleaf Maduro'], vitolaIds['Columbia Select - Broadleaf Maduro'][0].id, 'wishlist', 1, null, null, 'Need to grab a box of these from Pearl District.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid2, cigarIds['Pacific Premium - Morning Mist Robusto'], vitolaIds['Pacific Premium - Morning Mist Robusto'][0].id, 'humidor', 5, 7.50, '2026-06-15', 'My go-to. Always keeping 5 on hand.']);
+  await db.run(`INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uid2, cigarIds['Cascade Valley - Classic Lonsdale'], vitolaIds['Cascade Valley - Classic Lonsdale'][0].id, 'humidor', 3, 9.50, '2026-06-20', 'Second purchase. Love these.']);
 
-  // Follows
-  for (const [userId, storeId] of [[uid, store1Id], [uid, store2Id], [uid, store3Id], [uid2, store1Id], [uid2, store2Id]]) {
+  // Store follows
+  for (const [userId, storeId] of [[uid, store1Id], [uid, store3Id], [uid, store5Id], [uid2, store4Id], [uid2, store2Id], [uid2, store1Id]]) {
     await db.run('INSERT INTO store_follows (user_id, store_id, notify_broadcasts, notify_deals, notify_new_arrivals) VALUES (?, ?, 1, 1, 1)', [userId, storeId]);
   }
 
   // Deals
-  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`, [store1Id, '20% Off Hemingway Short Story Boxes', 'Stock up on one of the finest figurados in the world. 20% off all box purchases of the Arturo Fuente Hemingway Short Story this week only.', 20, cigarIds['Arturo Fuente - Hemingway Short Story'], '2026-05-15']);
-  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`, [store2Id, 'Liga Privada Tasting Night — May 8th', 'Join us for an exclusive Liga Privada tasting event. Sample No. 9 and T52 side by side with guided tasting notes. $35 per person includes 2 sticks and cocktails.', null, cigarIds['Liga Privada - No. 9'], '2026-05-08']);
-  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`, [store3Id, 'New Arrival: Opus X Allocation In', 'We just received our quarterly Opus X allocation. Strictly limited — max 5 per customer. Come in or call ahead.', null, cigarIds['Arturo Fuente - Opus X'], '2026-05-20']);
-  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`, [store4Id, '15% Off Davidoff Millennium Blend', 'Celebrating the return of our Davidoff partnership with a one-week special on Millennium Blend singles and bundles.', 15, cigarIds['Davidoff - Millennium Blend'], '2026-05-10']);
-  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`, [store1Id, 'Thursday Smoke Night — Free Admission', 'Join us every Thursday evening for our signature smoke night. $2 off all singles, drink specials, and great company. All skill levels welcome.', null, null, '2026-12-31']);
+  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`,
+    [store1Id, 'Thursday Smoke Night — June 26th', 'Join us this Thursday for our weekly smoke night. Featured cigar: Columbia Select Corojo Robusto. $5 off this stick all night, plus drink specials. No RSVP needed.', null, cigarIds['Columbia Select - Corojo Robusto'], '2026-07-01']);
+  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`,
+    [store2Id, '5 for $35 — Northwest Blend Toro No.1', 'Stock up on the most popular everyday smoke in Portland. Buy 5 Northwest Blend Toro No.1 singles for $35 — that\'s $7 each. This week only.', null, cigarIds['Northwest Blend - Toro No.1'], '2026-07-05']);
+  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`,
+    [store3Id, 'New Arrival: Columbia Select Sun Grown Toro', 'Just landed — the Columbia Select Sun Grown Toro. Ecuador sun-grown wrapper, medium body, complex earthy profile. First week price: $10.50.', null, cigarIds['Columbia Select - Sun Grown Toro'], '2026-07-10']);
+  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`,
+    [store4Id, '10% Off All Pioneer Leaf Singles', 'Celebrating 15 years in Vancouver! 10% off every Pioneer Leaf single this weekend — Sat and Sun only. No purchase minimum.', 10, null, '2026-06-29']);
+  await db.run(`INSERT INTO deals (store_id, title, description, discount_percent, cigar_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)`,
+    [store5Id, 'Monthly Pairing Night — Bourbon & Maduro', 'Join us July 12th for our bourbon and maduro pairing event. Three cigars, three bourbons, guided tasting notes. $55 per person. Limited to 20 seats — book early.', null, cigarIds['Columbia Select - Broadleaf Maduro'], '2026-07-12']);
 
   // Store ratings
-  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid, store1Id, 5, 'Best cigar shop in New Orleans. The staff really knows their stuff and the walk-in humidor is incredible.']);
-  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid, store2Id, 4, 'Love the lounge atmosphere. Cocktails are excellent. Selection is top notch.']);
-  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid2, store1Id, 5, "So helpful with beginners. They pointed me to the perfect first cigars and I've been coming back weekly."]);
-  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid2, store2Id, 5, 'The tasting events are worth every penny. Learned so much about pairing.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid, store1Id, 5, 'Best walk-in humidor in the city. Staff is incredibly knowledgeable and never pushy. Thursday smoke nights are a highlight of my week.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid, store3Id, 5, 'The lounge at Pearl District is unmatched. Cocktails are great, selection is curated, and the atmosphere is exactly what you want.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid, store5Id, 4, 'Great whiskey selection and comfortable seating. A bit of a drive from Portland proper but absolutely worth it.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid2, store4Id, 5, 'Everyone was so helpful when I was just starting out. Never made me feel like a newbie. Great prices too.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid2, store2Id, 4, 'No frills but exactly what you need. Cold beer in the fridge, solid prices, and the regulars are friendly.']);
+  await db.run(`INSERT INTO store_ratings (user_id, store_id, rating, comment) VALUES (?, ?, ?, ?)`, [uid2, store1Id, 5, 'Huge humidor, great staff, and the smoke nights are super welcoming for newer folks like me.']);
 
   // Store views (last 14 days)
   const viewInserts = [];
   for (let d = 0; d < 14; d++) {
     const date = new Date(Date.now() - d * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    const v1 = Math.floor(Math.random() * 20) + 5;
-    const v2 = Math.floor(Math.random() * 15) + 3;
-    for (let v = 0; v < v1; v++) viewInserts.push(db.run('INSERT INTO store_views (store_id, viewed_at) VALUES (?, ?)', [store1Id, `${date} 12:00:00`]));
-    for (let v = 0; v < v2; v++) viewInserts.push(db.run('INSERT INTO store_views (store_id, viewed_at) VALUES (?, ?)', [store2Id, `${date} 12:00:00`]));
+    for (const [sid, base] of [[store1Id, 18], [store2Id, 12], [store3Id, 15], [store4Id, 10], [store5Id, 8]]) {
+      const count = Math.floor(Math.random() * base) + 3;
+      for (let v = 0; v < count; v++) viewInserts.push(db.run('INSERT INTO store_views (store_id, viewed_at) VALUES (?, ?)', [sid, `${date} 12:00:00`]));
+    }
   }
   await Promise.all(viewInserts);
 
   // Notifications
-  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`, [store1Id, '🔥 New Arrival: Perdomo Reserve 10th Anniversary', 'We just got a fresh shipment of the Perdomo Reserve 10th Anniversary Maduro. Limited quantities available — come in while they last!', 'new_arrival', cigarIds['Perdomo - Reserve 10th Anniversary Maduro']]);
-  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`, [store2Id, 'Liga Privada T52 Flying Pig Back In Stock!', 'By popular demand — the T52 Flying Pig is back. Picked up an allocation from Drew Estate. First come first served. Members get first pick tonight.', 'new_arrival', cigarIds['Liga Privada - T52']]);
-  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`, [store1Id, 'Thursday Smoke Night This Week: Dominican Night', "This Thursday we're going full Dominican. Featuring Arturo Fuente across the lineup with a special mystery Opus X tasting. $15 entry includes your first stick.", 'event', null]);
-  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`, [store2Id, '20% Off All Singles This Weekend Only', 'Memorial Day weekend special — 20% off every single cigar in the humidor Friday through Sunday. Lounge open until 2am Friday and Saturday.', 'deal', null]);
-  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`, [store3Id, 'Limited: 2020 Opus X Perfecxion No. 2 Available', 'We sourced a small lot of 2020 vintage Opus X Perfecxion No. 2. Rarely available. Max 2 per customer. Call or come in.', 'announcement', cigarIds['Arturo Fuente - Opus X']]);
+  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`,
+    [store1Id, 'New Arrival: Columbia Select Perfecto Reserve', 'Just got in a fresh batch of the Columbia Select Perfecto Reserve — one of the most unique shapes we carry. Limited quantity. Come in or call ahead.', 'new_arrival', cigarIds['Columbia Select - Perfecto Reserve']]);
+  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`,
+    [store2Id, 'Northwest Blend Toro No.1 Back in Full Stock', 'We restocked the shelves with Northwest Blend Toro No.1 — our best-selling everyday smoke. Fresh rotation just hit the humidor.', 'new_arrival', cigarIds['Northwest Blend - Toro No.1']]);
+  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`,
+    [store3Id, 'Members: Early Access to Sun Grown Toro', 'Pearl District members get 48-hour early access to our new Columbia Select Sun Grown Toro before it opens to the public. Stop by or call to hold yours.', 'announcement', cigarIds['Columbia Select - Sun Grown Toro']]);
+  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`,
+    [store4Id, '15th Anniversary Weekend — 10% Off Everything', 'Columbia Cigar Co. turns 15 this weekend! Celebrating with 10% off all singles Saturday and Sunday. Thanks for 15 years of support, Vancouver.', 'deal', null]);
+  await db.run(`INSERT INTO notifications (store_id, title, message, type, cigar_id) VALUES (?, ?, ?, ?, ?)`,
+    [store5Id, 'July Pairing Night Tickets Now Available', 'Our July bourbon and maduro pairing night is filling up fast. Only 8 seats left. $55 includes three cigars and three bourbons with guided tasting notes.', 'event', null]);
 
-  // Smoke lists
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid, cigarIds['Padron - 1926 Serie No. 1'], 'high', "Everyone says the 80 Anos is the best cigar they've ever had. Need to try before I die.", 'Robert on the Cigar Dojo forum']);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid, cigarIds['Arturo Fuente - Hemingway Short Story'], 'high', 'Heard this is the best value Fuente. The figurado shape intrigues me.', null]);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid, cigarIds['Liga Privada - T52'], 'medium', 'Love the No. 9 so the T52 should be interesting. Broadleaf wrapper instead of Habano.', "Tasted it at a friend's and loved it"]);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid, cigarIds['Davidoff - Millennium Blend'], 'medium', 'Want to try a world-class mild smoke. Davidoff is the benchmark.', 'Cigar Aficionado review']);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid, cigarIds['Ashton - VSG'], 'low', 'VSG is supposed to be excellent. Dominican complexity in a sungrown wrapper.', null]);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid2, cigarIds['Romeo y Julieta - Reserva Real'], 'high', "My friend loves these. Perfect for a beginner like me.", "Jane's friend Lisa"]);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid2, cigarIds['Macanudo - Inspirado White'], 'medium', "Heard it's super smooth and approachable. Good starting point.", 'Staff at The Cigar Vault']);
-  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`, [uid2, cigarIds['My Father - Flor de las Antillas'], 'low', 'Cigar of the Year 2012 — have to try it eventually.', 'CigarBuddy community']);
+  // Smoke list
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid, cigarIds['Columbia Select - Broadleaf Maduro'], 'high', 'Everyone at Thursday smoke night raves about this. Need to try the Gran Toro size.', 'Staff at Portland Humidor']);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid, cigarIds['Columbia Select - Perfecto Reserve'], 'high', 'The perfecto shape intrigues me. Never smoked one before.', null]);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid, cigarIds['Pacific Premium - Grand Churchill'], 'medium', 'Saving for a long Saturday afternoon session.', 'Spotted at Lake Grove']);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid, cigarIds['Pioneer Leaf - Habano Torpedo'], 'medium', 'Heard the torpedo cuts really well with this blend.', 'Forum recommendation']);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid, cigarIds['Cascade Valley - Summit Maduro'], 'low', 'Want to compare this to the Pacific Premium Reserve Maduro side by side.', null]);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid2, cigarIds['Pacific Premium - Coastline Toro'], 'high', 'Stepping up from the Morning Mist. This seems like the natural next one.', 'Staff at Columbia Cigar Co.']);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid2, cigarIds['Northwest Blend - Robusto No.2'], 'medium', 'Heard it is a bit bolder than my usual but approachable. Want to try.', 'Jane\'s friend at work']);
+  await db.run(`INSERT INTO smoke_list (user_id, cigar_id, priority, notes, recommended_by, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
+    [uid2, cigarIds['Cascade Valley - Late Season Corona'], 'low', 'Short smoke for busy evenings. Seems perfect.', null]);
 
   // Verification requests
-  await db.run(`INSERT INTO verification_requests (store_id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [store4Id, 'The Smoking Jacket LLC', '47-1234567', '(312) 555-0875', '875 N Michigan Ave, Chicago, IL 60611', 'thesmokingjacket.com', 'IL-LIQ-2019-00847', 'We have been in business since 2019. State tobacco retail license attached. References available on request.', 'pending']);
-  await db.run(`INSERT INTO verification_requests (store_id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [store3Id, "Hemingway's Tobacconist Inc.", '65-9876543', '(305) 555-2240', '2240 Collins Ave, Miami Beach, FL 33139', 'hemingwaystobacconist.com', 'FL-TB-1978-00023', 'Established 1978. Florida state tobacco dealer license #FL-TB-1978-00023. Family owned and operated for 48 years.', 'approved']);
+  await db.run(`INSERT INTO verification_requests (store_id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [store2Id, 'Cascade Smoke Shop LLC', '91-2345678', '(503) 555-3412', '3412 SE Hawthorne Blvd, Portland, OR 97214', null, 'OR-TB-2009-00341', 'Independent shop operating since 2009. Oregon state tobacco retail license attached.', 'pending']);
 
-  console.log('✅ Seed complete!');
+  console.log('\n✅ Seed complete!');
   console.log('\nDemo accounts:');
-  console.log('  Smoker:  smoker@demo.com / password123');
-  console.log('  User 2:  jane@demo.com / password123');
-  console.log('  Store 1: store1@demo.com / password123 (The Cigar Vault — New Orleans)');
-  console.log('  Store 2: store2@demo.com / password123 (Smoke & Ember — Atlanta)');
-  console.log('  Store 3: store3@demo.com / password123 (Hemingway\'s — Miami Beach)');
-  console.log('  Store 4: store4@demo.com / password123 (The Smoking Jacket — Chicago)');
+  console.log('  Smoker:  smoker@demo.com / password123 (Marcus Rivera — Portland, OR)');
+  console.log('  User 2:  jane@demo.com / password123 (Jane Calloway — Vancouver, WA)');
+  console.log('  Store 1: store1@demo.com / password123 (The Portland Humidor — Downtown Portland)');
+  console.log('  Store 2: store2@demo.com / password123 (Cascade Smoke Shop — SE Portland)');
+  console.log('  Store 3: store3@demo.com / password123 (Pearl District Tobacco — NW Portland)');
+  console.log('  Store 4: store4@demo.com / password123 (Columbia Cigar Co. — Vancouver, WA)');
+  console.log('  Store 5: store5@demo.com / password123 (Lake Grove Cigars — Lake Oswego)');
+  console.log('  Admin:   admin@cigarbuddy.com / admin123');
 
   await db.pool.end();
 }
