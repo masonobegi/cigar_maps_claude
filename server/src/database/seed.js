@@ -156,7 +156,7 @@ const vitolasMap = {
 };
 
 async function seed() {
-  const { rows } = await db.query('SELECT COUNT(*)::int AS count FROM users');
+  const { rows } = await db.pool.query('SELECT COUNT(*)::int AS count FROM users');
   if (rows[0].count > 0) {
     console.log('[seed] Database already has data — skipping seed.');
     return;
