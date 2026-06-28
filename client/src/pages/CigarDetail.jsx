@@ -10,38 +10,61 @@ import ShareButton from '../components/ShareButton';
 import BackButton from '../components/BackButton';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
-const STRENGTH_LABEL = { 'mild': 'Mild', 'mild-medium': 'Mild-Medium', 'medium': 'Medium', 'medium-full': 'Medium-Full', 'full': 'Full' };
-const FLAVOR_COLORS = {
-  'cedar': 'bg-amber-900/30 text-amber-400', 'leather': 'bg-yellow-900/30 text-yellow-500',
-  'earth': 'bg-stone-700/40 text-stone-300', 'coffee': 'bg-yellow-950/60 text-yellow-600',
-  'chocolate': 'bg-amber-950/50 text-amber-600', 'dark chocolate': 'bg-amber-950/60 text-amber-500',
-  'espresso': 'bg-stone-800 text-stone-300', 'pepper': 'bg-red-900/30 text-red-400',
-  'cream': 'bg-stone-600/30 text-stone-300', 'nuts': 'bg-yellow-900/30 text-yellow-400',
-  'spice': 'bg-orange-900/30 text-orange-400', 'dark fruit': 'bg-purple-900/30 text-purple-400',
-  'default': 'bg-stone-800 text-stone-400',
+const NAVY  = '#12213D';
+const MUTED = '#6B7280';
+const AMBER = '#92510A';
+
+const STRENGTH_LABEL = { mild: 'Mild', 'mild-medium': 'Mild-Medium', medium: 'Medium', 'medium-full': 'Medium-Full', full: 'Full' };
+
+const STRENGTH_BADGE = {
+  mild:          { bg: '#DCFCE7', color: '#166534', border: '#BBF7D0' },
+  'mild-medium': { bg: '#F0FDF4', color: '#15803D', border: '#BBF7D0' },
+  medium:        { bg: '#FEF3C7', color: '#92400E', border: '#FDE68A' },
+  'medium-full': { bg: '#FFEDD5', color: '#9A3412', border: '#FED7AA' },
+  full:          { bg: '#FEE2E2', color: '#991B1B', border: '#FECACA' },
 };
 
-const ALL_FLAVOR_NOTES = ['cedar', 'leather', 'earth', 'coffee', 'chocolate', 'dark chocolate',
-  'espresso', 'pepper', 'cream', 'nuts', 'spice', 'floral', 'fruity', 'honey', 'dark fruit', 'cocoa', 'salt'];
+const FLAVOR_COLORS = {
+  cedar:           { bg: '#FEF3C7', color: '#92400E' },
+  leather:         { bg: '#FEF9C3', color: '#713F12' },
+  earth:           { bg: '#F5F5F4', color: '#44403C' },
+  coffee:          { bg: '#FEF3C7', color: '#78350F' },
+  chocolate:       { bg: '#FEF3C7', color: '#92400E' },
+  'dark chocolate':{ bg: '#FEE2E2', color: '#7F1D1D' },
+  espresso:        { bg: '#F5F5F4', color: '#292524' },
+  pepper:          { bg: '#FEE2E2', color: '#991B1B' },
+  cream:           { bg: '#F5F5F4', color: '#57534E' },
+  nuts:            { bg: '#FEF9C3', color: '#713F12' },
+  spice:           { bg: '#FFEDD5', color: '#9A3412' },
+  floral:          { bg: '#FDF4FF', color: '#7E22CE' },
+  honey:           { bg: '#FEF3C7', color: '#92400E' },
+  'dark fruit':    { bg: '#F3E8FF', color: '#6B21A8' },
+  cocoa:           { bg: '#FEE2E2', color: '#7F1D1D' },
+  default:         { bg: '#F5F5F4', color: '#44403C' },
+};
 
 function ScoreGauge({ value }) {
-  const color = value >= 95 ? '#10b981' : value >= 90 ? '#f59e0b' : value >= 85 ? '#fb923c' : '#94a3b8';
+  const color = value >= 95 ? '#059669' : value >= 90 ? '#D97706' : value >= 85 ? '#EA580C' : '#94A3B8';
   return (
     <div className="relative w-20 h-20">
       <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#292524" strokeWidth="3" />
-        <circle
-          cx="18" cy="18" r="15.9" fill="none"
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E8E4DE" strokeWidth="3" />
+        <circle cx="18" cy="18" r="15.9" fill="none"
           stroke={color} strokeWidth="3"
           strokeDasharray={`${value} 100`}
-          strokeLinecap="round"
-        />
+          strokeLinecap="round" />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-xl font-bold text-stone-100">{value}</span>
-        <span className="text-[9px] text-stone-500 uppercase tracking-wider">rating</span>
+        <span className="text-xl font-bold" style={{color: NAVY}}>{value}</span>
+        <span className="text-[9px] uppercase tracking-wider" style={{color: MUTED}}>rating</span>
       </div>
     </div>
+  );
+}
+
+function SectionLabel({ children }) {
+  return (
+    <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3" style={{color: MUTED}}>{children}</p>
   );
 }
 
@@ -79,9 +102,7 @@ export default function CigarDetail() {
       setFollowing(followStatus.following);
       setFollowerCount(followStatus.follower_count);
       addRecentlyViewed(d.cigar);
-      if (d.vitolas.length > 0) {
-        setHumidorForm(f => ({ ...f, vitola_id: d.vitolas[0].id }));
-      }
+      if (d.vitolas.length > 0) setHumidorForm(f => ({ ...f, vitola_id: d.vitolas[0].id }));
     }).finally(() => setLoading(false));
   }, [id]);
 
@@ -92,10 +113,8 @@ export default function CigarDetail() {
       await api.addToHumidor({ cigar_id: id, ...humidorForm });
       setHumidorModal(false);
       toast('Added to your collection');
-      
-    } catch (e) {
-      toast(e.message, 'error');
-    } finally { setSaving(false); }
+    } catch (e) { toast(e.message, 'error'); }
+    finally { setSaving(false); }
   }
 
   async function submitReview(form) {
@@ -107,21 +126,14 @@ export default function CigarDetail() {
       setReviews(rev.reviews);
       setReviewModal(false);
       toast('Saved to your journal');
-      
-    } catch (e) {
-      toast(e.message, 'error');
-    } finally { setSaving(false); }
+    } catch (e) { toast(e.message, 'error'); }
+    finally { setSaving(false); }
   }
 
   async function addToSmokeList() {
     if (!user) return navigate('/login');
-    try {
-      await api.addToSmokeList({ cigar_id: id });
-      toast('Added to Smoke List');
-      
-    } catch (e) {
-      toast(e.message, 'error');
-    }
+    try { await api.addToSmokeList({ cigar_id: id }); toast('Added to Smoke List'); }
+    catch (e) { toast(e.message, 'error'); }
   }
 
   async function toggleFollow() {
@@ -133,18 +145,17 @@ export default function CigarDetail() {
   }
 
   if (loading) return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-stone-800 rounded w-64" />
-        <div className="h-4 bg-stone-800 rounded w-40" />
-        <div className="h-48 bg-stone-800 rounded" />
-      </div>
+    <div className="max-w-4xl mx-auto px-4 py-10 space-y-4">
+      <div className="h-8 skeleton rounded w-64" />
+      <div className="h-4 skeleton rounded w-40" />
+      <div className="h-48 skeleton rounded" />
     </div>
   );
 
-  if (!data) return <div className="text-center py-20 text-stone-500">Cigar not found</div>;
+  if (!data) return <div className="text-center py-20" style={{color: MUTED}}>Cigar not found</div>;
 
   const { cigar, vitolas, stats, top_flavors, similar = [] } = data;
+  const sb = STRENGTH_BADGE[cigar.strength];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
@@ -153,9 +164,9 @@ export default function CigarDetail() {
       {/* Header */}
       <div className="flex items-start gap-4 mb-6">
         <div className="flex-1 min-w-0">
-          <p className="text-amber-500 text-sm font-semibold uppercase tracking-wider mb-1">{cigar.brand}</p>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-stone-50 leading-tight mb-2">{cigar.name}</h1>
-          <div className="flex flex-wrap items-center gap-2 text-sm text-stone-500">
+          <p className="text-sm font-bold uppercase tracking-wider mb-1" style={{color: AMBER}}>{cigar.brand}</p>
+          <h1 className="font-serif text-2xl md:text-3xl font-bold leading-tight mb-2" style={{color: NAVY}}>{cigar.name}</h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm" style={{color: MUTED}}>
             {cigar.country && <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{cigar.country}</span>}
             {cigar.wrapper && <span>· {cigar.wrapper} wrapper</span>}
             {cigar.year_introduced && <span>· Est. {cigar.year_introduced}</span>}
@@ -167,24 +178,30 @@ export default function CigarDetail() {
         </div>
       </div>
 
-      {/* Quick info pills */}
+      {/* Pills */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {cigar.strength && (
-          <span className={`badge capitalize border ${
-            { mild: 'bg-green-900/40 text-green-400 border-green-800/50', 'mild-medium': 'bg-lime-900/40 text-lime-400 border-lime-800/50', medium: 'bg-amber-900/40 text-amber-400 border-amber-800/50', 'medium-full': 'bg-orange-900/40 text-orange-400 border-orange-800/50', full: 'bg-red-900/40 text-red-400 border-red-800/50' }[cigar.strength]
-          }`}>
-            {STRENGTH_LABEL[cigar.strength]} Body
+        {cigar.strength && sb && (
+          <span className="badge border text-xs font-semibold capitalize"
+            style={{backgroundColor: sb.bg, color: sb.color, borderColor: sb.border}}>
+            {STRENGTH_LABEL[cigar.strength]}
           </span>
         )}
-        {cigar.wrapper && <span className="badge bg-stone-800 text-stone-300 border border-stone-700">{cigar.wrapper}</span>}
+        {cigar.wrapper && (
+          <span className="badge border text-xs"
+            style={{backgroundColor: '#F5F5F4', color: '#44403C', borderColor: '#E7E5E4'}}>
+            {cigar.wrapper}
+          </span>
+        )}
         {availability.length > 0 && (
-          <span className="badge bg-emerald-900/30 text-emerald-400 border border-emerald-800/40">
-            <Store className="w-3 h-3 mr-1" /> Available at {availability.length} store{availability.length !== 1 ? 's' : ''}
+          <span className="badge border text-xs font-semibold"
+            style={{backgroundColor: '#DCFCE7', color: '#166534', borderColor: '#BBF7D0'}}>
+            <Store className="w-3 h-3 mr-1" />
+            Available at {availability.length} store{availability.length !== 1 ? 's' : ''}
           </span>
         )}
       </div>
 
-      {/* Action buttons — mobile: 2-col grid, desktop: row */}
+      {/* Action buttons */}
       <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-8">
         <button onClick={() => setHumidorModal(true)} className="btn-primary flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> Add to Humidor
@@ -195,49 +212,45 @@ export default function CigarDetail() {
         <button onClick={addToSmokeList} className="btn-secondary flex items-center justify-center gap-2">
           <ListChecks className="w-4 h-4" /> Smoke List
         </button>
-        <button
-          onClick={toggleFollow}
-          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-semibold transition-all ${
-            following ? 'border-amber-700 bg-amber-900/20 text-amber-400' : 'btn-secondary'
-          }`}
-        >
+        <button onClick={toggleFollow}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all"
+          style={following
+            ? { backgroundColor: '#FEF3C7', color: '#92400E', borderColor: '#FDE68A' }
+            : { backgroundColor: '#FFFFFF', color: NAVY, borderColor: '#D4CFC8' }}>
           {following ? <BellOff className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
           {following ? 'Following' : 'Follow'}
-          {followerCount > 0 && <span className="text-xs text-stone-500 ml-1">({followerCount})</span>}
+          {followerCount > 0 && <span className="text-xs ml-1" style={{color: MUTED}}>({followerCount})</span>}
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-stone-800 mb-6 gap-1 overflow-x-auto">
+      <div className="tab-bar mb-6">
         {['overview', 'vitolas', 'where to buy', 'reviews'].map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors capitalize ${
-              tab === t ? 'text-amber-400 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'
-            }`}
-          >
+          <button key={t} onClick={() => setTab(t)}
+            className={`tab-btn capitalize ${tab === t ? 'tab-btn-active' : 'tab-btn-inactive'}`}>
             {t === 'reviews' ? `Reviews (${stats.review_count})` : t}
             {t === 'where to buy' && availability.length > 0 && (
-              <span className="ml-1 bg-emerald-800 text-emerald-300 text-[10px] px-1.5 rounded-full">{availability.length}</span>
+              <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                style={{backgroundColor: '#DCFCE7', color: '#166534'}}>
+                {availability.length}
+              </span>
             )}
           </button>
         ))}
       </div>
 
-      {/* Overview tab */}
+      {/* Overview */}
       {tab === 'overview' && (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {cigar.description && (
             <div className="card p-5">
-              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">About</h3>
-              <p className="text-stone-300 leading-relaxed">{cigar.description}</p>
+              <SectionLabel>About</SectionLabel>
+              <p className="leading-relaxed" style={{color: '#374151'}}>{cigar.description}</p>
             </div>
           )}
 
-          {/* Blend */}
           <div className="card p-5">
-            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-4">Blend Details</h3>
+            <SectionLabel>Blend Details</SectionLabel>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[
                 { label: 'Wrapper', value: cigar.wrapper },
@@ -248,38 +261,39 @@ export default function CigarDetail() {
                 { label: 'Est.', value: cigar.year_introduced },
               ].filter(i => i.value).map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-[10px] text-stone-600 uppercase tracking-wider mb-0.5">{label}</p>
-                  <p className="text-sm text-stone-300 font-medium">{value}</p>
+                  <p className="text-[10px] uppercase tracking-wider mb-0.5" style={{color: MUTED}}>{label}</p>
+                  <p className="text-sm font-semibold" style={{color: NAVY}}>{value}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Flavor profile */}
           {(cigar.flavor_notes.length > 0 || top_flavors.length > 0) && (
             <div className="card p-5">
-              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">Flavor Profile</h3>
+              <SectionLabel>Flavor Profile</SectionLabel>
               <div className="flex flex-wrap gap-2 mb-3">
-                {cigar.flavor_notes.map(n => (
-                  <span key={n} className={`text-xs font-medium px-2.5 py-1 rounded-full ${FLAVOR_COLORS[n] || FLAVOR_COLORS.default}`}>
-                    {n}
-                  </span>
-                ))}
+                {cigar.flavor_notes.map(n => {
+                  const fc = FLAVOR_COLORS[n] || FLAVOR_COLORS.default;
+                  return (
+                    <span key={n} className="text-xs font-medium px-2.5 py-1 rounded-full border"
+                      style={{backgroundColor: fc.bg, color: fc.color, borderColor: fc.bg}}>
+                      {n}
+                    </span>
+                  );
+                })}
               </div>
               {top_flavors.length > 0 && (
                 <>
-                  <p className="text-[10px] text-stone-600 uppercase tracking-wider mb-2 mt-4">Reported by smokers</p>
-                  <div className="flex flex-col gap-1.5">
+                  <p className="text-[10px] uppercase tracking-wider mb-2 mt-4" style={{color: MUTED}}>Reported by smokers</p>
+                  <div className="flex flex-col gap-2">
                     {top_flavors.slice(0, 5).map(({ note, count }) => (
                       <div key={note} className="flex items-center gap-2">
-                        <span className="text-xs text-stone-400 w-24 capitalize">{note}</span>
-                        <div className="flex-1 h-1.5 bg-stone-800 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-amber-600 rounded-full"
-                            style={{ width: `${(count / top_flavors[0].count) * 100}%` }}
-                          />
+                        <span className="text-xs w-24 capitalize" style={{color: '#374151'}}>{note}</span>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
+                          <div className="h-full rounded-full bg-amber-600"
+                            style={{ width: `${(count / top_flavors[0].count) * 100}%` }} />
                         </div>
-                        <span className="text-[10px] text-stone-600 w-6 text-right">{count}</span>
+                        <span className="text-[10px] w-5 text-right" style={{color: MUTED}}>{count}</span>
                       </div>
                     ))}
                   </div>
@@ -288,30 +302,29 @@ export default function CigarDetail() {
             </div>
           )}
 
-          {/* Score breakdown */}
           {stats.review_count > 0 && (
             <div className="card p-5">
-              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-4">Score Breakdown</h3>
+              <SectionLabel>Score Breakdown</SectionLabel>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { label: 'Overall', value: stats.avg_rating, max: 100 },
-                  { label: 'Draw', value: stats.avg_draw * 20, max: 100 },
-                  { label: 'Burn', value: stats.avg_burn * 20, max: 100 },
-                  { label: 'Appearance', value: stats.avg_appearance * 20, max: 100 },
+                  { label: 'Overall', value: stats.avg_rating },
+                  { label: 'Draw', value: stats.avg_draw * 20 },
+                  { label: 'Burn', value: stats.avg_burn * 20 },
+                  { label: 'Appearance', value: stats.avg_appearance * 20 },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-stone-500">{label}</span>
-                      <span className="text-stone-300 font-medium">{Math.round(value)}</span>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span style={{color: MUTED}}>{label}</span>
+                      <span className="font-semibold" style={{color: NAVY}}>{Math.round(value)}</span>
                     </div>
-                    <div className="h-1.5 bg-stone-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
                       <div className="h-full bg-amber-600 rounded-full" style={{ width: `${value}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
               {stats.avg_smoke_time > 0 && (
-                <p className="text-xs text-stone-500 mt-4 flex items-center gap-1">
+                <p className="text-xs mt-4 flex items-center gap-1" style={{color: MUTED}}>
                   <Clock className="w-3.5 h-3.5" /> Average smoke time: {stats.avg_smoke_time} minutes
                 </p>
               )}
@@ -320,23 +333,21 @@ export default function CigarDetail() {
         </div>
       )}
 
-      {/* Vitolas tab */}
+      {/* Vitolas */}
       {tab === 'vitolas' && (
         <div className="flex flex-col gap-3">
           {vitolas.length === 0 ? (
-            <p className="text-stone-500 text-center py-10">No sizes listed yet.</p>
+            <p className="text-center py-10" style={{color: MUTED}}>No sizes listed yet.</p>
           ) : vitolas.map(v => (
             <div key={v.id} className="card p-4 flex items-center justify-between gap-4">
               <div>
-                <p className="font-semibold text-stone-200">{v.name}</p>
-                <p className="text-xs text-stone-500 mt-0.5">
-                  {v.length}" × {v.ring_gauge} ring gauge
-                </p>
+                <p className="font-semibold" style={{color: NAVY}}>{v.name}</p>
+                <p className="text-xs mt-0.5" style={{color: MUTED}}>{v.length}" × {v.ring_gauge} ring gauge</p>
               </div>
               {v.msrp && (
                 <div className="text-right">
-                  <p className="text-[10px] text-stone-600 uppercase tracking-wider">MSRP</p>
-                  <p className="font-bold text-amber-400">${v.msrp.toFixed(2)}</p>
+                  <p className="text-[10px] uppercase tracking-wider" style={{color: MUTED}}>MSRP</p>
+                  <p className="font-bold" style={{color: AMBER}}>${v.msrp.toFixed(2)}</p>
                 </div>
               )}
             </div>
@@ -344,41 +355,48 @@ export default function CigarDetail() {
         </div>
       )}
 
-      {/* Where to buy tab */}
+      {/* Where to buy */}
       {tab === 'where to buy' && (
         <div className="flex flex-col gap-4">
           {availability.length === 0 ? (
             <div className="text-center py-12">
-              <Store className="w-10 h-10 text-stone-700 mx-auto mb-3" />
-              <p className="text-stone-400 font-medium">Not currently listed at any stores</p>
-              <p className="text-stone-600 text-sm mt-1">Check back later or search nearby shops</p>
+              <Store className="w-10 h-10 mx-auto mb-3" style={{color: '#D4CFC8'}} />
+              <p className="font-medium" style={{color: NAVY}}>Not currently listed at any stores</p>
+              <p className="text-sm mt-1" style={{color: MUTED}}>Check back later or search nearby shops</p>
             </div>
           ) : availability.map(store => (
             <div key={store.store_id} className="card p-4">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-stone-200">{store.name}</h3>
-                    {store.verified && <span className="text-[10px] bg-emerald-900/40 text-emerald-400 border border-emerald-800/40 px-1.5 py-0.5 rounded-full">Verified</span>}
+                    <h3 className="font-semibold" style={{color: NAVY}}>{store.name}</h3>
+                    {store.verified && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold border"
+                        style={{backgroundColor: '#DCFCE7', color: '#166534', borderColor: '#BBF7D0'}}>
+                        Verified
+                      </span>
+                    )}
                   </div>
-                  <p className="text-xs text-stone-500 mt-0.5">{store.city}, {store.state}</p>
+                  <p className="text-xs mt-0.5" style={{color: MUTED}}>{store.city}, {store.state}</p>
                 </div>
                 {store.phone && (
-                  <a href={`tel:${store.phone}`} className="text-xs text-amber-400 hover:underline whitespace-nowrap">
+                  <a href={`tel:${store.phone}`} className="text-xs font-medium hover:underline whitespace-nowrap"
+                    style={{color: AMBER}}>
                     {store.phone}
                   </a>
                 )}
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0">
                 {store.vitolas.map(v => (
-                  <div key={v.vitola_id} className="flex items-center justify-between text-sm border-t border-stone-800/50 pt-2">
+                  <div key={v.vitola_id} className="flex items-center justify-between py-2.5 border-t"
+                    style={{borderColor: '#EAE6E0'}}>
                     <div>
-                      <span className="text-stone-300 font-medium">{v.name}</span>
-                      <span className="text-stone-600 text-xs ml-2">{v.length}" × {v.ring_gauge}</span>
+                      <span className="text-sm font-medium" style={{color: NAVY}}>{v.name}</span>
+                      <span className="text-xs ml-2" style={{color: MUTED}}>{v.length}" × {v.ring_gauge}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-stone-600">{v.quantity} in stock</span>
-                      <span className="font-bold text-amber-400">${v.price.toFixed(2)}</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs" style={{color: MUTED}}>{v.quantity} in stock</span>
+                      <span className="font-bold text-sm" style={{color: AMBER}}>${v.price.toFixed(2)}</span>
                     </div>
                   </div>
                 ))}
@@ -388,31 +406,30 @@ export default function CigarDetail() {
         </div>
       )}
 
-      {/* Reviews tab */}
+      {/* Reviews */}
       {tab === 'reviews' && (
         <div className="flex flex-col gap-4">
-          <button onClick={() => setReviewModal(true)} className="btn-primary w-full">
-            Write a Review
-          </button>
+          <button onClick={() => setReviewModal(true)} className="btn-primary w-full">Write a Review</button>
           {reviews.length === 0 ? (
-            <p className="text-stone-500 text-center py-10">No reviews yet. Be the first!</p>
+            <p className="text-center py-10" style={{color: MUTED}}>No reviews yet. Be the first!</p>
           ) : reviews.map(r => <ReviewCard key={r.id} review={r} />)}
         </div>
       )}
 
-      {/* Similar cigars */}
+      {/* Similar */}
       {similar.length > 0 && (
-        <div className="mt-8 mb-2">
-          <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">You Might Also Like</h3>
+        <div className="mt-10 mb-2">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-4" style={{color: MUTED}}>You Might Also Like</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {similar.map(s => (
               <Link key={s.id} to={`/cigars/${s.id}`}
-                className="card p-3 hover:border-stone-600 transition-colors group">
-                <p className="text-[10px] text-amber-500/80 font-medium uppercase tracking-wider truncate">{s.brand}</p>
-                <p className="text-xs font-semibold text-stone-200 group-hover:text-amber-300 transition-colors leading-tight mt-0.5 line-clamp-2">{s.name}</p>
+                className="card p-3.5 hover:shadow-md transition-shadow group">
+                <p className="text-[10px] font-bold uppercase tracking-wider truncate mb-1" style={{color: AMBER}}>{s.brand}</p>
+                <p className="text-xs font-semibold leading-tight line-clamp-2 group-hover:text-amber-700 transition-colors"
+                  style={{color: NAVY}}>{s.name}</p>
                 {s.avg_rating > 0 && (
-                  <p className="text-[10px] text-stone-500 mt-1.5 flex items-center gap-1">
-                    <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />{Math.round(s.avg_rating)}
+                  <p className="text-[10px] mt-2 flex items-center gap-1" style={{color: MUTED}}>
+                    <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />{Math.round(s.avg_rating)}
                   </p>
                 )}
               </Link>
@@ -423,18 +440,20 @@ export default function CigarDetail() {
 
       {/* Humidor Modal */}
       {humidorModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70" onClick={() => setHumidorModal(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
-            <h2 className="font-serif text-lg font-bold text-stone-100">Add to Collection</h2>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50"
+          onClick={() => setHumidorModal(false)}>
+          <div className="card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
+            onClick={e => e.stopPropagation()}>
+            <h2 className="font-serif text-lg font-bold" style={{color: NAVY}}>Add to Collection</h2>
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5">Size</label>
+              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Size</label>
               <select className="input" value={humidorForm.vitola_id} onChange={e => setHumidorForm(f => ({ ...f, vitola_id: e.target.value }))}>
                 {vitolas.map(v => <option key={v.id} value={v.id}>{v.name} ({v.length}" × {v.ring_gauge})</option>)}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-stone-400 mb-1.5">Status</label>
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Status</label>
                 <select className="input" value={humidorForm.status} onChange={e => setHumidorForm(f => ({ ...f, status: e.target.value }))}>
                   <option value="humidor">In Humidor</option>
                   <option value="smoked">Already Smoked</option>
@@ -442,23 +461,29 @@ export default function CigarDetail() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1.5">Quantity</label>
-                <input type="number" min="1" className="input" value={humidorForm.quantity} onChange={e => setHumidorForm(f => ({ ...f, quantity: +e.target.value }))} />
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Quantity</label>
+                <input type="number" min="1" className="input" value={humidorForm.quantity}
+                  onChange={e => setHumidorForm(f => ({ ...f, quantity: +e.target.value }))} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-stone-400 mb-1.5">Price Paid</label>
-                <input type="number" step="0.01" placeholder="0.00" className="input" value={humidorForm.purchase_price} onChange={e => setHumidorForm(f => ({ ...f, purchase_price: e.target.value }))} />
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Price Paid</label>
+                <input type="number" step="0.01" placeholder="0.00" className="input" value={humidorForm.purchase_price}
+                  onChange={e => setHumidorForm(f => ({ ...f, purchase_price: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1.5">Date Purchased</label>
-                <input type="date" className="input" value={humidorForm.purchase_date} onChange={e => setHumidorForm(f => ({ ...f, purchase_date: e.target.value }))} />
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Date Purchased</label>
+                <input type="date" className="input" value={humidorForm.purchase_date}
+                  onChange={e => setHumidorForm(f => ({ ...f, purchase_date: e.target.value }))} />
               </div>
             </div>
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5">Notes</label>
-              <textarea rows={2} className="input resize-none" placeholder="Tasting notes, occasion, where you got it..." value={humidorForm.notes} onChange={e => setHumidorForm(f => ({ ...f, notes: e.target.value }))} />
+              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Notes</label>
+              <textarea rows={2} className="input resize-none"
+                placeholder="Tasting notes, occasion, where you got it..."
+                value={humidorForm.notes}
+                onChange={e => setHumidorForm(f => ({ ...f, notes: e.target.value }))} />
             </div>
             <div className="flex gap-2 pt-1">
               <button onClick={() => setHumidorModal(false)} className="btn-secondary flex-1">Cancel</button>
@@ -470,18 +495,15 @@ export default function CigarDetail() {
         </div>
       )}
 
-      {/* Review / Logbook Modal */}
+      {/* Review Modal */}
       {reviewModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 overflow-y-auto" onClick={() => setReviewModal(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto p-5 my-auto" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 overflow-y-auto"
+          onClick={() => setReviewModal(false)}>
+          <div className="card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto p-5 my-auto"
+            onClick={e => e.stopPropagation()}>
             <ReviewLogbookForm
-              cigar={cigar}
-              vitolas={vitolas}
-              stores={stores}
-              onSubmit={submitReview}
-              onClose={() => setReviewModal(false)}
-              saving={saving}
-            />
+              cigar={cigar} vitolas={vitolas} stores={stores}
+              onSubmit={submitReview} onClose={() => setReviewModal(false)} saving={saving} />
           </div>
         </div>
       )}
