@@ -36,7 +36,7 @@ export default function BottomNav() {
   ].filter(item => !(isStore && item.label === 'Humidor'));
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-stone-950/98 backdrop-blur border-t border-stone-800"
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur border-t border-amber-200/80" style={{backgroundColor: 'rgba(250,245,238,0.98)'}}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div className="flex">
         {items.map(({ to, icon: Icon, label }) => {

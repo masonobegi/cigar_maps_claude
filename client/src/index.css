@@ -4,34 +4,28 @@
 
 @layer base {
   body {
-    @apply bg-stone-950 text-stone-100 antialiased;
+    @apply text-stone-900 antialiased;
+    background-color: #faf5ee;
     overscroll-behavior-y: none;
   }
 
-  /* Prevent iOS zoom on focus — requires 16px minimum font size */
+  /* Prevent iOS zoom on focus */
   input, textarea, select {
     font-size: 16px !important;
   }
 
-  /* Tap feedback — no ghost highlight */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
+  * { -webkit-tap-highlight-color: transparent; }
 
-  /* Allow text selection where it makes sense */
   p, span, h1, h2, h3, h4, li {
     -webkit-user-select: auto;
     user-select: auto;
   }
 
-  /* Smooth scrolling everywhere */
   html { scroll-behavior: smooth; }
 }
 
 @layer components {
-  /* ── Buttons ────────────────────────────────────────────────────────────────
-     All buttons MUST be at least 44px tall (Apple HIG / WCAG 2.5.8)
-  */
+  /* ── Buttons ──────────────────────────────────────────────────────────── */
   .btn-primary {
     @apply bg-amber-600 hover:bg-amber-500 active:bg-amber-700
            text-white font-semibold
@@ -39,51 +33,54 @@
            transition-colors duration-150
            disabled:opacity-50 disabled:cursor-not-allowed
            min-h-[44px] inline-flex items-center justify-center gap-2
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50;
   }
 
   .btn-secondary {
-    @apply bg-stone-800 hover:bg-stone-700 active:bg-stone-900
-           text-stone-200 font-medium
-           py-3 px-5 rounded-xl
+    @apply hover:bg-amber-50 active:bg-amber-100
+           font-medium py-3 px-5 rounded-xl
            transition-colors duration-150
-           border border-stone-700
            min-h-[44px] inline-flex items-center justify-center gap-2
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50;
+    background-color: #ffffff;
+    color: #3a2010;
+    border: 1px solid #d4b898;
   }
 
   .btn-ghost {
-    @apply hover:bg-stone-800 active:bg-stone-900
-           text-stone-400 hover:text-stone-200
+    @apply hover:bg-amber-50 active:bg-amber-100
            font-medium py-2.5 px-4 rounded-xl
            transition-colors duration-150
            min-h-[44px] inline-flex items-center justify-center
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400;
+    color: #7a5538;
   }
+  .btn-ghost:hover { color: #2c1a0e; }
 
-  /* ── Inputs ─────────────────────────────────────────────────────────────────
-     font-size must be 16px+ on mobile to prevent iOS auto-zoom
-  */
+  /* ── Inputs ───────────────────────────────────────────────────────────── */
   .input {
-    @apply bg-stone-900 border border-stone-700
-           text-stone-100 placeholder-stone-500
-           rounded-xl px-4 py-3 w-full
+    @apply rounded-xl px-4 py-3 w-full
            focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent
            transition-all duration-150
            min-h-[48px];
-    font-size: 16px; /* explicit: prevents iOS zoom */
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #1c0e06;
+    border: 1px solid #d4b898;
   }
+  .input::placeholder { color: #b09070; }
 
-  /* ── Cards ──────────────────────────────────────────────────────────────────*/
+  /* ── Cards ────────────────────────────────────────────────────────────── */
   .card {
-    @apply bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden;
+    @apply rounded-2xl overflow-hidden;
+    background-color: #ffffff;
+    border: 1px solid #e8d8c4;
   }
 
-  /* ── Tabs ───────────────────────────────────────────────────────────────────
-     44px minimum height for touch accessibility
-  */
+  /* ── Tabs ─────────────────────────────────────────────────────────────── */
   .tab-bar {
-    @apply flex border-b border-stone-800 overflow-x-auto gap-0;
+    @apply flex overflow-x-auto gap-0;
+    border-bottom: 1px solid #e8d8c4;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -96,51 +93,52 @@
            focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-amber-400;
   }
 
-  .tab-btn-active   { @apply text-amber-400 border-b-2 border-amber-400; }
-  .tab-btn-inactive { @apply text-stone-500 hover:text-stone-300; }
+  .tab-btn-active   { color: #b86a00; border-bottom: 2px solid #b86a00; }
+  .tab-btn-inactive { color: #a07850; }
+  .tab-btn-inactive:hover { color: #3a2010; }
 
-  /* ── Badge / pill ───────────────────────────────────────────────────────────*/
+  /* ── Badge / pill ─────────────────────────────────────────────────────── */
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
   }
 }
 
-/* ── Horizontal scroll fade indicator ──────────────────────────────────────── */
+/* ── Horizontal scroll fade ─────────────────────────────────────────────── */
 .scroll-fade-right {
   mask-image: linear-gradient(to right, black 85%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
 }
 
-/* ── Smooth page transitions ────────────────────────────────────────────────── */
+/* ── Page transitions ───────────────────────────────────────────────────── */
 .page-enter { animation: fadeSlideUp 0.18s ease-out; }
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Bottom sheet animation ─────────────────────────────────────────────────── */
+/* ── Bottom sheet ───────────────────────────────────────────────────────── */
 .sheet-enter { animation: sheetUp 0.22s cubic-bezier(0.32, 0.72, 0, 1); }
 @keyframes sheetUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
 
-/* ── Scrollbars (desktop only) ──────────────────────────────────────────────── */
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
 @media (hover: hover) {
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #1a1008; }
-  ::-webkit-scrollbar-thumb { background: #5a3818; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #7a5030; }
+  ::-webkit-scrollbar-track { background: #faf5ee; }
+  ::-webkit-scrollbar-thumb { background: #c8a882; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a88060; }
 }
 
-/* ── Safe areas (iPhone notch / home indicator) ─────────────────────────────── */
+/* ── Safe areas ─────────────────────────────────────────────────────────── */
 .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
 .pt-safe { padding-top: env(safe-area-inset-top); }
 
-/* ── Loading skeleton shimmer ───────────────────────────────────────────────── */
+/* ── Skeleton shimmer ───────────────────────────────────────────────────── */
 .skeleton {
   @apply rounded-xl;
-  background: linear-gradient(90deg, #221408 25%, #3a2010 50%, #221408 75%);
+  background: linear-gradient(90deg, #f0e4d4 25%, #fde8c8 50%, #f0e4d4 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -148,3 +146,64 @@
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* LIGHT THEME — override Tailwind's dark stone utilities globally.           */
+/* Unlayered CSS wins over @layer utilities without needing !important.       */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/* Backgrounds */
+.bg-stone-950  { background-color: #faf5ee; }
+.bg-stone-900  { background-color: #ffffff; }
+.bg-stone-800  { background-color: #f5ece0; }
+.bg-stone-700  { background-color: #ecdcca; }
+
+/* Opacity variants (navbar/bottomnav backdrop-blur) */
+.bg-stone-950\/95 { background-color: rgba(250, 245, 238, 0.95); }
+.bg-stone-950\/98 { background-color: rgba(250, 245, 238, 0.98); }
+.bg-stone-900\/50 { background-color: rgba(255, 255, 255, 0.5); }
+.bg-stone-900\/80 { background-color: rgba(255, 255, 255, 0.8); }
+.bg-stone-900\/90 { background-color: rgba(255, 255, 255, 0.9); }
+.bg-stone-800\/50 { background-color: rgba(245, 236, 224, 0.5); }
+
+/* Hover backgrounds */
+.hover\:bg-stone-800:hover { background-color: #f0e4d4; }
+.hover\:bg-stone-700:hover { background-color: #e8d8c4; }
+.hover\:bg-stone-900:hover { background-color: #faf5ee; }
+
+/* Active backgrounds */
+.active\:bg-stone-900:active { background-color: #f0e4d4; }
+
+/* Text colors */
+.text-stone-100 { color: #1c0e06; }
+.text-stone-200 { color: #2d1a0e; }
+.text-stone-300 { color: #4a2e18; }
+.text-stone-400 { color: #7a5538; }
+.text-stone-500 { color: #a07850; }
+.text-stone-600 { color: #7a5538; }
+
+/* Hover text */
+.hover\:text-stone-200:hover { color: #2d1a0e; }
+.hover\:text-stone-300:hover { color: #4a2e18; }
+.hover\:text-stone-400:hover { color: #7a5538; }
+
+/* Borders */
+.border-stone-800 { border-color: #e0ccb0; }
+.border-stone-700 { border-color: #d4b898; }
+.border-stone-600 { border-color: #c8a882; }
+
+/* Placeholders */
+.placeholder-stone-500::placeholder { color: #b09070; }
+.placeholder-stone-600::placeholder { color: #9a7050; }
+
+/* Divide (horizontal rules between list items) */
+.divide-stone-800 > * + * { border-color: #e0ccb0; }
+.divide-stone-700 > * + * { border-color: #d4b898; }
+
+/* Ring offsets (focus rings) */
+.focus-visible\:ring-offset-stone-950:focus-visible { --tw-ring-offset-color: #faf5ee; }
+
+/* Gradient froms/tos used in hero or banners */
+.from-stone-950 { --tw-gradient-from: #faf5ee; }
+.to-stone-900   { --tw-gradient-to: #ffffff; }
+.via-stone-900  { --tw-gradient-via: #ffffff; }
