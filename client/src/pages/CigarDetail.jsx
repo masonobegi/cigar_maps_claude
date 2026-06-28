@@ -12,6 +12,7 @@ import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
 const NAVY  = '#12213D';
 const MUTED = '#6B7280';
+const LABEL = '#4B5563';
 const AMBER = '#92510A';
 
 const STRENGTH_LABEL = { mild: 'Mild', 'mild-medium': 'Mild-Medium', medium: 'Medium', 'medium-full': 'Medium-Full', full: 'Full' };
@@ -56,7 +57,6 @@ function ScoreGauge({ value }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-xl font-bold" style={{color: NAVY}}>{value}</span>
-        <span className="text-[9px] uppercase tracking-wider" style={{color: MUTED}}>rating</span>
       </div>
     </div>
   );
@@ -64,7 +64,7 @@ function ScoreGauge({ value }) {
 
 function SectionLabel({ children }) {
   return (
-    <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3" style={{color: MUTED}}>{children}</p>
+    <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{color: LABEL}}>{children}</p>
   );
 }
 
@@ -230,7 +230,7 @@ export default function CigarDetail() {
             className={`tab-btn capitalize ${tab === t ? 'tab-btn-active' : 'tab-btn-inactive'}`}>
             {t === 'reviews' ? `Reviews (${stats.review_count})` : t}
             {t === 'where to buy' && availability.length > 0 && (
-              <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+              <span className="ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-bold"
                 style={{backgroundColor: '#DCFCE7', color: '#166534'}}>
                 {availability.length}
               </span>
@@ -261,7 +261,7 @@ export default function CigarDetail() {
                 { label: 'Est.', value: cigar.year_introduced },
               ].filter(i => i.value).map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-[10px] uppercase tracking-wider mb-0.5" style={{color: MUTED}}>{label}</p>
+                  <p className="text-xs uppercase tracking-wider mb-1" style={{color: LABEL}}>{label}</p>
                   <p className="text-sm font-semibold" style={{color: NAVY}}>{value}</p>
                 </div>
               ))}
@@ -284,16 +284,16 @@ export default function CigarDetail() {
               </div>
               {top_flavors.length > 0 && (
                 <>
-                  <p className="text-[10px] uppercase tracking-wider mb-2 mt-4" style={{color: MUTED}}>Reported by smokers</p>
+                  <p className="text-xs uppercase tracking-wider mb-2 mt-4" style={{color: LABEL}}>Reported by smokers</p>
                   <div className="flex flex-col gap-2">
                     {top_flavors.slice(0, 5).map(({ note, count }) => (
                       <div key={note} className="flex items-center gap-2">
-                        <span className="text-xs w-24 capitalize" style={{color: '#374151'}}>{note}</span>
+                        <span className="text-sm w-28 capitalize" style={{color: NAVY}}>{note}</span>
                         <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
                           <div className="h-full rounded-full bg-amber-600"
                             style={{ width: `${(count / top_flavors[0].count) * 100}%` }} />
                         </div>
-                        <span className="text-[10px] w-5 text-right" style={{color: MUTED}}>{count}</span>
+                        <span className="text-xs w-5 text-right" style={{color: MUTED}}>{count}</span>
                       </div>
                     ))}
                   </div>
@@ -346,7 +346,7 @@ export default function CigarDetail() {
               </div>
               {v.msrp && (
                 <div className="text-right">
-                  <p className="text-[10px] uppercase tracking-wider" style={{color: MUTED}}>MSRP</p>
+                  <p className="text-xs uppercase tracking-wider mb-0.5" style={{color: LABEL}}>MSRP</p>
                   <p className="font-bold" style={{color: AMBER}}>${v.msrp.toFixed(2)}</p>
                 </div>
               )}
@@ -371,7 +371,7 @@ export default function CigarDetail() {
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold" style={{color: NAVY}}>{store.name}</h3>
                     {store.verified && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold border"
+                      <span className="text-xs px-2 py-0.5 rounded-full font-semibold border"
                         style={{backgroundColor: '#DCFCE7', color: '#166534', borderColor: '#BBF7D0'}}>
                         Verified
                       </span>
@@ -419,17 +419,17 @@ export default function CigarDetail() {
       {/* Similar */}
       {similar.length > 0 && (
         <div className="mt-10 mb-2">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-4" style={{color: MUTED}}>You Might Also Like</p>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{color: LABEL}}>You Might Also Like</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {similar.map(s => (
               <Link key={s.id} to={`/cigars/${s.id}`}
                 className="card p-3.5 hover:shadow-md transition-shadow group">
-                <p className="text-[10px] font-bold uppercase tracking-wider truncate mb-1" style={{color: AMBER}}>{s.brand}</p>
-                <p className="text-xs font-semibold leading-tight line-clamp-2 group-hover:text-amber-700 transition-colors"
+                <p className="text-xs font-bold uppercase tracking-wider truncate mb-1" style={{color: AMBER}}>{s.brand}</p>
+                <p className="text-sm font-semibold leading-tight line-clamp-2 group-hover:text-amber-700 transition-colors"
                   style={{color: NAVY}}>{s.name}</p>
                 {s.avg_rating > 0 && (
-                  <p className="text-[10px] mt-2 flex items-center gap-1" style={{color: MUTED}}>
-                    <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />{Math.round(s.avg_rating)}
+                  <p className="text-xs mt-2 flex items-center gap-1" style={{color: MUTED}}>
+                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />{Math.round(s.avg_rating)}
                   </p>
                 )}
               </Link>
