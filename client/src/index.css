@@ -123,6 +123,18 @@
 .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
 .pt-safe { padding-top: env(safe-area-inset-top); }
 
+/* ── Marquee ──────────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee:hover { animation-play-state: paused; }
+
 /* ── Skeleton ─────────────────────────────────────────────────────────────── */
 .skeleton {
   @apply rounded-xl;
