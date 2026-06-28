@@ -36,15 +36,14 @@ export default function BottomNav() {
   ].filter(item => !(isStore && item.label === 'Humidor'));
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur border-t border-amber-200/80" style={{backgroundColor: 'rgba(250,245,238,0.98)'}}
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/10" style={{backgroundColor: '#1a2744', paddingBottom: 'env(safe-area-inset-bottom)'}}>
       <div className="flex">
         {items.map(({ to, icon: Icon, label }) => {
           const active = path === to || (to !== '/' && path.startsWith(to));
           const showBadge = label === 'Humidor' && notifCount > 0;
           return (
             <Link key={to} to={to}
-              className={`flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] transition-colors relative ${active ? 'text-amber-400' : 'text-stone-500'}`}>
+              className={`flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] transition-colors relative ${active ? 'text-amber-400' : 'text-blue-300 hover:text-white'}`}>
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {showBadge && (

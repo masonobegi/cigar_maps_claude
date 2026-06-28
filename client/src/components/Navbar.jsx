@@ -37,12 +37,12 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 backdrop-blur border-b border-amber-200/80" style={{backgroundColor: 'rgba(250,245,238,0.96)'}}>
+      <nav className="sticky top-0 z-50" style={{backgroundColor: '#1a2744'}}>
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1.5 flex-shrink-0 mr-1">
-            <Flame className="w-5 h-5 text-amber-500" />
-            <span className="font-serif font-bold text-lg text-amber-400 tracking-wide">CigarBuddy</span>
+            <Flame className="w-5 h-5 text-amber-400" />
+            <span className="font-serif font-bold text-lg text-amber-300 tracking-wide">CigarBuddy</span>
           </Link>
 
           {/* Search */}
@@ -54,19 +54,16 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            <Link to="/stores" className={`btn-ghost text-sm ${location.pathname.startsWith('/stores') ? 'text-amber-400' : ''}`}>Stores</Link>
-            <Link to="/deals" className={`btn-ghost text-sm ${location.pathname === '/deals' ? 'text-amber-400' : ''}`}>Deals</Link>
+            <Link to="/stores" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname.startsWith('/stores') ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>Stores</Link>
+            <Link to="/deals" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname === '/deals' ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>Deals</Link>
             {user ? (
               <>
-                <Link to={dashPath} className={`btn-ghost text-sm flex items-center gap-1.5 ${location.pathname === dashPath ? 'text-amber-400' : ''}`}>
+                <Link to={dashPath} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${location.pathname === dashPath ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>
                   {isStore ? <Store className="w-4 h-4" /> : <LayoutDashboard className="w-4 h-4" />}
                   {isStore ? 'My Store' : 'My Humidor'}
                 </Link>
                 {!isStore && (
-                  <button
-                    onClick={() => setNotifOpen(o => !o)}
-                    className={`relative btn-ghost p-2 ${notifOpen ? 'text-amber-400' : ''}`}
-                  >
+                  <button onClick={() => setNotifOpen(o => !o)} className={`relative p-2 rounded-lg transition-colors ${notifOpen ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>
                     <Bell className="w-5 h-5" />
                     {notifCount > 0 && (
                       <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
@@ -75,13 +72,13 @@ export default function Navbar() {
                     )}
                   </button>
                 )}
-                <button onClick={handleLogout} className="btn-ghost p-2 text-stone-500 hover:text-red-400">
+                <button onClick={handleLogout} className="p-2 rounded-lg text-blue-300 hover:text-red-300 hover:bg-white/10 transition-colors">
                   <LogOut className="w-4 h-4" />
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-ghost text-sm">Sign In</Link>
+                <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Sign In</Link>
                 <Link to="/register" className="btn-primary text-sm py-2 px-4">Join Free</Link>
               </>
             )}
@@ -90,7 +87,7 @@ export default function Navbar() {
           {/* Mobile: bell + menu */}
           <div className="flex md:hidden items-center gap-1">
             {user && !isStore && (
-              <button onClick={() => setNotifOpen(o => !o)} className="relative btn-ghost p-2">
+              <button onClick={() => setNotifOpen(o => !o)} className="relative p-2 rounded-lg text-blue-200 hover:text-white hover:bg-white/10 transition-colors">
                 <Bell className="w-5 h-5" />
                 {notifCount > 0 && (
                   <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
@@ -99,7 +96,7 @@ export default function Navbar() {
                 )}
               </button>
             )}
-            <button className="btn-ghost p-2" onClick={() => setMenuOpen(!menuOpen)}>
+            <button className="p-2 rounded-lg text-blue-200 hover:text-white hover:bg-white/10 transition-colors" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
@@ -107,26 +104,26 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-amber-200/80" style={{backgroundColor: '#faf5ee'}}>
-            <div className="p-4 border-b border-stone-800">
+          <div className="md:hidden border-t border-white/10" style={{backgroundColor: '#162040'}}>
+            <div className="p-4 border-b border-white/10">
               <SearchAutocomplete onSubmit={() => setMenuOpen(false)} />
             </div>
             <div className="p-2 flex flex-col gap-1">
-              <Link to="/stores" onClick={() => setMenuOpen(false)} className="btn-ghost text-sm py-3">Stores</Link>
-              <Link to="/deals" onClick={() => setMenuOpen(false)} className="btn-ghost text-sm py-3">Deals</Link>
+              <Link to="/stores" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Stores</Link>
+              <Link to="/deals" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Deals</Link>
               {user ? (
                 <>
-                  <Link to={dashPath} onClick={() => setMenuOpen(false)} className="btn-ghost text-sm py-3 flex items-center gap-2">
+                  <Link to={dashPath} onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-2">
                     {isStore ? <Store className="w-4 h-4" /> : <LayoutDashboard className="w-4 h-4" />}
                     {isStore ? 'My Store' : 'My Humidor'}
                   </Link>
-                  <button onClick={handleLogout} className="btn-ghost text-sm py-3 text-left flex items-center gap-2 text-stone-400">
+                  <button onClick={handleLogout} className="px-4 py-3 rounded-lg text-sm font-medium text-red-300 hover:bg-white/10 transition-colors text-left flex items-center gap-2">
                     <LogOut className="w-4 h-4" /> Sign Out
                   </button>
                 </>
               ) : (
                 <div className="flex gap-2 p-2">
-                  <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-secondary flex-1 text-center text-sm">Sign In</Link>
+                  <Link to="/login" onClick={() => setMenuOpen(false)} className="flex-1 text-center px-4 py-3 rounded-lg text-sm font-medium text-blue-200 border border-white/20 hover:bg-white/10 transition-colors">Sign In</Link>
                   <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary flex-1 text-center text-sm">Join Free</Link>
                 </div>
               )}
