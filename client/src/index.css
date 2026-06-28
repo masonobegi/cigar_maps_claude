@@ -33,7 +33,7 @@
   .btn-secondary {
     @apply hover:bg-amber-50 active:bg-amber-100 font-medium py-3 px-5 rounded-xl
            transition-colors duration-150 min-h-[44px] inline-flex items-center justify-center gap-2
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-400 focus-visible:ring-offset-2;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2;
     background-color: #ffffff;
     color: #1a2744;
     border: 1px solid #c8bfb0;
@@ -193,3 +193,4 @@
 .from-stone-950 { --tw-gradient-from: #f0ece3; }
 .to-stone-900   { --tw-gradient-to: #ffffff; }
 .via-stone-900  { --tw-gradient-via: #ffffff; }
+
