@@ -118,7 +118,7 @@ export default function Home() {
       <section className="relative overflow-hidden" style={{background: 'linear-gradient(150deg, #1e3464 0%, #1a2744 55%, #16203c 100%)'}}>
         <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'repeating-linear-gradient(45deg, #c2a060 0, #c2a060 1px, transparent 0, transparent 50%)', backgroundSize: '20px 20px'}} />
         {/* Fade hero into body so there's no hard edge */}
-        <div className="absolute bottom-0 left-0 right-0 h-20" style={{background: 'linear-gradient(to bottom, transparent, #f0ece3)'}} />
+        <div className="absolute bottom-0 left-0 right-0 h-20" style={{background: 'linear-gradient(to bottom, transparent, #d8cfc0)'}} />
 
         <div className="relative max-w-5xl mx-auto px-6 pt-12 pb-20">
           <div className="max-w-2xl">
@@ -175,7 +175,7 @@ export default function Home() {
 
       {/* City strip */}
       {cities.length > 0 && (
-        <div className="border-b border-stone-800 overflow-x-auto" style={{backgroundColor: '#ede8df'}}>
+        <div className="border-b border-stone-800 overflow-x-auto" style={{backgroundColor: '#ccc5b8'}}>
           <div className="flex items-center gap-5 px-6 py-2.5 min-w-max">
             <span className="text-xs text-stone-400 flex-shrink-0 font-medium">Shops near</span>
             {cities.slice(0, 10).map(c => (
