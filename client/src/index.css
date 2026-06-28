@@ -4,72 +4,66 @@
 
 @layer base {
   body {
-    @apply text-stone-900 antialiased;
-    background-color: #d8cfc0;
+    @apply antialiased;
+    background-color: #FAF8F4;
+    color: #12213D;
     overscroll-behavior-y: none;
   }
 
   input, textarea, select { font-size: 16px !important; }
   * { -webkit-tap-highlight-color: transparent; }
-
-  p, span, h1, h2, h3, h4, li {
-    -webkit-user-select: auto;
-    user-select: auto;
-  }
-
+  p, span, h1, h2, h3, h4, li { -webkit-user-select: auto; user-select: auto; }
   html { scroll-behavior: smooth; }
 }
 
 @layer components {
-  /* ── Buttons ──────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply bg-amber-600 hover:bg-amber-500 active:bg-amber-700
+    @apply bg-amber-700 hover:bg-amber-600 active:bg-amber-800
            text-white font-semibold py-3 px-5 rounded-xl
            transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed
            min-h-[44px] inline-flex items-center justify-center gap-2
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply hover:bg-amber-100/60 active:bg-amber-100 font-medium py-3 px-5 rounded-xl
+    @apply font-medium py-3 px-5 rounded-xl
            transition-colors duration-150 min-h-[44px] inline-flex items-center justify-center gap-2
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2;
-    background-color: #f0e8da;
-    color: #1a2744;
-    border: 1px solid #c0b09e;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
+    background-color: #FFFFFF;
+    color: #12213D;
+    border: 1px solid #D4CFC8;
   }
+  .btn-secondary:hover { background-color: #F5F2ED; }
 
   .btn-ghost {
-    @apply hover:bg-amber-900/10 active:bg-amber-900/15 font-medium py-2.5 px-4 rounded-xl
+    @apply font-medium py-2.5 px-4 rounded-xl
            transition-colors duration-150 min-h-[44px] inline-flex items-center justify-center
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400;
-    color: #7a6e62;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500;
+    color: #6B7280;
   }
-  .btn-ghost:hover { color: #1a2744; }
+  .btn-ghost:hover { color: #12213D; background-color: #F0EDE8; }
 
-  /* ── Inputs ───────────────────────────────────────────────────────────── */
   .input {
     @apply rounded-xl px-4 py-3 w-full
-           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
+           focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent
            transition-all duration-150 min-h-[48px];
     font-size: 16px;
-    background-color: #f5f0e8;
-    color: #1a2744;
-    border: 1px solid #c0b09e;
+    background-color: #FFFFFF;
+    color: #12213D;
+    border: 1px solid #D4CFC8;
   }
-  .input::placeholder { color: #8898b8; }
+  .input::placeholder { color: #A09898; }
 
-  /* ── Cards ────────────────────────────────────────────────────────────── */
   .card {
     @apply rounded-2xl overflow-hidden;
-    background-color: #f5f0e8;
-    border: 1px solid #c8baa8;
+    background-color: #FFFFFF;
+    border: 1px solid #EAE6E0;
+    box-shadow: 0 1px 3px rgba(18,33,61,0.05), 0 4px 12px rgba(18,33,61,0.04);
   }
 
-  /* ── Tabs ─────────────────────────────────────────────────────────────── */
   .tab-bar {
     @apply flex overflow-x-auto gap-0;
-    border-bottom: 1px solid #ddd0bc;
+    border-bottom: 1px solid #EAE6E0;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -78,52 +72,18 @@
   .tab-btn {
     @apply px-4 text-sm font-medium whitespace-nowrap transition-colors
            flex items-center justify-center min-h-[44px] min-w-[60px]
-           focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-amber-400;
+           focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-amber-500;
   }
+  .tab-btn-active   { color: #92510A; border-bottom: 2px solid #92510A; }
+  .tab-btn-inactive { color: #9CA3AF; }
+  .tab-btn-inactive:hover { color: #12213D; }
 
-  .tab-btn-active   { color: #b86a00; border-bottom: 2px solid #b86a00; }
-  .tab-btn-inactive { color: #7a6e62; }
-  .tab-btn-inactive:hover { color: #1a2744; }
-
-  /* ── Badge ────────────────────────────────────────────────────────────── */
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
   }
 }
 
-/* ── Scroll fade ──────────────────────────────────────────────────────────── */
-.scroll-fade-right {
-  mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-}
-
-/* ── Page transitions ─────────────────────────────────────────────────────── */
-.page-enter { animation: fadeSlideUp 0.18s ease-out; }
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Bottom sheet ─────────────────────────────────────────────────────────── */
-.sheet-enter { animation: sheetUp 0.22s cubic-bezier(0.32, 0.72, 0, 1); }
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-
-/* ── Scrollbars ───────────────────────────────────────────────────────────── */
-@media (hover: hover) {
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #d8cfc0; }
-  ::-webkit-scrollbar-thumb { background: #a0b0cc; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6070a0; }
-}
-
-/* ── Safe areas ───────────────────────────────────────────────────────────── */
-.pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
-.pt-safe { padding-top: env(safe-area-inset-top); }
-
-/* ── Marquee ──────────────────────────────────────────────────────────────── */
+/* ── Marquee ─────────────────────────────────────────────────────────────── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -135,10 +95,42 @@
 }
 .animate-marquee:hover { animation-play-state: paused; }
 
-/* ── Skeleton ─────────────────────────────────────────────────────────────── */
+/* ── Scroll fade ─────────────────────────────────────────────────────────── */
+.scroll-fade-right {
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+/* ── Page transitions ────────────────────────────────────────────────────── */
+.page-enter { animation: fadeSlideUp 0.18s ease-out; }
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Bottom sheet ────────────────────────────────────────────────────────── */
+.sheet-enter { animation: sheetUp 0.22s cubic-bezier(0.32, 0.72, 0, 1); }
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Safe areas ──────────────────────────────────────────────────────────── */
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
+.pt-safe { padding-top: env(safe-area-inset-top); }
+
+/* ── Scrollbars ──────────────────────────────────────────────────────────── */
+@media (hover: hover) {
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #FAF8F4; }
+  ::-webkit-scrollbar-thumb { background: #C8C0B8; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #A09898; }
+}
+
+/* ── Skeleton ────────────────────────────────────────────────────────────── */
 .skeleton {
   @apply rounded-xl;
-  background: linear-gradient(90deg, #e8e2d8 25%, #ddd6c8 50%, #e8e2d8 75%);
+  background: linear-gradient(90deg, #EDE9E3 25%, #E4DFD8 50%, #EDE9E3 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -147,62 +139,58 @@
   100% { background-position: -200% 0; }
 }
 
-/* ──────────────────────────────────────────────────────────────────────────── */
-/* CREAM + NAVY THEME — override Tailwind dark stone utilities globally.        */
-/* Unlayered CSS wins over @layer utilities without needing !important.         */
-/* ──────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/* GLOBAL STONE OVERRIDES — map Tailwind dark stone → clean light theme       */
+/* Unlayered CSS beats @layer utilities — no !important needed                */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 /* Backgrounds */
-.bg-stone-950  { background-color: #d8cfc0; }
-.bg-stone-900  { background-color: #f5f0e8; }
-.bg-stone-800  { background-color: #ccc3b4; }
-.bg-stone-700  { background-color: #c0b8a8; }
+.bg-stone-950  { background-color: #FAF8F4; }
+.bg-stone-900  { background-color: #FFFFFF; }
+.bg-stone-800  { background-color: #F0EDE8; }
+.bg-stone-700  { background-color: #E8E4DE; }
 
-/* Opacity variants */
-.bg-stone-950\/95 { background-color: rgba(216, 207, 192, 0.95); }
-.bg-stone-950\/98 { background-color: rgba(216, 207, 192, 0.98); }
-.bg-stone-900\/50 { background-color: rgba(245, 240, 232, 0.5); }
-.bg-stone-900\/80 { background-color: rgba(245, 240, 232, 0.8); }
-.bg-stone-900\/90 { background-color: rgba(245, 240, 232, 0.9); }
-.bg-stone-800\/50 { background-color: rgba(204, 195, 180, 0.5); }
+.bg-stone-950\/95 { background-color: rgba(250,248,244,0.95); }
+.bg-stone-950\/98 { background-color: rgba(250,248,244,0.98); }
+.bg-stone-900\/50 { background-color: rgba(255,255,255,0.5); }
+.bg-stone-900\/80 { background-color: rgba(255,255,255,0.8); }
+.bg-stone-900\/90 { background-color: rgba(255,255,255,0.9); }
+.bg-stone-800\/50 { background-color: rgba(240,237,232,0.5); }
 
-/* Hover/Active backgrounds */
-.hover\:bg-stone-800:hover { background-color: #bfb8aa; }
-.hover\:bg-stone-700:hover { background-color: #b8b0a0; }
-.hover\:bg-stone-900:hover { background-color: #ede5d8; }
-.active\:bg-stone-900:active { background-color: #e5ddd0; }
+.hover\:bg-stone-800:hover  { background-color: #E8E4DE; }
+.hover\:bg-stone-700:hover  { background-color: #DDD9D2; }
+.hover\:bg-stone-900:hover  { background-color: #F5F2ED; }
+.active\:bg-stone-900:active { background-color: #F0EDE8; }
 
-/* Text — navy palette for headings, warm brown for body/muted */
-.text-stone-100 { color: #1a2744; }
-.text-stone-200 { color: #1e2d50; }
-.text-stone-300 { color: #3a3028; }
-.text-stone-400 { color: #5a5048; }
-.text-stone-500 { color: #7a6e62; }
-.text-stone-600 { color: #6a5e52; }
-.text-stone-700 { color: #9a8e82; }
+/* Text */
+.text-stone-100 { color: #12213D; }
+.text-stone-200 { color: #1C2E4A; }
+.text-stone-300 { color: #374151; }
+.text-stone-400 { color: #6B7280; }
+.text-stone-500 { color: #9CA3AF; }
+.text-stone-600 { color: #6B7280; }
+.text-stone-700 { color: #BDB8B0; }
 
-/* Hover text */
-.hover\:text-stone-200:hover { color: #1e2d50; }
-.hover\:text-stone-300:hover { color: #3a3028; }
-.hover\:text-stone-400:hover { color: #5a5048; }
+.hover\:text-stone-200:hover { color: #1C2E4A; }
+.hover\:text-stone-300:hover { color: #374151; }
+.hover\:text-stone-400:hover { color: #6B7280; }
 
 /* Borders */
-.border-stone-800 { border-color: #c8baa8; }
-.border-stone-700 { border-color: #bab0a0; }
-.border-stone-600 { border-color: #aca498; }
+.border-stone-800 { border-color: #EAE6E0; }
+.border-stone-700 { border-color: #D8D3CA; }
+.border-stone-600 { border-color: #CBC6BC; }
+
+.divide-stone-800 > * + * { border-color: #EAE6E0; }
+.divide-stone-700 > * + * { border-color: #D8D3CA; }
 
 /* Placeholders */
-.placeholder-stone-500::placeholder { color: #8898b8; }
-.placeholder-stone-600::placeholder { color: #7080b0; }
+.placeholder-stone-500::placeholder { color: #A09898; }
+.placeholder-stone-600::placeholder { color: #9CA3AF; }
 
-/* Dividers */
-.divide-stone-800 > * + * { border-color: #ddd0bc; }
-.divide-stone-700 > * + * { border-color: #c8bfb0; }
-
-/* Ring offsets */
-.focus-visible\:ring-offset-stone-950:focus-visible { --tw-ring-offset-color: #f0ece3; }
+/* Ring offset */
+.focus-visible\:ring-offset-stone-950:focus-visible { --tw-ring-offset-color: #FAF8F4; }
 
 /* Gradients */
-.from-stone-950 { --tw-gradient-from: #d8cfc0; }
-.to-stone-900   { --tw-gradient-to: #f5f0e8; }
-.via-stone-900  { --tw-gradient-via: #f5f0e8; }
+.from-stone-950 { --tw-gradient-from: #FAF8F4; }
+.to-stone-900   { --tw-gradient-to: #FFFFFF; }
+.via-stone-900  { --tw-gradient-via: #FFFFFF; }

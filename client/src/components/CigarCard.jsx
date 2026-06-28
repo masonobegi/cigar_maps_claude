@@ -23,7 +23,7 @@ function WrapperSwatch({ wrapper }) {
     ? Object.entries(WRAPPER_COLORS).find(([k]) => wrapper.toLowerCase().includes(k.toLowerCase()))?.[1]
     : null;
   return color ? (
-    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color, border: '1px solid #a89888' }} title={wrapper} />
+    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color, border: '1px solid #D4CFC8' }} title={wrapper} />
   ) : null;
 }
 
@@ -36,7 +36,7 @@ function ScoreRing({ value, size = 36 }) {
   return (
     <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-        <circle cx="18" cy="18" r={r} fill="none" stroke="#c8baa8" strokeWidth="3.5" />
+        <circle cx="18" cy="18" r={r} fill="none" stroke="#E8E4DE" strokeWidth="3.5" />
         <circle cx="18" cy="18" r={r} fill="none" stroke={color} strokeWidth="3.5"
           strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       </svg>
@@ -52,7 +52,7 @@ export default function CigarCard({ cigar }) {
   const rating = cigar.avg_rating || 0;
 
   return (
-    <Link to={`/cigars/${cigar.id}`} className="card hover:border-amber-500/50 active:scale-[0.98] transition-all duration-150 group flex flex-col overflow-hidden" style={{backgroundColor: '#f5f0e8'}}>
+    <Link to={`/cigars/${cigar.id}`} className="card hover:shadow-md active:scale-[0.98] transition-all duration-150 group flex flex-col overflow-hidden">
       {/* Wrapper color strip */}
       <div className="h-1.5 w-full flex-shrink-0"
         style={{ backgroundColor: cigar.wrapper
@@ -75,7 +75,7 @@ export default function CigarCard({ cigar }) {
         {/* Strength bar */}
         {sc && (
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-1 rounded-full overflow-hidden" style={{backgroundColor: '#c8baa8'}}>
+            <div className="flex-1 h-1 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
               <div className={`h-full ${sc.bar} ${sc.color} rounded-full transition-all`} />
             </div>
             <span className={`text-[9px] font-semibold ${sc.text} flex-shrink-0`}>{sc.label}</span>
@@ -98,7 +98,7 @@ export default function CigarCard({ cigar }) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-auto pt-1.5 border-t" style={{borderColor: '#c8baa8'}}>
+        <div className="flex items-center justify-between mt-auto pt-1.5 border-t border-stone-800">
           {cigar.store_count > 0 ? (
             <span className="text-[9px] text-stone-500 flex items-center gap-1">
               <Store className="w-2.5 h-2.5 text-emerald-600" />
