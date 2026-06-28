@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const { initSchema } = require('./database/schema');
+const { seed } = require('./database/seed');
 
 const app = express();
 app.use(cors());
@@ -43,6 +44,7 @@ const PORT = process.env.PORT || 3001;
 
 async function start() {
   await initSchema();
+  await seed();
   app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
 }
 

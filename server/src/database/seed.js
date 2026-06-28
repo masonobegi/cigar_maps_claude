@@ -156,9 +156,12 @@ const vitolasMap = {
 };
 
 async function seed() {
-  console.log('Seeding database...');
-
-  await db.exec('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
+  const { rows } = await db.query('SELECT COUNT(*)::int AS count FROM users');
+  if (rows[0].count > 0) {
+    console.log('[seed] Database already has data — skipping seed.');
+    return;
+  }
+  console.log('[seed] Empty database detected — seeding...');
 
   const hash = bcrypt.hashSync('password123', 10);
   const adminHash = bcrypt.hashSync('admin123', 10);
@@ -420,7 +423,12 @@ async function seed() {
   console.log('  Store 5: store5@demo.com / password123 (Lake Grove Cigars — Lake Oswego)');
   console.log('  Admin:   admin@cigarbuddy.com / admin123');
 
-  await db.pool.end();
+  console.log('[seed] Done.');
 }
 
-initSchema().then(seed).catch(err => { console.error(err); process.exit(1); });
+module.exports = { seed };
+
+// Allow running directly: node seed.js
+if (require.main === module) {
+  initSchema().then(seed).then(() => db.pool.end()).catch(err => { console.error(err); process.exit(1); });
+}
