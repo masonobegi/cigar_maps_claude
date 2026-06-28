@@ -19,7 +19,6 @@ import Passport from './pages/Passport';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Footer from './components/Footer';
-import InstallPrompt from './components/InstallPrompt';
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -68,7 +67,6 @@ function AppLayout() {
       </main>
       <Footer />
       <BottomNav />
-      <InstallPrompt />
     </div>
   );
 }
