@@ -242,7 +242,12 @@ async function initSchema() {
     CREATE INDEX IF NOT EXISTS idx_verif_store ON verification_requests(store_id);
     CREATE INDEX IF NOT EXISTS idx_verif_status ON verification_requests(status);
     CREATE INDEX IF NOT EXISTS idx_cigar_follows_user ON cigar_follows(user_id);
-    CREATE INDEX IF NOT EXISTS idx_inv_requests_store ON inventory_requests(store_id)
+    CREATE INDEX IF NOT EXISTS idx_inv_requests_store ON inventory_requests(store_id);
+
+    CREATE TABLE IF NOT EXISTS seed_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    )
   `);
 }
 
