@@ -6,6 +6,12 @@ import { getStoreStatus } from '../utils/hours';
 
 const StoreMap = lazy(() => import('../components/StoreMap'));
 
+const NAVY   = '#12213D';
+const MUTED  = '#6B7280';
+const LABEL  = '#4B5563';
+const BORDER = '#E8E4DE';
+const AMBER  = '#92510A';
+
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [stores, setStores] = useState([]);
@@ -18,7 +24,7 @@ export default function Stores() {
   const [hasHumidor, setHasHumidor] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('list'); // 'list' | 'map'
+  const [viewMode, setViewMode] = useState('list');
   const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => { api.getStoreCities().then(setCities); }, []);
@@ -67,16 +73,11 @@ export default function Stores() {
 
   const hasFilters = q || city || openNow || hasLounge || hasHumidor;
 
-  // Map view — full screen
   if (viewMode === 'map') {
     return (
       <div className="fixed inset-0 z-40" style={{ top: '56px', bottom: '64px' }}>
-        <Suspense fallback={<div className="w-full h-full bg-stone-950 flex items-center justify-center"><div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" /></div>}>
-          <StoreMap
-            stores={stores}
-            userLocation={userLocation}
-            onClose={() => setViewMode('list')}
-          />
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center"><div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" /></div>}>
+          <StoreMap stores={stores} userLocation={userLocation} onClose={() => setViewMode('list')} />
         </Suspense>
       </div>
     );
@@ -86,17 +87,24 @@ export default function Stores() {
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="font-serif text-2xl font-bold text-stone-100 mb-1">Cigar Retailers</h1>
-          <p className="text-stone-500 text-sm">Find premium cigar shops with real-time inventory</p>
+          <h1 className="font-serif text-2xl font-bold mb-1" style={{ color: NAVY }}>Cigar Retailers</h1>
+          <p className="text-sm" style={{ color: MUTED }}>Find premium cigar shops with real-time inventory</p>
         </div>
+
         {/* Map / List toggle */}
-        <div className="flex bg-stone-800 rounded-xl p-1 gap-1">
+        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#F0EDE8' }}>
           <button onClick={() => setViewMode('list')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-stone-700 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}>
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+            style={viewMode === 'list'
+              ? { backgroundColor: '#FFFFFF', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }
+              : { color: MUTED }}>
             <List className="w-4 h-4" /> List
           </button>
           <button onClick={() => { setViewMode('map'); if (!userLocation) useMyLocation(); }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === 'map' ? 'bg-amber-600 text-white' : 'text-stone-500 hover:text-stone-300'}`}>
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+            style={viewMode === 'map'
+              ? { backgroundColor: AMBER, color: '#FFFFFF' }
+              : { color: MUTED }}>
             <Map className="w-4 h-4" /> Map
           </button>
         </div>
@@ -105,11 +113,11 @@ export default function Stores() {
       {/* Search + filter */}
       <form onSubmit={applySearch} className="flex gap-2 mb-3 flex-wrap">
         <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
           <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search store name..." className="input pl-10 py-2.5" />
         </div>
         <div className="relative">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
+          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
           <input value={city} onChange={e => setCity(e.target.value)} placeholder="City" className="input pl-9 py-2.5 w-36" list="store-cities" />
           <datalist id="store-cities">{cities.map(c => <option key={`${c.city}-${c.state}`} value={c.city} />)}</datalist>
         </div>
@@ -121,27 +129,28 @@ export default function Stores() {
           <span className="hidden sm:inline text-sm">Near Me</span>
         </button>
         <button type="submit" className="btn-primary px-5">Search</button>
-        <button type="button" onClick={() => setShowFilters(!showFilters)} className={`btn-secondary flex items-center gap-1.5 ${hasFilters ? 'border-amber-600 text-amber-400' : ''}`}>
+        <button type="button" onClick={() => setShowFilters(!showFilters)}
+          className="btn-secondary flex items-center gap-1.5"
+          style={hasFilters ? { borderColor: AMBER, color: AMBER } : {}}>
           <Filter className="w-4 h-4" />
         </button>
       </form>
 
       {showFilters && (
         <div className="card p-4 mb-4 flex flex-wrap gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={openNow} onChange={e => setOpenNow(e.target.checked)} className="accent-amber-500" />
-            <span className="text-sm text-stone-300">Open right now</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={hasLounge} onChange={e => setHasLounge(e.target.checked)} className="accent-amber-500" />
-            <span className="text-sm text-stone-300">Has Lounge</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={hasHumidor} onChange={e => setHasHumidor(e.target.checked)} className="accent-amber-500" />
-            <span className="text-sm text-stone-300">Walk-in Humidor</span>
-          </label>
+          {[
+            { label: 'Open right now', checked: openNow, onChange: e => setOpenNow(e.target.checked) },
+            { label: 'Has Lounge',     checked: hasLounge, onChange: e => setHasLounge(e.target.checked) },
+            { label: 'Walk-in Humidor',checked: hasHumidor,onChange: e => setHasHumidor(e.target.checked) },
+          ].map(({ label, checked, onChange }) => (
+            <label key={label} className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={checked} onChange={onChange} className="accent-amber-600" />
+              <span className="text-sm font-medium" style={{ color: LABEL }}>{label}</span>
+            </label>
+          ))}
           {hasFilters && (
-            <button onClick={() => { setQ(''); setCity(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false); setSearchParams({}); }} className="text-xs text-stone-500 hover:text-amber-400 flex items-center gap-1">
+            <button onClick={() => { setQ(''); setCity(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false); setSearchParams({}); }}
+              className="flex items-center gap-1 text-xs" style={{ color: MUTED }}>
               <X className="w-3 h-3" /> Clear
             </button>
           )}
@@ -153,23 +162,27 @@ export default function Stores() {
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
           {cities.map(c => (
             <button key={`${c.city}-${c.state}`} onClick={() => setCity(c.city)}
-              className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-amber-400 transition-colors flex-shrink-0">
-              {c.city}, {c.state} <span className="text-stone-600 ml-1">({c.store_count})</span>
+              className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full flex-shrink-0 transition-colors"
+              style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+              {c.city}, {c.state}
+              <span className="ml-1" style={{ color: MUTED }}>({c.store_count})</span>
             </button>
           ))}
         </div>
       )}
 
-      <p className="text-xs text-stone-600 mb-4">
+      <p className="text-xs mb-4" style={{ color: MUTED }}>
         {loading ? 'Loading...' : `${stores.length} store${stores.length !== 1 ? 's' : ''} found`}
       </p>
 
       {loading ? (
-        <div className="flex flex-col gap-4">{[1,2,3].map(i => <div key={i} className="card h-32 animate-pulse bg-stone-800" />)}</div>
+        <div className="flex flex-col gap-4">
+          {[1, 2, 3].map(i => <div key={i} className="card h-32 skeleton" />)}
+        </div>
       ) : stores.length === 0 ? (
         <div className="text-center py-16">
-          <Store className="w-10 h-10 text-stone-700 mx-auto mb-3" />
-          <p className="text-stone-400">No stores found. Try different filters.</p>
+          <Store className="w-10 h-10 mx-auto mb-3" style={{ color: '#D4CFC8' }} />
+          <p style={{ color: MUTED }}>No stores found. Try different filters.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -177,40 +190,85 @@ export default function Stores() {
             let parsedHours = {};
             try { parsedHours = JSON.parse(store.hours || '{}'); } catch {}
             const status = getStoreStatus(parsedHours);
+
+            const statusStyle = status.isOpen
+              ? { backgroundColor: '#D1FAE5', color: '#065F46' }
+              : { backgroundColor: '#F3F4F6', color: '#6B7280' };
+
             return (
-            <Link key={store.id} to={`/stores/${store.id}`} className="card p-5 hover:border-stone-600 transition-colors group">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-                  <Store className="w-6 h-6 text-amber-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h2 className="font-semibold text-stone-100 group-hover:text-amber-300 transition-colors">{store.name}</h2>
-                    {store.verified === 1 && <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />}
-                    {status.label && (
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${status.isOpen ? 'bg-emerald-900/40 text-emerald-400' : 'bg-stone-800 text-stone-500'}`}>
-                        {status.isOpen ? '● ' : ''}{status.label}
+              <Link key={store.id} to={`/stores/${store.id}`}
+                className="card p-5 transition-colors group"
+                style={{ '--hover-border': '#D4CFC8' }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: '#FEF3C7' }}>
+                    <Store className="w-6 h-6" style={{ color: AMBER }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    {/* Name row */}
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <h2 className="font-semibold transition-colors" style={{ color: NAVY }}>
+                        {store.name}
+                      </h2>
+                      {store.verified === 1 && (
+                        <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} />
+                      )}
+                      {status.label && (
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={statusStyle}>
+                          {status.label}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex items-center gap-1 text-xs mb-2" style={{ color: MUTED }}>
+                      <MapPin className="w-3 h-3" />{store.city}, {store.state}
+                    </div>
+
+                    {/* Description */}
+                    {store.description && (
+                      <p className="text-sm line-clamp-2 mb-2" style={{ color: LABEL }}>
+                        {store.description}
+                      </p>
+                    )}
+
+                    {/* Stats */}
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: MUTED }}>
+                      <span className="flex items-center gap-1">
+                        <Package className="w-3 h-3" />{store.inventory_count} SKUs
                       </span>
+                      <span className="flex items-center gap-1">
+                        <Users className="w-3 h-3" />{store.follower_count} followers
+                      </span>
+                      {store.avg_rating > 0 && (
+                        <span className="flex items-center gap-1">
+                          <Star className="w-3 h-3" style={{ color: '#D97706' }} />
+                          <span style={{ color: LABEL, fontWeight: 500 }}>{store.avg_rating.toFixed(1)}</span>
+                        </span>
+                      )}
+                      {store.today_hours && (
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />{store.today_hours}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Tags */}
+                    {store.tags?.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {store.tags.map(t => (
+                          <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium"
+                            style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-stone-500 mb-2">
-                    <MapPin className="w-3 h-3" />{store.city}, {store.state}
-                  </div>
-                  {store.description && <p className="text-sm text-stone-400 line-clamp-2 mb-2">{store.description}</p>}
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-500">
-                    <span className="flex items-center gap-1"><Package className="w-3 h-3" />{store.inventory_count} SKUs</span>
-                    <span className="flex items-center gap-1"><Users className="w-3 h-3" />{store.follower_count} followers</span>
-                    {store.avg_rating > 0 && <span className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-500" />{store.avg_rating.toFixed(1)}</span>}
-                    {store.today_hours && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{store.today_hours}</span>}
-                  </div>
-                  {store.tags?.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {store.tags.map(t => <span key={t} className="text-[10px] bg-stone-800 text-stone-500 px-2 py-0.5 rounded-full">{t}</span>)}
-                    </div>
-                  )}
                 </div>
-              </div>
-            </Link>
+              </Link>
             );
           })}
         </div>
