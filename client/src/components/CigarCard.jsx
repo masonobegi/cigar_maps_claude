@@ -1,12 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Star, Store, MapPin } from 'lucide-react';
 
+const NAVY  = '#12213D';
+const AMBER = '#92510A';
+const MUTED = '#6B7280';
+const LABEL = '#4B5563';
+
 const STRENGTH_CONFIG = {
-  'mild':        { label: 'Mild',        bar: 'w-1/5',  color: 'bg-green-400',  text: 'text-green-400',  bg: 'bg-green-900/30' },
-  'mild-medium': { label: 'Mild-Med',    bar: 'w-2/5',  color: 'bg-lime-400',   text: 'text-lime-400',   bg: 'bg-lime-900/30' },
-  'medium':      { label: 'Medium',      bar: 'w-3/5',  color: 'bg-amber-400',  text: 'text-amber-400',  bg: 'bg-amber-900/30' },
-  'medium-full': { label: 'Med-Full',    bar: 'w-4/5',  color: 'bg-orange-400', text: 'text-orange-400', bg: 'bg-orange-900/30' },
-  'full':        { label: 'Full',        bar: 'w-full', color: 'bg-red-400',    text: 'text-red-400',    bg: 'bg-red-900/30' },
+  'mild':        { label: 'Mild',     bar: 'w-1/5',  barColor: '#22C55E',  textColor: '#166534' },
+  'mild-medium': { label: 'Mild-Med', bar: 'w-2/5',  barColor: '#84CC16',  textColor: '#3F6212' },
+  'medium':      { label: 'Medium',   bar: 'w-3/5',  barColor: '#F59E0B',  textColor: '#92400E' },
+  'medium-full': { label: 'Med-Full', bar: 'w-4/5',  barColor: '#F97316',  textColor: '#9A3412' },
+  'full':        { label: 'Full',     bar: 'w-full', barColor: '#EF4444',  textColor: '#991B1B' },
 };
 
 const WRAPPER_COLORS = {
@@ -23,13 +28,14 @@ function WrapperSwatch({ wrapper }) {
     ? Object.entries(WRAPPER_COLORS).find(([k]) => wrapper.toLowerCase().includes(k.toLowerCase()))?.[1]
     : null;
   return color ? (
-    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color, border: '1px solid #D4CFC8' }} title={wrapper} />
+    <div className="w-3 h-3 rounded-full flex-shrink-0"
+      style={{ backgroundColor: color, border: '1px solid #D4CFC8' }} title={wrapper} />
   ) : null;
 }
 
 function ScoreRing({ value, size = 36 }) {
   if (!value) return null;
-  const color = value >= 95 ? '#10b981' : value >= 90 ? '#f59e0b' : value >= 85 ? '#fb923c' : '#94a3b8';
+  const color = value >= 95 ? '#059669' : value >= 90 ? '#D97706' : value >= 85 ? '#EA580C' : '#6B7280';
   const r = 14;
   const circ = 2 * Math.PI * r;
   const dash = (value / 100) * circ;
@@ -41,7 +47,7 @@ function ScoreRing({ value, size = 36 }) {
           strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[9px] font-bold" style={{ color }}>{value}</span>
+        <span className="text-xs font-bold" style={{ color }}>{value}</span>
       </div>
     </div>
   );
@@ -52,20 +58,26 @@ export default function CigarCard({ cigar }) {
   const rating = cigar.avg_rating || 0;
 
   return (
-    <Link to={`/cigars/${cigar.id}`} className="card hover:shadow-md active:scale-[0.98] transition-all duration-150 group flex flex-col overflow-hidden">
+    <Link to={`/cigars/${cigar.id}`}
+      className="card hover:shadow-md active:scale-[0.98] transition-all duration-150 group flex flex-col overflow-hidden">
       {/* Wrapper color strip */}
       <div className="h-1.5 w-full flex-shrink-0"
-        style={{ backgroundColor: cigar.wrapper
-          ? Object.entries(WRAPPER_COLORS).find(([k]) => cigar.wrapper?.toLowerCase().includes(k.toLowerCase()))?.[1] ?? '#4a3020'
-          : '#4a3020'
+        style={{ backgroundColor:
+          cigar.wrapper
+            ? Object.entries(WRAPPER_COLORS).find(([k]) => cigar.wrapper?.toLowerCase().includes(k.toLowerCase()))?.[1] ?? '#4a3020'
+            : '#4a3020'
         }} />
 
       <div className="p-3 flex flex-col gap-2 flex-1">
-        {/* Header row */}
+        {/* Header */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-amber-500/80 font-semibold uppercase tracking-wider truncate leading-none mb-1">{cigar.brand}</p>
-            <h3 className="font-semibold text-stone-100 text-sm leading-tight group-hover:text-amber-300 transition-colors line-clamp-2">
+            <p className="text-xs font-bold uppercase tracking-wider truncate leading-none mb-1"
+              style={{ color: AMBER }}>{cigar.brand}</p>
+            <h3 className="font-semibold text-sm leading-tight line-clamp-2 transition-colors"
+              style={{ color: NAVY }}
+              onMouseEnter={e => e.currentTarget.style.color = AMBER}
+              onMouseLeave={e => e.currentTarget.style.color = NAVY}>
               {cigar.name}
             </h3>
           </div>
@@ -75,45 +87,49 @@ export default function CigarCard({ cigar }) {
         {/* Strength bar */}
         {sc && (
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-1 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
-              <div className={`h-full ${sc.bar} ${sc.color} rounded-full transition-all`} />
+            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E4DE' }}>
+              <div className={`h-full ${sc.bar} rounded-full`} style={{ backgroundColor: sc.barColor }} />
             </div>
-            <span className={`text-[9px] font-semibold ${sc.text} flex-shrink-0`}>{sc.label}</span>
+            <span className="text-xs font-semibold flex-shrink-0" style={{ color: sc.textColor }}>
+              {sc.label}
+            </span>
           </div>
         )}
 
-        {/* Meta row */}
+        {/* Wrapper / country */}
         <div className="flex items-center gap-2 flex-wrap">
           {cigar.wrapper && (
             <div className="flex items-center gap-1">
               <WrapperSwatch wrapper={cigar.wrapper} />
-              <span className="text-[9px] text-stone-500 truncate max-w-20">{cigar.wrapper}</span>
+              <span className="text-xs truncate max-w-20" style={{ color: LABEL }}>{cigar.wrapper}</span>
             </div>
           )}
           {cigar.country && (
-            <span className="text-[9px] text-stone-600 flex items-center gap-0.5 truncate">
+            <span className="text-xs flex items-center gap-0.5 truncate" style={{ color: MUTED }}>
               <MapPin className="w-2.5 h-2.5" />{cigar.country.split(' ')[0]}
             </span>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-auto pt-1.5 border-t border-stone-800">
+        <div className="flex items-center justify-between mt-auto pt-1.5"
+          style={{ borderTop: '1px solid #EAE6E0' }}>
           {cigar.store_count > 0 ? (
-            <span className="text-[9px] text-stone-500 flex items-center gap-1">
-              <Store className="w-2.5 h-2.5 text-emerald-600" />
-              <span className="text-emerald-600 font-medium">{cigar.store_count}</span> {cigar.store_count === 1 ? 'store' : 'stores'}
+            <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}>
+              <Store className="w-2.5 h-2.5" style={{ color: '#059669' }} />
+              <span className="font-medium" style={{ color: '#059669' }}>{cigar.store_count}</span>
+              {cigar.store_count === 1 ? ' store' : ' stores'}
             </span>
           ) : (
-            <span className="text-[9px] text-stone-700">Not stocked nearby</span>
+            <span className="text-xs" style={{ color: MUTED }}>Not stocked</span>
           )}
           {cigar.min_price > 0 ? (
-            <span className="text-[10px] text-stone-400">
-              from <span className="text-amber-400 font-semibold">${cigar.min_price.toFixed(2)}</span>
+            <span className="text-xs" style={{ color: MUTED }}>
+              from <span className="font-semibold" style={{ color: AMBER }}>${cigar.min_price.toFixed(2)}</span>
             </span>
           ) : cigar.review_count > 0 ? (
-            <span className="text-[9px] text-stone-600 flex items-center gap-0.5">
-              <Star className="w-2.5 h-2.5" />{cigar.review_count}
+            <span className="text-xs flex items-center gap-0.5" style={{ color: MUTED }}>
+              <Star className="w-2.5 h-2.5" style={{ color: '#D97706' }} />{cigar.review_count}
             </span>
           ) : null}
         </div>

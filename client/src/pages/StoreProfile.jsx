@@ -6,7 +6,13 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import BackButton from '../components/BackButton';
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const NAVY  = '#12213D';
+const LABEL = '#4B5563';
+const MUTED = '#6B7280';
+const AMBER = '#92510A';
+const BORDER= '#E8E4DE';
+const BG_ALT= '#F5F3F0';
 
 function StarRating({ value, onChange, size = 'md' }) {
   const sz = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
@@ -14,7 +20,8 @@ function StarRating({ value, onChange, size = 'md' }) {
     <div className="flex gap-1">
       {[1,2,3,4,5].map(n => (
         <button key={n} type="button" onClick={() => onChange && onChange(n)} className="transition-transform hover:scale-110">
-          <Star className={`${sz} ${n <= value ? 'text-amber-400 fill-amber-400' : 'text-stone-700'}`} />
+          <Star className={`${sz} ${n <= value ? 'fill-amber-500' : ''}`}
+            style={{ color: n <= value ? '#D97706' : '#D4CFC8' }} />
         </button>
       ))}
     </div>
@@ -103,22 +110,20 @@ export default function StoreProfile() {
   }
 
   if (loading) return (
-    <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse space-y-4">
-      <div className="h-8 bg-stone-800 rounded w-64" />
-      <div className="h-32 bg-stone-800 rounded" />
+    <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+      <div className="h-8 skeleton rounded w-64" />
+      <div className="h-32 skeleton rounded" />
     </div>
   );
 
-  if (!data) return <div className="text-center py-20 text-stone-500">Store not found</div>;
+  if (!data) return <div className="text-center py-20" style={{ color: MUTED }}>Store not found</div>;
 
   const { store, inventory_count, deals, stats, recent_ratings, new_arrivals } = data;
   const hours = typeof store.hours === 'object' ? store.hours : {};
 
-  // Open now calculation
   const now = new Date();
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const today = dayNames[now.getDay()];
-  const dayIdx = DAYS.indexOf(today);
   const todayHours = hours[today];
   let isOpen = null;
   if (todayHours && todayHours !== 'Closed') {
@@ -132,7 +137,6 @@ export default function StoreProfile() {
     }
   } else if (todayHours === 'Closed') isOpen = false;
 
-  // Group inventory by cigar
   const filteredInv = inventory.filter(i =>
     !search || i.brand.toLowerCase().includes(search.toLowerCase()) ||
     i.cigar_name.toLowerCase().includes(search.toLowerCase())
@@ -145,14 +149,17 @@ export default function StoreProfile() {
 
   const TABS = [
     { key: 'inventory', label: `Inventory (${inventory_count})` },
-    { key: 'new', label: `New Arrivals (${new_arrivals.length})` },
-    { key: 'deals', label: `Deals (${deals.length})` },
-    { key: 'about', label: 'About' },
+    { key: 'new',       label: `New Arrivals (${new_arrivals.length})` },
+    { key: 'deals',     label: `Deals (${deals.length})` },
+    { key: 'about',     label: 'About' },
   ];
 
   const mapsUrl = store.address
     ? `https://maps.google.com/?q=${encodeURIComponent([store.address, store.city, store.state].filter(Boolean).join(', '))}`
     : `https://maps.google.com/?q=${encodeURIComponent([store.name, store.city, store.state].filter(Boolean).join(', '))}`;
+
+  const openStyle   = { backgroundColor: '#D1FAE5', color: '#065F46' };
+  const closedStyle = { backgroundColor: '#FEE2E2', color: '#991B1B' };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
@@ -160,56 +167,88 @@ export default function StoreProfile() {
 
       {/* Store header card */}
       <div className="card mb-4 overflow-hidden">
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-            <Store className="w-7 h-7 text-amber-500" />
+        <div className="flex items-start gap-4 p-5">
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: '#FEF3C7' }}>
+            <Store className="w-7 h-7" style={{ color: AMBER }} />
           </div>
           <div className="flex-1 min-w-0">
+            {/* Name + badges */}
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h1 className="font-serif text-xl font-bold text-stone-100">{store.name}</h1>
-              {store.verified === 1 && <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />}
+              <h1 className="font-serif text-xl font-bold" style={{ color: NAVY }}>{store.name}</h1>
+              {store.verified === 1 && <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} />}
               {isOpen !== null && (
-                <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${isOpen ? 'bg-emerald-900/40 text-emerald-400' : 'bg-red-900/30 text-red-500'}`}>
-                  {isOpen ? '● Open Now' : '● Closed'}
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
+                  style={isOpen ? openStyle : closedStyle}>
+                  ● {isOpen ? 'Open Now' : 'Closed'}
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-stone-500">
+
+            {/* Address / phone / website */}
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-2" style={{ color: MUTED }}>
               {(store.address || store.city) && (
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" />{[store.address, store.city, store.state].filter(Boolean).join(', ')}
+                  <MapPin className="w-3.5 h-3.5" />
+                  {[store.address, store.city, store.state].filter(Boolean).join(', ')}
                 </span>
               )}
-              {store.phone && <a href={`tel:${store.phone}`} className="flex items-center gap-1 hover:text-amber-400"><Phone className="w-3.5 h-3.5" />{store.phone}</a>}
-              {store.website && <a href={`https://${store.website}`} target="_blank" rel="noopener" className="flex items-center gap-1 hover:text-amber-400"><Globe className="w-3.5 h-3.5" />{store.website}</a>}
+              {store.phone && (
+                <a href={`tel:${store.phone}`} className="flex items-center gap-1 transition-colors"
+                  style={{ color: MUTED }}
+                  onMouseEnter={e => e.currentTarget.style.color = AMBER}
+                  onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+                  <Phone className="w-3.5 h-3.5" />{store.phone}
+                </a>
+              )}
+              {store.website && (
+                <a href={`https://${store.website}`} target="_blank" rel="noopener"
+                  className="flex items-center gap-1 transition-colors"
+                  style={{ color: MUTED }}
+                  onMouseEnter={e => e.currentTarget.style.color = AMBER}
+                  onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+                  <Globe className="w-3.5 h-3.5" />{store.website}
+                </a>
+              )}
             </div>
 
             {/* Tags */}
             {store.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {store.tags.map(t => <span key={t} className="text-xs bg-stone-800 text-stone-400 px-2.5 py-0.5 rounded-full">{t}</span>)}
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {store.tags.map(t => (
+                  <span key={t} className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                    style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+                    {t}
+                  </span>
+                ))}
               </div>
             )}
 
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-4 mt-3 text-xs text-stone-500">
+            {/* Stats */}
+            <div className="flex flex-wrap gap-4 text-xs" style={{ color: MUTED }}>
               <span className="flex items-center gap-1"><Package className="w-3 h-3" />{inventory_count} SKUs</span>
               <span className="flex items-center gap-1"><Users className="w-3 h-3" />{stats.followers} followers</span>
               {stats.avg_rating > 0 && (
-                <span className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-500" />{stats.avg_rating} ({stats.rating_count} ratings)</span>
+                <span className="flex items-center gap-1">
+                  <Star className="w-3 h-3" style={{ color: '#D97706' }} />
+                  <span style={{ color: LABEL, fontWeight: 500 }}>{stats.avg_rating}</span>
+                  <span>({stats.rating_count} ratings)</span>
+                </span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Follow button area */}
+        {/* Follow / Request buttons */}
         {user && user.account_type === 'user' && (
-          <div className="mt-4 pt-4 border-t border-stone-800 flex flex-wrap items-center gap-3 px-5 pb-4">
-            <button onClick={handleFollow} disabled={followLoading} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-60 ${following ? 'bg-amber-900/30 border border-amber-700 text-amber-400' : 'btn-primary'}`}>
+          <div className="px-5 pb-4 pt-3 flex flex-wrap items-center gap-3"
+            style={{ borderTop: `1px solid ${BORDER}` }}>
+            <button onClick={handleFollow} disabled={followLoading}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-60 ${following ? '' : 'btn-primary'}`}
+              style={following ? { backgroundColor: '#FEF3C7', color: AMBER, border: `1px solid #FDE68A` } : {}}>
               {followLoading
                 ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                : <Heart className={`w-4 h-4 ${following ? 'fill-amber-400' : ''}`} />
-              }
+                : <Heart className={`w-4 h-4 ${following ? 'fill-current' : ''}`} />}
               {following ? 'Following' : 'Follow'}
             </button>
 
@@ -218,110 +257,140 @@ export default function StoreProfile() {
             </button>
 
             {following && (
-              <button onClick={() => setShowPrefs(!showPrefs)} className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-300 transition-colors ml-auto">
+              <button onClick={() => setShowPrefs(!showPrefs)}
+                className="flex items-center gap-1.5 text-xs ml-auto transition-colors"
+                style={{ color: MUTED }}
+                onMouseEnter={e => e.currentTarget.style.color = NAVY}
+                onMouseLeave={e => e.currentTarget.style.color = MUTED}>
                 <Bell className="w-3.5 h-3.5" /> Alerts
               </button>
             )}
           </div>
         )}
 
+        {/* Notification prefs */}
         {following && showPrefs && (
-          <div className="mx-5 mb-4 bg-stone-800/50 rounded-xl p-3">
-            <p className="text-xs text-stone-500 mb-2">Notify me when this store posts:</p>
+          <div className="mx-5 mb-4 rounded-xl p-3" style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
+            <p className="text-xs mb-2" style={{ color: MUTED }}>Notify me when this store posts:</p>
             <div className="flex flex-wrap gap-4">
               {[
                 { key: 'notify_broadcasts', label: 'Announcements' },
-                { key: 'notify_deals', label: 'Deals' },
+                { key: 'notify_deals',      label: 'Deals' },
                 { key: 'notify_new_arrivals', label: 'New Arrivals' },
               ].map(({ key, label }) => (
                 <label key={key} className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={!!followPrefs[key]} onChange={e => updatePrefs(key, e.target.checked)} className="accent-amber-500" />
-                  <span className="text-sm text-stone-300">{label}</span>
+                  <input type="checkbox" checked={!!followPrefs[key]} onChange={e => updatePrefs(key, e.target.checked)} className="accent-amber-600" />
+                  <span className="text-sm font-medium" style={{ color: LABEL }}>{label}</span>
                 </label>
               ))}
             </div>
           </div>
         )}
 
-        {/* Quick contact bar — always visible, mobile-optimized */}
-        <div className="flex border-t border-stone-800">
+        {/* Quick contact bar */}
+        <div className="flex" style={{ borderTop: `1px solid ${BORDER}` }}>
           {store.phone && (
             <a href={`tel:${store.phone}`}
-              className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-stone-500 hover:text-amber-400 hover:bg-stone-800/40 transition-colors">
+              className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+              style={{ color: MUTED }}
+              onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
+              onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
               <Phone className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Call</span>
+              <span className="text-xs font-medium">Call</span>
             </a>
           )}
           <a href={mapsUrl} target="_blank" rel="noopener"
-            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-stone-500 hover:text-amber-400 hover:bg-stone-800/40 transition-colors border-l border-stone-800">
+            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+            style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}
+            onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
+            onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
             <Navigation className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Directions</span>
+            <span className="text-xs font-medium">Directions</span>
           </a>
           {store.website && (
             <a href={`https://${store.website}`} target="_blank" rel="noopener"
-              className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-stone-500 hover:text-amber-400 hover:bg-stone-800/40 transition-colors border-l border-stone-800">
+              className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+              style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}
+              onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
+              onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
               <Globe className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Website</span>
+              <span className="text-xs font-medium">Website</span>
             </a>
           )}
           <button onClick={() => { if (!user) navigate('/login'); else setRequestModal(true); }}
-            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-stone-500 hover:text-amber-400 hover:bg-stone-800/40 transition-colors border-l border-stone-800">
+            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+            style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}
+            onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
+            onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
             <Package className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Request</span>
+            <span className="text-xs font-medium">Request</span>
           </button>
         </div>
       </div>
 
-      {/* Today's hours highlight */}
+      {/* Today's hours */}
       {todayHours && (
-        <div className={`rounded-xl px-4 py-2.5 mb-4 flex items-center gap-2 text-sm ${isOpen ? 'bg-emerald-900/20 border border-emerald-900/30' : 'bg-stone-800/50 border border-stone-800'}`}>
-          <Clock className={`w-4 h-4 ${isOpen ? 'text-emerald-400' : 'text-stone-500'}`} />
-          <span className="text-stone-300">Today: <span className="font-medium">{todayHours}</span></span>
+        <div className="rounded-xl px-4 py-2.5 mb-4 flex items-center gap-2 text-sm"
+          style={isOpen
+            ? { backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0' }
+            : { backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
+          <Clock className="w-4 h-4" style={{ color: isOpen ? '#059669' : MUTED }} />
+          <span style={{ color: LABEL }}>
+            Today: <span className="font-semibold">{todayHours}</span>
+          </span>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-stone-800 mb-5 gap-0 overflow-x-auto">
+      <div className="flex mb-5 overflow-x-auto" style={{ borderBottom: `1px solid ${BORDER}` }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors ${tab === t.key ? 'text-amber-400 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}>
+            className="px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors"
+            style={tab === t.key
+              ? { color: AMBER, borderBottom: `2px solid ${AMBER}` }
+              : { color: MUTED }}>
             {t.label}
           </button>
         ))}
       </div>
 
-      {/* Inventory */}
+      {/* ── Inventory ── */}
       {tab === 'inventory' && (
         <>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search this store's inventory..." className="input mb-4" />
+          <input value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Search this store's inventory..." className="input mb-4" />
           {Object.values(byCigar).length === 0 ? (
-            <p className="text-stone-500 text-center py-10">No inventory found.</p>
+            <p className="text-center py-10" style={{ color: MUTED }}>No inventory found.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {Object.values(byCigar).map(item => (
-                <Link key={item.cigar_id} to={`/cigars/${item.cigar_id}`} className="card p-4 hover:border-stone-600 transition-colors group">
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-                        {item.is_featured === 1 && <span className="text-[9px] bg-amber-900/40 text-amber-400 border border-amber-800/40 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Featured</span>}
-                      </div>
-                      <p className="text-xs text-amber-500/80 font-medium uppercase tracking-wider">{item.brand}</p>
-                      <h3 className="font-semibold text-stone-200 group-hover:text-amber-300 transition-colors mt-0.5">{item.cigar_name}</h3>
-                      <p className="text-xs text-stone-600 mt-0.5 capitalize">{item.strength} · {item.country}</p>
+                <Link key={item.cigar_id} to={`/cigars/${item.cigar_id}`}
+                  className="card p-4 transition-colors group"
+                  onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
+                  <div className="mb-3">
+                    <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                      {item.is_featured === 1 && (
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide"
+                          style={{ backgroundColor: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A' }}>
+                          Featured
+                        </span>
+                      )}
                     </div>
+                    <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: AMBER }}>{item.brand}</p>
+                    <h3 className="font-semibold" style={{ color: NAVY }}>{item.cigar_name}</h3>
+                    <p className="text-xs mt-0.5 capitalize" style={{ color: MUTED }}>{item.strength} · {item.country}</p>
                   </div>
+
                   <div className="flex flex-wrap gap-2">
                     {item.vitolas.map(v => (
-                      <div key={v.vitola_id} className="bg-stone-800 rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5">
-                        {v.is_new_arrival === 1 && <span className="text-blue-400 text-[9px] font-bold uppercase">NEW</span>}
-                        <span className="text-stone-300 font-medium">{v.name}</span>
-                        <span className="text-amber-400 font-bold">${v.price.toFixed(2)}</span>
-                        {v.quantity > 0 && v.quantity <= 3
-                          ? <span className="text-red-400 text-[9px] font-bold">Only {v.quantity} left!</span>
-                          : v.quantity > 0 && v.quantity <= 8
-                          ? <span className="text-orange-400 text-[9px]">{v.quantity} left</span>
-                          : <span className="text-stone-600 text-[9px]">{v.quantity} in stock</span>
-                        }
+                      <div key={v.vitola_id} className="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5"
+                        style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
+                        {v.is_new_arrival === 1 && (
+                          <span className="text-xs font-bold uppercase" style={{ color: '#1D4ED8' }}>NEW</span>
+                        )}
+                        <span className="font-medium" style={{ color: LABEL }}>{v.name}</span>
+                        <span className="font-bold" style={{ color: AMBER }}>${v.price.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -332,68 +401,77 @@ export default function StoreProfile() {
         </>
       )}
 
-      {/* New Arrivals */}
+      {/* ── New Arrivals ── */}
       {tab === 'new' && (
         <div className="flex flex-col gap-3">
           {new_arrivals.length === 0 ? (
-            <p className="text-stone-500 text-center py-10">No new arrivals right now.</p>
+            <p className="text-center py-10" style={{ color: MUTED }}>No new arrivals right now.</p>
           ) : new_arrivals.map(item => (
-            <Link key={item.id} to={`/cigars/${item.cigar_id}`} className="card p-4 hover:border-stone-600 transition-colors group">
+            <Link key={item.id} to={`/cigars/${item.cigar_id}`}
+              className="card p-4 transition-colors group"
+              onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Package2 className="w-4 h-4 text-blue-400" />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: '#DBEAFE' }}>
+                  <Package2 className="w-4 h-4" style={{ color: '#1D4ED8' }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-amber-500/70">{item.brand}</p>
-                  <p className="font-semibold text-stone-200 group-hover:text-amber-300 transition-colors text-sm">{item.cigar_name} — {item.vitola_name}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: AMBER }}>{item.brand}</p>
+                  <p className="font-semibold text-sm" style={{ color: NAVY }}>{item.cigar_name} — {item.vitola_name}</p>
                 </div>
-                <p className="font-bold text-amber-400 flex-shrink-0">${item.price.toFixed(2)}</p>
+                <p className="font-bold flex-shrink-0" style={{ color: AMBER }}>${item.price.toFixed(2)}</p>
               </div>
             </Link>
           ))}
         </div>
       )}
 
-      {/* Deals */}
+      {/* ── Deals ── */}
       {tab === 'deals' && (
         <div className="flex flex-col gap-4">
           {deals.length === 0 ? (
-            <p className="text-stone-500 text-center py-10">No active deals right now.</p>
+            <p className="text-center py-10" style={{ color: MUTED }}>No active deals right now.</p>
           ) : deals.map(d => (
-            <div key={d.id} className="card p-4 border-amber-900/20">
+            <div key={d.id} className="card p-4">
               <div className="flex items-start justify-between gap-3 mb-2">
-                <h3 className="font-semibold text-stone-100">{d.title}</h3>
-                {d.discount_percent && <span className="bg-amber-600 text-white text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0">-{d.discount_percent}%</span>}
+                <h3 className="font-semibold" style={{ color: NAVY }}>{d.title}</h3>
+                {d.discount_percent && (
+                  <span className="text-white text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: AMBER }}>
+                    -{d.discount_percent}%
+                  </span>
+                )}
               </div>
-              {d.description && <p className="text-sm text-stone-400 mb-2">{d.description}</p>}
-              {d.expires_at && <p className="text-xs text-stone-600">Expires {new Date(d.expires_at).toLocaleDateString()}</p>}
+              {d.description && <p className="text-sm mb-2" style={{ color: LABEL }}>{d.description}</p>}
+              {d.expires_at && <p className="text-xs" style={{ color: MUTED }}>Expires {new Date(d.expires_at).toLocaleDateString()}</p>}
             </div>
           ))}
         </div>
       )}
 
-      {/* About */}
+      {/* ── About ── */}
       {tab === 'about' && (
         <div className="flex flex-col gap-5">
           {store.description && (
             <div className="card p-5">
-              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">About</h3>
-              <p className="text-stone-300 leading-relaxed">{store.description}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: MUTED }}>About</p>
+              <p className="leading-relaxed" style={{ color: LABEL }}>{store.description}</p>
             </div>
           )}
 
-          {/* Hours */}
           {Object.keys(hours).length > 0 && (
             <div className="card p-5">
-              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">Hours</h3>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: MUTED }}>Hours</p>
               <div className="flex flex-col gap-1.5">
                 {DAYS.map(day => {
                   const h = hours[day];
                   const isToday = day === today;
                   return (
-                    <div key={day} className={`flex justify-between text-sm py-1 ${isToday ? 'text-amber-400 font-medium' : 'text-stone-500'}`}>
+                    <div key={day} className="flex justify-between text-sm py-1"
+                      style={{ color: isToday ? AMBER : LABEL, fontWeight: isToday ? 600 : 400 }}>
                       <span>{isToday ? `${day} (today)` : day}</span>
-                      <span className={h === 'Closed' ? 'text-red-500' : ''}>{h || '—'}</span>
+                      <span style={h === 'Closed' ? { color: '#DC2626' } : {}}>{h || '—'}</span>
                     </div>
                   );
                 })}
@@ -401,99 +479,115 @@ export default function StoreProfile() {
             </div>
           )}
 
-          {/* Ratings */}
           <div className="card p-5">
-            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-4">Customer Ratings</h3>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: MUTED }}>Customer Ratings</p>
             {stats.rating_count > 0 && (
-              <div className="flex items-center gap-4 mb-4 pb-4 border-b border-stone-800">
+              <div className="flex items-center gap-4 mb-4 pb-4" style={{ borderBottom: `1px solid ${BORDER}` }}>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-400">{stats.avg_rating}</div>
+                  <div className="text-3xl font-bold mb-1" style={{ color: AMBER }}>{stats.avg_rating}</div>
                   <StarRating value={Math.round(stats.avg_rating)} size="sm" />
-                  <p className="text-xs text-stone-600 mt-1">{stats.rating_count} ratings</p>
+                  <p className="text-xs mt-1" style={{ color: MUTED }}>{stats.rating_count} ratings</p>
                 </div>
               </div>
             )}
             {recent_ratings.map(r => (
-              <div key={r.id} className="py-3 border-b border-stone-800/50 last:border-0">
+              <div key={r.id} className="py-3 last:border-0" style={{ borderBottom: `1px solid ${BORDER}` }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-medium text-stone-300">{r.user_name}</p>
+                  <p className="text-sm font-semibold" style={{ color: NAVY }}>{r.user_name}</p>
                   <StarRating value={r.rating} size="sm" />
                 </div>
-                {r.comment && <p className="text-xs text-stone-500">{r.comment}</p>}
+                {r.comment && <p className="text-sm" style={{ color: LABEL }}>{r.comment}</p>}
               </div>
             ))}
 
             {user && user.account_type === 'user' && !ratingSubmitted && (
-              <div className="mt-4 pt-4 border-t border-stone-800">
-                <p className="text-sm font-medium text-stone-300 mb-2">Rate this store</p>
+              <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${BORDER}` }}>
+                <p className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Rate this store</p>
                 <StarRating value={ratingForm.rating} onChange={r => setRatingForm(f => ({ ...f, rating: r }))} />
-                <textarea rows={2} className="input resize-none mt-2 text-sm" placeholder="Leave a comment (optional)..." value={ratingForm.comment} onChange={e => setRatingForm(f => ({ ...f, comment: e.target.value }))} />
-                <button onClick={submitRating} disabled={!ratingForm.rating} className="btn-primary text-sm mt-2 disabled:opacity-50">Submit Rating</button>
+                <textarea rows={2} className="input resize-none mt-2 text-sm"
+                  placeholder="Leave a comment (optional)..."
+                  value={ratingForm.comment}
+                  onChange={e => setRatingForm(f => ({ ...f, comment: e.target.value }))} />
+                <button onClick={submitRating} disabled={!ratingForm.rating} className="btn-primary text-sm mt-2 disabled:opacity-50">
+                  Submit Rating
+                </button>
               </div>
             )}
-            {ratingSubmitted && <p className="text-xs text-emerald-400 mt-2">Thanks for your rating!</p>}
+            {ratingSubmitted && (
+              <p className="text-xs mt-2" style={{ color: '#059669' }}>Thanks for your rating!</p>
+            )}
           </div>
         </div>
       )}
 
-      {/* Request Inventory Modal */}
+      {/* ── Request Modal ── */}
       {requestModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70" onClick={() => setRequestModal(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60"
+          onClick={() => setRequestModal(false)}>
+          <div className="rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
+            style={{ backgroundColor: '#FFFFFF', border: `1px solid ${BORDER}`, boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+            onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-lg font-bold text-stone-100">Request a Cigar</h2>
+              <h2 className="font-serif text-lg font-bold" style={{ color: NAVY }}>Request a Cigar</h2>
               <button onClick={() => setRequestModal(false)} className="btn-ghost p-1.5"><X className="w-5 h-5" /></button>
             </div>
-            <p className="text-sm text-stone-400 -mt-2">
-              Let <span className="text-stone-300 font-medium">{store.name}</span> know what you'd like them to stock.
+            <p className="text-sm -mt-2" style={{ color: MUTED }}>
+              Let <span className="font-medium" style={{ color: LABEL }}>{store.name}</span> know what you'd like them to stock.
             </p>
 
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5">Search the Catalog</label>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Search the Catalog</label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
-                <input
-                  className="input pl-10 text-sm"
-                  placeholder="Type a brand or cigar name..."
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
+                <input className="input pl-10 text-sm" placeholder="Type a brand or cigar name..."
                   value={reqCigarSearch}
-                  onChange={e => { setReqCigarSearch(e.target.value); searchRequestCigars(e.target.value); if (!e.target.value) setReqSelectedCigar(null); }}
-                />
+                  onChange={e => { setReqCigarSearch(e.target.value); searchRequestCigars(e.target.value); if (!e.target.value) setReqSelectedCigar(null); }} />
               </div>
               {reqCigarResults.length > 0 && !reqSelectedCigar && (
-                <div className="mt-1 border border-stone-700 rounded-xl overflow-hidden shadow-xl">
+                <div className="mt-1 rounded-xl overflow-hidden shadow-lg" style={{ border: `1px solid ${BORDER}` }}>
                   {reqCigarResults.map(c => (
                     <button key={c.id} onClick={() => { setReqSelectedCigar(c); setReqCigarSearch(`${c.brand} ${c.name}`); setReqCigarResults([]); }}
-                      className="w-full text-left px-4 py-2.5 hover:bg-stone-800 border-b border-stone-800/50 last:border-0">
-                      <p className="text-sm font-medium text-stone-200">{c.brand} {c.name}</p>
-                      <p className="text-xs text-stone-500 capitalize">{c.strength} · {c.country}</p>
+                      className="w-full text-left px-4 py-2.5 transition-colors"
+                      style={{ borderBottom: `1px solid ${BORDER}` }}
+                      onMouseEnter={e => e.currentTarget.style.backgroundColor = BG_ALT}
+                      onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
+                      <p className="text-sm font-medium" style={{ color: NAVY }}>{c.brand} {c.name}</p>
+                      <p className="text-xs capitalize" style={{ color: MUTED }}>{c.strength} · {c.country}</p>
                     </button>
                   ))}
                 </div>
               )}
               {reqSelectedCigar && (
-                <div className="mt-1 flex items-center gap-2 text-xs text-emerald-400">
+                <div className="mt-1 flex items-center gap-2 text-xs" style={{ color: '#059669' }}>
                   <CheckCircle className="w-4 h-4" />
                   <span>{reqSelectedCigar.brand} {reqSelectedCigar.name}</span>
-                  <button onClick={() => { setReqSelectedCigar(null); setReqCigarSearch(''); }} className="ml-auto text-stone-500 hover:text-red-400">Change</button>
+                  <button onClick={() => { setReqSelectedCigar(null); setReqCigarSearch(''); }}
+                    className="ml-auto text-xs" style={{ color: MUTED }}>Change</button>
                 </div>
               )}
             </div>
 
             {!reqSelectedCigar && (
               <div>
-                <label className="block text-xs text-stone-400 mb-1.5">Or type a name (if not in catalog)</label>
-                <input className="input text-sm" placeholder="e.g. Padron 1926 Imperial" value={requestForm.cigar_name_free} onChange={e => setRequestForm(f => ({ ...f, cigar_name_free: e.target.value }))} />
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Or type a name (if not in catalog)</label>
+                <input className="input text-sm" placeholder="e.g. Padron 1926 Imperial"
+                  value={requestForm.cigar_name_free}
+                  onChange={e => setRequestForm(f => ({ ...f, cigar_name_free: e.target.value }))} />
               </div>
             )}
 
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5">Message (optional)</label>
-              <textarea rows={2} className="input resize-none text-sm" placeholder="Any specific size preference or note for the store..." value={requestForm.message} onChange={e => setRequestForm(f => ({ ...f, message: e.target.value }))} />
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Message (optional)</label>
+              <textarea rows={2} className="input resize-none text-sm"
+                placeholder="Any specific size preference or note for the store..."
+                value={requestForm.message}
+                onChange={e => setRequestForm(f => ({ ...f, message: e.target.value }))} />
             </div>
 
             <div className="flex gap-2">
               <button onClick={() => setRequestModal(false)} className="btn-secondary flex-1">Cancel</button>
-              <button onClick={submitRequest} disabled={!reqSelectedCigar && !requestForm.cigar_name_free} className="btn-primary flex-1 disabled:opacity-50">
+              <button onClick={submitRequest} disabled={!reqSelectedCigar && !requestForm.cigar_name_free}
+                className="btn-primary flex-1 disabled:opacity-50">
                 Send Request
               </button>
             </div>

@@ -28,7 +28,9 @@ function OpenBadge({ isOpen }) {
 function StoreRow({ store }) {
   return (
     <Link to={`/stores/${store.id}`}
-      className="flex items-center gap-4 py-4 group transition-colors hover:bg-stone-800/40 -mx-2 px-2 rounded-xl">
+      className="flex items-center gap-4 py-4 group transition-colors -mx-2 px-2 rounded-xl"
+      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#F5F3F0'}
+      onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
       <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
         <Store className="w-4 h-4 text-amber-700" />
       </div>
@@ -202,7 +204,7 @@ export default function Home() {
 
       {/* ── Local Retailers ── */}
       {stores.length > 0 && (
-        <section className="border-t border-stone-800">
+        <section style={{ borderTop: '1px solid #EAE6E0' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Where to shop"
@@ -216,9 +218,9 @@ export default function Home() {
                 </Link>
               }
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 divide-y divide-stone-800 sm:divide-y-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 divide-y divide-stone-200 sm:divide-y-0">
               {stores.slice(0, 6).map((s, i) => (
-                <div key={s.id} className={i < stores.slice(0,6).length - 2 ? 'sm:border-b sm:border-stone-800' : ''}>
+                <div key={s.id} className={i < stores.slice(0,6).length - 2 ? 'sm:border-b sm:border-stone-200' : ''}>
                   <StoreRow store={s} />
                 </div>
               ))}
@@ -229,7 +231,7 @@ export default function Home() {
 
       {/* ── Deals ── */}
       {deals.length > 0 && (
-        <section className="border-t border-stone-800">
+        <section style={{ borderTop: '1px solid #EAE6E0' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Limited time"
