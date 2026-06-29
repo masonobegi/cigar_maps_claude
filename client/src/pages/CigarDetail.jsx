@@ -395,7 +395,6 @@ export default function CigarDetail() {
                       <span className="text-xs ml-2" style={{color: MUTED}}>{v.length}" × {v.ring_gauge}</span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="text-xs" style={{color: MUTED}}>{v.quantity} in stock</span>
                       <span className="font-bold text-sm" style={{color: AMBER}}>${v.price.toFixed(2)}</span>
                     </div>
                   </div>

@@ -4,6 +4,11 @@ import { Search, Filter, X, MapPin, DollarSign, SlidersHorizontal, ArrowUpDown }
 import { api } from '../services/api';
 import CigarCard from '../components/CigarCard';
 
+const NAVY  = '#12213D';
+const MUTED = '#6B7280';
+const LABEL = '#4B5563';
+const AMBER = '#92510A';
+
 const STRENGTHS = ['mild', 'mild-medium', 'medium', 'medium-full', 'full'];
 const SORTS = [
   { value: 'popular', label: 'Most Popular' },
@@ -95,11 +100,11 @@ export default function SearchPage() {
       {/* Search bar */}
       <form onSubmit={applySearch} className="flex flex-col sm:flex-row gap-2 mb-4">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{color: MUTED}} />
           <input value={localQ} onChange={e => setLocalQ(e.target.value)} placeholder="Search cigars, brands, flavors..." className="input pl-12 py-3 text-base" />
         </div>
         <div className="relative sm:w-44">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
+          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{color: MUTED}} />
           <input
             value={localCity}
             onChange={e => setLocalCity(e.target.value)}
@@ -112,10 +117,15 @@ export default function SearchPage() {
           </datalist>
         </div>
         <button type="submit" className="btn-primary px-6">Search</button>
-        <button type="button" onClick={() => setShowFilters(!showFilters)} className={`btn-secondary flex items-center gap-2 ${activeFilters.length > 0 ? 'border-amber-600 text-amber-400' : ''}`}>
+        <button type="button" onClick={() => setShowFilters(!showFilters)}
+          className="btn-secondary flex items-center gap-2"
+          style={activeFilters.length > 0 ? {borderColor: AMBER, color: AMBER} : {}}>
           <SlidersHorizontal className="w-4 h-4" />
           <span className="hidden sm:inline">Filters</span>
-          {activeFilters.length > 0 && <span className="bg-amber-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{activeFilters.length}</span>}
+          {activeFilters.length > 0 && (
+            <span className="text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+              style={{backgroundColor: AMBER}}>{activeFilters.length}</span>
+          )}
         </button>
       </form>
 
@@ -124,21 +134,26 @@ export default function SearchPage() {
         <div className="card p-5 mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Strength */}
           <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">Strength</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{color: LABEL}}>Strength</label>
             <div className="flex flex-col gap-1.5">
               {STRENGTHS.map(s => (
                 <label key={s} className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="strength" checked={strength === s} onChange={() => updateParam('strength', strength === s ? '' : s)} className="accent-amber-500" />
-                  <span className="text-sm text-stone-300 capitalize">{s}</span>
+                  <input type="radio" name="strength" checked={strength === s} onChange={() => updateParam('strength', strength === s ? '' : s)} className="accent-amber-700" />
+                  <span className="text-sm capitalize" style={{color: NAVY}}>{s}</span>
                 </label>
               ))}
-              {strength && <button onClick={() => updateParam('strength', '')} className="text-xs text-stone-500 hover:text-amber-400 text-left mt-1">Clear</button>}
+              {strength && (
+                <button onClick={() => updateParam('strength', '')} className="text-xs text-left mt-1 transition-colors"
+                  style={{color: MUTED}}
+                  onMouseEnter={e => e.currentTarget.style.color = AMBER}
+                  onMouseLeave={e => e.currentTarget.style.color = MUTED}>Clear</button>
+              )}
             </div>
           </div>
 
           {/* Origin */}
           <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">Origin Country</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{color: LABEL}}>Origin Country</label>
             <select value={country} onChange={e => updateParam('country', e.target.value)} className="input py-2 text-sm">
               <option value="">All Countries</option>
               {filterOptions.countries.map(c => <option key={c} value={c}>{c}</option>)}
@@ -147,30 +162,36 @@ export default function SearchPage() {
 
           {/* Price range */}
           <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">Price Range</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{color: LABEL}}>Price Range</label>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-500" />
+                <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{color: MUTED}} />
                 <input type="number" placeholder="Min" value={localMinPrice} onChange={e => setLocalMinPrice(e.target.value)} className="input pl-7 py-2 text-sm" min="0" />
               </div>
-              <span className="text-stone-600">–</span>
+              <span style={{color: MUTED}}>–</span>
               <div className="relative flex-1">
-                <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-500" />
+                <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{color: MUTED}} />
                 <input type="number" placeholder="Max" value={localMaxPrice} onChange={e => setLocalMaxPrice(e.target.value)} className="input pl-7 py-2 text-sm" min="0" />
               </div>
             </div>
-            <button onClick={applySearch} className="text-xs text-amber-500 hover:text-amber-400 mt-1.5">Apply price</button>
+            <button onClick={applySearch} className="text-xs mt-1.5 transition-colors"
+              style={{color: AMBER}}
+              onMouseEnter={e => e.currentTarget.style.color = '#6B3A07'}
+              onMouseLeave={e => e.currentTarget.style.color = AMBER}>Apply price</button>
           </div>
 
           {/* Toggles */}
           <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">Availability</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{color: LABEL}}>Availability</label>
             <label className="flex items-center gap-2 cursor-pointer mb-2">
-              <input type="checkbox" checked={in_stock_only === '1'} onChange={e => updateParam('in_stock_only', e.target.checked ? '1' : '')} className="accent-amber-500" />
-              <span className="text-sm text-stone-300">In stock at stores only</span>
+              <input type="checkbox" checked={in_stock_only === '1'} onChange={e => updateParam('in_stock_only', e.target.checked ? '1' : '')} className="accent-amber-700" />
+              <span className="text-sm" style={{color: NAVY}}>In stock at stores only</span>
             </label>
             {activeFilters.length > 0 && (
-              <button onClick={clearAll} className="text-xs text-stone-500 hover:text-red-400 flex items-center gap-1 mt-3">
+              <button onClick={clearAll} className="text-xs flex items-center gap-1 mt-3 transition-colors"
+                style={{color: MUTED}}
+                onMouseEnter={e => e.currentTarget.style.color = '#DC2626'}
+                onMouseLeave={e => e.currentTarget.style.color = MUTED}>
                 <X className="w-3 h-3" /> Clear all filters
               </button>
             )}
@@ -182,23 +203,32 @@ export default function SearchPage() {
       {activeFilters.length > 0 && !showFilters && (
         <div className="flex flex-wrap gap-2 mb-4">
           {activeFilters.map(f => (
-            <span key={f.key} className="flex items-center gap-1 bg-stone-800 border border-stone-700 text-stone-300 text-xs px-3 py-1.5 rounded-full">
+            <span key={f.key} className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
+              style={{backgroundColor: '#F0EDE8', border: '1px solid #E8E4DE', color: LABEL}}>
               {f.label}
-              <button onClick={f.clear} className="hover:text-red-400 ml-0.5"><X className="w-3 h-3" /></button>
+              <button onClick={f.clear} className="ml-0.5 transition-colors"
+                style={{color: MUTED}}
+                onMouseEnter={e => e.currentTarget.style.color = '#DC2626'}
+                onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+                <X className="w-3 h-3" />
+              </button>
             </span>
           ))}
-          <button onClick={clearAll} className="text-xs text-stone-600 hover:text-amber-400 px-2">Clear all</button>
+          <button onClick={clearAll} className="text-xs px-2 transition-colors"
+            style={{color: MUTED}}
+            onMouseEnter={e => e.currentTarget.style.color = AMBER}
+            onMouseLeave={e => e.currentTarget.style.color = MUTED}>Clear all</button>
         </div>
       )}
 
       {/* Sort + count bar */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <p className="text-sm text-stone-500">
+        <p className="text-sm" style={{color: MUTED}}>
           {loading ? 'Searching...' : `${total.toLocaleString()} cigar${total !== 1 ? 's' : ''} found${city ? ` available in ${city}` : ''}`}
         </p>
         <div className="flex items-center gap-2">
-          <ArrowUpDown className="w-4 h-4 text-stone-500" />
-          <select value={sort} onChange={e => updateParam('sort', e.target.value)} className="bg-stone-900 border border-stone-700 text-stone-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-600">
+          <ArrowUpDown className="w-4 h-4" style={{color: MUTED}} />
+          <select value={sort} onChange={e => updateParam('sort', e.target.value)} className="input py-1.5 text-sm" style={{minHeight: 0, width: 'auto'}}>
             {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </div>
@@ -207,14 +237,14 @@ export default function SearchPage() {
       {/* Results */}
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          {Array.from({ length: 8 }).map((_, i) => <div key={i} className="card h-52 animate-pulse bg-stone-800" />)}
+          {Array.from({ length: 8 }).map((_, i) => <div key={i} className="card h-52 skeleton" />)}
         </div>
       ) : results.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-4xl mb-4">🔍</div>
-          <h3 className="text-lg font-semibold text-stone-300 mb-2">No cigars found</h3>
-          <p className="text-stone-500 text-sm">Try different search terms or adjust your filters.</p>
-          {city && <p className="text-stone-600 text-sm mt-1">No stores in "{city}" carry matching cigars.</p>}
+          <h3 className="text-lg font-semibold mb-2" style={{color: NAVY}}>No cigars found</h3>
+          <p className="text-sm" style={{color: MUTED}}>Try different search terms or adjust your filters.</p>
+          {city && <p className="text-sm mt-1" style={{color: MUTED}}>No stores in "{city}" carry matching cigars.</p>}
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -226,7 +256,7 @@ export default function SearchPage() {
       {total > 24 && (
         <div className="flex justify-center gap-2 mt-8">
           <button disabled={page <= 1} onClick={() => updateParam('page', page - 1)} className="btn-secondary disabled:opacity-40">Previous</button>
-          <span className="flex items-center px-4 text-sm text-stone-400">Page {page} of {Math.ceil(total / 24)}</span>
+          <span className="flex items-center px-4 text-sm" style={{color: MUTED}}>Page {page} of {Math.ceil(total / 24)}</span>
           <button disabled={page >= Math.ceil(total / 24)} onClick={() => updateParam('page', page + 1)} className="btn-secondary disabled:opacity-40">Next</button>
         </div>
       )}
