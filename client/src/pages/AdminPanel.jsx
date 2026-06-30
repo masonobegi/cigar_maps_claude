@@ -449,6 +449,8 @@ export default function AdminPanel() {
   const [stores, setStores] = useState([]);
   const [users, setUsers] = useState([]);
   const [toast, setToast] = useState('');
+  const [resetInput, setResetInput] = useState('');
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !['admin','staff'].includes(user.account_type))) {
@@ -472,6 +474,21 @@ export default function AdminPanel() {
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
+  }
+
+  async function handleReset() {
+    if (resetInput !== 'RESET') return;
+    setResetting(true);
+    try {
+      await api.adminResetDatabase();
+      showToast('Database reset — demo data restored.');
+      setResetInput('');
+      api.adminGetStats().then(setStats);
+    } catch (e) {
+      showToast('Reset failed: ' + (e.message || 'unknown error'));
+    } finally {
+      setResetting(false);
+    }
   }
 
   async function toggleVerified(storeId, current) {
@@ -587,18 +604,45 @@ export default function AdminPanel() {
       {tab === 'cigars' && <CigarManager toast={showToast} />}
 
       {tab === 'overview' && stats && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {[
-            { label: 'Total Users', value: stats.stats.total_users, icon: Users, color: 'text-blue-400' },
-            { label: 'Total Stores', value: stats.stats.total_stores, icon: Store, color: 'text-amber-400' },
-            { label: 'Verified Stores', value: stats.stats.verified_stores, icon: CheckCircle, color: 'text-emerald-400' },
-            { label: 'Total Reviews', value: stats.stats.total_reviews, icon: Star, color: 'text-yellow-400' },
-            { label: 'Cigars in DB', value: stats.stats.total_cigars, icon: Flame, color: 'text-orange-400' },
-            { label: 'Inventory SKUs', value: stats.stats.total_inventory, icon: Package, color: 'text-stone-400' },
-            { label: 'Smoke Lists (active)', value: stats.stats.smoke_list_pending, icon: Eye, color: 'text-blue-400' },
-            { label: 'Store Follows', value: stats.stats.total_follows, icon: Users, color: 'text-pink-400' },
-            { label: 'Broadcasts Sent', value: stats.stats.total_broadcasts, icon: Flame, color: 'text-purple-400' },
-          ].map(s => <StatCard key={s.label} {...s} />)}
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {[
+              { label: 'Total Users', value: stats.stats.total_users, icon: Users, color: 'text-blue-400' },
+              { label: 'Total Stores', value: stats.stats.total_stores, icon: Store, color: 'text-amber-400' },
+              { label: 'Verified Stores', value: stats.stats.verified_stores, icon: CheckCircle, color: 'text-emerald-400' },
+              { label: 'Total Reviews', value: stats.stats.total_reviews, icon: Star, color: 'text-yellow-400' },
+              { label: 'Cigars in DB', value: stats.stats.total_cigars, icon: Flame, color: 'text-orange-400' },
+              { label: 'Inventory SKUs', value: stats.stats.total_inventory, icon: Package, color: 'text-stone-400' },
+              { label: 'Smoke Lists (active)', value: stats.stats.smoke_list_pending, icon: Eye, color: 'text-blue-400' },
+              { label: 'Store Follows', value: stats.stats.total_follows, icon: Users, color: 'text-pink-400' },
+              { label: 'Broadcasts Sent', value: stats.stats.total_broadcasts, icon: Flame, color: 'text-purple-400' },
+            ].map(s => <StatCard key={s.label} {...s} />)}
+          </div>
+
+          {/* Danger zone */}
+          <div className="border border-red-900/40 rounded-2xl p-5 bg-red-900/10">
+            <p className="text-sm font-semibold text-red-400 mb-1">Danger Zone</p>
+            <p className="text-xs text-stone-400 mb-4">
+              Wipes <strong className="text-stone-300">all users, stores, inventory, reviews, and cigars</strong>, then restores the demo catalog.
+              Staff and admin accounts are automatically recreated. This cannot be undone.
+            </p>
+            <div className="flex gap-2 items-center flex-wrap">
+              <input
+                value={resetInput}
+                onChange={e => setResetInput(e.target.value)}
+                placeholder='Type RESET to enable'
+                className="input py-2 text-sm max-w-[200px]"
+                style={{ borderColor: resetInput === 'RESET' ? '#dc2626' : undefined }}
+              />
+              <button
+                onClick={handleReset}
+                disabled={resetInput !== 'RESET' || resetting}
+                className="py-2 px-4 rounded-xl border border-red-700/60 bg-red-900/20 text-red-400 hover:bg-red-900/40 text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                {resetting ? 'Resetting…' : 'Reset Database'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

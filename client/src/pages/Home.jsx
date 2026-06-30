@@ -10,12 +10,6 @@ const NAVY  = '#E8DDD0';
 const AMBER = '#D4882A';
 const MUTED = '#9E8E7E';
 
-const MARQUEE_ITEMS = [
-  'Toro', 'Robusto', 'Churchill', 'Corona', 'Belicoso',
-  'Maduro', 'Connecticut', 'Habano', 'Perfecto', 'Torpedo',
-  'Lancero', 'Lonsdale', 'Figurado', 'Double Corona', 'Gordo',
-];
-
 function OpenBadge({ isOpen }) {
   if (isOpen === null) return null;
   return (
@@ -89,8 +83,6 @@ export default function Home() {
     if (cityInput.trim()) params.set('city', cityInput.trim());
     navigate(`/search?${params}`);
   }
-
-  const allMarquee = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
   return (
     <div>
@@ -168,19 +160,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ── Marquee ── */}
-      <div className="overflow-hidden py-3" style={{backgroundColor: '#12213D', borderTop: '1px solid #1c304f', borderBottom: '1px solid #1c304f'}}>
-        <div className="animate-marquee">
-          {allMarquee.map((item, i) => (
-            <span key={i} className="flex items-center gap-6 px-6 text-sm font-medium tracking-wider whitespace-nowrap"
-              style={{color: 'rgba(255,255,255,0.45)'}}>
-              {item}
-              <span style={{color: '#92510A', fontSize: 7}}>◆</span>
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* ── Top Rated ── */}
       {topCigars.length > 0 && (

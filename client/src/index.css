@@ -5,7 +5,9 @@
 @layer base {
   body {
     @apply antialiased;
-    background-color: #1A1510;
+    background-color: #0F0B09;
+    background-image: radial-gradient(ellipse 120% 60% at 50% 0%, #261B11 0%, #0F0B09 70%);
+    background-attachment: fixed;
     color: #E8DDD0;
     overscroll-behavior-y: none;
   }
@@ -82,18 +84,6 @@
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
   }
 }
-
-/* ── Marquee ─────────────────────────────────────────────────────────────── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-.animate-marquee:hover { animation-play-state: paused; }
 
 /* ── Scroll fade ─────────────────────────────────────────────────────────── */
 .scroll-fade-right {

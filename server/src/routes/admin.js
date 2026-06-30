@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../database/db');
 const { requireAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
+const { seed } = require('../database/seed');
 
 function requireAdmin(req, res, next) {
   if (!['admin', 'staff'].includes(req.user.account_type)) return res.status(403).json({ error: 'Staff only' });
@@ -107,6 +108,20 @@ router.get('/users', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
     SELECT id, name, email, account_type, location_city, location_state, created_at FROM users ORDER BY created_at DESC
   `, []);
   res.json(users);
+}));
+
+// ── Database reset ───────────────────────────────────────────────────────────
+// Wipes all user-generated data and reseeds the demo catalog.
+// The staff/admin accounts survive because seed() restores them via ON CONFLICT DO NOTHING.
+router.post('/reset-database', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  await db.pool.query(`
+    TRUNCATE TABLE notifications, smoke_list, store_views, store_ratings, deals,
+      verification_requests, store_follows, user_cigars, reviews, inventory,
+      cigar_images, vitolas, cigars, stores, users
+    RESTART IDENTITY CASCADE
+  `);
+  await seed();
+  res.json({ success: true, message: 'Database reset and reseeded.' });
 }));
 
 // ── Cigar catalog management ────────────────────────────────────────────────

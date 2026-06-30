@@ -122,6 +122,7 @@ export const api = {
   adminGetStores: () => request('/admin/stores'),
   adminToggleVerified: (id, verified) => request(`/admin/stores/${id}/verified`, { method: 'PATCH', body: JSON.stringify({ verified }) }),
   adminGetUsers: () => request('/admin/users'),
+  adminResetDatabase: () => request('/admin/reset-database', { method: 'POST' }),
 
   // Cigar catalog management
   adminGetCigars: () => request('/admin/cigars'),
