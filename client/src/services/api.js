@@ -69,6 +69,7 @@ export const api = {
   addToHumidor: (b) => request('/users/me/humidor', { method: 'POST', body: JSON.stringify(b) }),
   updateHumidorItem: (id, b) => request(`/users/me/humidor/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
   deleteHumidorItem: (id) => request(`/users/me/humidor/${id}`, { method: 'DELETE' }),
+  syncHumidorSheet: () => request('/users/me/humidor-sheet', { method: 'POST' }),
   getMyReviews: () => request('/users/me/reviews'),
   getFollowedStores: () => request('/users/me/followed-stores'),
   getFeed: () => request('/users/me/feed'),

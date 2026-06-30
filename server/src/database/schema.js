@@ -317,6 +317,7 @@ const MIGRATIONS = [
   { name: '005_users_add_home_lng', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_lng FLOAT' },
   { name: '006_users_add_home_label', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_label TEXT' },
   { name: '007_store_follows_notify_community', sql: 'ALTER TABLE store_follows ADD COLUMN IF NOT EXISTS notify_community INTEGER DEFAULT 1' },
+  { name: '008_users_add_humidor_sheet_url', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS humidor_sheet_url TEXT' },
 ];
 
 async function runMigrations() {

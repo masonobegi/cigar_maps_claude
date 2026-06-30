@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../database/db');
 const { requireAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
+const { createHumidorSheet, syncHumidorSheet } = require('../utils/googleSheets');
 
 router.get('/me/humidor', requireAuth, asyncRoute(async (req, res) => {
   const { status } = req.query;
@@ -91,6 +92,30 @@ router.get('/me/followed-stores', requireAuth, asyncRoute(async (req, res) => {
     ORDER BY unread_notifications DESC, sf.created_at DESC
   `, [req.user.id, req.user.id]);
   res.json(stores);
+}));
+
+router.post('/me/humidor-sheet', requireAuth, asyncRoute(async (req, res) => {
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT) return res.status(503).json({ error: 'Google Sheets not configured' });
+
+  const user = await db.get('SELECT * FROM users WHERE id = ?', [req.user.id]);
+  const items = await db.all(`
+    SELECT uc.*, c.brand, c.name as cigar_name, v.name as vitola_name
+    FROM user_cigars uc
+    JOIN cigars c ON c.id = uc.cigar_id
+    LEFT JOIN vitolas v ON v.id = uc.vitola_id
+    WHERE uc.user_id = ?
+    ORDER BY uc.status, c.brand, c.name
+  `, [req.user.id]);
+
+  let sheetUrl = user.humidor_sheet_url;
+  if (!sheetUrl) {
+    sheetUrl = await createHumidorSheet(user.email, user.name, items);
+    await db.run('UPDATE users SET humidor_sheet_url = ? WHERE id = ?', [sheetUrl, req.user.id]);
+  } else {
+    await syncHumidorSheet(sheetUrl, items);
+  }
+
+  res.json({ sheet_url: sheetUrl });
 }));
 
 router.put('/me/profile', requireAuth, asyncRoute(async (req, res) => {

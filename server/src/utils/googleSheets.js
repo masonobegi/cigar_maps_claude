@@ -93,4 +93,81 @@ async function createInventorySheet(storeOwnerEmail, storeName) {
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
 }
 
-module.exports = { createInventorySheet };
+async function createHumidorSheet(userEmail, userName, items) {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+  const drive = google.drive({ version: 'v3', auth });
+
+  const { data } = await sheets.spreadsheets.create({
+    requestBody: {
+      properties: { title: `${userName}'s Humidor — CigarBuddy` },
+      sheets: [{ properties: { title: 'My Humidor', gridProperties: { frozenRowCount: 1 } } }],
+    },
+  });
+  const spreadsheetId = data.spreadsheetId;
+
+  const rows = buildHumidorRows(items);
+  await sheets.spreadsheets.values.update({
+    spreadsheetId, range: `My Humidor!A1:H${rows.length}`,
+    valueInputOption: 'USER_ENTERED', requestBody: { values: rows },
+  });
+
+  await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: [
+        {
+          repeatCell: {
+            range: { sheetId: 0, startRowIndex: 0, endRowIndex: 1 },
+            cell: {
+              userEnteredFormat: {
+                textFormat: { bold: true, foregroundColor: { red: 1, green: 1, blue: 1 } },
+                backgroundColor: { red: 0.33, green: 0.2, blue: 0.04 },
+              },
+            },
+            fields: 'userEnteredFormat(textFormat,backgroundColor)',
+          },
+        },
+        { autoResizeDimensions: { dimensions: { sheetId: 0, dimension: 'COLUMNS', startIndex: 0, endIndex: 8 } } },
+      ],
+    },
+  });
+
+  if (userEmail) {
+    await drive.permissions.create({
+      fileId: spreadsheetId,
+      requestBody: { type: 'user', role: 'writer', emailAddress: userEmail },
+      sendNotificationEmail: true,
+    });
+  }
+
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+}
+
+async function syncHumidorSheet(sheetUrl, items) {
+  const m = (sheetUrl || '').match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if (!m) throw new Error('Invalid sheet URL');
+  const spreadsheetId = m[1];
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const rows = buildHumidorRows(items);
+  await sheets.spreadsheets.values.clear({ spreadsheetId, range: 'My Humidor!A:H' });
+  await sheets.spreadsheets.values.update({
+    spreadsheetId, range: `My Humidor!A1:H${rows.length}`,
+    valueInputOption: 'USER_ENTERED', requestBody: { values: rows },
+  });
+}
+
+function buildHumidorRows(items) {
+  return [
+    ['Brand', 'Cigar Name', 'Vitola', 'Status', 'Qty', 'Purchase Price', 'Purchase Date', 'Notes'],
+    ...items.map(i => [
+      i.brand || '', i.cigar_name || '', i.vitola_name || '',
+      i.status || 'humidor', i.quantity ?? '', i.purchase_price ?? '',
+      i.purchase_date || '', i.notes || '',
+    ]),
+  ];
+}
+
+module.exports = { createInventorySheet, createHumidorSheet, syncHumidorSheet };

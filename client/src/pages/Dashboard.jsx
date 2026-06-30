@@ -328,6 +328,7 @@ export default function Dashboard() {
   const [profileForm, setProfileForm] = useState({ name: user?.name || '', bio: '', location_city: '', location_state: '' });
   const [saving, setSaving] = useState(false);
   const [expandedReview, setExpandedReview] = useState(null);
+  const [sheetLoading, setSheetLoading] = useState(false);
 
   async function loadAll() {
     setLoading(true);
@@ -351,6 +352,17 @@ export default function Dashboard() {
   }
 
   useEffect(() => { loadAll(); }, [statusFilter]);
+
+  async function syncToSheet() {
+    setSheetLoading(true);
+    try {
+      const data = await api.syncHumidorSheet();
+      window.open(data.sheet_url, '_blank');
+      toast('Humidor synced to Google Sheet!');
+    } catch (e) {
+      toast(e.message || 'Could not sync to Google Sheets', 'error');
+    } finally { setSheetLoading(false); }
+  }
 
   async function deleteItem(id) {
     if (!confirm('Remove from collection?')) return;
@@ -492,9 +504,18 @@ export default function Dashboard() {
 
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-stone-600">{humidor.length} item{humidor.length !== 1 ? 's' : ''}</p>
-            <Link to="/search" className="text-xs text-amber-500 hover:text-amber-400 flex items-center gap-1">
-              <Plus className="w-3.5 h-3.5" /> Add cigars
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={syncToSheet}
+                disabled={sheetLoading}
+                className="text-xs text-emerald-400 hover:text-emerald-300 border border-emerald-800/50 hover:border-emerald-600 rounded-lg px-2.5 py-1 flex items-center gap-1 transition-colors disabled:opacity-50"
+              >
+                {sheetLoading ? '⏳' : '📊'} {user?.humidor_sheet_url ? 'Sync Sheet' : 'Export to Sheet'}
+              </button>
+              <Link to="/search" className="text-xs text-amber-500 hover:text-amber-400 flex items-center gap-1">
+                <Plus className="w-3.5 h-3.5" /> Add cigars
+              </Link>
+            </div>
           </div>
 
           {loading ? (
