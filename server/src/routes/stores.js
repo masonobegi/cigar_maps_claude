@@ -3,6 +3,7 @@ const db = require('../database/db');
 const https = require('https');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
+const { createInventorySheet } = require('../utils/googleSheets');
 
 let transporter = null;
 try {
@@ -214,7 +215,16 @@ router.post('/', requireAuth, asyncRoute(async (req, res) => {
     typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
     has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0, JSON.stringify(tags || [])]);
 
-  res.json({ id: result.lastInsertRowid });
+  const storeId = result.lastInsertRowid;
+
+  // Auto-create Google Sheet for inventory sync (non-blocking — don't fail store creation if this errors)
+  if (process.env.GOOGLE_SERVICE_ACCOUNT) {
+    createInventorySheet(req.user.email, name)
+      .then(sheetUrl => db.run('UPDATE stores SET sheet_url = ? WHERE id = ?', [sheetUrl, storeId]))
+      .catch(err => console.error('[sheets] Failed to create inventory sheet for store', storeId, err.message));
+  }
+
+  res.json({ id: storeId });
 }));
 
 router.put('/:id', requireAuth, asyncRoute(async (req, res) => {

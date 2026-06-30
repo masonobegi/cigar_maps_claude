@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../database/db');
 const { requireAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
+const { createInventorySheet } = require('../utils/googleSheets');
 function requireAdmin(req, res, next) {
   if (!['admin', 'staff'].includes(req.user.account_type)) return res.status(403).json({ error: 'Staff only' });
   next();
@@ -64,6 +65,17 @@ router.post('/verifications/:id/approve', requireAuth, requireAdmin, asyncRoute(
   await db.run("UPDATE verification_requests SET status='approved', admin_notes=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=?",
     [admin_notes || null, req.params.id]);
   await db.run('UPDATE stores SET verified=1 WHERE id=?', [vr.store_id]);
+
+  // If store doesn't have a sheet yet, create one now
+  if (process.env.GOOGLE_SERVICE_ACCOUNT) {
+    const store = await db.get('SELECT s.name, s.sheet_url, u.email FROM stores s JOIN users u ON u.id = s.user_id WHERE s.id = ?', [vr.store_id]);
+    if (store && !store.sheet_url) {
+      createInventorySheet(store.email, store.name)
+        .then(url => db.run('UPDATE stores SET sheet_url = ? WHERE id = ?', [url, vr.store_id]))
+        .catch(err => console.error('[sheets] Failed to create sheet on verification approve:', err.message));
+    }
+  }
+
   res.json({ success: true });
 }));
 
