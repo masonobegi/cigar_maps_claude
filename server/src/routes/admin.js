@@ -224,4 +224,9 @@ router.delete('/vitolas/:id', requireAuth, requireAdmin, asyncRoute(async (req, 
   res.json({ success: true });
 }));
 
+router.delete('/stores/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  await db.pool.query('DELETE FROM stores WHERE id = $1', [req.params.id]);
+  res.json({ success: true });
+}));
+
 module.exports = router;
