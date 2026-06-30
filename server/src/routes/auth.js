@@ -40,7 +40,7 @@ router.post('/login', asyncRoute(async (req, res) => {
 }));
 
 router.get('/me', requireAuth, asyncRoute(async (req, res) => {
-  const user = await db.get('SELECT id, email, name, account_type, avatar_url, bio, created_at FROM users WHERE id = ?', [req.user.id]);
+  const user = await db.get('SELECT id, email, name, account_type, avatar_url, bio, location_city, location_state, home_lat, home_lng, home_label, created_at FROM users WHERE id = ?', [req.user.id]);
   if (!user) return res.status(404).json({ error: 'User not found' });
 
   let store = null;

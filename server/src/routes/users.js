@@ -94,10 +94,10 @@ router.get('/me/followed-stores', requireAuth, asyncRoute(async (req, res) => {
 }));
 
 router.put('/me/profile', requireAuth, asyncRoute(async (req, res) => {
-  const { name, bio, location_city, location_state } = req.body;
+  const { name, bio, location_city, location_state, home_lat, home_lng, home_label } = req.body;
   const n = v => v ?? null;
-  await db.run('UPDATE users SET name=?, bio=?, location_city=?, location_state=? WHERE id=?',
-    [n(name), n(bio), n(location_city), n(location_state), req.user.id]);
+  await db.run('UPDATE users SET name=?, bio=?, location_city=?, location_state=?, home_lat=?, home_lng=?, home_label=? WHERE id=?',
+    [n(name), n(bio), n(location_city), n(location_state), n(home_lat), n(home_lng), n(home_label), req.user.id]);
   res.json({ success: true });
 }));
 
