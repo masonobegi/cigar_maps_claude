@@ -73,6 +73,7 @@ export default function StoreProfile() {
     try {
       const res = await api.followStore(id);
       setFollowing(res.following);
+      if (res.following) setShowPrefs(true);
       toast(res.following ? `Following ${data?.store?.name}` : 'Unfollowed');
     } finally { setFollowLoading(false); }
   }
@@ -288,20 +289,11 @@ export default function StoreProfile() {
               {following ? 'Following' : 'Follow'}
             </button>
 
-            {following && (
-              <button onClick={() => setShowPrefs(!showPrefs)}
-                className="flex items-center gap-1.5 text-xs ml-auto transition-colors"
-                style={{ color: MUTED }}
-                onMouseEnter={e => e.currentTarget.style.color = NAVY}
-                onMouseLeave={e => e.currentTarget.style.color = MUTED}>
-                <Bell className="w-3.5 h-3.5" /> Alerts
-              </button>
-            )}
           </div>
         )}
 
         {/* Notification prefs */}
-        {following && showPrefs && (
+        {following && (
           <div className="mx-5 mb-4 rounded-xl p-3" style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
             <p className="text-xs mb-2" style={{ color: MUTED }}>Notify me when this store posts:</p>
             <div className="flex flex-wrap gap-4">
