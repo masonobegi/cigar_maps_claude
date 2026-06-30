@@ -65,7 +65,7 @@ export default function SearchPage() {
   function updateParam(key, val) {
     const next = new URLSearchParams(params);
     if (val) next.set(key, val); else next.delete(key);
-    next.delete('page');
+    if (key !== 'page') next.delete('page');
     setParams(next);
   }
 
