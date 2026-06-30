@@ -122,4 +122,14 @@ export const api = {
   adminGetStores: () => request('/admin/stores'),
   adminToggleVerified: (id, verified) => request(`/admin/stores/${id}/verified`, { method: 'PATCH', body: JSON.stringify({ verified }) }),
   adminGetUsers: () => request('/admin/users'),
+
+  // Cigar catalog management
+  adminGetCigars: () => request('/admin/cigars'),
+  adminCreateCigar: (b) => request('/admin/cigars', { method: 'POST', body: JSON.stringify(b) }),
+  adminUpdateCigar: (id, b) => request(`/admin/cigars/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
+  adminDeleteCigar: (id) => request(`/admin/cigars/${id}`, { method: 'DELETE' }),
+  adminGetCigarVitolas: (id) => request(`/admin/cigars/${id}/vitolas`),
+  adminAddVitola: (cigarId, b) => request(`/admin/cigars/${cigarId}/vitolas`, { method: 'POST', body: JSON.stringify(b) }),
+  adminUpdateVitola: (id, b) => request(`/admin/vitolas/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
+  adminDeleteVitola: (id) => request(`/admin/vitolas/${id}`, { method: 'DELETE' }),
 };

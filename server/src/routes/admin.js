@@ -109,4 +109,108 @@ router.get('/users', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   res.json(users);
 }));
 
+// ── Cigar catalog management ────────────────────────────────────────────────
+// Safe live-migration: all edits are UPDATE in place. IDs never change, so
+// every inventory / review / humidor / follow row stays correctly linked.
+
+router.get('/cigars', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const cigars = await db.all(`
+    SELECT c.id, c.brand, c.name, c.country, c.wrapper, c.binder, c.filler,
+           c.strength, c.flavor_notes, c.description, c.year_introduced,
+           COUNT(DISTINCT i.id)     AS inventory_count,
+           COUNT(DISTINCT r.id)     AS review_count,
+           COUNT(DISTINCT cf.user_id) AS follow_count,
+           COUNT(DISTINCT v.id)     AS vitola_count
+    FROM cigars c
+    LEFT JOIN inventory i      ON i.cigar_id  = c.id
+    LEFT JOIN reviews r        ON r.cigar_id  = c.id
+    LEFT JOIN cigar_follows cf ON cf.cigar_id = c.id
+    LEFT JOIN vitolas v        ON v.cigar_id  = c.id
+    GROUP BY c.id
+    ORDER BY inventory_count DESC, c.brand, c.name
+  `);
+  res.json(cigars);
+}));
+
+router.post('/cigars', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { brand, name, country, wrapper, binder, filler, strength, flavor_notes, description, year_introduced } = req.body;
+  if (!brand || !name) return res.status(400).json({ error: 'Brand and name are required' });
+  const fn = Array.isArray(flavor_notes) ? JSON.stringify(flavor_notes) : (flavor_notes || null);
+  const result = await db.run(
+    `INSERT INTO cigars (brand, name, country, wrapper, binder, filler, strength, flavor_notes, description, year_introduced)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+    [brand, name, country || null, wrapper || null, binder || null, filler || null, strength || 'medium', fn, description || null, year_introduced || null]
+  );
+  res.json({ id: result.lastInsertRowid });
+}));
+
+router.put('/cigars/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { brand, name, country, wrapper, binder, filler, strength, flavor_notes, description, year_introduced } = req.body;
+  if (!brand || !name) return res.status(400).json({ error: 'Brand and name are required' });
+  const fn = Array.isArray(flavor_notes)
+    ? JSON.stringify(flavor_notes)
+    : (typeof flavor_notes === 'string' && flavor_notes ? flavor_notes : null);
+  await db.run(
+    `UPDATE cigars SET brand=?, name=?, country=?, wrapper=?, binder=?, filler=?, strength=?, flavor_notes=?, description=?, year_introduced=? WHERE id=?`,
+    [brand, name, country || null, wrapper || null, binder || null, filler || null, strength || 'medium', fn, description || null, year_introduced || null, req.params.id]
+  );
+  res.json({ success: true });
+}));
+
+router.delete('/cigars/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const refs = await db.get(`
+    SELECT
+      (SELECT COUNT(*) FROM inventory   WHERE cigar_id = $1)::int AS inventory,
+      (SELECT COUNT(*) FROM reviews     WHERE cigar_id = $1)::int AS reviews,
+      (SELECT COUNT(*) FROM user_cigars WHERE cigar_id = $1)::int AS humidor,
+      (SELECT COUNT(*) FROM smoke_list  WHERE cigar_id = $1)::int AS smoke_list
+  `, [req.params.id]);
+  const total = refs.inventory + refs.reviews + refs.humidor + refs.smoke_list;
+  if (total > 0) {
+    return res.status(409).json({
+      error: `Cannot delete — ${refs.inventory} inventory, ${refs.reviews} reviews, ${refs.humidor} humidor, ${refs.smoke_list} smoke-list items reference this cigar. Edit the name/details instead.`
+    });
+  }
+  await db.run('DELETE FROM cigars WHERE id = ?', [req.params.id]);
+  res.json({ success: true });
+}));
+
+router.get('/cigars/:id/vitolas', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const vitolas = await db.all(`
+    SELECT v.*, COUNT(i.id)::int AS inventory_count
+    FROM vitolas v LEFT JOIN inventory i ON i.vitola_id = v.id
+    WHERE v.cigar_id = ? GROUP BY v.id ORDER BY v.name
+  `, [req.params.id]);
+  res.json(vitolas);
+}));
+
+router.post('/cigars/:id/vitolas', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { name, length, ring_gauge, msrp } = req.body;
+  if (!name) return res.status(400).json({ error: 'Vitola name is required' });
+  const result = await db.run(
+    'INSERT INTO vitolas (cigar_id, name, length, ring_gauge, msrp) VALUES (?, ?, ?, ?, ?) RETURNING id',
+    [req.params.id, name, length || null, ring_gauge || null, msrp || null]
+  );
+  res.json({ id: result.lastInsertRowid });
+}));
+
+router.put('/vitolas/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { name, length, ring_gauge, msrp } = req.body;
+  if (!name) return res.status(400).json({ error: 'Vitola name is required' });
+  await db.run(
+    'UPDATE vitolas SET name=?, length=?, ring_gauge=?, msrp=? WHERE id=?',
+    [name, length || null, ring_gauge || null, msrp || null, req.params.id]
+  );
+  res.json({ success: true });
+}));
+
+router.delete('/vitolas/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const ref = await db.get('SELECT COUNT(*)::int AS count FROM inventory WHERE vitola_id = ?', [req.params.id]);
+  if (ref.count > 0) {
+    return res.status(409).json({ error: `Cannot delete — ${ref.count} inventory items use this vitola.` });
+  }
+  await db.run('DELETE FROM vitolas WHERE id = ?', [req.params.id]);
+  res.json({ success: true });
+}));
+
 module.exports = router;
