@@ -18,6 +18,8 @@ app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/deals', require('./routes/deals'));
 app.use('/api/smoke-list', require('./routes/smoke-list'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api', require('./routes/images'));
+app.use('/api', require('./routes/import'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
 

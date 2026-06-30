@@ -90,6 +90,30 @@ export const api = {
   // Deals
   getDeals: () => request('/deals'),
 
+  // Cigar Images
+  getCigarImages: (cigarId) => request(`/cigars/${cigarId}/images`),
+  uploadCigarImage: (cigarId, formData) => {
+    const t = getToken();
+    return fetch(`${BASE}/cigars/${cigarId}/images`, {
+      method: 'POST',
+      headers: t ? { Authorization: `Bearer ${t}` } : {},
+      body: formData,
+    }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Upload failed'); return d; });
+  },
+  setCigarImageDefault: (imageId) => request(`/images/${imageId}/set-default`, { method: 'PATCH' }),
+  deleteCigarImage: (imageId) => request(`/images/${imageId}`, { method: 'DELETE' }),
+
+  // Inventory Import
+  importPreview: (storeId, formData) => {
+    const t = getToken();
+    return fetch(`${BASE}/stores/${storeId}/import/preview`, {
+      method: 'POST',
+      headers: t ? { Authorization: `Bearer ${t}` } : {},
+      body: formData,
+    }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Import failed'); return d; });
+  },
+  importConfirm: (storeId, rows) => request(`/stores/${storeId}/import/confirm`, { method: 'POST', body: JSON.stringify({ rows }) }),
+
   // Admin
   adminGetStats: () => request('/admin/stats'),
   adminGetVerifications: (status) => request(`/admin/verifications${status ? `?status=${status}` : ''}`),

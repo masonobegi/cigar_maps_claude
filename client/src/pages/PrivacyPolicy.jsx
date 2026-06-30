@@ -35,6 +35,11 @@ export default function PrivacyPolicy() {
         </section>
 
         <section>
+          <h2 className="text-base font-semibold text-stone-200 mb-2">4a. Store-Uploaded Images</h2>
+          <p>Verified store accounts may upload photographs of cigars to enrich the CigarBuddy catalog. By uploading an image, you represent that you own the image or have all necessary rights to license it. You grant CigarBuddy a perpetual, irrevocable, royalty-free, worldwide license to use, display, reproduce, and distribute that image across the CigarBuddy platform, including as the default thumbnail for the depicted cigar visible to all users. Images may be displayed on any device or medium through which CigarBuddy is accessed.</p>
+        </section>
+
+        <section>
           <h2 className="text-base font-semibold text-stone-200 mb-2">5. Data Storage</h2>
           <p>Your data is stored on secure servers. Passwords are hashed using bcrypt and are never stored in plain text. We retain your account data for as long as your account is active. You may request deletion of your account and associated data by contacting us.</p>
         </section>

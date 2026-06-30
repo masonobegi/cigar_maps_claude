@@ -168,13 +168,13 @@ export default function AdminPanel() {
   const [toast, setToast] = useState('');
 
   useEffect(() => {
-    if (!authLoading && (!user || user.account_type !== 'admin')) {
+    if (!authLoading && (!user || !['admin','staff'].includes(user.account_type))) {
       navigate('/');
     }
   }, [user, authLoading]);
 
   useEffect(() => {
-    if (!user || user.account_type !== 'admin') return;
+    if (!user || !['admin','staff'].includes(user.account_type)) return;
     api.adminGetStats().then(setStats);
   }, [user]);
 
@@ -184,7 +184,7 @@ export default function AdminPanel() {
   }, [tab]);
 
   if (authLoading || !user) return null;
-  if (user.account_type !== 'admin') return null;
+  if (!['admin','staff'].includes(user.account_type)) return null;
 
   function showToast(msg) {
     setToast(msg);
@@ -290,6 +290,7 @@ export default function AdminPanel() {
               <div className="flex flex-col items-end gap-1">
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase ${
                   u.account_type === 'admin' ? 'bg-purple-900/40 text-purple-400' :
+                  u.account_type === 'staff' ? 'bg-blue-900/40 text-blue-400' :
                   u.account_type === 'store' ? 'bg-amber-900/40 text-amber-400' : 'bg-stone-800 text-stone-400'
                 }`}>{u.account_type}</span>
                 <span className="text-[10px] text-stone-600">{new Date(u.created_at).toLocaleDateString()}</span>

@@ -244,6 +244,19 @@ async function initSchema() {
     CREATE INDEX IF NOT EXISTS idx_cigar_follows_user ON cigar_follows(user_id);
     CREATE INDEX IF NOT EXISTS idx_inv_requests_store ON inventory_requests(store_id);
 
+    CREATE TABLE IF NOT EXISTS cigar_images (
+      id SERIAL PRIMARY KEY,
+      cigar_id INTEGER NOT NULL REFERENCES cigars(id) ON DELETE CASCADE,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      image_data TEXT NOT NULL,
+      image_type VARCHAR(50) NOT NULL DEFAULT 'image/jpeg',
+      is_default INTEGER NOT NULL DEFAULT 0,
+      uploaded_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cigar_images_cigar ON cigar_images(cigar_id);
+    CREATE INDEX IF NOT EXISTS idx_cigar_images_default ON cigar_images(cigar_id, is_default);
+
     CREATE TABLE IF NOT EXISTS seed_meta (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL

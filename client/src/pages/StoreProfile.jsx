@@ -44,12 +44,6 @@ export default function StoreProfile() {
   const [ratingForm, setRatingForm] = useState({ rating: 0, comment: '' });
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
-  const [requestModal, setRequestModal] = useState(false);
-  const [requestForm, setRequestForm] = useState({ cigar_id: '', cigar_name_free: '', message: '' });
-  const [reqCigarSearch, setReqCigarSearch] = useState('');
-  const [reqCigarResults, setReqCigarResults] = useState([]);
-  const [reqSelectedCigar, setReqSelectedCigar] = useState(null);
-  const [reqSubmitted, setReqSubmitted] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -87,27 +81,6 @@ export default function StoreProfile() {
     setData(updated);
   }
 
-  async function searchRequestCigars(q) {
-    if (q.length < 2) { setReqCigarResults([]); return; }
-    const { cigars } = await api.searchCigars({ q, limit: 6 });
-    setReqCigarResults(cigars);
-  }
-
-  async function submitRequest() {
-    if (!user) { navigate('/login'); return; }
-    if (!reqSelectedCigar && !requestForm.cigar_name_free) return;
-    await api.submitInventoryRequest(id, {
-      cigar_id: reqSelectedCigar?.id || null,
-      cigar_name_free: requestForm.cigar_name_free || null,
-      message: requestForm.message || null,
-    });
-    setReqSubmitted(true);
-    toast('Request sent to the store!');
-    setRequestModal(false);
-    setReqSelectedCigar(null);
-    setReqCigarSearch('');
-    setRequestForm({ cigar_id: '', cigar_name_free: '', message: '' });
-  }
 
   if (loading) return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
@@ -250,10 +223,6 @@ export default function StoreProfile() {
                 ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 : <Heart className={`w-4 h-4 ${following ? 'fill-current' : ''}`} />}
               {following ? 'Following' : 'Follow'}
-            </button>
-
-            <button onClick={() => setRequestModal(true)} className="btn-secondary text-sm flex items-center gap-2">
-              <Package className="w-4 h-4" /> Request a Cigar
             </button>
 
             {following && (
@@ -520,80 +489,6 @@ export default function StoreProfile() {
         </div>
       )}
 
-      {/* ── Request Modal ── */}
-      {requestModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60"
-          onClick={() => setRequestModal(false)}>
-          <div className="rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
-            style={{ backgroundColor: '#1F2D42', border: `1px solid ${BORDER}`, boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}
-            onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h2 className="font-serif text-lg font-bold" style={{ color: NAVY }}>Request a Cigar</h2>
-              <button onClick={() => setRequestModal(false)} className="btn-ghost p-1.5"><X className="w-5 h-5" /></button>
-            </div>
-            <p className="text-sm -mt-2" style={{ color: MUTED }}>
-              Let <span className="font-medium" style={{ color: LABEL }}>{store.name}</span> know what you'd like them to stock.
-            </p>
-
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Search the Catalog</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
-                <input className="input pl-10 text-sm" placeholder="Type a brand or cigar name..."
-                  value={reqCigarSearch}
-                  onChange={e => { setReqCigarSearch(e.target.value); searchRequestCigars(e.target.value); if (!e.target.value) setReqSelectedCigar(null); }} />
-              </div>
-              {reqCigarResults.length > 0 && !reqSelectedCigar && (
-                <div className="mt-1 rounded-xl overflow-hidden shadow-lg" style={{ border: `1px solid ${BORDER}` }}>
-                  {reqCigarResults.map(c => (
-                    <button key={c.id} onClick={() => { setReqSelectedCigar(c); setReqCigarSearch(`${c.brand} ${c.name}`); setReqCigarResults([]); }}
-                      className="w-full text-left px-4 py-2.5 transition-colors"
-                      style={{ borderBottom: `1px solid ${BORDER}` }}
-                      onMouseEnter={e => e.currentTarget.style.backgroundColor = BG_ALT}
-                      onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
-                      <p className="text-sm font-medium" style={{ color: NAVY }}>{c.brand} {c.name}</p>
-                      <p className="text-xs capitalize" style={{ color: MUTED }}>{c.strength} · {c.country}</p>
-                    </button>
-                  ))}
-                </div>
-              )}
-              {reqSelectedCigar && (
-                <div className="mt-1 flex items-center gap-2 text-xs" style={{ color: '#4ADE80' }}>
-                  <CheckCircle className="w-4 h-4" />
-                  <span>{reqSelectedCigar.brand} {reqSelectedCigar.name}</span>
-                  <button onClick={() => { setReqSelectedCigar(null); setReqCigarSearch(''); }}
-                    className="ml-auto text-xs" style={{ color: MUTED }}>Change</button>
-                </div>
-              )}
-            </div>
-
-            {!reqSelectedCigar && (
-              <div>
-                <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Or type a name (if not in catalog)</label>
-                <input className="input text-sm" placeholder="e.g. Padron 1926 Imperial"
-                  value={requestForm.cigar_name_free}
-                  onChange={e => setRequestForm(f => ({ ...f, cigar_name_free: e.target.value }))} />
-              </div>
-            )}
-
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: LABEL }}>Message (optional)</label>
-              <textarea rows={2} className="input resize-none text-sm"
-                placeholder="Any specific size preference or note for the store..."
-                value={requestForm.message}
-                onChange={e => setRequestForm(f => ({ ...f, message: e.target.value }))} />
-            </div>
-
-            <div className="flex gap-2">
-              <button onClick={() => setRequestModal(false)} className="btn-secondary flex-1">Cancel</button>
-              <button onClick={submitRequest} disabled={!reqSelectedCigar && !requestForm.cigar_name_free}
-                className="btn-primary flex-1 disabled:opacity-50">
-                Send Request
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

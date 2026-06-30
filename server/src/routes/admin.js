@@ -4,7 +4,7 @@ const { requireAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 
 function requireAdmin(req, res, next) {
-  if (req.user.account_type !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  if (!['admin', 'staff'].includes(req.user.account_type)) return res.status(403).json({ error: 'Staff only' });
   next();
 }
 

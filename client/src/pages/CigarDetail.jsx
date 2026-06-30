@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff } from 'lucide-react';
+import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff, Camera, X, CheckCircle } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -70,7 +70,7 @@ function SectionLabel({ children }) {
 
 export default function CigarDetail() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, store: myStore } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { add: addRecentlyViewed } = useRecentlyViewed();
@@ -86,6 +86,9 @@ export default function CigarDetail() {
   const [saving, setSaving] = useState(false);
   const [following, setFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
+  const [images, setImages] = useState([]);
+  const [imageUploadOpen, setImageUploadOpen] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -94,8 +97,10 @@ export default function CigarDetail() {
       api.getCigarReviews(id, { limit: 20 }),
       api.searchStores(),
       api.getCigarFollowStatus(id),
-    ]).then(([d, avail, rev, storeList, followStatus]) => {
+      api.getCigarImages(id),
+    ]).then(([d, avail, rev, storeList, followStatus, imgs]) => {
       setData(d);
+      setImages(imgs);
       setAvailability(avail);
       setReviews(rev.reviews);
       setStores(storeList);
@@ -134,6 +139,22 @@ export default function CigarDetail() {
     if (!user) return navigate('/login');
     try { await api.addToSmokeList({ cigar_id: id }); toast('Added to Smoke List'); }
     catch (e) { toast(e.message, 'error'); }
+  }
+
+  async function handleImageUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('image', file);
+    setUploadingImage(true);
+    try {
+      await api.uploadCigarImage(id, fd);
+      const imgs = await api.getCigarImages(id);
+      setImages(imgs);
+      setImageUploadOpen(false);
+      toast('Image uploaded! It will appear as the thumbnail if it\'s the first for this cigar.');
+    } catch (e2) { toast(e2.message, 'error'); }
+    finally { setUploadingImage(false); }
   }
 
   async function toggleFollow() {
@@ -177,6 +198,58 @@ export default function CigarDetail() {
           <ShareButton title={`${cigar.brand} ${cigar.name}`} text={`Check out ${cigar.brand} ${cigar.name} on CigarBuddy`} />
         </div>
       </div>
+
+      {/* Cigar Image */}
+      {(() => {
+        const defaultImg = images.find(i => i.is_default);
+        const isVerifiedStore = user?.account_type === 'store' && myStore?.verified;
+        return (
+          <div className="mb-6">
+            {defaultImg ? (
+              <div className="relative rounded-2xl overflow-hidden" style={{ maxHeight: '280px' }}>
+                <img src={`/api/images/${defaultImg.id}`} alt={`${cigar.brand} ${cigar.name}`}
+                  className="w-full object-cover" style={{ maxHeight: '280px' }} />
+                {isVerifiedStore && (
+                  <button onClick={() => setImageUploadOpen(true)}
+                    className="absolute bottom-3 right-3 flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors">
+                    <Camera className="w-3.5 h-3.5" /> Upload Better Photo
+                  </button>
+                )}
+              </div>
+            ) : isVerifiedStore ? (
+              <button onClick={() => setImageUploadOpen(true)}
+                className="w-full rounded-2xl border-2 border-dashed py-8 flex flex-col items-center gap-2 transition-colors"
+                style={{ borderColor: '#2B3D57', color: MUTED }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = AMBER; e.currentTarget.style.color = AMBER; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#2B3D57'; e.currentTarget.style.color = MUTED; }}>
+                <Camera className="w-7 h-7" />
+                <span className="text-sm font-medium">Be the first to add a photo of this cigar</span>
+                <span className="text-xs">As a verified store, your photo becomes the default thumbnail site-wide</span>
+              </button>
+            ) : null}
+
+            {imageUploadOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setImageUploadOpen(false)}>
+                <div className="rounded-2xl p-6 w-full max-w-sm flex flex-col gap-4" style={{ backgroundColor: '#1F2D42', border: '1px solid #2B3D57' }} onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold" style={{ color: NAVY }}>Upload Cigar Photo</h3>
+                    <button onClick={() => setImageUploadOpen(false)} className="btn-ghost p-1"><X className="w-4 h-4" /></button>
+                  </div>
+                  <p className="text-xs" style={{ color: MUTED }}>
+                    By uploading, you confirm you have rights to this image and agree to our
+                    <span style={{ color: AMBER }}> image usage terms</span>. If this is the first photo
+                    for this cigar, it becomes the default thumbnail across the site.
+                  </p>
+                  <label className="btn-primary flex items-center justify-center gap-2 cursor-pointer">
+                    {uploadingImage ? 'Uploading...' : <><Camera className="w-4 h-4" /> Choose Photo</>}
+                    <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Pills */}
       <div className="flex flex-wrap gap-2 mb-6">

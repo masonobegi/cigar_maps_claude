@@ -46,6 +46,18 @@ export default function TermsOfService() {
         </section>
 
         <section>
+          <h2 className="text-base font-semibold text-stone-200 mb-2">5a. Cigar Image Uploads (Verified Stores)</h2>
+          <p className="mb-2">Verified store accounts may upload photographs of cigars to the CigarBuddy platform. By uploading an image, you agree to the following:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>You own the image or hold all rights necessary to grant the license below.</li>
+            <li>You grant CigarBuddy a <strong className="text-stone-200">perpetual, irrevocable, royalty-free, worldwide license</strong> to use, reproduce, display, distribute, and sublicense the image across the CigarBuddy platform and any future CigarBuddy products or media.</li>
+            <li>The image may be displayed as the default thumbnail for the depicted cigar, visible to all users of the platform, for as long as CigarBuddy operates.</li>
+            <li>You will not upload images that you do not have rights to, or that are misleading, offensive, or unrelated to the cigar being cataloged.</li>
+            <li>CigarBuddy may remove any uploaded image at its discretion, including if a rights dispute arises.</li>
+          </ul>
+        </section>
+
+        <section>
           <h2 className="text-base font-semibold text-stone-200 mb-2">6. Prohibited Conduct</h2>
           <p className="mb-2">You may not:</p>
           <ul className="list-disc pl-5 space-y-1">

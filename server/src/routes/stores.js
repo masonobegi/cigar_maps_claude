@@ -4,6 +4,17 @@ const https = require('https');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 
+let transporter = null;
+try {
+  const nodemailer = require('nodemailer');
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    });
+  }
+} catch (_) {}
+
 async function geocode(address, city, state) {
   const q = [address, city, state].filter(Boolean).join(', ');
   return new Promise((resolve) => {
@@ -453,6 +464,11 @@ router.post('/:id/verification-request', requireAuth, asyncRoute(async (req, res
     INSERT INTO verification_requests (store_id, business_name, business_ein, business_phone, business_address, business_website, license_number, notes)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
   `, [req.params.id, business_name, n(business_ein), n(business_phone), n(business_address), n(business_website), n(license_number), n(notes)]);
+
+  if (transporter) {
+    const body = `New verification request submitted:\n\nStore: ${store.name} (ID: ${store.id})\nBusiness Name: ${business_name}\nEIN: ${business_ein || 'N/A'}\nPhone: ${business_phone || 'N/A'}\nAddress: ${business_address || 'N/A'}\nWebsite: ${business_website || 'N/A'}\nLicense: ${license_number || 'N/A'}\nNotes: ${notes || 'N/A'}\n\nReview at: https://cigarmapsclaude-production.up.railway.app/admin`;
+    transporter.sendMail({ from: process.env.SMTP_USER, to: 'mason.obegi@gmail.com', subject: `[CigarBuddy] Verification Request: ${store.name}`, text: body }).catch(() => {});
+  }
 
   res.json({ id: result.lastInsertRowid });
 }));

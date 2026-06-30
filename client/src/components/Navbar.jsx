@@ -33,6 +33,7 @@ export default function Navbar() {
   }
 
   const isStore = user?.account_type === 'store';
+  const isStaff = user?.account_type === 'admin' || user?.account_type === 'staff';
   const dashPath = isStore ? '/store-dashboard' : '/dashboard';
 
   return (
@@ -62,7 +63,10 @@ export default function Navbar() {
                   {isStore ? <Store className="w-4 h-4" /> : <LayoutDashboard className="w-4 h-4" />}
                   {isStore ? 'My Store' : 'My Humidor'}
                 </Link>
-                {!isStore && (
+                {isStaff && (
+                  <Link to="/admin" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname === '/admin' ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>Staff Panel</Link>
+                )}
+                {!isStore && !isStaff && (
                   <button onClick={() => setNotifOpen(o => !o)} className={`relative p-2 rounded-lg transition-colors ${notifOpen ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>
                     <Bell className="w-5 h-5" />
                     {notifCount > 0 && (

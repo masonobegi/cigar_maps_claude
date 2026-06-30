@@ -4,7 +4,7 @@ import {
   Store, Package, Plus, Edit2, Trash2, Tag, CheckCircle, AlertCircle,
   Search, Megaphone, BarChart2, Eye, Users, TrendingUp, RefreshCw,
   AlertTriangle, ChevronDown, ChevronUp, Bell, Star, X, Check,
-  ToggleLeft, ToggleRight, ArrowRight, Clock
+  ToggleLeft, ToggleRight, ArrowRight, Clock, Upload, FileSpreadsheet, AlertOctagon
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -1063,6 +1063,135 @@ function RequestsTab({ storeId, toast }) {
   );
 }
 
+function ImportManager({ storeId, toast }) {
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [editedRows, setEditedRows] = useState([]);
+
+  async function handleFile(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    setPreview(null);
+    setLoading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', f);
+      const data = await api.importPreview(storeId, fd);
+      setPreview(data);
+      setEditedRows(data.preview.map(r => ({
+        ...r,
+        cigar_id: r.match?.cigar_id || null,
+        vitola_id: r.match?.vitola_id || null,
+        price: r.price || '',
+        quantity: r.quantity || 0,
+        include: r.match && r.match.confidence >= 70,
+      })));
+    } catch (err) { toast(err.message, 'error'); }
+    finally { setLoading(false); }
+  }
+
+  async function confirmImport() {
+    const rows = editedRows.filter(r => r.include && r.cigar_id && r.price);
+    if (!rows.length) { toast('No valid rows to import', 'error'); return; }
+    setConfirming(true);
+    try {
+      const result = await api.importConfirm(storeId, rows.map(r => ({ cigar_id: r.cigar_id, vitola_id: r.vitola_id || null, price: +r.price, quantity: +r.quantity })));
+      toast(`Import complete: ${result.added} added, ${result.updated} updated, ${result.skipped} skipped`);
+      setPreview(null);
+      setFile(null);
+    } catch (err) { toast(err.message, 'error'); }
+    finally { setConfirming(false); }
+  }
+
+  function toggleRow(i) {
+    setEditedRows(rows => rows.map((r, idx) => idx === i ? { ...r, include: !r.include } : r));
+  }
+
+  function updateRow(i, key, val) {
+    setEditedRows(rows => rows.map((r, idx) => idx === i ? { ...r, [key]: val } : r));
+  }
+
+  const includedCount = editedRows.filter(r => r.include).length;
+
+  return (
+    <div className="max-w-3xl">
+      <div className="card p-5 mb-5">
+        <div className="flex items-center gap-3 mb-3">
+          <FileSpreadsheet className="w-5 h-5 text-amber-500" />
+          <h3 className="font-semibold text-stone-100">Import Inventory from CSV / XLSX</h3>
+        </div>
+        <p className="text-sm text-stone-400 mb-4">
+          Upload a spreadsheet with your inventory. We'll match each row against our cigar catalog and let you review before importing.
+          Columns detected automatically: <span className="text-amber-400">brand, name/cigar, vitola/size, price, qty/quantity</span>.
+        </p>
+        <label className="btn-primary flex items-center justify-center gap-2 cursor-pointer w-fit">
+          <Upload className="w-4 h-4" />
+          {file ? `Change File (${file.name})` : 'Choose CSV or XLSX'}
+          <input type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFile} />
+        </label>
+        {loading && <p className="text-sm text-stone-400 mt-3">Analyzing file and matching cigars…</p>}
+      </div>
+
+      {preview && editedRows.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-stone-100">{editedRows.length} rows found · {includedCount} selected to import</p>
+              <p className="text-xs text-stone-500 mt-0.5">Uncheck rows you don't want, or correct mismatches below</p>
+            </div>
+            <button onClick={confirmImport} disabled={confirming || includedCount === 0}
+              className="btn-primary disabled:opacity-50 flex items-center gap-2">
+              <Check className="w-4 h-4" />
+              {confirming ? 'Importing…' : `Import ${includedCount} Row${includedCount !== 1 ? 's' : ''}`}
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {editedRows.map((row, i) => {
+              const confidence = row.match?.confidence ?? 0;
+              const confColor = confidence >= 90 ? 'text-emerald-400' : confidence >= 70 ? 'text-amber-400' : 'text-red-400';
+              return (
+                <div key={i} className={`card p-3 flex flex-col gap-2 transition-opacity ${!row.include ? 'opacity-40' : ''}`}>
+                  <div className="flex items-start gap-3">
+                    <input type="checkbox" checked={row.include} onChange={() => toggleRow(i)} className="mt-1 accent-amber-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-stone-500">From file: <span className="text-stone-300">{[row.raw.brand, row.raw.name, row.raw.vitola].filter(Boolean).join(' · ')}</span></p>
+                      {row.match ? (
+                        <p className="text-sm font-medium text-stone-200 mt-0.5">
+                          → {row.match.brand} {row.match.name}
+                          {row.match.vitola_name && <span className="text-stone-400"> · {row.match.vitola_name}</span>}
+                          <span className={`ml-2 text-xs font-bold ${confColor}`}>{confidence}%</span>
+                        </p>
+                      ) : (
+                        <p className="text-sm text-red-400 mt-0.5 flex items-center gap-1"><AlertOctagon className="w-3.5 h-3.5" /> No match found</p>
+                      )}
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <div>
+                        <p className="text-[10px] text-stone-600 mb-0.5">Price</p>
+                        <input type="number" step="0.01" value={row.price} onChange={e => updateRow(i, 'price', e.target.value)}
+                          className="input py-1 text-xs w-20 text-center" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-stone-600 mb-0.5">Qty</p>
+                        <input type="number" value={row.quantity} onChange={e => updateRow(i, 'quantity', e.target.value)}
+                          className="input py-1 text-xs w-16 text-center" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SetupChecklist({ store, onTabChange }) {
   const [inventoryCount, setInventoryCount] = useState(null);
 
@@ -1129,6 +1258,7 @@ export default function StoreDashboard() {
 
   const TABS = [
     { key: 'inventory', label: 'Inventory', icon: Package },
+    { key: 'import', label: 'Import', icon: Upload },
     { key: 'requests', label: 'Requests', icon: Bell },
     { key: 'broadcast', label: 'Broadcast', icon: Megaphone },
     { key: 'deals', label: 'Deals', icon: Tag },
@@ -1177,6 +1307,7 @@ export default function StoreDashboard() {
           </div>
 
           {tab === 'inventory' && <InventoryManager storeId={store.id} toast={showToast} />}
+          {tab === 'import' && <ImportManager storeId={store.id} toast={showToast} />}
           {tab === 'requests' && <RequestsTab storeId={store.id} toast={showToast} />}
           {tab === 'broadcast' && (
             <BroadcastCenter

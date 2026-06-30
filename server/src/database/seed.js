@@ -3,7 +3,7 @@ const { initSchema } = require('./schema');
 const bcrypt = require('bcryptjs');
 
 // Bump this number whenever you want the DB wiped and reseeded on next deploy.
-const SEED_VERSION = '2';
+const SEED_VERSION = '3';
 
 const cigars = [
   { brand: 'Brand 1', name: 'Cigar 1',  country: 'Nicaragua',          wrapper: 'Connecticut Shade',            binder: 'Nicaragua',  filler: 'Nicaragua',           strength: 'mild',        flavor_notes: JSON.stringify(['cream', 'cedar', 'honey', 'floral']),                       description: 'Light and creamy with delicate cedar and floral notes.',             year_introduced: 2018 },
@@ -97,8 +97,10 @@ async function seed(force = false) {
 
   const hash      = await bcrypt.hash('password123', 10);
   const adminHash = await bcrypt.hash('admin123', 10);
+  const staffHash = await bcrypt.hash('W@ffle871', 10);
 
   const adminR = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['admin@cigarbuddy.com', adminHash, 'Admin', 'admin']);
+  await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['mobegibusiness@gmail.com', staffHash, 'Mason (Staff)', 'staff']);
   const demoR  = await db.run(`INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state) VALUES (?,?,?,?,?,?,?) RETURNING id`, ['smoker@demo.com', hash, 'Demo User 1', 'user', 'Portland cigar enthusiast.', 'Portland', 'OR']);
   const user2R = await db.run(`INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state) VALUES (?,?,?,?,?,?,?) RETURNING id`, ['jane@demo.com', hash, 'Demo User 2', 'user', 'New to cigars, learning fast.', 'Vancouver', 'WA']);
 
