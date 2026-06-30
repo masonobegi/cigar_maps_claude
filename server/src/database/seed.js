@@ -150,15 +150,15 @@ async function seed() {
   const { rows: [{ id: sid3 }] } = await db.pool.query(
     `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
-    [su3,'Store 3','Upscale lounge in the Pearl District. Craft cocktail bar and curated humidor.','1242 NW Everett St','Portland','OR','97209','(503) 555-1242',h3,1,1,JSON.stringify(['Lounge','Craft Cocktails','Private Lockers']),45.5284,-122.6822]);
+    [su3,'Store 3','Upscale Deep Ellum lounge. Craft cocktail bar, private lockers, and a curated walk-in humidor.','2803 Elm St','Dallas','TX','75226','(214) 555-2803',h3,1,1,JSON.stringify(['Lounge','Craft Cocktails','Private Lockers']),32.7834,-96.7908]);
   const { rows: [{ id: sid4 }] } = await db.pool.query(
     `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
-    [su4,'Store 4','Vancouver go-to cigar shop. Friendly staff, fair prices, over 150 SKUs.','512 W 8th St','Vancouver','WA','98660','(360) 555-0512',h4,0,1,JSON.stringify(['Walk-in Humidor','Everyday Value']),45.6275,-122.6739]);
+    [su4,'Store 4','Hyde Park cigar shop. Friendly staff, fair prices, over 150 SKUs. Great everyday selection.','712 S Dale Mabry Hwy','Tampa','FL','33609','(813) 555-0712',h4,0,1,JSON.stringify(['Walk-in Humidor','Everyday Value']),27.9395,-82.4991]);
   const { rows: [{ id: sid5 }] } = await db.pool.query(
     `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
-    [su5,'Store 5','Refined neighborhood lounge in Lake Oswego. Whiskey bar and monthly pairing events.','15820 Boones Ferry Rd','Lake Oswego','OR','97035','(503) 555-5820',h5,1,1,JSON.stringify(['Lounge','Whiskey Bar','Walk-in Humidor']),45.4201,-122.7051]);
+    [su5,'Store 5','Midtown Manhattan cigar lounge. Whiskey bar, private events, and a world-class humidor.','19 W 44th St','New York','NY','10036','(212) 555-0019',h5,1,1,JSON.stringify(['Lounge','Whiskey Bar','Walk-in Humidor']),40.7553,-73.9822]);
 
   // Cigars + vitolas
   const cigarIds  = {};
