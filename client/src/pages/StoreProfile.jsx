@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search } from 'lucide-react';
+import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -44,6 +44,15 @@ export default function StoreProfile() {
   const [ratingForm, setRatingForm] = useState({ rating: 0, comment: '' });
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
+  const [requestModal, setRequestModal] = useState(false);
+  const [communityPosts, setCommunityPosts] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [communityLoading, setCommunityLoading] = useState(false);
+  const [postForm, setPostForm] = useState({ type: 'post', content: '', cigar_id: '' });
+  const [postSubmitting, setPostSubmitting] = useState(false);
+  const [cigarSearchQ, setCigarSearchQ] = useState('');
+  const [cigarSearchResults, setCigarSearchResults] = useState([]);
+  const [selectedCigar, setSelectedCigar] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -71,6 +80,58 @@ export default function StoreProfile() {
     const next = { ...followPrefs, [key]: val ? 1 : 0 };
     setFollowPrefs(next);
     await api.updateFollowPrefs(id, next);
+  }
+
+  async function loadCommunity() {
+    setCommunityLoading(true);
+    try {
+      const [posts, evts] = await Promise.all([
+        api.getCommunityPosts(id),
+        api.getStoreEvents(id),
+      ]);
+      setCommunityPosts(posts);
+      setEvents(evts);
+    } finally { setCommunityLoading(false); }
+  }
+
+  useEffect(() => { if (tab === 'community') loadCommunity(); }, [tab, id]);
+
+  async function searchCigarsForPost(q) {
+    if (!q.trim()) { setCigarSearchResults([]); return; }
+    const d = await api.searchCigars({ q, limit: 6 });
+    setCigarSearchResults(d.cigars);
+  }
+
+  async function submitPost() {
+    if (!postForm.content.trim()) return;
+    setPostSubmitting(true);
+    try {
+      await api.createCommunityPost(id, {
+        type: postForm.type,
+        content: postForm.content,
+        cigar_id: selectedCigar?.id || null,
+      });
+      setPostForm({ type: 'post', content: '', cigar_id: '' });
+      setSelectedCigar(null);
+      setCigarSearchQ('');
+      setCigarSearchResults([]);
+      await loadCommunity();
+      toast(postForm.type === 'checkin' ? 'Checked in!' : 'Posted!');
+    } catch (e) { toast(e.message, 'error'); } finally { setPostSubmitting(false); }
+  }
+
+  async function handleRsvp(eventId, status) {
+    if (!user) return navigate('/login');
+    try {
+      await api.rsvpEvent(eventId, status);
+      await loadCommunity();
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  async function deletePost(postId) {
+    if (!confirm('Delete this post?')) return;
+    await api.deleteCommunityPost(postId);
+    await loadCommunity();
   }
 
   async function submitRating() {
@@ -121,10 +182,11 @@ export default function StoreProfile() {
   }
 
   const TABS = [
-    { key: 'inventory', label: `Inventory (${inventory_count})` },
-    { key: 'new',       label: `New Arrivals (${new_arrivals.length})` },
-    { key: 'deals',     label: `Deals (${deals.length})` },
-    { key: 'about',     label: 'About' },
+    { key: 'inventory',  label: `Inventory (${inventory_count})` },
+    { key: 'new',        label: `New Arrivals (${new_arrivals.length})` },
+    { key: 'deals',      label: `Deals (${deals.length})` },
+    { key: 'community',  label: 'Community' },
+    { key: 'about',      label: 'About' },
   ];
 
   const mapsUrl = store.address
@@ -243,9 +305,10 @@ export default function StoreProfile() {
             <p className="text-xs mb-2" style={{ color: MUTED }}>Notify me when this store posts:</p>
             <div className="flex flex-wrap gap-4">
               {[
-                { key: 'notify_broadcasts', label: 'Announcements' },
-                { key: 'notify_deals',      label: 'Deals' },
+                { key: 'notify_broadcasts',   label: 'Announcements' },
+                { key: 'notify_deals',        label: 'Deals' },
                 { key: 'notify_new_arrivals', label: 'New Arrivals' },
+                { key: 'notify_community',    label: 'Community & Events' },
               ].map(({ key, label }) => (
                 <label key={key} className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={!!followPrefs[key]} onChange={e => updatePrefs(key, e.target.checked)} className="accent-amber-600" />
@@ -416,6 +479,189 @@ export default function StoreProfile() {
               {d.expires_at && <p className="text-xs" style={{ color: MUTED }}>Expires {new Date(d.expires_at).toLocaleDateString()}</p>}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ── Community ── */}
+      {tab === 'community' && (
+        <div className="flex flex-col gap-5">
+          {/* Upcoming events */}
+          {events.filter(e => new Date(e.event_date) >= new Date()).length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: MUTED }}>Upcoming Events</p>
+              <div className="flex flex-col gap-3">
+                {events.filter(e => new Date(e.event_date) >= new Date()).map(evt => (
+                  <div key={evt.id} className="card p-4">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: AMBER }} />
+                          <h3 className="font-semibold" style={{ color: NAVY }}>{evt.title}</h3>
+                        </div>
+                        <p className="text-xs mb-1" style={{ color: AMBER }}>
+                          {new Date(evt.event_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                        </p>
+                        {evt.description && <p className="text-sm" style={{ color: LABEL }}>{evt.description}</p>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 mt-2 pt-2" style={{ borderTop: `1px solid ${BORDER}` }}>
+                      <span className="text-xs" style={{ color: MUTED }}>
+                        <span className="font-semibold" style={{ color: '#4ADE80' }}>{evt.going_count}</span> going
+                        {evt.maybe_count > 0 && <> · <span className="font-semibold" style={{ color: AMBER }}>{evt.maybe_count}</span> maybe</>}
+                      </span>
+                      {user?.account_type === 'user' && (
+                        <div className="flex gap-2 ml-auto">
+                          {['going', 'maybe'].map(s => (
+                            <button key={s} onClick={() => handleRsvp(evt.id, evt.my_rsvp === s ? null : s)}
+                              className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors capitalize"
+                              style={evt.my_rsvp === s
+                                ? { backgroundColor: s === 'going' ? '#0B3320' : '#2D1E06', color: s === 'going' ? '#4ADE80' : AMBER, border: `1px solid ${s === 'going' ? '#0D5F35' : '#5A3010'}` }
+                                : { backgroundColor: '#1A1410', color: MUTED, border: `1px solid ${BORDER}` }}>
+                              {s === 'going' ? '✓ Going' : '? Maybe'}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Post composer */}
+          {user && ['user', 'store'].includes(user.account_type) && (
+            <div className="card p-4">
+              <div className="flex gap-2 mb-3">
+                {[
+                  { type: 'post', icon: MessageSquare, label: 'Post' },
+                  { type: 'checkin', icon: Coffee, label: 'Check In' },
+                ].map(({ type, icon: Icon, label }) => (
+                  <button key={type} onClick={() => setPostForm(f => ({ ...f, type }))}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                    style={postForm.type === type
+                      ? { backgroundColor: '#2D1E06', color: AMBER, border: `1px solid #4D3010` }
+                      : { backgroundColor: '#1A1410', color: MUTED, border: `1px solid ${BORDER}` }}>
+                    <Icon className="w-3.5 h-3.5" />{label}
+                  </button>
+                ))}
+              </div>
+              <textarea rows={3} className="input resize-none text-sm mb-2"
+                placeholder={postForm.type === 'checkin' ? "What's going on here? Any cigar recommendations today?" : "Share something with the community..."}
+                value={postForm.content}
+                onChange={e => setPostForm(f => ({ ...f, content: e.target.value }))} />
+
+              {/* Cigar tag */}
+              <div className="mb-2">
+                {selectedCigar ? (
+                  <div className="flex items-center gap-2 text-xs">
+                    <Tag className="w-3.5 h-3.5" style={{ color: AMBER }} />
+                    <span style={{ color: AMBER }} className="font-medium">{selectedCigar.brand} {selectedCigar.name}</span>
+                    <button onClick={() => { setSelectedCigar(null); setCigarSearchQ(''); setCigarSearchResults([]); }}
+                      className="ml-1" style={{ color: MUTED }}><X className="w-3 h-3" /></button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input className="input text-xs py-1.5 pl-8"
+                      placeholder="Tag a cigar (optional)..."
+                      value={cigarSearchQ}
+                      onChange={e => { setCigarSearchQ(e.target.value); searchCigarsForPost(e.target.value); }} />
+                    <Tag className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: MUTED }} />
+                    {cigarSearchResults.length > 0 && (
+                      <div className="absolute left-0 right-0 top-full mt-1 border border-stone-700 rounded-xl overflow-hidden shadow-xl z-10" style={{ backgroundColor: '#141009' }}>
+                        {cigarSearchResults.map(c => (
+                          <button key={c.id} onClick={() => { setSelectedCigar(c); setCigarSearchQ(''); setCigarSearchResults([]); }}
+                            className="w-full text-left px-3 py-2 hover:bg-stone-800 transition-colors text-xs">
+                            <span style={{ color: NAVY }} className="font-medium">{c.brand} {c.name}</span>
+                            <span style={{ color: MUTED }} className="ml-1 capitalize">{c.strength}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <button onClick={submitPost} disabled={postSubmitting || !postForm.content.trim()} className="btn-primary text-sm w-full disabled:opacity-50">
+                {postSubmitting ? 'Posting...' : postForm.type === 'checkin' ? 'Check In' : 'Post'}
+              </button>
+            </div>
+          )}
+
+          {/* Posts feed */}
+          {communityLoading ? (
+            <div className="flex flex-col gap-3">{[1,2,3].map(i => <div key={i} className="card h-20 animate-pulse bg-stone-800" />)}</div>
+          ) : communityPosts.length === 0 ? (
+            <div className="text-center py-10">
+              <MessageSquare className="w-10 h-10 mx-auto mb-3" style={{ color: '#3D3020' }} />
+              <p style={{ color: MUTED }}>No community posts yet. Be the first!</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {communityPosts.map(post => (
+                <div key={post.id} className={`card p-4 ${post.is_pinned ? 'border-amber-800/50' : ''}`}>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                        style={{ backgroundColor: '#2D1E06', color: AMBER }}>
+                        {post.user_name?.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <span className="text-sm font-semibold" style={{ color: NAVY }}>{post.user_name}</span>
+                        {post.type === 'checkin' && (
+                          <span className="ml-1.5 text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#0B3320', color: '#4ADE80' }}>
+                            <Coffee className="w-2.5 h-2.5 inline mr-0.5" />checked in
+                          </span>
+                        )}
+                        {post.is_pinned === 1 && <Pin className="w-3 h-3 inline ml-1.5" style={{ color: AMBER }} />}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs" style={{ color: MUTED }}>
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </span>
+                      {(user?.id === post.user_id || user?.account_type === 'store') && (
+                        <button onClick={() => deletePost(post.id)} className="text-xs" style={{ color: MUTED }}>
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm leading-relaxed" style={{ color: LABEL }}>{post.content}</p>
+                  {post.cigar_brand && (
+                    <div className="mt-2">
+                      <Link to={`/cigars/${post.cigar_id}`}
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full transition-colors"
+                        style={{ backgroundColor: '#2D1E06', color: AMBER, border: '1px solid #4D3010' }}>
+                        <Tag className="w-3 h-3" />{post.cigar_brand} {post.cigar_name}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Past events */}
+          {events.filter(e => new Date(e.event_date) < new Date()).length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3 mt-2" style={{ color: MUTED }}>Past Events</p>
+              <div className="flex flex-col gap-2">
+                {events.filter(e => new Date(e.event_date) < new Date()).map(evt => (
+                  <div key={evt.id} className="card p-3 opacity-60">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5" style={{ color: MUTED }} />
+                      <span className="text-sm font-medium" style={{ color: LABEL }}>{evt.title}</span>
+                      <span className="text-xs ml-auto" style={{ color: MUTED }}>
+                        {new Date(evt.event_date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-xs mt-1" style={{ color: MUTED }}>{evt.going_count} attended</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

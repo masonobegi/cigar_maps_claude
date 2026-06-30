@@ -8,7 +8,7 @@ router.get('/', requireAuth, asyncRoute(async (req, res) => {
     SELECT n.*, s.name as store_name,
       c.brand as cigar_brand, c.name as cigar_name,
       CASE WHEN nr.user_id IS NOT NULL THEN 1 ELSE 0 END as is_read,
-      sf.notify_broadcasts, sf.notify_deals, sf.notify_new_arrivals
+      sf.notify_broadcasts, sf.notify_deals, sf.notify_new_arrivals, sf.notify_community
     FROM notifications n
     JOIN store_follows sf ON sf.store_id = n.store_id AND sf.user_id = ?
     JOIN stores s ON s.id = n.store_id
@@ -18,7 +18,8 @@ router.get('/', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'announcement' AND sf.notify_broadcasts = 1) OR
       (n.type = 'deal' AND sf.notify_deals = 1) OR
       (n.type = 'new_arrival' AND sf.notify_new_arrivals = 1) OR
-      (n.type = 'event')
+      (n.type = 'community' AND sf.notify_community = 1) OR
+      (n.type = 'event' AND sf.notify_community = 1)
     )
     ORDER BY n.created_at DESC
     LIMIT 50
@@ -37,7 +38,8 @@ router.get('/count', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'announcement' AND sf.notify_broadcasts = 1) OR
       (n.type = 'deal' AND sf.notify_deals = 1) OR
       (n.type = 'new_arrival' AND sf.notify_new_arrivals = 1) OR
-      (n.type = 'event')
+      (n.type = 'community' AND sf.notify_community = 1) OR
+      (n.type = 'event' AND sf.notify_community = 1)
     )
   `, [req.user.id, req.user.id]);
   res.json({ count: parseInt(row.count) });

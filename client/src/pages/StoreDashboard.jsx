@@ -4,7 +4,8 @@ import {
   Store, Package, Plus, Edit2, Trash2, Tag, CheckCircle, AlertCircle,
   Search, Megaphone, BarChart2, Eye, Users, TrendingUp, RefreshCw,
   AlertTriangle, ChevronDown, ChevronUp, Bell, Star, X, Check,
-  ToggleLeft, ToggleRight, ArrowRight, Clock, Upload, FileSpreadsheet, AlertOctagon
+  ToggleLeft, ToggleRight, ArrowRight, Clock, Upload, FileSpreadsheet, AlertOctagon,
+  MessageSquare, Calendar, Pin, Coffee
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -1269,6 +1270,7 @@ export default function StoreDashboard() {
     { key: 'requests', label: 'Requests', icon: Bell },
     { key: 'broadcast', label: 'Broadcast', icon: Megaphone },
     { key: 'deals', label: 'Deals', icon: Tag },
+    { key: 'community', label: 'Community', icon: MessageSquare },
     { key: 'analytics', label: 'Analytics', icon: BarChart2 },
     { key: 'verification', label: store?.verified ? '✓ Verified' : 'Get Verified', icon: CheckCircle },
     { key: 'settings', label: 'Settings', icon: Store },
@@ -1324,6 +1326,7 @@ export default function StoreDashboard() {
             />
           )}
           {tab === 'deals' && <DealsManager storeId={store.id} toast={showToast} />}
+          {tab === 'community' && <CommunityManager storeId={store.id} storeName={store.name} toast={showToast} />}
           {tab === 'analytics' && <Analytics storeId={store.id} />}
           {tab === 'verification' && (
             <VerificationSection store={store} toast={showToast} onVerified={(s) => { setStore(s); refreshStore(s); }} />
@@ -1333,6 +1336,173 @@ export default function StoreDashboard() {
           )}
         </>
       )}
+    </div>
+  );
+}
+
+function CommunityManager({ storeId, storeName, toast }) {
+  const [posts, setPosts] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [eventForm, setEventForm] = useState({ title: '', description: '', event_date: '' });
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [savingEvent, setSavingEvent] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const [p, e] = await Promise.all([api.getCommunityPosts(storeId), api.getStoreEvents(storeId)]);
+      setPosts(p); setEvents(e);
+    } finally { setLoading(false); }
+  }
+
+  useEffect(() => { load(); }, [storeId]);
+
+  async function handlePin(postId) {
+    await api.pinCommunityPost(postId);
+    load();
+  }
+  async function handleDeletePost(postId) {
+    if (!confirm('Delete this post?')) return;
+    await api.deleteCommunityPost(postId);
+    load();
+  }
+  async function handleCreateEvent() {
+    if (!eventForm.title || !eventForm.event_date) return;
+    setSavingEvent(true);
+    try {
+      await api.createStoreEvent(storeId, eventForm);
+      setEventForm({ title: '', description: '', event_date: '' });
+      setShowEventForm(false);
+      toast('Event created!');
+      load();
+    } catch (e) { toast(e.message, 'error'); } finally { setSavingEvent(false); }
+  }
+  async function handleDeleteEvent(eventId) {
+    if (!confirm('Delete this event?')) return;
+    await api.deleteStoreEvent(storeId, eventId);
+    load();
+  }
+
+  if (loading) return <div className="flex flex-col gap-3">{[1,2,3].map(i => <div key={i} className="card h-16 animate-pulse bg-stone-800" />)}</div>;
+
+  const upcomingEvents = events.filter(e => new Date(e.event_date) >= new Date());
+  const pastEvents = events.filter(e => new Date(e.event_date) < new Date());
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Events section */}
+      <div className="card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-stone-200 flex items-center gap-2"><Calendar className="w-4 h-4 text-amber-500" /> Events</h3>
+          <button onClick={() => setShowEventForm(!showEventForm)} className="btn-primary text-sm flex items-center gap-1.5">
+            <Plus className="w-3.5 h-3.5" /> New Event
+          </button>
+        </div>
+
+        {showEventForm && (
+          <div className="bg-stone-800/50 rounded-xl p-4 mb-4 flex flex-col gap-3">
+            <div>
+              <label className="block text-xs text-stone-400 mb-1">Event Title *</label>
+              <input className="input" placeholder="Cigar of the Month Night" value={eventForm.title} onChange={e => setEventForm(f => ({ ...f, title: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-xs text-stone-400 mb-1">Description</label>
+              <textarea rows={2} className="input resize-none" placeholder="What's happening?" value={eventForm.description} onChange={e => setEventForm(f => ({ ...f, description: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-xs text-stone-400 mb-1">Date & Time *</label>
+              <input type="datetime-local" className="input" value={eventForm.event_date} onChange={e => setEventForm(f => ({ ...f, event_date: e.target.value }))} />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={handleCreateEvent} disabled={savingEvent || !eventForm.title || !eventForm.event_date} className="btn-primary text-sm disabled:opacity-50">
+                {savingEvent ? 'Creating...' : 'Create Event'}
+              </button>
+              <button onClick={() => setShowEventForm(false)} className="btn-secondary text-sm">Cancel</button>
+            </div>
+          </div>
+        )}
+
+        {upcomingEvents.length === 0 && !showEventForm && (
+          <p className="text-stone-500 text-sm">No upcoming events. Create one to engage your community!</p>
+        )}
+        <div className="flex flex-col gap-2">
+          {upcomingEvents.map(evt => (
+            <div key={evt.id} className="flex items-start justify-between gap-3 p-3 rounded-xl bg-stone-800/40">
+              <div>
+                <p className="text-sm font-semibold text-stone-200">{evt.title}</p>
+                <p className="text-xs text-amber-500">{new Date(evt.event_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</p>
+                <p className="text-xs text-stone-500 mt-0.5">{evt.going_count} going · {evt.maybe_count} maybe</p>
+              </div>
+              <button onClick={() => handleDeleteEvent(evt.id)} className="p-1.5 hover:bg-red-900/30 rounded-lg text-stone-600 hover:text-red-400 transition-colors">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+          {pastEvents.length > 0 && (
+            <details className="mt-1">
+              <summary className="text-xs text-stone-500 cursor-pointer hover:text-stone-400">Past events ({pastEvents.length})</summary>
+              <div className="flex flex-col gap-2 mt-2">
+                {pastEvents.map(evt => (
+                  <div key={evt.id} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-stone-800/20 opacity-60">
+                    <div>
+                      <p className="text-sm text-stone-400">{evt.title}</p>
+                      <p className="text-xs text-stone-600">{new Date(evt.event_date).toLocaleDateString()} · {evt.going_count} attended</p>
+                    </div>
+                    <button onClick={() => handleDeleteEvent(evt.id)} className="p-1.5 hover:bg-red-900/30 rounded-lg text-stone-700 hover:text-red-400 transition-colors">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
+        </div>
+      </div>
+
+      {/* Community posts */}
+      <div>
+        <h3 className="font-semibold text-stone-200 flex items-center gap-2 mb-3"><MessageSquare className="w-4 h-4 text-amber-500" /> Community Posts</h3>
+        {posts.length === 0 ? (
+          <div className="card p-8 text-center">
+            <MessageSquare className="w-8 h-8 text-stone-700 mx-auto mb-2" />
+            <p className="text-stone-500 text-sm">No community posts yet</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {posts.map(post => (
+              <div key={post.id} className={`card p-4 ${post.is_pinned ? 'border-amber-800/50' : ''}`}>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-amber-900/40 flex items-center justify-center text-xs font-bold text-amber-500 flex-shrink-0">
+                      {post.user_name?.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-semibold text-stone-300">{post.user_name}</span>
+                    {post.type === 'checkin' && <Coffee className="w-3.5 h-3.5 text-emerald-400" />}
+                    {post.is_pinned === 1 && <Pin className="w-3 h-3 text-amber-500" />}
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button onClick={() => handlePin(post.id)} title={post.is_pinned ? 'Unpin' : 'Pin to top'}
+                      className={`p-1.5 rounded-lg transition-colors ${post.is_pinned ? 'text-amber-500 bg-amber-900/20' : 'text-stone-600 hover:text-amber-500 hover:bg-stone-700'}`}>
+                      <Pin className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => handleDeletePost(post.id)} className="p-1.5 hover:bg-red-900/30 rounded-lg text-stone-600 hover:text-red-400 transition-colors">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-stone-400 mb-1">{post.content}</p>
+                {post.cigar_brand && (
+                  <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-900/20 text-amber-500 border border-amber-800/30">
+                    <Tag className="w-2.5 h-2.5" />{post.cigar_brand} {post.cigar_name}
+                  </span>
+                )}
+                <p className="text-xs text-stone-600 mt-1">{new Date(post.created_at).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

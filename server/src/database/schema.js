@@ -260,7 +260,39 @@ async function initSchema() {
     CREATE TABLE IF NOT EXISTS seed_meta (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
-    )
+    );
+
+    CREATE TABLE IF NOT EXISTS community_posts (
+      id SERIAL PRIMARY KEY,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      type TEXT NOT NULL DEFAULT 'post',
+      content TEXT NOT NULL,
+      cigar_id INTEGER REFERENCES cigars(id),
+      is_pinned INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS store_events (
+      id SERIAL PRIMARY KEY,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      created_by INTEGER NOT NULL REFERENCES users(id),
+      title TEXT NOT NULL,
+      description TEXT,
+      event_date TIMESTAMP NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS event_rsvps (
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      event_id INTEGER NOT NULL REFERENCES store_events(id) ON DELETE CASCADE,
+      status TEXT NOT NULL DEFAULT 'going',
+      created_at TIMESTAMP DEFAULT NOW(),
+      PRIMARY KEY (user_id, event_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_community_store ON community_posts(store_id);
+    CREATE INDEX IF NOT EXISTS idx_events_store ON store_events(store_id);
   `);
 }
 
@@ -284,6 +316,7 @@ const MIGRATIONS = [
   { name: '004_users_add_home_lat', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_lat FLOAT' },
   { name: '005_users_add_home_lng', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_lng FLOAT' },
   { name: '006_users_add_home_label', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_label TEXT' },
+  { name: '007_store_follows_notify_community', sql: 'ALTER TABLE store_follows ADD COLUMN IF NOT EXISTS notify_community INTEGER DEFAULT 1' },
 ];
 
 async function runMigrations() {

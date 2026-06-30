@@ -135,4 +135,16 @@ export const api = {
 
   // Sheet sync
   syncSheet: (storeId) => request(`/stores/${storeId}/sync-sheet`, { method: 'POST' }),
+
+  // Community
+  getCommunityPosts: (storeId) => request(`/stores/${storeId}/community`),
+  createCommunityPost: (storeId, b) => request(`/stores/${storeId}/community`, { method: 'POST', body: JSON.stringify(b) }),
+  pinCommunityPost: (postId) => request(`/community/${postId}/pin`, { method: 'PATCH' }),
+  deleteCommunityPost: (postId) => request(`/community/${postId}`, { method: 'DELETE' }),
+
+  // Events
+  getStoreEvents: (storeId) => request(`/stores/${storeId}/events`),
+  createStoreEvent: (storeId, b) => request(`/stores/${storeId}/events`, { method: 'POST', body: JSON.stringify(b) }),
+  deleteStoreEvent: (storeId, eventId) => request(`/stores/${storeId}/events/${eventId}`, { method: 'DELETE' }),
+  rsvpEvent: (eventId, status) => request(`/events/${eventId}/rsvp`, { method: 'POST', body: JSON.stringify({ status }) }),
 };
