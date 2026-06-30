@@ -213,13 +213,19 @@ function SetupWizard({ onComplete }) {
 }
 
 // Inventory Manager
-function InventoryManager({ storeId, toast }) {
+function InventoryManager({ storeId, toast, externalOpen, onExternalOpen }) {
   const [items, setItems] = useState([]);
   const [stats, setStats] = useState({ low_stock: 0, out_of_stock: 0 });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [showAdd, setShowAdd] = useState(false);
+  const [showAddLocal, setShowAddLocal] = useState(false);
   const [editItem, setEditItem] = useState(null);
+
+  const showAdd = showAddLocal || !!externalOpen;
+  function setShowAdd(val) {
+    setShowAddLocal(val);
+    if (!val && onExternalOpen) onExternalOpen(false);
+  }
   const [filterStatus, setFilterStatus] = useState('all');
 
   // Add form
@@ -375,7 +381,7 @@ function InventoryManager({ storeId, toast }) {
 
       {/* Add Inventory Modal */}
       {showAdd && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 overflow-y-auto" onClick={() => setShowAdd(false)}>
+        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 overflow-y-auto" onClick={() => setShowAdd(false)}>
           <div className="bg-stone-900 border border-stone-700 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-xl p-6 flex flex-col gap-4 my-auto max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-lg font-bold text-stone-100">Add Cigar to Inventory</h2>
@@ -1245,6 +1251,7 @@ export default function StoreDashboard() {
   const [store, setStore] = useState(storeCtx);
   const [tab, setTab] = useState('inventory');
   const [analyticsData, setAnalyticsData] = useState(null);
+  const [showInventoryAdd, setShowInventoryAdd] = useState(false);
 
   const showToast = (message, type = 'success') => globalToast(message, type);
 
@@ -1294,7 +1301,7 @@ export default function StoreDashboard() {
             </Link>
           </div>
 
-          <SetupChecklist store={store} onTabChange={setTab} />
+          <SetupChecklist store={store} onTabChange={(t) => { setTab(t); if (t === 'inventory') setShowInventoryAdd(true); }} />
 
           {/* Tabs */}
           <div className="flex border-b border-stone-800 mb-6 gap-0 overflow-x-auto">
@@ -1306,7 +1313,7 @@ export default function StoreDashboard() {
             ))}
           </div>
 
-          {tab === 'inventory' && <InventoryManager storeId={store.id} toast={showToast} />}
+          {tab === 'inventory' && <InventoryManager storeId={store.id} toast={showToast} externalOpen={showInventoryAdd} onExternalOpen={setShowInventoryAdd} />}
           {tab === 'import' && <ImportManager storeId={store.id} toast={showToast} />}
           {tab === 'requests' && <RequestsTab storeId={store.id} toast={showToast} />}
           {tab === 'broadcast' && (
