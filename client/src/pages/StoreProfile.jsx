@@ -660,7 +660,7 @@ export default function StoreProfile() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs" style={{ color: MUTED }}>
-                        {new Date(post.created_at).toLocaleDateString()}
+                        {new Date(post.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                       </span>
                       {(user?.id === post.user_id || user?.account_type === 'store') && (
                         <button onClick={() => deletePost(post.id)} className="text-xs" style={{ color: MUTED }}>
