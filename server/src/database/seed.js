@@ -1,10 +1,9 @@
 const db = require('./db');
-const { initSchema } = require('./schema');
 const bcrypt = require('bcryptjs');
 
-// Bump this number whenever you want the DB wiped and reseeded on next deploy.
-const SEED_VERSION = '3';
-
+// ── Demo cigar catalog ───────────────────────────────────────────────────────
+// These are only ever inserted on a fresh (empty) database. On an existing
+// deployment with real cigars this entire block is skipped.
 const cigars = [
   { brand: 'Brand 1', name: 'Cigar 1',  country: 'Nicaragua',          wrapper: 'Connecticut Shade',            binder: 'Nicaragua',  filler: 'Nicaragua',           strength: 'mild',        flavor_notes: JSON.stringify(['cream', 'cedar', 'honey', 'floral']),                       description: 'Light and creamy with delicate cedar and floral notes.',             year_introduced: 2018 },
   { brand: 'Brand 1', name: 'Cigar 2',  country: 'Honduras',           wrapper: 'Ecuador Connecticut',          binder: 'Honduras',   filler: 'Honduras/Dominican',  strength: 'mild-medium', flavor_notes: JSON.stringify(['cream', 'nuts', 'cedar', 'honey', 'coffee']),               description: 'Balanced and approachable with creamy nuts and light coffee.',         year_introduced: 2016 },
@@ -69,49 +68,70 @@ const vitolasMap = {
   'Brand 5 - Cigar 25': [{ name: 'Perfecto',     length: 5.5, ring_gauge: 50, msrp: 15 }, { name: 'Gran Perfecto',length: 6.5, ring_gauge: 52, msrp: 18 }],
 };
 
-async function truncateAll() {
-  await db.pool.query(`
-    TRUNCATE TABLE notifications, smoke_list, store_views, store_ratings, deals,
-      verification_requests, store_follows, user_cigars, reviews, inventory,
-      vitolas, cigars, stores, users
-    RESTART IDENTITY CASCADE
-  `);
-}
-
-async function seed(force = false) {
-  if (!force) {
-    const { rows } = await db.pool.query(
-      `SELECT value FROM seed_meta WHERE key = 'version'`
-    );
-    const storedVersion = rows[0]?.value;
-    if (storedVersion === SEED_VERSION) {
-      console.log(`[seed] Version ${SEED_VERSION} already seeded — skipping.`);
-      return;
-    }
-    console.log(`[seed] Version mismatch (db=${storedVersion ?? 'none'}, code=${SEED_VERSION}) — truncating and reseeding...`);
-    await truncateAll();
-  } else {
-    await truncateAll();
-  }
-  console.log('[seed] Seeding fresh database...');
-
-  const hash      = await bcrypt.hash('password123', 10);
+// ── Main seed function ───────────────────────────────────────────────────────
+// SAFE TO RUN ON EVERY DEPLOY. Never truncates, never wipes, never destroys
+// user data. Two phases:
+//
+//  Phase 1 — Essential accounts (always runs)
+//    Staff and admin users are upserted with ON CONFLICT DO NOTHING.
+//    If they already exist, nothing changes. If someone deletes them,
+//    the next deploy restores them automatically.
+//
+//  Phase 2 — Demo catalog (only on empty databases)
+//    Checks cigars COUNT. If > 0 we have real (or previously seeded)
+//    data — skip everything. If = 0 this is a fresh DB and we load the
+//    full demo set so the app works out of the box.
+async function seed() {
+  // ── Phase 1: essential accounts ───────────────────────────────────────────
   const adminHash = await bcrypt.hash('admin123', 10);
   const staffHash = await bcrypt.hash('W@ffle871', 10);
 
-  const adminR = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['admin@cigarbuddy.com', adminHash, 'Admin', 'admin']);
-  await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['mobegibusiness@gmail.com', staffHash, 'Mason (Staff)', 'staff']);
-  const demoR  = await db.run(`INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state) VALUES (?,?,?,?,?,?,?) RETURNING id`, ['smoker@demo.com', hash, 'Demo User 1', 'user', 'Portland cigar enthusiast.', 'Portland', 'OR']);
-  const user2R = await db.run(`INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state) VALUES (?,?,?,?,?,?,?) RETURNING id`, ['jane@demo.com', hash, 'Demo User 2', 'user', 'New to cigars, learning fast.', 'Vancouver', 'WA']);
+  await db.pool.query(
+    `INSERT INTO users (email, password_hash, name, account_type)
+     VALUES ($1, $2, 'Admin', 'admin')
+     ON CONFLICT (email) DO NOTHING`,
+    ['admin@cigarbuddy.com', adminHash]
+  );
 
-  const su1R = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['store1@demo.com', hash, 'Store 1 Owner', 'store']);
-  const su2R = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['store2@demo.com', hash, 'Store 2 Owner', 'store']);
-  const su3R = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['store3@demo.com', hash, 'Store 3 Owner', 'store']);
-  const su4R = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['store4@demo.com', hash, 'Store 4 Owner', 'store']);
-  const su5R = await db.run(`INSERT INTO users (email,password_hash,name,account_type) VALUES (?,?,?,?) RETURNING id`, ['store5@demo.com', hash, 'Store 5 Owner', 'store']);
+  await db.pool.query(
+    `INSERT INTO users (email, password_hash, name, account_type)
+     VALUES ($1, $2, 'Mason (Staff)', 'staff')
+     ON CONFLICT (email) DO NOTHING`,
+    ['mobegibusiness@gmail.com', staffHash]
+  );
 
-  const uid  = demoR.lastInsertRowid;
-  const uid2 = user2R.lastInsertRowid;
+  // ── Phase 2: demo catalog ─────────────────────────────────────────────────
+  const { rows: [{ count }] } = await db.pool.query(
+    'SELECT COUNT(*)::int AS count FROM cigars'
+  );
+
+  if (count > 0) {
+    console.log(`[seed] DB has ${count} cigars — skipping demo data.`);
+    return;
+  }
+
+  console.log('[seed] Fresh database — inserting demo catalog and sample data...');
+
+  const hash = await bcrypt.hash('password123', 10);
+
+  // Demo users
+  const { rows: [{ id: uid }] } = await db.pool.query(
+    `INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state)
+     VALUES ($1,$2,$3,'user',$4,$5,$6) RETURNING id`,
+    ['smoker@demo.com', hash, 'Demo User 1', 'Portland cigar enthusiast.', 'Portland', 'OR']
+  );
+  const { rows: [{ id: uid2 }] } = await db.pool.query(
+    `INSERT INTO users (email,password_hash,name,account_type,bio,location_city,location_state)
+     VALUES ($1,$2,$3,'user',$4,$5,$6) RETURNING id`,
+    ['jane@demo.com', hash, 'Demo User 2', 'New to cigars, learning fast.', 'Vancouver', 'WA']
+  );
+
+  // Demo store owners
+  const { rows: [{ id: su1 }] } = await db.pool.query(`INSERT INTO users (email,password_hash,name,account_type) VALUES ($1,$2,'Store 1 Owner','store') RETURNING id`, ['store1@demo.com', hash]);
+  const { rows: [{ id: su2 }] } = await db.pool.query(`INSERT INTO users (email,password_hash,name,account_type) VALUES ($1,$2,'Store 2 Owner','store') RETURNING id`, ['store2@demo.com', hash]);
+  const { rows: [{ id: su3 }] } = await db.pool.query(`INSERT INTO users (email,password_hash,name,account_type) VALUES ($1,$2,'Store 3 Owner','store') RETURNING id`, ['store3@demo.com', hash]);
+  const { rows: [{ id: su4 }] } = await db.pool.query(`INSERT INTO users (email,password_hash,name,account_type) VALUES ($1,$2,'Store 4 Owner','store') RETURNING id`, ['store4@demo.com', hash]);
+  const { rows: [{ id: su5 }] } = await db.pool.query(`INSERT INTO users (email,password_hash,name,account_type) VALUES ($1,$2,'Store 5 Owner','store') RETURNING id`, ['store5@demo.com', hash]);
 
   const h1 = JSON.stringify({ Mon: '10am-8pm', Tue: '10am-8pm', Wed: '10am-8pm', Thu: '10am-9pm', Fri: '10am-10pm', Sat: '9am-10pm',  Sun: '11am-7pm' });
   const h2 = JSON.stringify({ Mon: '11am-7pm', Tue: '11am-7pm', Wed: '11am-7pm', Thu: '11am-8pm', Fri: '11am-9pm',  Sat: '10am-9pm',  Sun: '12pm-6pm' });
@@ -119,209 +139,225 @@ async function seed(force = false) {
   const h4 = JSON.stringify({ Mon: '10am-7pm', Tue: '10am-7pm', Wed: '10am-7pm', Thu: '10am-7pm', Fri: '10am-8pm',  Sat: '9am-8pm',   Sun: '11am-5pm' });
   const h5 = JSON.stringify({ Mon: '11am-8pm', Tue: '11am-8pm', Wed: '11am-8pm', Thu: '11am-9pm', Fri: '11am-10pm', Sat: '10am-10pm', Sun: '12pm-7pm' });
 
-  const s1R = await db.run(`INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?) RETURNING id`,
-    [su1R.lastInsertRowid,'Store 1','Downtown Portland walk-in humidor. Weekly smoke nights every Thursday.','927 SW Morrison St','Portland','OR','97205','(503) 555-0927',h1,1,1,JSON.stringify(['Walk-in Humidor','Lounge','Events']),1,45.5193,-122.6817]);
-  const s2R = await db.run(`INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?) RETURNING id`,
-    [su2R.lastInsertRowid,'Store 2','Neighborhood smoke shop. Great prices, solid everyday selection.','3412 SE Hawthorne Blvd','Portland','OR','97214','(503) 555-3412',h2,0,1,JSON.stringify(['Walk-in Humidor','Budget-Friendly']),0,45.5121,-122.6317]);
-  const s3R = await db.run(`INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?) RETURNING id`,
-    [su3R.lastInsertRowid,'Store 3','Upscale lounge in the Pearl District. Craft cocktail bar and curated humidor.','1242 NW Everett St','Portland','OR','97209','(503) 555-1242',h3,1,1,JSON.stringify(['Lounge','Craft Cocktails','Private Lockers']),1,45.5284,-122.6822]);
-  const s4R = await db.run(`INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?) RETURNING id`,
-    [su4R.lastInsertRowid,'Store 4','Vancouver go-to cigar shop. Friendly staff, fair prices, over 150 SKUs.','512 W 8th St','Vancouver','WA','98660','(360) 555-0512',h4,0,1,JSON.stringify(['Walk-in Humidor','Everyday Value']),1,45.6275,-122.6739]);
-  const s5R = await db.run(`INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?) RETURNING id`,
-    [su5R.lastInsertRowid,'Store 5','Refined neighborhood lounge in Lake Oswego. Whiskey bar and monthly pairing events.','15820 Boones Ferry Rd','Lake Oswego','OR','97035','(503) 555-5820',h5,1,1,JSON.stringify(['Lounge','Whiskey Bar','Walk-in Humidor']),1,45.4201,-122.7051]);
+  const { rows: [{ id: sid1 }] } = await db.pool.query(
+    `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
+    [su1,'Store 1','Downtown Portland walk-in humidor. Weekly smoke nights every Thursday.','927 SW Morrison St','Portland','OR','97205','(503) 555-0927',h1,1,1,JSON.stringify(['Walk-in Humidor','Lounge','Events']),45.5193,-122.6817]);
+  const { rows: [{ id: sid2 }] } = await db.pool.query(
+    `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,0,1,$13,$14) RETURNING id`,
+    [su2,'Store 2','Neighborhood smoke shop. Great prices, solid everyday selection.','3412 SE Hawthorne Blvd','Portland','OR','97214','(503) 555-3412',h2,0,1,JSON.stringify(['Walk-in Humidor','Budget-Friendly']),45.5121,-122.6317]);
+  const { rows: [{ id: sid3 }] } = await db.pool.query(
+    `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
+    [su3,'Store 3','Upscale lounge in the Pearl District. Craft cocktail bar and curated humidor.','1242 NW Everett St','Portland','OR','97209','(503) 555-1242',h3,1,1,JSON.stringify(['Lounge','Craft Cocktails','Private Lockers']),45.5284,-122.6822]);
+  const { rows: [{ id: sid4 }] } = await db.pool.query(
+    `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
+    [su4,'Store 4','Vancouver go-to cigar shop. Friendly staff, fair prices, over 150 SKUs.','512 W 8th St','Vancouver','WA','98660','(360) 555-0512',h4,0,1,JSON.stringify(['Walk-in Humidor','Everyday Value']),45.6275,-122.6739]);
+  const { rows: [{ id: sid5 }] } = await db.pool.query(
+    `INSERT INTO stores (user_id,name,description,address,city,state,zip,phone,hours,has_lounge,has_walk_in_humidor,tags,verified,setup_complete,lat,lng)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1,1,$13,$14) RETURNING id`,
+    [su5,'Store 5','Refined neighborhood lounge in Lake Oswego. Whiskey bar and monthly pairing events.','15820 Boones Ferry Rd','Lake Oswego','OR','97035','(503) 555-5820',h5,1,1,JSON.stringify(['Lounge','Whiskey Bar','Walk-in Humidor']),45.4201,-122.7051]);
 
-  const sid1 = s1R.lastInsertRowid, sid2 = s2R.lastInsertRowid, sid3 = s3R.lastInsertRowid;
-  const sid4 = s4R.lastInsertRowid, sid5 = s5R.lastInsertRowid;
-
+  // Cigars + vitolas
   const cigarIds  = {};
   const vitolaIds = {};
 
   for (const c of cigars) {
-    const r = await db.run(
-      `INSERT INTO cigars (brand,name,country,wrapper,binder,filler,strength,flavor_notes,description,year_introduced) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id`,
+    const { rows: [{ id: cid }] } = await db.pool.query(
+      `INSERT INTO cigars (brand,name,country,wrapper,binder,filler,strength,flavor_notes,description,year_introduced)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
       [c.brand, c.name, c.country, c.wrapper, c.binder, c.filler, c.strength, c.flavor_notes, c.description, c.year_introduced]
     );
     const key = `${c.brand} - ${c.name}`;
-    cigarIds[key]  = r.lastInsertRowid;
+    cigarIds[key]  = cid;
     vitolaIds[key] = [];
     for (const v of (vitolasMap[key] || [])) {
-      const vr = await db.run(
-        `INSERT INTO vitolas (cigar_id,name,length,ring_gauge,msrp) VALUES (?,?,?,?,?) RETURNING id`,
-        [r.lastInsertRowid, v.name, v.length, v.ring_gauge, v.msrp]
+      const { rows: [{ id: vid }] } = await db.pool.query(
+        `INSERT INTO vitolas (cigar_id,name,length,ring_gauge,msrp) VALUES ($1,$2,$3,$4,$5) RETURNING id`,
+        [cid, v.name, v.length, v.ring_gauge, v.msrp]
       );
-      vitolaIds[key].push({ id: vr.lastInsertRowid, name: v.name, msrp: v.msrp });
+      vitolaIds[key].push({ id: vid, name: v.name, msrp: v.msrp });
     }
   }
 
+  // Inventory helper
   async function addToStore(storeId, key, featured = 0, newArrival = 0) {
     const cid = cigarIds[key];
     for (const v of (vitolaIds[key] || [])) {
       const price = +(v.msrp * (0.9 + Math.random() * 0.2)).toFixed(2);
-      await db.run(
-        `INSERT INTO inventory (store_id,cigar_id,vitola_id,price,quantity,in_stock,is_featured,is_new_arrival) VALUES (?,?,?,?,?,1,?,?)`,
+      await db.pool.query(
+        `INSERT INTO inventory (store_id,cigar_id,vitola_id,price,quantity,in_stock,is_featured,is_new_arrival)
+         VALUES ($1,$2,$3,$4,$5,1,$6,$7)`,
         [storeId, cid, v.id, price, Math.floor(Math.random() * 30) + 5, featured, newArrival]
       );
     }
   }
 
-  await addToStore(sid1, 'Brand 1 - Cigar 3', 1);
-  await addToStore(sid1, 'Brand 1 - Cigar 4', 1);
-  await addToStore(sid1, 'Brand 1 - Cigar 5');
-  await addToStore(sid1, 'Brand 1 - Cigar 2');
-  await addToStore(sid1, 'Brand 3 - Cigar 13', 1);
-  await addToStore(sid1, 'Brand 3 - Cigar 14');
-  await addToStore(sid1, 'Brand 3 - Cigar 11');
-  await addToStore(sid1, 'Brand 2 - Cigar 7', 0, 1);
-  await addToStore(sid1, 'Brand 2 - Cigar 8');
-  await addToStore(sid1, 'Brand 5 - Cigar 21', 1);
-  await addToStore(sid1, 'Brand 5 - Cigar 22', 1);
-  await addToStore(sid1, 'Brand 5 - Cigar 25', 0, 1);
-  await addToStore(sid1, 'Brand 4 - Cigar 20');
-  await addToStore(sid1, 'Brand 4 - Cigar 19');
+  await addToStore(sid1, 'Brand 1 - Cigar 3', 1);  await addToStore(sid1, 'Brand 1 - Cigar 4', 1);
+  await addToStore(sid1, 'Brand 1 - Cigar 5');       await addToStore(sid1, 'Brand 1 - Cigar 2');
+  await addToStore(sid1, 'Brand 3 - Cigar 13', 1);   await addToStore(sid1, 'Brand 3 - Cigar 14');
+  await addToStore(sid1, 'Brand 3 - Cigar 11');       await addToStore(sid1, 'Brand 2 - Cigar 7', 0, 1);
+  await addToStore(sid1, 'Brand 2 - Cigar 8');        await addToStore(sid1, 'Brand 5 - Cigar 21', 1);
+  await addToStore(sid1, 'Brand 5 - Cigar 22', 1);    await addToStore(sid1, 'Brand 5 - Cigar 25', 0, 1);
+  await addToStore(sid1, 'Brand 4 - Cigar 20');       await addToStore(sid1, 'Brand 4 - Cigar 19');
 
-  await addToStore(sid2, 'Brand 1 - Cigar 1', 1);
-  await addToStore(sid2, 'Brand 1 - Cigar 2', 1);
-  await addToStore(sid2, 'Brand 2 - Cigar 6', 1);
-  await addToStore(sid2, 'Brand 2 - Cigar 9');
-  await addToStore(sid2, 'Brand 2 - Cigar 10');
-  await addToStore(sid2, 'Brand 2 - Cigar 7');
-  await addToStore(sid2, 'Brand 3 - Cigar 11', 0, 1);
-  await addToStore(sid2, 'Brand 3 - Cigar 12');
-  await addToStore(sid2, 'Brand 3 - Cigar 15');
-  await addToStore(sid2, 'Brand 4 - Cigar 16', 1);
-  await addToStore(sid2, 'Brand 4 - Cigar 18');
-  await addToStore(sid2, 'Brand 4 - Cigar 17');
+  await addToStore(sid2, 'Brand 1 - Cigar 1', 1);    await addToStore(sid2, 'Brand 1 - Cigar 2', 1);
+  await addToStore(sid2, 'Brand 2 - Cigar 6', 1);     await addToStore(sid2, 'Brand 2 - Cigar 9');
+  await addToStore(sid2, 'Brand 2 - Cigar 10');        await addToStore(sid2, 'Brand 2 - Cigar 7');
+  await addToStore(sid2, 'Brand 3 - Cigar 11', 0, 1); await addToStore(sid2, 'Brand 3 - Cigar 12');
+  await addToStore(sid2, 'Brand 3 - Cigar 15');        await addToStore(sid2, 'Brand 4 - Cigar 16', 1);
+  await addToStore(sid2, 'Brand 4 - Cigar 18');        await addToStore(sid2, 'Brand 4 - Cigar 17');
 
-  await addToStore(sid3, 'Brand 5 - Cigar 21', 1);
-  await addToStore(sid3, 'Brand 5 - Cigar 22', 1);
-  await addToStore(sid3, 'Brand 5 - Cigar 23', 1, 1);
-  await addToStore(sid3, 'Brand 5 - Cigar 24');
-  await addToStore(sid3, 'Brand 5 - Cigar 25', 1);
-  await addToStore(sid3, 'Brand 1 - Cigar 3');
-  await addToStore(sid3, 'Brand 1 - Cigar 5', 0, 1);
-  await addToStore(sid3, 'Brand 3 - Cigar 13', 1);
-  await addToStore(sid3, 'Brand 3 - Cigar 14');
-  await addToStore(sid3, 'Brand 4 - Cigar 19');
-  await addToStore(sid3, 'Brand 4 - Cigar 20');
-  await addToStore(sid3, 'Brand 2 - Cigar 8', 0, 1);
+  await addToStore(sid3, 'Brand 5 - Cigar 21', 1);    await addToStore(sid3, 'Brand 5 - Cigar 22', 1);
+  await addToStore(sid3, 'Brand 5 - Cigar 23', 1, 1); await addToStore(sid3, 'Brand 5 - Cigar 24');
+  await addToStore(sid3, 'Brand 5 - Cigar 25', 1);    await addToStore(sid3, 'Brand 1 - Cigar 3');
+  await addToStore(sid3, 'Brand 1 - Cigar 5', 0, 1);  await addToStore(sid3, 'Brand 3 - Cigar 13', 1);
+  await addToStore(sid3, 'Brand 3 - Cigar 14');        await addToStore(sid3, 'Brand 4 - Cigar 19');
+  await addToStore(sid3, 'Brand 4 - Cigar 20');        await addToStore(sid3, 'Brand 2 - Cigar 8', 0, 1);
 
-  await addToStore(sid4, 'Brand 4 - Cigar 16', 1);
-  await addToStore(sid4, 'Brand 4 - Cigar 18', 1);
-  await addToStore(sid4, 'Brand 4 - Cigar 17');
-  await addToStore(sid4, 'Brand 4 - Cigar 20');
-  await addToStore(sid4, 'Brand 2 - Cigar 6', 1);
-  await addToStore(sid4, 'Brand 2 - Cigar 9');
-  await addToStore(sid4, 'Brand 2 - Cigar 10');
-  await addToStore(sid4, 'Brand 2 - Cigar 7');
-  await addToStore(sid4, 'Brand 3 - Cigar 11', 1);
-  await addToStore(sid4, 'Brand 3 - Cigar 12');
-  await addToStore(sid4, 'Brand 3 - Cigar 15', 0, 1);
-  await addToStore(sid4, 'Brand 1 - Cigar 1');
+  await addToStore(sid4, 'Brand 4 - Cigar 16', 1);    await addToStore(sid4, 'Brand 4 - Cigar 18', 1);
+  await addToStore(sid4, 'Brand 4 - Cigar 17');        await addToStore(sid4, 'Brand 4 - Cigar 20');
+  await addToStore(sid4, 'Brand 2 - Cigar 6', 1);     await addToStore(sid4, 'Brand 2 - Cigar 9');
+  await addToStore(sid4, 'Brand 2 - Cigar 10');        await addToStore(sid4, 'Brand 2 - Cigar 7');
+  await addToStore(sid4, 'Brand 3 - Cigar 11', 1);    await addToStore(sid4, 'Brand 3 - Cigar 12');
+  await addToStore(sid4, 'Brand 3 - Cigar 15', 0, 1); await addToStore(sid4, 'Brand 1 - Cigar 1');
   await addToStore(sid4, 'Brand 1 - Cigar 2');
 
-  await addToStore(sid5, 'Brand 1 - Cigar 4', 1);
-  await addToStore(sid5, 'Brand 1 - Cigar 3', 1);
-  await addToStore(sid5, 'Brand 1 - Cigar 5');
-  await addToStore(sid5, 'Brand 5 - Cigar 22', 1);
-  await addToStore(sid5, 'Brand 5 - Cigar 21', 1, 1);
-  await addToStore(sid5, 'Brand 5 - Cigar 25');
-  await addToStore(sid5, 'Brand 5 - Cigar 23');
-  await addToStore(sid5, 'Brand 4 - Cigar 17');
-  await addToStore(sid5, 'Brand 4 - Cigar 20', 0, 1);
-  await addToStore(sid5, 'Brand 2 - Cigar 7');
-  await addToStore(sid5, 'Brand 2 - Cigar 8', 1);
-  await addToStore(sid5, 'Brand 3 - Cigar 13');
+  await addToStore(sid5, 'Brand 1 - Cigar 4', 1);     await addToStore(sid5, 'Brand 1 - Cigar 3', 1);
+  await addToStore(sid5, 'Brand 1 - Cigar 5');         await addToStore(sid5, 'Brand 5 - Cigar 22', 1);
+  await addToStore(sid5, 'Brand 5 - Cigar 21', 1, 1); await addToStore(sid5, 'Brand 5 - Cigar 25');
+  await addToStore(sid5, 'Brand 5 - Cigar 23');        await addToStore(sid5, 'Brand 4 - Cigar 17');
+  await addToStore(sid5, 'Brand 4 - Cigar 20', 0, 1); await addToStore(sid5, 'Brand 2 - Cigar 7');
+  await addToStore(sid5, 'Brand 2 - Cigar 8', 1);     await addToStore(sid5, 'Brand 3 - Cigar 13');
   await addToStore(sid5, 'Brand 3 - Cigar 14', 0, 1);
 
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid,  cigarIds['Brand 1 - Cigar 3'],  vitolaIds['Brand 1 - Cigar 3'][0].id,  92, 5, 5, 4, JSON.stringify(['dark chocolate','espresso','leather']), 'medium-full', 65, 'Cold brew coffee', 'Solid maduro. Dark chocolate up front, leather by halfway. Burn was razor sharp.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid,  cigarIds['Brand 5 - Cigar 21'], vitolaIds['Brand 5 - Cigar 21'][0].id, 94, 5, 4, 5, JSON.stringify(['red pepper','cedar','leather','coffee']), 'medium-full', 60, 'Rye whiskey', 'Punchy red pepper right away then settles into leather and coffee. Near perfect construction.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid,  cigarIds['Brand 2 - Cigar 7'],  vitolaIds['Brand 2 - Cigar 7'][0].id,  90, 4, 5, 4, JSON.stringify(['cocoa','leather','black pepper','earth']), 'medium-full', 70, 'Black coffee', 'Cocoa and earth throughout. Good construction, never went out on me.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid,  cigarIds['Brand 3 - Cigar 11'], vitolaIds['Brand 3 - Cigar 11'][0].id, 87, 5, 4, 4, JSON.stringify(['cedar','earth','nuts','pepper']), 'medium', 55, 'IPA', 'Great everyday smoke. Reliable and consistent. Would buy a bundle.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid2, cigarIds['Brand 1 - Cigar 1'],  vitolaIds['Brand 1 - Cigar 1'][0].id,  88, 5, 5, 4, JSON.stringify(['cream','cedar','honey','floral']), 'mild', 45, 'Latte', 'My first cigar and it was amazing. So smooth, zero harshness.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid2, cigarIds['Brand 2 - Cigar 9'],  vitolaIds['Brand 2 - Cigar 9'][0].id,  85, 4, 4, 5, JSON.stringify(['cream','cedar','nuts','honey']), 'mild-medium', 55, 'Herbal tea', 'Beautiful looking cigar. Creamy nut flavors were exactly what I wanted.']);
-  await db.run(`INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [uid,  cigarIds['Brand 5 - Cigar 22'], vitolaIds['Brand 5 - Cigar 22'][0].id, 96, 5, 5, 5, JSON.stringify(['dark chocolate','molasses','coffee','leather']), 'full', 80, 'Aged bourbon', 'Best maduro in a long time. The molasses note on the retrohale is something else.']);
-
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid,  cigarIds['Brand 1 - Cigar 3'],  vitolaIds['Brand 1 - Cigar 3'][1].id,  'humidor',  10, 14.50, '2026-05-10', 'Box purchase. Letting these rest.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid,  cigarIds['Brand 5 - Cigar 21'], vitolaIds['Brand 5 - Cigar 21'][0].id, 'humidor',  5,  13.00, '2026-06-01', 'Great after-dinner smoke.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid,  cigarIds['Brand 3 - Cigar 13'], vitolaIds['Brand 3 - Cigar 13'][0].id, 'humidor',  3,  13.50, '2026-06-10', 'Picked up at a Thursday smoke night.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid,  cigarIds['Brand 2 - Cigar 7'],  vitolaIds['Brand 2 - Cigar 7'][0].id,  'smoked',   1,  13.00, '2026-05-25', 'Rainy porch smoke. Perfect.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid,  cigarIds['Brand 5 - Cigar 22'], vitolaIds['Brand 5 - Cigar 22'][0].id, 'wishlist', 1,  null,  null,         'Need to grab a box.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid2, cigarIds['Brand 1 - Cigar 1'],  vitolaIds['Brand 1 - Cigar 1'][0].id,  'humidor',  5,  7.50,  '2026-06-15', 'My go-to. Always keeping 5 on hand.']);
-  await db.run(`INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes) VALUES (?,?,?,?,?,?,?,?)`, [uid2, cigarIds['Brand 2 - Cigar 9'],  vitolaIds['Brand 2 - Cigar 9'][0].id,  'humidor',  3,  9.50,  '2026-06-20', 'Second purchase. Love these.']);
-
-  for (const [userId, storeId] of [[uid, sid1], [uid, sid3], [uid, sid5], [uid2, sid4], [uid2, sid2], [uid2, sid1]]) {
-    await db.run('INSERT INTO store_follows (user_id,store_id,notify_broadcasts,notify_deals,notify_new_arrivals) VALUES (?,?,1,1,1)', [userId, storeId]);
+  // Reviews
+  const reviews = [
+    [uid,  'Brand 1 - Cigar 3',  0, 92, 5, 5, 4, ['dark chocolate','espresso','leather'],    'medium-full', 65, 'Cold brew coffee', 'Solid maduro. Dark chocolate up front, leather by halfway. Burn was razor sharp.'],
+    [uid,  'Brand 5 - Cigar 21', 0, 94, 5, 4, 5, ['red pepper','cedar','leather','coffee'],   'medium-full', 60, 'Rye whiskey',      'Punchy red pepper right away then settles into leather and coffee. Near perfect construction.'],
+    [uid,  'Brand 2 - Cigar 7',  0, 90, 4, 5, 4, ['cocoa','leather','black pepper','earth'], 'medium-full', 70, 'Black coffee',     'Cocoa and earth throughout. Good construction, never went out on me.'],
+    [uid,  'Brand 3 - Cigar 11', 0, 87, 5, 4, 4, ['cedar','earth','nuts','pepper'],          'medium',      55, 'IPA',              'Great everyday smoke. Reliable and consistent. Would buy a bundle.'],
+    [uid2, 'Brand 1 - Cigar 1',  0, 88, 5, 5, 4, ['cream','cedar','honey','floral'],         'mild',        45, 'Latte',            'My first cigar and it was amazing. So smooth, zero harshness.'],
+    [uid2, 'Brand 2 - Cigar 9',  0, 85, 4, 4, 5, ['cream','cedar','nuts','honey'],           'mild-medium', 55, 'Herbal tea',       'Beautiful looking cigar. Creamy nut flavors were exactly what I wanted.'],
+    [uid,  'Brand 5 - Cigar 22', 0, 96, 5, 5, 5, ['dark chocolate','molasses','coffee','leather'], 'full',  80, 'Aged bourbon',    'Best maduro in a long time. The molasses note on the retrohale is something else.'],
+  ];
+  for (const [userId, key, vitolaIdx, rating, draw, burn, appearance, fn, strength, time, pairing, text] of reviews) {
+    const cid = cigarIds[key];
+    const vid = vitolaIds[key][vitolaIdx]?.id;
+    await db.pool.query(
+      `INSERT INTO reviews (user_id,cigar_id,vitola_id,rating,draw_rating,burn_rating,appearance_rating,flavor_notes,strength_experienced,smoke_time,pairing,review_text)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      [userId, cid, vid, rating, draw, burn, appearance, JSON.stringify(fn), strength, time, pairing, text]
+    );
   }
 
-  await db.run(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES (?,?,?,?,?,?)`, [sid1, 'Thursday Smoke Night', 'Weekly smoke night this Thursday. Featured: Cigar 21. $5 off all night.', null, cigarIds['Brand 5 - Cigar 21'], '2026-07-01']);
-  await db.run(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES (?,?,?,?,?,?)`, [sid2, '5 for $35 — Cigar 11',  'Stock up on the best everyday smoke. Buy 5 for $35 this week only.', null, cigarIds['Brand 3 - Cigar 11'], '2026-07-05']);
-  await db.run(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES (?,?,?,?,?,?)`, [sid3, 'New: Cigar 23',          'Just landed — Ecuador sun-grown wrapper, medium body. First week: $10.50.', null, cigarIds['Brand 5 - Cigar 23'], '2026-07-10']);
-  await db.run(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES (?,?,?,?,?,?)`, [sid4, '10% Off All Brand 4',   '15-year anniversary weekend. 10% off every Brand 4 single Sat and Sun.', 10, null, '2026-06-29']);
-  await db.run(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES (?,?,?,?,?,?)`, [sid5, 'Bourbon & Maduro Night', 'Three cigars, three bourbons, guided tasting notes. $55 per person.', null, cigarIds['Brand 5 - Cigar 22'], '2026-07-12']);
+  // Humidor / user_cigars
+  const humidor = [
+    [uid,  'Brand 1 - Cigar 3',  1, 'humidor',  10, 14.50, '2026-05-10', 'Box purchase. Letting these rest.'],
+    [uid,  'Brand 5 - Cigar 21', 0, 'humidor',   5, 13.00, '2026-06-01', 'Great after-dinner smoke.'],
+    [uid,  'Brand 3 - Cigar 13', 0, 'humidor',   3, 13.50, '2026-06-10', 'Picked up at a Thursday smoke night.'],
+    [uid,  'Brand 2 - Cigar 7',  0, 'smoked',    1, 13.00, '2026-05-25', 'Rainy porch smoke. Perfect.'],
+    [uid,  'Brand 5 - Cigar 22', 0, 'wishlist',  1, null,  null,         'Need to grab a box.'],
+    [uid2, 'Brand 1 - Cigar 1',  0, 'humidor',   5,  7.50, '2026-06-15', 'My go-to. Always keeping 5 on hand.'],
+    [uid2, 'Brand 2 - Cigar 9',  0, 'humidor',   3,  9.50, '2026-06-20', 'Second purchase. Love these.'],
+  ];
+  for (const [userId, key, vitolaIdx, status, qty, price, date, notes] of humidor) {
+    await db.pool.query(
+      `INSERT INTO user_cigars (user_id,cigar_id,vitola_id,status,quantity,purchase_price,purchase_date,notes)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+      [userId, cigarIds[key], vitolaIds[key][vitolaIdx]?.id, status, qty, price, date, notes]
+    );
+  }
 
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid,  sid1, 5, 'Best walk-in humidor in the city. Thursday smoke nights are a highlight.']);
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid,  sid3, 5, 'Unmatched lounge. Great cocktails and curated selection.']);
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid,  sid5, 4, 'Great whiskey selection and comfortable seating.']);
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid2, sid4, 5, 'Everyone was so helpful when I was starting out. Great prices too.']);
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid2, sid2, 4, 'No frills but exactly what you need. Solid prices and friendly regulars.']);
-  await db.run(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES (?,?,?,?)`, [uid2, sid1, 5, 'Huge humidor and the smoke nights are super welcoming for newer folks.']);
+  // Store follows
+  for (const [userId, storeId] of [[uid, sid1],[uid, sid3],[uid, sid5],[uid2, sid4],[uid2, sid2],[uid2, sid1]]) {
+    await db.pool.query(
+      'INSERT INTO store_follows (user_id,store_id,notify_broadcasts,notify_deals,notify_new_arrivals) VALUES ($1,$2,1,1,1)',
+      [userId, storeId]
+    );
+  }
 
+  // Deals
+  await db.pool.query(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES ($1,$2,$3,$4,$5,$6)`, [sid1,'Thursday Smoke Night','Weekly smoke night this Thursday. Featured: Cigar 21. $5 off all night.',null,cigarIds['Brand 5 - Cigar 21'],'2026-07-01']);
+  await db.pool.query(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES ($1,$2,$3,$4,$5,$6)`, [sid2,'5 for $35 — Cigar 11','Stock up on the best everyday smoke. Buy 5 for $35 this week only.',null,cigarIds['Brand 3 - Cigar 11'],'2026-07-05']);
+  await db.pool.query(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES ($1,$2,$3,$4,$5,$6)`, [sid3,'New: Cigar 23','Just landed — Ecuador sun-grown wrapper, medium body. First week: $10.50.',null,cigarIds['Brand 5 - Cigar 23'],'2026-07-10']);
+  await db.pool.query(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES ($1,$2,$3,$4,$5,$6)`, [sid4,'10% Off All Brand 4','15-year anniversary weekend. 10% off every Brand 4 single Sat and Sun.',10,null,'2026-06-29']);
+  await db.pool.query(`INSERT INTO deals (store_id,title,description,discount_percent,cigar_id,expires_at) VALUES ($1,$2,$3,$4,$5,$6)`, [sid5,'Bourbon & Maduro Night','Three cigars, three bourbons, guided tasting notes. $55 per person.',null,cigarIds['Brand 5 - Cigar 22'],'2026-07-12']);
+
+  // Store ratings
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid,  sid1, 5, 'Best walk-in humidor in the city. Thursday smoke nights are a highlight.']);
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid,  sid3, 5, 'Unmatched lounge. Great cocktails and curated selection.']);
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid,  sid5, 4, 'Great whiskey selection and comfortable seating.']);
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid2, sid4, 5, 'Everyone was so helpful when I was starting out. Great prices too.']);
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid2, sid2, 4, 'No frills but exactly what you need. Solid prices and friendly regulars.']);
+  await db.pool.query(`INSERT INTO store_ratings (user_id,store_id,rating,comment) VALUES ($1,$2,$3,$4)`, [uid2, sid1, 5, 'Huge humidor and the smoke nights are super welcoming for newer folks.']);
+
+  // Store views (last 14 days)
   const viewInserts = [];
   for (let d = 0; d < 14; d++) {
     const date = new Date(Date.now() - d * 86400000).toISOString().slice(0, 10);
     for (const [sid, base] of [[sid1, 18], [sid2, 12], [sid3, 15], [sid4, 10], [sid5, 8]]) {
       const count = Math.floor(Math.random() * base) + 3;
       for (let v = 0; v < count; v++) {
-        viewInserts.push(db.run('INSERT INTO store_views (store_id,viewed_at) VALUES (?,?)', [sid, `${date} 12:00:00`]));
+        viewInserts.push(db.pool.query('INSERT INTO store_views (store_id,viewed_at) VALUES ($1,$2)', [sid, `${date} 12:00:00`]));
       }
     }
   }
   await Promise.all(viewInserts);
 
-  await db.run(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES (?,?,?,?,?)`, [sid1, 'New Arrival: Cigar 25',  'Fresh batch just arrived — limited quantity.',                          'new_arrival',  cigarIds['Brand 5 - Cigar 25']]);
-  await db.run(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES (?,?,?,?,?)`, [sid2, 'Cigar 11 Back in Stock',  'Our best-selling everyday smoke. Fresh rotation just hit the humidor.',  'new_arrival',  cigarIds['Brand 3 - Cigar 11']]);
-  await db.run(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES (?,?,?,?,?)`, [sid3, 'Members: Early Access',    '48-hour member early access to Cigar 23. Stop by or call to hold yours.','announcement', cigarIds['Brand 5 - Cigar 23']]);
-  await db.run(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES (?,?,?,?,?)`, [sid4, '15th Anniversary — 10% Off','Celebrating 15 years! 10% off all singles this weekend.',               'deal',         null]);
-  await db.run(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES (?,?,?,?,?)`, [sid5, 'July Pairing Night Tickets','Only 8 seats left. $55 includes three cigars and three bourbons.',       'event',        null]);
+  // Notifications
+  await db.pool.query(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES ($1,$2,$3,$4,$5)`, [sid1,'New Arrival: Cigar 25','Fresh batch just arrived — limited quantity.','new_arrival',cigarIds['Brand 5 - Cigar 25']]);
+  await db.pool.query(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES ($1,$2,$3,$4,$5)`, [sid2,'Cigar 11 Back in Stock','Our best-selling everyday smoke. Fresh rotation just hit the humidor.','new_arrival',cigarIds['Brand 3 - Cigar 11']]);
+  await db.pool.query(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES ($1,$2,$3,$4,$5)`, [sid3,'Members: Early Access','48-hour member early access to Cigar 23. Stop by or call to hold yours.','announcement',cigarIds['Brand 5 - Cigar 23']]);
+  await db.pool.query(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES ($1,$2,$3,$4,$5)`, [sid4,'15th Anniversary — 10% Off','Celebrating 15 years! 10% off all singles this weekend.','deal',null]);
+  await db.pool.query(`INSERT INTO notifications (store_id,title,message,type,cigar_id) VALUES ($1,$2,$3,$4,$5)`, [sid5,'July Pairing Night Tickets','Only 8 seats left. $55 includes three cigars and three bourbons.','event',null]);
 
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid,  cigarIds['Brand 5 - Cigar 22'], 'high',   'Everyone at smoke night raves about this.',           'Store 1 staff']);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid,  cigarIds['Brand 5 - Cigar 25'], 'high',   'Never smoked a perfecto shape before.',               null]);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid,  cigarIds['Brand 1 - Cigar 4'],  'medium', 'Saving for a long Saturday afternoon.',               'Spotted at Store 5']);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid,  cigarIds['Brand 4 - Cigar 19'], 'medium', 'Heard the torpedo cuts really well with this blend.', 'Forum recommendation']);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid,  cigarIds['Brand 2 - Cigar 8'],  'low',    'Want to compare with Cigar 3 side by side.',         null]);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid2, cigarIds['Brand 1 - Cigar 2'],  'high',   'Stepping up from Cigar 1. Seems like the next one.', 'Store 4 staff']);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid2, cigarIds['Brand 3 - Cigar 12'], 'medium', 'Heard it is bolder but still approachable.',          null]);
-  await db.run(`INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES (?,?,?,?,?,'pending')`, [uid2, cigarIds['Brand 2 - Cigar 10'], 'low',    'Short smoke for busy evenings.',                      null]);
+  // Smoke list
+  const smokeList = [
+    [uid,  'Brand 5 - Cigar 22', 'high',   'Everyone at smoke night raves about this.',            'Store 1 staff'],
+    [uid,  'Brand 5 - Cigar 25', 'high',   'Never smoked a perfecto shape before.',                null],
+    [uid,  'Brand 1 - Cigar 4',  'medium', 'Saving for a long Saturday afternoon.',                'Spotted at Store 5'],
+    [uid,  'Brand 4 - Cigar 19', 'medium', 'Heard the torpedo cuts really well with this blend.',  'Forum recommendation'],
+    [uid,  'Brand 2 - Cigar 8',  'low',    'Want to compare with Cigar 3 side by side.',           null],
+    [uid2, 'Brand 1 - Cigar 2',  'high',   'Stepping up from Cigar 1. Seems like the next one.',  'Store 4 staff'],
+    [uid2, 'Brand 3 - Cigar 12', 'medium', 'Heard it is bolder but still approachable.',           null],
+    [uid2, 'Brand 2 - Cigar 10', 'low',    'Short smoke for busy evenings.',                       null],
+  ];
+  for (const [userId, key, priority, notes, recommendedBy] of smokeList) {
+    await db.pool.query(
+      `INSERT INTO smoke_list (user_id,cigar_id,priority,notes,recommended_by,status) VALUES ($1,$2,$3,$4,$5,'pending')`,
+      [userId, cigarIds[key], priority, notes, recommendedBy]
+    );
+  }
 
-  await db.run(`INSERT INTO verification_requests (store_id,business_name,business_ein,business_phone,business_address,license_number,notes,status) VALUES (?,?,?,?,?,?,?,?)`,
-    [sid2, 'Store 2 LLC', '91-2345678', '(503) 555-3412', '3412 SE Hawthorne Blvd, Portland, OR 97214', 'OR-TB-2009-00341', 'Independent shop operating since 2009.', 'pending']);
-
+  // Pending verification request for Store 2
   await db.pool.query(
-    `INSERT INTO seed_meta (key, value) VALUES ('version', $1)
-     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`,
-    [SEED_VERSION]
+    `INSERT INTO verification_requests (store_id,business_name,business_ein,business_phone,business_address,license_number,notes,status)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+    [sid2,'Store 2 LLC','91-2345678','(503) 555-3412','3412 SE Hawthorne Blvd, Portland, OR 97214','OR-TB-2009-00341','Independent shop operating since 2009.','pending']
   );
 
-  console.log('[seed] Done! Demo accounts:');
+  console.log('[seed] Done. Demo accounts:');
   console.log('  smoker@demo.com / password123');
   console.log('  jane@demo.com   / password123');
   console.log('  store1@demo.com / password123');
   console.log('  admin@cigarbuddy.com / admin123');
+  console.log('  mobegibusiness@gmail.com / W@ffle871');
 }
 
 module.exports = { seed };
 
+// Allow running directly: node seed.js
+// This will NOT wipe the DB — it runs the same idempotent seed() function.
+// To start completely fresh, drop/recreate the Railway DB manually first.
 if (require.main === module) {
-  const force = process.argv.includes('--force');
+  const { initSchema } = require('./schema');
+  const { runMigrations } = require('./schema');
   initSchema()
-    .then(() => seed(force))
+    .then(() => runMigrations())
+    .then(() => seed())
     .then(() => db.pool.end())
     .catch(err => { console.error(err); process.exit(1); });
 }

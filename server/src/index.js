@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const { initSchema } = require('./database/schema');
+const { initSchema, runMigrations } = require('./database/schema');
 const { seed } = require('./database/seed');
 
 const app = express();
@@ -46,8 +46,9 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3001;
 
 async function start() {
-  await initSchema();
-  await seed();
+  await initSchema();      // CREATE TABLE IF NOT EXISTS — always safe
+  await runMigrations();   // ALTER TABLE / new indexes — each runs exactly once
+  await seed();            // upsert staff account; demo data only on empty DB
   app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
 }
 

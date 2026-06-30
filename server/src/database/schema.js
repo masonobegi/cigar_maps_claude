@@ -264,4 +264,41 @@ async function initSchema() {
   `);
 }
 
-module.exports = { initSchema };
+// ── Schema migrations ────────────────────────────────────────────────────────
+// When you need to add a column or index to an EXISTING table, add an entry
+// here instead of (or in addition to) editing the CREATE TABLE above.
+//
+// Rules:
+//   1. Give it a unique name in the format NNN_short_description
+//   2. Write the SQL as idempotent as possible (IF NOT EXISTS, etc.)
+//   3. Also add the column to the CREATE TABLE block above so fresh DBs get it
+//
+// Each migration runs EXACTLY ONCE and is recorded in schema_migrations.
+// Safe to deploy as many times as you like — already-run migrations are skipped.
+const MIGRATIONS = [
+  // Example (do not delete this comment — it shows the format):
+  // { name: '001_stores_add_slug', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS slug TEXT' },
+];
+
+async function runMigrations() {
+  await db.pool.query(`
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+      name TEXT PRIMARY KEY,
+      applied_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
+
+  for (const m of MIGRATIONS) {
+    const { rows } = await db.pool.query(
+      'SELECT 1 FROM schema_migrations WHERE name = $1', [m.name]
+    );
+    if (rows.length) {
+      continue;
+    }
+    await db.pool.query(m.sql);
+    await db.pool.query('INSERT INTO schema_migrations (name) VALUES ($1)', [m.name]);
+    console.log(`[migrate] Applied: ${m.name}`);
+  }
+}
+
+module.exports = { initSchema, runMigrations };
