@@ -229,4 +229,9 @@ router.delete('/stores/:id', requireAuth, requireAdmin, asyncRoute(async (req, r
   res.json({ success: true });
 }));
 
+router.delete('/users/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  await db.pool.query('DELETE FROM users WHERE id = $1', [req.params.id]);
+  res.json({ success: true });
+}));
+
 module.exports = router;

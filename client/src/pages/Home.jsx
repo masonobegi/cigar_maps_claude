@@ -62,6 +62,7 @@ export default function Home() {
   const { user } = useAuth();
   const { items: recentlyViewed } = useRecentlyViewed();
   const [topCigars, setTopCigars] = useState([]);
+  const [cigarTotal, setCigarTotal] = useState(0);
   const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
   const [cities, setCities] = useState([]);
@@ -70,7 +71,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.searchCigars({ limit: 8, sort: 'popular' }).then(d => setTopCigars(d.cigars));
+    api.searchCigars({ limit: 8, sort: 'popular' }).then(d => { setTopCigars(d.cigars); setCigarTotal(d.total); });
     api.searchStores().then(setStores);
     api.getDeals().then(setDeals);
     api.getStoreCities().then(setCities);
@@ -149,7 +150,7 @@ export default function Home() {
           <div className="hidden lg:flex flex-col gap-8 pt-4 min-w-[140px]">
             {[
               { n: stores.length || '5', label: 'Local Retailers' },
-              { n: topCigars.length || '25', label: 'Premium Cigars' },
+              { n: cigarTotal || '—', label: 'Premium Cigars' },
               { n: cities.length || '3', label: 'Cities' },
             ].map(({ n, label }) => (
               <div key={label} className="border-l-2 pl-5" style={{borderColor: '#D4882A'}}>

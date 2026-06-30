@@ -281,6 +281,9 @@ const MIGRATIONS = [
   { name: '001_stores_add_sheet_url', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS sheet_url TEXT' },
   { name: '002_stores_add_sheet_last_synced', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS sheet_last_synced TIMESTAMP' },
   { name: '003_inventory_synced_from_sheet', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS synced_from_sheet BOOLEAN DEFAULT false' },
+  { name: '004_users_add_home_lat', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_lat FLOAT' },
+  { name: '005_users_add_home_lng', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_lng FLOAT' },
+  { name: '006_users_add_home_label', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_label TEXT' },
 ];
 
 async function runMigrations() {

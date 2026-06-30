@@ -12,6 +12,12 @@ const LABEL  = '#B0A090';
 const BORDER = '#3D3020';
 const AMBER  = '#D4882A';
 
+const RADII = [10, 25, 50, 100];
+
+function loadSavedLocation() {
+  try { return JSON.parse(localStorage.getItem('cb_location_v1') || 'null'); } catch { return null; }
+}
+
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [stores, setStores] = useState([]);
@@ -26,19 +32,29 @@ export default function Stores() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('list');
   const [userLocation, setUserLocation] = useState(null);
+  const [radius, setRadius] = useState(() => parseInt(localStorage.getItem('cb_radius') || '50'));
+  const [showTempAddr, setShowTempAddr] = useState(false);
+  const [tempAddr, setTempAddr] = useState('');
+  const [tempGeoLoading, setTempGeoLoading] = useState(false);
 
   useEffect(() => { api.getStoreCities().then(setCities); }, []);
+
+  useEffect(() => {
+    const saved = loadSavedLocation();
+    if (saved) setUserLocation(saved);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
     const p = {};
     if (q) p.q = q;
-    if (city) p.city = city;
+    if (city && !userLocation) p.city = city;
     if (openNow) p.open_now = '1';
     if (hasLounge) p.has_lounge = '1';
     if (hasHumidor) p.has_walk_in_humidor = '1';
+    if (userLocation?.lat) { p.lat = userLocation.lat; p.lng = userLocation.lng; p.radius = radius; }
     api.searchStores(p).then(setStores).finally(() => setLoading(false));
-  }, [q, city, openNow, hasLounge, hasHumidor]);
+  }, [q, city, openNow, hasLounge, hasHumidor, userLocation, radius]);
 
   function applySearch(e) {
     e.preventDefault();
@@ -49,26 +65,58 @@ export default function Stores() {
     setSearchParams(p);
   }
 
+  function saveLocation(loc) {
+    setUserLocation(loc);
+    localStorage.setItem('cb_location_v1', JSON.stringify(loc));
+  }
+
+  function clearLocation() {
+    setUserLocation(null);
+    localStorage.removeItem('cb_location_v1');
+  }
+
+  function changeRadius(r) {
+    setRadius(r);
+    localStorage.setItem('cb_radius', String(r));
+  }
+
   function useMyLocation() {
     if (!navigator.geolocation) return;
     setGeoLoading(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        setUserLocation(loc);
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude, label: 'Current Location', isTemp: false };
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${loc.lat}&lon=${loc.lng}&format=json`, {
             headers: { 'User-Agent': 'CigarBuddy/1.0' }
           });
           const data = await res.json();
-          const detectedCity = data.address?.city || data.address?.town || data.address?.village || '';
-          if (detectedCity) setCity(detectedCity);
+          const label = data.address?.city || data.address?.town || data.address?.village || 'My Location';
+          loc.label = label;
         } catch {}
+        saveLocation(loc);
         setGeoLoading(false);
       },
       () => setGeoLoading(false),
       { timeout: 8000 }
     );
+  }
+
+  async function applyTempAddress() {
+    if (!tempAddr.trim()) return;
+    setTempGeoLoading(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(tempAddr)}&format=json&limit=1&countrycodes=us`, {
+        headers: { 'User-Agent': 'CigarBuddy/1.0' }
+      });
+      const data = await res.json();
+      if (data[0]) {
+        saveLocation({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), label: tempAddr, isTemp: true });
+        setShowTempAddr(false);
+        setTempAddr('');
+      }
+    } catch {}
+    setTempGeoLoading(false);
   }
 
   const hasFilters = q || city || openNow || hasLounge || hasHumidor;
@@ -110,23 +158,66 @@ export default function Stores() {
         </div>
       </div>
 
+      {/* Location banner */}
+      {userLocation && (
+        <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl text-sm" style={{ backgroundColor: '#1A1410', border: '1px solid #3D3020' }}>
+          <Navigation className="w-3.5 h-3.5 flex-shrink-0" style={{ color: AMBER }} />
+          <span style={{ color: MUTED }}>
+            {userLocation.isTemp ? 'Traveling to' : 'Near'}{' '}
+            <span style={{ color: NAVY }} className="font-medium">{userLocation.label}</span>
+          </span>
+          <div className="flex items-center gap-1 ml-auto">
+            {RADII.map(r => (
+              <button key={r} onClick={() => changeRadius(r)} type="button"
+                className="text-xs px-2 py-0.5 rounded-full transition-colors"
+                style={radius === r ? { backgroundColor: AMBER, color: '#fff' } : { color: MUTED }}>
+                {r}mi
+              </button>
+            ))}
+            <button onClick={() => setShowTempAddr(!showTempAddr)} type="button" className="ml-2 text-xs" style={{ color: MUTED }}>Travel?</button>
+            <button onClick={clearLocation} type="button" className="ml-1 p-0.5 hover:text-red-400" style={{ color: MUTED }}>
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Temp address */}
+      {showTempAddr && (
+        <div className="flex gap-2 mb-3">
+          <div className="relative flex-1">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
+            <input value={tempAddr} onChange={e => setTempAddr(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && applyTempAddress()}
+              placeholder="Enter a city or address for travel..." className="input pl-9 py-2" />
+          </div>
+          <button type="button" onClick={applyTempAddress} disabled={tempGeoLoading} className="btn-secondary px-4 text-sm disabled:opacity-60">
+            {tempGeoLoading ? <div className="w-4 h-4 border border-amber-500 border-t-transparent rounded-full animate-spin" /> : 'Set'}
+          </button>
+          <button type="button" onClick={() => setShowTempAddr(false)} className="btn-ghost px-3"><X className="w-4 h-4" /></button>
+        </div>
+      )}
+
       {/* Search + filter */}
       <form onSubmit={applySearch} className="flex gap-2 mb-3 flex-wrap">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
           <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search store name..." className="input pl-10 py-2.5" />
         </div>
-        <div className="relative">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
-          <input value={city} onChange={e => setCity(e.target.value)} placeholder="City" className="input pl-9 py-2.5 w-36" list="store-cities" />
-          <datalist id="store-cities">{cities.map(c => <option key={`${c.city}-${c.state}`} value={c.city} />)}</datalist>
-        </div>
+        {!userLocation && (
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
+            <input value={city} onChange={e => setCity(e.target.value)} placeholder="City" className="input pl-9 py-2.5 w-36" list="store-cities" />
+            <datalist id="store-cities">{cities.map(c => <option key={`${c.city}-${c.state}`} value={c.city} />)}</datalist>
+          </div>
+        )}
         <button type="button" onClick={useMyLocation} disabled={geoLoading}
-          className="btn-secondary flex items-center gap-1.5 px-3 disabled:opacity-60" title="Use my location">
+          className="btn-secondary flex items-center gap-1.5 px-3 disabled:opacity-60" title="Use my location"
+          style={userLocation && !userLocation.isTemp ? { borderColor: AMBER, color: AMBER } : {}}>
           {geoLoading
             ? <div className="w-4 h-4 border border-amber-500 border-t-transparent rounded-full animate-spin" />
             : <Navigation className="w-4 h-4" />}
-          <span className="hidden sm:inline text-sm">Near Me</span>
+          <span className="hidden sm:inline text-sm">{userLocation ? 'Update' : 'Near Me'}</span>
         </button>
         <button type="submit" className="btn-primary px-5">Search</button>
         <button type="button" onClick={() => setShowFilters(!showFilters)}
@@ -222,9 +313,12 @@ export default function Stores() {
                       )}
                     </div>
 
-                    {/* Location */}
-                    <div className="flex items-center gap-1 text-xs mb-2" style={{ color: MUTED }}>
-                      <MapPin className="w-3 h-3" />{store.city}, {store.state}
+                    {/* Location + distance */}
+                    <div className="flex items-center gap-2 text-xs mb-2" style={{ color: MUTED }}>
+                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{store.city}, {store.state}</span>
+                      {store.distance_mi !== null && store.distance_mi !== undefined && (
+                        <span className="font-semibold" style={{ color: AMBER }}>{store.distance_mi} mi</span>
+                      )}
                     </div>
 
                     {/* Description */}

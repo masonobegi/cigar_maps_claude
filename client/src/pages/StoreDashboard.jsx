@@ -306,7 +306,7 @@ function InventoryManager({ storeId, toast, externalOpen, onExternalOpen }) {
       {/* Stats bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'Total SKUs', value: items.length, active: filterStatus === 'all', onClick: () => setFilterStatus('all'), color: 'text-stone-100' },
+          { label: 'Cigars', value: new Set(items.map(i => i.cigar_id)).size, active: filterStatus === 'all', onClick: () => setFilterStatus('all'), color: 'text-stone-100' },
           { label: 'Low Stock', value: stats.low_stock, active: filterStatus === 'low', onClick: () => setFilterStatus('low'), color: stats.low_stock > 0 ? 'text-orange-400' : 'text-stone-400', alert: stats.low_stock > 0 },
           { label: 'Out of Stock', value: stats.out_of_stock, active: filterStatus === 'out', onClick: () => setFilterStatus('out'), color: stats.out_of_stock > 0 ? 'text-red-400' : 'text-stone-400', alert: stats.out_of_stock > 0 },
           { label: 'Featured', value: items.filter(i => i.is_featured).length, active: filterStatus === 'featured', onClick: () => setFilterStatus('featured'), color: 'text-amber-400' },

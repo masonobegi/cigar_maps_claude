@@ -16,6 +16,14 @@ try {
   }
 } catch (_) {}
 
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 async function geocode(address, city, state) {
   const q = [address, city, state].filter(Boolean).join(', ');
   return new Promise((resolve) => {
@@ -37,6 +45,9 @@ async function geocode(address, city, state) {
 
 router.get('/', asyncRoute(async (req, res) => {
   const { q, city, state, has_lounge, has_walk_in_humidor, open_now } = req.query;
+  const userLat = parseFloat(req.query.lat);
+  const userLng = parseFloat(req.query.lng);
+  const radiusMi = parseFloat(req.query.radius) || 50;
   let where = ['1=1'];
   const params = [];
 
@@ -91,6 +102,21 @@ router.get('/', asyncRoute(async (req, res) => {
     }
     return { ...s, tags: s.tags ? JSON.parse(s.tags) : [], today_hours: todayHours || null, is_open: isOpen, avg_rating: +parseFloat(s.avg_rating).toFixed(1) };
   }).filter(s => open_now === '1' ? s.is_open === true : true);
+
+  if (!isNaN(userLat) && !isNaN(userLng)) {
+    const withDist = result.map(s => ({
+      ...s,
+      distance_mi: (s.lat && s.lng) ? Math.round(haversine(userLat, userLng, s.lat, s.lng) * 10) / 10 : null,
+    }));
+    const inRange = withDist.filter(s => s.distance_mi === null || s.distance_mi <= radiusMi);
+    inRange.sort((a, b) => {
+      if (a.distance_mi === null && b.distance_mi === null) return 0;
+      if (a.distance_mi === null) return 1;
+      if (b.distance_mi === null) return -1;
+      return a.distance_mi - b.distance_mi;
+    });
+    return res.json(inRange);
+  }
 
   res.json(result);
 }));

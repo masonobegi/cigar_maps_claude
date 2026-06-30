@@ -254,6 +254,7 @@ router.post('/:id/reviews', requireAuth, asyncRoute(async (req, res) => {
     pairing, occasion, review_text,
   } = req.body;
 
+  if (req.user.account_type !== 'user') return res.status(403).json({ error: 'Only regular user accounts can post reviews' });
   if (!rating || rating < 50 || rating > 100) return res.status(400).json({ error: 'Rating must be 50-100' });
 
   const existing = await db.get('SELECT id FROM reviews WHERE user_id=? AND cigar_id=? AND vitola_id=?', [req.user.id, req.params.id, vitola_id]);
