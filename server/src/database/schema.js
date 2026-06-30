@@ -293,6 +293,23 @@ async function initSchema() {
 
     CREATE INDEX IF NOT EXISTS idx_community_store ON community_posts(store_id);
     CREATE INDEX IF NOT EXISTS idx_events_store ON store_events(store_id);
+
+    CREATE TABLE IF NOT EXISTS community_likes (
+      post_id INTEGER NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at TIMESTAMP DEFAULT NOW(),
+      PRIMARY KEY (post_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS community_replies (
+      id SERIAL PRIMARY KEY,
+      post_id INTEGER NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      content TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_community_replies_post ON community_replies(post_id);
   `);
 }
 
@@ -318,6 +335,10 @@ const MIGRATIONS = [
   { name: '006_users_add_home_label', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS home_label TEXT' },
   { name: '007_store_follows_notify_community', sql: 'ALTER TABLE store_follows ADD COLUMN IF NOT EXISTS notify_community INTEGER DEFAULT 1' },
   { name: '008_users_add_humidor_sheet_url', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS humidor_sheet_url TEXT' },
+  { name: '009_notifications_add_created_by', sql: 'ALTER TABLE notifications ADD COLUMN IF NOT EXISTS created_by_user_id INTEGER' },
+  { name: '010_community_likes', sql: `CREATE TABLE IF NOT EXISTS community_likes (post_id INTEGER NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_at TIMESTAMP DEFAULT NOW(), PRIMARY KEY (post_id, user_id))` },
+  { name: '011_community_replies', sql: `CREATE TABLE IF NOT EXISTS community_replies (id SERIAL PRIMARY KEY, post_id INTEGER NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, content TEXT NOT NULL, created_at TIMESTAMP DEFAULT NOW())` },
+  { name: '012_community_replies_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_community_replies_post ON community_replies(post_id)' },
 ];
 
 async function runMigrations() {

@@ -142,6 +142,10 @@ export const api = {
   createCommunityPost: (storeId, b) => request(`/stores/${storeId}/community`, { method: 'POST', body: JSON.stringify(b) }),
   pinCommunityPost: (postId) => request(`/community/${postId}/pin`, { method: 'PATCH' }),
   deleteCommunityPost: (postId) => request(`/community/${postId}`, { method: 'DELETE' }),
+  likePost: (postId) => request(`/community/${postId}/like`, { method: 'POST' }),
+  getReplies: (postId) => request(`/community/${postId}/replies`),
+  postReply: (postId, content) => request(`/community/${postId}/replies`, { method: 'POST', body: JSON.stringify({ content }) }),
+  deleteReply: (postId, replyId) => request(`/community/${postId}/replies/${replyId}`, { method: 'DELETE' }),
 
   // Events
   getStoreEvents: (storeId) => request(`/stores/${storeId}/events`),

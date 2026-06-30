@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee } from 'lucide-react';
+import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee, Reply, ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -54,6 +54,8 @@ export default function StoreProfile() {
   const [cigarSearchQ, setCigarSearchQ] = useState('');
   const [cigarSearchResults, setCigarSearchResults] = useState([]);
   const [selectedCigar, setSelectedCigar] = useState(null);
+  // replies: { [postId]: { open: bool, list: [], content: string, submitting: bool } }
+  const [replyState, setReplyState] = useState({});
 
   useEffect(() => {
     Promise.all([
@@ -134,6 +136,53 @@ export default function StoreProfile() {
     if (!confirm('Delete this post?')) return;
     await api.deleteCommunityPost(postId);
     await loadCommunity();
+  }
+
+  async function toggleLike(postId) {
+    if (!user) return navigate('/login');
+    const res = await api.likePost(postId);
+    setCommunityPosts(prev => prev.map(p =>
+      p.id === postId ? { ...p, my_like: res.liked, like_count: res.like_count } : p
+    ));
+  }
+
+  function getReply(postId) {
+    return replyState[postId] || { open: false, list: [], content: '', submitting: false };
+  }
+
+  async function toggleReplies(postId) {
+    const cur = getReply(postId);
+    if (!cur.open) {
+      const list = await api.getReplies(postId);
+      setReplyState(s => ({ ...s, [postId]: { ...cur, open: true, list } }));
+    } else {
+      setReplyState(s => ({ ...s, [postId]: { ...cur, open: false } }));
+    }
+  }
+
+  async function submitReply(postId) {
+    const cur = getReply(postId);
+    if (!cur.content.trim()) return;
+    setReplyState(s => ({ ...s, [postId]: { ...cur, submitting: true } }));
+    try {
+      await api.postReply(postId, cur.content);
+      const list = await api.getReplies(postId);
+      setCommunityPosts(prev => prev.map(p =>
+        p.id === postId ? { ...p, reply_count: parseInt(p.reply_count) + 1 } : p
+      ));
+      setReplyState(s => ({ ...s, [postId]: { open: true, list, content: '', submitting: false } }));
+    } catch {
+      setReplyState(s => ({ ...s, [postId]: { ...cur, submitting: false } }));
+    }
+  }
+
+  async function deleteReply(postId, replyId) {
+    await api.deleteReply(postId, replyId);
+    const list = await api.getReplies(postId);
+    setCommunityPosts(prev => prev.map(p =>
+      p.id === postId ? { ...p, reply_count: Math.max(0, parseInt(p.reply_count) - 1) } : p
+    ));
+    setReplyState(s => ({ ...s, [postId]: { ...getReply(postId), list } }));
   }
 
   async function submitRating() {
@@ -628,6 +677,64 @@ export default function StoreProfile() {
                         style={{ backgroundColor: '#2D1E06', color: AMBER, border: '1px solid #4D3010' }}>
                         <Tag className="w-3 h-3" />{post.cigar_brand} {post.cigar_name}
                       </Link>
+                    </div>
+                  )}
+                  {/* Like + Reply bar */}
+                  <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid #2A2018' }}>
+                    <button onClick={() => toggleLike(post.id)}
+                      className="flex items-center gap-1.5 text-xs transition-colors"
+                      style={{ color: post.my_like ? '#F87171' : MUTED }}>
+                      <Heart className={`w-3.5 h-3.5 ${post.my_like ? 'fill-current' : ''}`} />
+                      {post.like_count > 0 ? post.like_count : ''}
+                    </button>
+                    <button onClick={() => toggleReplies(post.id)}
+                      className="flex items-center gap-1.5 text-xs transition-colors"
+                      style={{ color: MUTED }}
+                      onMouseEnter={e => e.currentTarget.style.color = NAVY}
+                      onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+                      <Reply className="w-3.5 h-3.5" />
+                      {post.reply_count > 0 ? `${post.reply_count} repl${post.reply_count === 1 ? 'y' : 'ies'}` : 'Reply'}
+                      {getReply(post.id).open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    </button>
+                  </div>
+                  {/* Replies section */}
+                  {getReply(post.id).open && (
+                    <div className="mt-3 space-y-2 pl-3" style={{ borderLeft: '2px solid #2A2018' }}>
+                      {getReply(post.id).list.map(r => (
+                        <div key={r.id} className="flex items-start gap-2">
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
+                            style={{ backgroundColor: '#2D1E06', color: AMBER }}>
+                            {r.user_name?.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-xs font-semibold" style={{ color: NAVY }}>{r.user_name} </span>
+                            <span className="text-xs" style={{ color: LABEL }}>{r.content}</span>
+                          </div>
+                          {user && (user.id === r.user_id || user.account_type === 'store') && (
+                            <button onClick={() => deleteReply(post.id, r.id)} className="flex-shrink-0">
+                              <X className="w-3 h-3" style={{ color: MUTED }} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      {user && (
+                        <div className="flex gap-2 mt-2">
+                          <input
+                            value={getReply(post.id).content}
+                            onChange={e => setReplyState(s => ({ ...s, [post.id]: { ...getReply(post.id), content: e.target.value } }))}
+                            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && submitReply(post.id)}
+                            placeholder="Write a reply…"
+                            className="flex-1 text-xs rounded-lg px-3 py-1.5 bg-stone-800 border border-stone-700 text-stone-200 placeholder-stone-600 focus:outline-none focus:border-amber-700"
+                          />
+                          <button
+                            onClick={() => submitReply(post.id)}
+                            disabled={getReply(post.id).submitting || !getReply(post.id).content.trim()}
+                            className="text-xs px-3 py-1.5 rounded-lg font-medium disabled:opacity-50"
+                            style={{ backgroundColor: AMBER, color: '#1A0F00' }}>
+                            Send
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
