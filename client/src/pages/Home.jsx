@@ -6,9 +6,9 @@ import { useAuth } from '../context/AuthContext';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import CigarCard from '../components/CigarCard';
 
-const NAVY  = '#DCE5F0';
+const NAVY  = '#E8DDD0';
 const AMBER = '#D4882A';
-const MUTED = '#7B8C9C';
+const MUTED = '#9E8E7E';
 
 const MARQUEE_ITEMS = [
   'Toro', 'Robusto', 'Churchill', 'Corona', 'Belicoso',
@@ -30,7 +30,7 @@ function StoreRow({ store }) {
   return (
     <Link to={`/stores/${store.id}`}
       className="flex items-center gap-4 py-4 group transition-colors -mx-2 px-2 rounded-xl"
-      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#253348'}
+      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#2A2018'}
       onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
       <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{backgroundColor: '#2D2010', border: '1px solid #4D3010'}}>
         <Store className="w-4 h-4 text-amber-700" />
@@ -138,9 +138,9 @@ export default function Home() {
               {['mild', 'medium', 'full'].map(s => (
                 <button key={s} onClick={() => navigate(`/search?strength=${s}`)}
                   className="text-xs px-4 py-1.5 rounded-full border capitalize transition-colors"
-                  style={{borderColor: '#2B3D57', color: MUTED}}
+                  style={{borderColor: '#3D3020', color: MUTED}}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = AMBER; e.currentTarget.style.color = AMBER; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2B3D57'; e.currentTarget.style.color = MUTED; }}>
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#3D3020'; e.currentTarget.style.color = MUTED; }}>
                   {s}
                 </button>
               ))}
@@ -205,7 +205,7 @@ export default function Home() {
 
       {/* ── Local Retailers ── */}
       {stores.length > 0 && (
-        <section style={{ borderTop: '1px solid #2B3D57' }}>
+        <section style={{ borderTop: '1px solid #3D3020' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Where to shop"
@@ -232,7 +232,7 @@ export default function Home() {
 
       {/* ── Deals ── */}
       {deals.length > 0 && (
-        <section style={{ borderTop: '1px solid #2B3D57' }}>
+        <section style={{ borderTop: '1px solid #3D3020' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Limited time"

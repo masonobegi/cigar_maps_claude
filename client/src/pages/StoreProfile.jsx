@@ -7,12 +7,12 @@ import { useToast } from '../context/ToastContext';
 import BackButton from '../components/BackButton';
 
 const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const NAVY  = '#DCE5F0';
-const LABEL = '#96A8B8';
-const MUTED = '#7B8C9C';
+const NAVY  = '#E8DDD0';
+const LABEL = '#B0A090';
+const MUTED = '#9E8E7E';
 const AMBER = '#D4882A';
-const BORDER= '#2B3D57';
-const BG_ALT= '#253348';
+const BORDER= '#3D3020';
+const BG_ALT= '#2A2018';
 
 function StarRating({ value, onChange, size = 'md' }) {
   const sz = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';

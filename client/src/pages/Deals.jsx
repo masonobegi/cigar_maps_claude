@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Tag, Store, Calendar, Percent } from 'lucide-react';
 import { api } from '../services/api';
 
-const NAVY  = '#DCE5F0';
-const MUTED = '#7B8C9C';
+const NAVY  = '#E8DDD0';
+const MUTED = '#9E8E7E';
 const AMBER = '#D4882A';
 
 export default function Deals() {

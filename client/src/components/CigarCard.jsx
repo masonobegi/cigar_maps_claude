@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Star, Store, MapPin } from 'lucide-react';
 
-const NAVY  = '#DCE5F0';
+const NAVY  = '#E8DDD0';
 const AMBER = '#D4882A';
-const MUTED = '#7B8C9C';
-const LABEL = '#96A8B8';
+const MUTED = '#9E8E7E';
+const LABEL = '#B0A090';
 
 const STRENGTH_CONFIG = {
   'mild':        { label: 'Mild',     bar: 'w-1/5',  barColor: '#22C55E',  textColor: '#4ADE80' },
@@ -42,7 +42,7 @@ function ScoreRing({ value, size = 36 }) {
   return (
     <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-        <circle cx="18" cy="18" r={r} fill="none" stroke="#2B3D57" strokeWidth="3.5" />
+        <circle cx="18" cy="18" r={r} fill="none" stroke="#3D3020" strokeWidth="3.5" />
         <circle cx="18" cy="18" r={r} fill="none" stroke={color} strokeWidth="3.5"
           strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       </svg>
@@ -87,7 +87,7 @@ export default function CigarCard({ cigar }) {
         {/* Strength bar */}
         {sc && (
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#2B3D57' }}>
+            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#3D3020' }}>
               <div className={`h-full ${sc.bar} rounded-full`} style={{ backgroundColor: sc.barColor }} />
             </div>
             <span className="text-xs font-semibold flex-shrink-0" style={{ color: sc.textColor }}>
@@ -113,7 +113,7 @@ export default function CigarCard({ cigar }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-auto pt-1.5"
-          style={{ borderTop: '1px solid #2B3D57' }}>
+          style={{ borderTop: '1px solid #3D3020' }}>
           {cigar.store_count > 0 ? (
             <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}>
               <Store className="w-2.5 h-2.5" style={{ color: '#4ADE80' }} />

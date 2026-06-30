@@ -4,9 +4,9 @@ import { Search, Filter, X, MapPin, DollarSign, SlidersHorizontal, ArrowUpDown }
 import { api } from '../services/api';
 import CigarCard from '../components/CigarCard';
 
-const NAVY  = '#DCE5F0';
-const MUTED = '#7B8C9C';
-const LABEL = '#96A8B8';
+const NAVY  = '#E8DDD0';
+const MUTED = '#9E8E7E';
+const LABEL = '#B0A090';
 const AMBER = '#D4882A';
 
 const STRENGTHS = ['mild', 'mild-medium', 'medium', 'medium-full', 'full'];
@@ -204,7 +204,7 @@ export default function SearchPage() {
         <div className="flex flex-wrap gap-2 mb-4">
           {activeFilters.map(f => (
             <span key={f.key} className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
-              style={{backgroundColor: '#253348', border: '1px solid #2B3D57', color: LABEL}}>
+              style={{backgroundColor: '#2A2018', border: '1px solid #3D3020', color: LABEL}}>
               {f.label}
               <button onClick={f.clear} className="ml-0.5 transition-colors"
                 style={{color: MUTED}}

@@ -6,10 +6,10 @@ import { getStoreStatus } from '../utils/hours';
 
 const StoreMap = lazy(() => import('../components/StoreMap'));
 
-const NAVY   = '#DCE5F0';
-const MUTED  = '#7B8C9C';
-const LABEL  = '#96A8B8';
-const BORDER = '#2B3D57';
+const NAVY   = '#E8DDD0';
+const MUTED  = '#9E8E7E';
+const LABEL  = '#B0A090';
+const BORDER = '#3D3020';
 const AMBER  = '#D4882A';
 
 export default function Stores() {
@@ -92,11 +92,11 @@ export default function Stores() {
         </div>
 
         {/* Map / List toggle */}
-        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#162030' }}>
+        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#0F0C09' }}>
           <button onClick={() => setViewMode('list')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
             style={viewMode === 'list'
-              ? { backgroundColor: '#1F2D42', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
+              ? { backgroundColor: '#221C15', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
               : { color: MUTED }}>
             <List className="w-4 h-4" /> List
           </button>
@@ -163,7 +163,7 @@ export default function Stores() {
           {cities.map(c => (
             <button key={`${c.city}-${c.state}`} onClick={() => setCity(c.city)}
               className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full flex-shrink-0 transition-colors"
-              style={{ backgroundColor: '#253348', color: LABEL, border: `1px solid ${BORDER}` }}>
+              style={{ backgroundColor: '#2A2018', color: LABEL, border: `1px solid ${BORDER}` }}>
               {c.city}, {c.state}
               <span className="ml-1" style={{ color: MUTED }}>({c.store_count})</span>
             </button>
@@ -193,7 +193,7 @@ export default function Stores() {
 
             const statusStyle = status.isOpen
               ? { backgroundColor: '#0B3320', color: '#4ADE80' }
-              : { backgroundColor: '#253348', color: '#7B8C9C' };
+              : { backgroundColor: '#2A2018', color: '#9E8E7E' };
 
             return (
               <Link key={store.id} to={`/stores/${store.id}`}
@@ -260,7 +260,7 @@ export default function Stores() {
                       <div className="flex flex-wrap gap-1 mt-2">
                         {store.tags.map(t => (
                           <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ backgroundColor: '#253348', color: LABEL, border: `1px solid ${BORDER}` }}>
+                            style={{ backgroundColor: '#2A2018', color: LABEL, border: `1px solid ${BORDER}` }}>
                             {t}
                           </span>
                         ))}
