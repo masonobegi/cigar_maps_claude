@@ -34,7 +34,7 @@ export default function Deals() {
       ) : (
         <div className="flex flex-col gap-4">
           {deals.map(d => (
-            <div key={d.id} className="card p-5 transition-colors"
+            <Link key={d.id} to={`/stores/${d.store_id}?tab=deals`} className="card p-5 transition-colors block"
               onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
               onMouseLeave={e => e.currentTarget.style.borderColor = '#E8E4DE'}>
               <div className="flex items-start gap-4">
@@ -57,13 +57,15 @@ export default function Deals() {
                     <p className="text-sm mt-1.5 leading-relaxed" style={{color: MUTED}}>{d.description}</p>
                   )}
                   <div className="flex flex-wrap items-center gap-3 mt-3 text-xs" style={{color: '#9CA3AF'}}>
-                    <Link to={`/stores/${d.store_id}`} className="flex items-center gap-1 transition-colors"
+                    <Link to={`/stores/${d.store_id}?tab=deals`} className="flex items-center gap-1 transition-colors"
+                      onClick={e => e.stopPropagation()}
                       onMouseEnter={e => e.currentTarget.style.color = AMBER}
                       onMouseLeave={e => e.currentTarget.style.color = '#9CA3AF'}>
                       <Store className="w-3 h-3" />{d.store_name}
                     </Link>
                     {d.cigar_name && (
                       <Link to={`/cigars/${d.cigar_id}`} className="flex items-center gap-1 transition-colors"
+                        onClick={e => e.stopPropagation()}
                         onMouseEnter={e => e.currentTarget.style.color = AMBER}
                         onMouseLeave={e => e.currentTarget.style.color = '#9CA3AF'}>
                         <Tag className="w-3 h-3" />{d.brand} {d.cigar_name}
@@ -75,7 +77,7 @@ export default function Deals() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
