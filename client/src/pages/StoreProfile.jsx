@@ -7,12 +7,12 @@ import { useToast } from '../context/ToastContext';
 import BackButton from '../components/BackButton';
 
 const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const NAVY  = '#12213D';
-const LABEL = '#4B5563';
-const MUTED = '#6B7280';
-const AMBER = '#92510A';
-const BORDER= '#E8E4DE';
-const BG_ALT= '#F5F3F0';
+const NAVY  = '#DCE5F0';
+const LABEL = '#96A8B8';
+const MUTED = '#7B8C9C';
+const AMBER = '#D4882A';
+const BORDER= '#2B3D57';
+const BG_ALT= '#253348';
 
 function StarRating({ value, onChange, size = 'md' }) {
   const sz = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
@@ -21,7 +21,7 @@ function StarRating({ value, onChange, size = 'md' }) {
       {[1,2,3,4,5].map(n => (
         <button key={n} type="button" onClick={() => onChange && onChange(n)} className="transition-transform hover:scale-110">
           <Star className={`${sz} ${n <= value ? 'fill-amber-500' : ''}`}
-            style={{ color: n <= value ? '#D97706' : '#D4CFC8' }} />
+            style={{ color: n <= value ? '#D4882A' : '#3A4858' }} />
         </button>
       ))}
     </div>
@@ -158,8 +158,8 @@ export default function StoreProfile() {
     ? `https://maps.google.com/?q=${encodeURIComponent([store.address, store.city, store.state].filter(Boolean).join(', '))}`
     : `https://maps.google.com/?q=${encodeURIComponent([store.name, store.city, store.state].filter(Boolean).join(', '))}`;
 
-  const openStyle   = { backgroundColor: '#D1FAE5', color: '#065F46' };
-  const closedStyle = { backgroundColor: '#FEE2E2', color: '#991B1B' };
+  const openStyle   = { backgroundColor: '#0B3320', color: '#4ADE80' };
+  const closedStyle = { backgroundColor: '#2D1010', color: '#F87171' };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
@@ -169,14 +169,14 @@ export default function StoreProfile() {
       <div className="card mb-4 overflow-hidden">
         <div className="flex items-start gap-4 p-5">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: '#FEF3C7' }}>
+            style={{ backgroundColor: '#2D2010' }}>
             <Store className="w-7 h-7" style={{ color: AMBER }} />
           </div>
           <div className="flex-1 min-w-0">
             {/* Name + badges */}
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h1 className="font-serif text-xl font-bold" style={{ color: NAVY }}>{store.name}</h1>
-              {store.verified === 1 && <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} />}
+              {store.verified === 1 && <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#4ADE80' }} />}
               {isOpen !== null && (
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
                   style={isOpen ? openStyle : closedStyle}>
@@ -245,7 +245,7 @@ export default function StoreProfile() {
             style={{ borderTop: `1px solid ${BORDER}` }}>
             <button onClick={handleFollow} disabled={followLoading}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-60 ${following ? '' : 'btn-primary'}`}
-              style={following ? { backgroundColor: '#FEF3C7', color: AMBER, border: `1px solid #FDE68A` } : {}}>
+              style={following ? { backgroundColor: '#2D1E06', color: AMBER, border: `1px solid #4D3010` } : {}}>
               {followLoading
                 ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 : <Heart className={`w-4 h-4 ${following ? 'fill-current' : ''}`} />}
@@ -332,9 +332,9 @@ export default function StoreProfile() {
       {todayHours && (
         <div className="rounded-xl px-4 py-2.5 mb-4 flex items-center gap-2 text-sm"
           style={isOpen
-            ? { backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0' }
+            ? { backgroundColor: '#0A2C1A', border: '1px solid #0D5F35' }
             : { backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
-          <Clock className="w-4 h-4" style={{ color: isOpen ? '#059669' : MUTED }} />
+          <Clock className="w-4 h-4" style={{ color: isOpen ? '#4ADE80' : MUTED }} />
           <span style={{ color: LABEL }}>
             Today: <span className="font-semibold">{todayHours}</span>
           </span>
@@ -366,13 +366,13 @@ export default function StoreProfile() {
               {Object.values(byCigar).map(item => (
                 <Link key={item.cigar_id} to={`/cigars/${item.cigar_id}`}
                   className="card p-4 transition-colors group"
-                  onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
                   onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
                   <div className="mb-3">
                     <div className="flex items-center gap-1.5 flex-wrap mb-1">
                       {item.is_featured === 1 && (
                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide"
-                          style={{ backgroundColor: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A' }}>
+                          style={{ backgroundColor: '#2D1E06', color: '#D4882A', border: '1px solid #4D3010' }}>
                           Featured
                         </span>
                       )}
@@ -387,7 +387,7 @@ export default function StoreProfile() {
                       <div key={v.vitola_id} className="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5"
                         style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
                         {v.is_new_arrival === 1 && (
-                          <span className="text-xs font-bold uppercase" style={{ color: '#1D4ED8' }}>NEW</span>
+                          <span className="text-xs font-bold uppercase" style={{ color: '#60A5FA' }}>NEW</span>
                         )}
                         <span className="font-medium" style={{ color: LABEL }}>{v.name}</span>
                         <span className="font-bold" style={{ color: AMBER }}>${v.price.toFixed(2)}</span>
@@ -409,12 +409,12 @@ export default function StoreProfile() {
           ) : new_arrivals.map(item => (
             <Link key={item.id} to={`/cigars/${item.cigar_id}`}
               className="card p-4 transition-colors group"
-              onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+              onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
               onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#DBEAFE' }}>
-                  <Package2 className="w-4 h-4" style={{ color: '#1D4ED8' }} />
+                  style={{ backgroundColor: '#0D1F3A' }}>
+                  <Package2 className="w-4 h-4" style={{ color: '#60A5FA' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-bold uppercase tracking-wider" style={{ color: AMBER }}>{item.brand}</p>
@@ -471,7 +471,7 @@ export default function StoreProfile() {
                     <div key={day} className="flex justify-between text-sm py-1"
                       style={{ color: isToday ? AMBER : LABEL, fontWeight: isToday ? 600 : 400 }}>
                       <span>{isToday ? `${day} (today)` : day}</span>
-                      <span style={h === 'Closed' ? { color: '#DC2626' } : {}}>{h || '—'}</span>
+                      <span style={h === 'Closed' ? { color: '#F87171' } : {}}>{h || '—'}</span>
                     </div>
                   );
                 })}
@@ -514,7 +514,7 @@ export default function StoreProfile() {
               </div>
             )}
             {ratingSubmitted && (
-              <p className="text-xs mt-2" style={{ color: '#059669' }}>Thanks for your rating!</p>
+              <p className="text-xs mt-2" style={{ color: '#4ADE80' }}>Thanks for your rating!</p>
             )}
           </div>
         </div>
@@ -525,7 +525,7 @@ export default function StoreProfile() {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60"
           onClick={() => setRequestModal(false)}>
           <div className="rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
-            style={{ backgroundColor: '#FFFFFF', border: `1px solid ${BORDER}`, boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+            style={{ backgroundColor: '#1F2D42', border: `1px solid ${BORDER}`, boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-lg font-bold" style={{ color: NAVY }}>Request a Cigar</h2>
@@ -558,7 +558,7 @@ export default function StoreProfile() {
                 </div>
               )}
               {reqSelectedCigar && (
-                <div className="mt-1 flex items-center gap-2 text-xs" style={{ color: '#059669' }}>
+                <div className="mt-1 flex items-center gap-2 text-xs" style={{ color: '#4ADE80' }}>
                   <CheckCircle className="w-4 h-4" />
                   <span>{reqSelectedCigar.brand} {reqSelectedCigar.name}</span>
                   <button onClick={() => { setReqSelectedCigar(null); setReqCigarSearch(''); }}

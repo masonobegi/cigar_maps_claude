@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Tag, Store, Calendar, Percent } from 'lucide-react';
 import { api } from '../services/api';
 
-const NAVY  = '#12213D';
-const MUTED = '#6B7280';
-const AMBER = '#92510A';
+const NAVY  = '#DCE5F0';
+const MUTED = '#7B8C9C';
+const AMBER = '#D4882A';
 
 export default function Deals() {
   const [deals, setDeals] = useState([]);

@@ -6,11 +6,11 @@ import { getStoreStatus } from '../utils/hours';
 
 const StoreMap = lazy(() => import('../components/StoreMap'));
 
-const NAVY   = '#12213D';
-const MUTED  = '#6B7280';
-const LABEL  = '#4B5563';
-const BORDER = '#E8E4DE';
-const AMBER  = '#92510A';
+const NAVY   = '#DCE5F0';
+const MUTED  = '#7B8C9C';
+const LABEL  = '#96A8B8';
+const BORDER = '#2B3D57';
+const AMBER  = '#D4882A';
 
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -92,11 +92,11 @@ export default function Stores() {
         </div>
 
         {/* Map / List toggle */}
-        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#F0EDE8' }}>
+        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#162030' }}>
           <button onClick={() => setViewMode('list')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
             style={viewMode === 'list'
-              ? { backgroundColor: '#FFFFFF', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }
+              ? { backgroundColor: '#1F2D42', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
               : { color: MUTED }}>
             <List className="w-4 h-4" /> List
           </button>
@@ -163,7 +163,7 @@ export default function Stores() {
           {cities.map(c => (
             <button key={`${c.city}-${c.state}`} onClick={() => setCity(c.city)}
               className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full flex-shrink-0 transition-colors"
-              style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+              style={{ backgroundColor: '#253348', color: LABEL, border: `1px solid ${BORDER}` }}>
               {c.city}, {c.state}
               <span className="ml-1" style={{ color: MUTED }}>({c.store_count})</span>
             </button>
@@ -192,18 +192,18 @@ export default function Stores() {
             const status = getStoreStatus(parsedHours);
 
             const statusStyle = status.isOpen
-              ? { backgroundColor: '#D1FAE5', color: '#065F46' }
-              : { backgroundColor: '#F3F4F6', color: '#6B7280' };
+              ? { backgroundColor: '#0B3320', color: '#4ADE80' }
+              : { backgroundColor: '#253348', color: '#7B8C9C' };
 
             return (
               <Link key={store.id} to={`/stores/${store.id}`}
                 className="card p-5 transition-colors group"
                 style={{ '--hover-border': '#D4CFC8' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#C8C0B8'}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
                 onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: '#FEF3C7' }}>
+                    style={{ backgroundColor: '#2D2010' }}>
                     <Store className="w-6 h-6" style={{ color: AMBER }} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -213,7 +213,7 @@ export default function Stores() {
                         {store.name}
                       </h2>
                       {store.verified === 1 && (
-                        <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} />
+                        <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#4ADE80' }} />
                       )}
                       {status.label && (
                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={statusStyle}>
@@ -244,7 +244,7 @@ export default function Stores() {
                       </span>
                       {store.avg_rating > 0 && (
                         <span className="flex items-center gap-1">
-                          <Star className="w-3 h-3" style={{ color: '#D97706' }} />
+                          <Star className="w-3 h-3" style={{ color: '#D4882A' }} />
                           <span style={{ color: LABEL, fontWeight: 500 }}>{store.avg_rating.toFixed(1)}</span>
                         </span>
                       )}
@@ -260,7 +260,7 @@ export default function Stores() {
                       <div className="flex flex-wrap gap-1 mt-2">
                         {store.tags.map(t => (
                           <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+                            style={{ backgroundColor: '#253348', color: LABEL, border: `1px solid ${BORDER}` }}>
                             {t}
                           </span>
                         ))}

@@ -6,9 +6,9 @@ import { useAuth } from '../context/AuthContext';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import CigarCard from '../components/CigarCard';
 
-const NAVY  = '#12213D';
-const AMBER = '#92510A';
-const MUTED = '#6B7280';
+const NAVY  = '#DCE5F0';
+const AMBER = '#D4882A';
+const MUTED = '#7B8C9C';
 
 const MARQUEE_ITEMS = [
   'Toro', 'Robusto', 'Churchill', 'Corona', 'Belicoso',
@@ -19,7 +19,8 @@ const MARQUEE_ITEMS = [
 function OpenBadge({ isOpen }) {
   if (isOpen === null) return null;
   return (
-    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${isOpen ? 'bg-emerald-100 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
+      style={isOpen ? {backgroundColor: '#0B3320', color: '#4ADE80'} : {backgroundColor: '#2D1010', color: '#F87171'}}>
       {isOpen ? '● Open' : '● Closed'}
     </span>
   );
@@ -29,9 +30,9 @@ function StoreRow({ store }) {
   return (
     <Link to={`/stores/${store.id}`}
       className="flex items-center gap-4 py-4 group transition-colors -mx-2 px-2 rounded-xl"
-      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#F5F3F0'}
+      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#253348'}
       onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
-      <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{backgroundColor: '#2D2010', border: '1px solid #4D3010'}}>
         <Store className="w-4 h-4 text-amber-700" />
       </div>
       <div className="flex-1 min-w-0">
@@ -120,12 +121,12 @@ export default function Home() {
 
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 max-w-xl mb-5">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{color: '#A09898'}} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{color: '#4A5A6A'}} />
                 <input value={searchVal} onChange={e => setSearchVal(e.target.value)}
                   placeholder="Cigar name, brand, wrapper..." className="input pl-11" />
               </div>
               <div className="relative sm:w-36">
-                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{color: '#A09898'}} />
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{color: '#4A5A6A'}} />
                 <input value={cityInput} onChange={e => setCityInput(e.target.value)}
                   placeholder="City" list="home-cities" className="input pl-10" />
                 <datalist id="home-cities">{cities.map(c => <option key={`${c.city}-${c.state}`} value={c.city} />)}</datalist>
@@ -137,17 +138,17 @@ export default function Home() {
               {['mild', 'medium', 'full'].map(s => (
                 <button key={s} onClick={() => navigate(`/search?strength=${s}`)}
                   className="text-xs px-4 py-1.5 rounded-full border capitalize transition-colors"
-                  style={{borderColor: '#D4CFC8', color: MUTED}}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#92510A'; e.currentTarget.style.color = '#92510A'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#D4CFC8'; e.currentTarget.style.color = MUTED; }}>
+                  style={{borderColor: '#2B3D57', color: MUTED}}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = AMBER; e.currentTarget.style.color = AMBER; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2B3D57'; e.currentTarget.style.color = MUTED; }}>
                   {s}
                 </button>
               ))}
               <button onClick={() => navigate('/search?in_stock_only=1')}
                 className="text-xs px-4 py-1.5 rounded-full border transition-colors"
-                style={{borderColor: '#BBD0BB', color: '#4A7A4A'}}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#4A7A4A'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = '#BBD0BB'}>
+                style={{borderColor: '#1E4A2E', color: '#4ADE80'}}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#4ADE80'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = '#1E4A2E'}>
                 In Stock
               </button>
             </div>
@@ -159,7 +160,7 @@ export default function Home() {
               { n: topCigars.length || '25', label: 'Premium Cigars' },
               { n: cities.length || '3', label: 'Cities' },
             ].map(({ n, label }) => (
-              <div key={label} className="border-l-2 border-amber-200 pl-5">
+              <div key={label} className="border-l-2 pl-5" style={{borderColor: '#D4882A'}}>
                 <p className="font-serif text-5xl font-bold leading-none" style={{color: NAVY}}>{n}</p>
                 <p className="text-[11px] mt-1.5 font-semibold tracking-widest uppercase" style={{color: MUTED}}>{label}</p>
               </div>
@@ -204,7 +205,7 @@ export default function Home() {
 
       {/* ── Local Retailers ── */}
       {stores.length > 0 && (
-        <section style={{ borderTop: '1px solid #EAE6E0' }}>
+        <section style={{ borderTop: '1px solid #2B3D57' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Where to shop"
@@ -231,7 +232,7 @@ export default function Home() {
 
       {/* ── Deals ── */}
       {deals.length > 0 && (
-        <section style={{ borderTop: '1px solid #EAE6E0' }}>
+        <section style={{ borderTop: '1px solid #2B3D57' }}>
           <div className="max-w-6xl mx-auto px-6 py-14">
             <SectionLabel
               tag="Limited time"
@@ -257,7 +258,7 @@ export default function Home() {
                     )}
                   </div>
                   <p className="text-xs leading-relaxed mb-3 line-clamp-2" style={{color: MUTED}}>{d.description}</p>
-                  <p className="text-xs flex items-center gap-1.5" style={{color: '#9CA3AF'}}>
+                  <p className="text-xs flex items-center gap-1.5" style={{color: MUTED}}>
                     <Store className="w-3 h-3 text-amber-600" />{d.store_name}
                   </p>
                 </Link>

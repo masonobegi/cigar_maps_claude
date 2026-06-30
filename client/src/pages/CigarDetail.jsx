@@ -10,46 +10,46 @@ import ShareButton from '../components/ShareButton';
 import BackButton from '../components/BackButton';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
-const NAVY  = '#12213D';
-const MUTED = '#6B7280';
-const LABEL = '#4B5563';
-const AMBER = '#92510A';
+const NAVY  = '#DCE5F0';
+const MUTED = '#7B8C9C';
+const LABEL = '#96A8B8';
+const AMBER = '#D4882A';
 
 const STRENGTH_LABEL = { mild: 'Mild', 'mild-medium': 'Mild-Medium', medium: 'Medium', 'medium-full': 'Medium-Full', full: 'Full' };
 
 const STRENGTH_BADGE = {
-  mild:          { bg: '#DCFCE7', color: '#166534', border: '#BBF7D0' },
-  'mild-medium': { bg: '#F0FDF4', color: '#15803D', border: '#BBF7D0' },
-  medium:        { bg: '#FEF3C7', color: '#92400E', border: '#FDE68A' },
-  'medium-full': { bg: '#FFEDD5', color: '#9A3412', border: '#FED7AA' },
-  full:          { bg: '#FEE2E2', color: '#991B1B', border: '#FECACA' },
+  mild:          { bg: '#0B3320', color: '#4ADE80', border: '#155E36' },
+  'mild-medium': { bg: '#1A3A10', color: '#A3E635', border: '#2D6E1E' },
+  medium:        { bg: '#3A2008', color: '#FCD34D', border: '#6B3D14' },
+  'medium-full': { bg: '#3A1508', color: '#FB923C', border: '#6B2A14' },
+  full:          { bg: '#3A0E0E', color: '#F87171', border: '#6B1A1A' },
 };
 
 const FLAVOR_COLORS = {
-  cedar:           { bg: '#FEF3C7', color: '#92400E' },
-  leather:         { bg: '#FEF9C3', color: '#713F12' },
-  earth:           { bg: '#F5F5F4', color: '#44403C' },
-  coffee:          { bg: '#FEF3C7', color: '#78350F' },
-  chocolate:       { bg: '#FEF3C7', color: '#92400E' },
-  'dark chocolate':{ bg: '#FEE2E2', color: '#7F1D1D' },
-  espresso:        { bg: '#F5F5F4', color: '#292524' },
-  pepper:          { bg: '#FEE2E2', color: '#991B1B' },
-  cream:           { bg: '#F5F5F4', color: '#57534E' },
-  nuts:            { bg: '#FEF9C3', color: '#713F12' },
-  spice:           { bg: '#FFEDD5', color: '#9A3412' },
-  floral:          { bg: '#FDF4FF', color: '#7E22CE' },
-  honey:           { bg: '#FEF3C7', color: '#92400E' },
-  'dark fruit':    { bg: '#F3E8FF', color: '#6B21A8' },
-  cocoa:           { bg: '#FEE2E2', color: '#7F1D1D' },
-  default:         { bg: '#F5F5F4', color: '#44403C' },
+  cedar:           { bg: '#2E1E08', color: '#FCD34D' },
+  leather:         { bg: '#2E2008', color: '#E8C96B' },
+  earth:           { bg: '#1E2020', color: '#A8A29E' },
+  coffee:          { bg: '#2E1E08', color: '#FCD34D' },
+  chocolate:       { bg: '#2E1A08', color: '#FBB96B' },
+  'dark chocolate':{ bg: '#2E1010', color: '#F87171' },
+  espresso:        { bg: '#1E1A16', color: '#A8917A' },
+  pepper:          { bg: '#2E1010', color: '#F87171' },
+  cream:           { bg: '#1E2020', color: '#BEB8B0' },
+  nuts:            { bg: '#2E2008', color: '#E8C96B' },
+  spice:           { bg: '#2E1808', color: '#FB923C' },
+  floral:          { bg: '#1E0E2E', color: '#D8B4FE' },
+  honey:           { bg: '#2E1E08', color: '#FCD34D' },
+  'dark fruit':    { bg: '#1E0E28', color: '#D8B4FE' },
+  cocoa:           { bg: '#2E1010', color: '#F87171' },
+  default:         { bg: '#1E2020', color: '#A8A29E' },
 };
 
 function ScoreGauge({ value }) {
-  const color = value >= 95 ? '#059669' : value >= 90 ? '#D97706' : value >= 85 ? '#EA580C' : '#94A3B8';
+  const color = value >= 95 ? '#4ADE80' : value >= 90 ? '#D4882A' : value >= 85 ? '#FB923C' : '#596B7A';
   return (
     <div className="relative w-20 h-20">
       <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E8E4DE" strokeWidth="3" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#2B3D57" strokeWidth="3" />
         <circle cx="18" cy="18" r="15.9" fill="none"
           stroke={color} strokeWidth="3"
           strokeDasharray={`${value} 100`}
@@ -188,13 +188,13 @@ export default function CigarDetail() {
         )}
         {cigar.wrapper && (
           <span className="badge border text-xs"
-            style={{backgroundColor: '#F5F5F4', color: '#44403C', borderColor: '#E7E5E4'}}>
+            style={{backgroundColor: '#1E2020', color: '#A8A29E', borderColor: '#2B3040'}}>
             {cigar.wrapper}
           </span>
         )}
         {availability.length > 0 && (
           <span className="badge border text-xs font-semibold"
-            style={{backgroundColor: '#DCFCE7', color: '#166534', borderColor: '#BBF7D0'}}>
+            style={{backgroundColor: '#0B3320', color: '#4ADE80', borderColor: '#155E36'}}>
             <Store className="w-3 h-3 mr-1" />
             Available at {availability.length} store{availability.length !== 1 ? 's' : ''}
           </span>
@@ -216,7 +216,7 @@ export default function CigarDetail() {
           className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all"
           style={following
             ? { backgroundColor: '#FEF3C7', color: '#92400E', borderColor: '#FDE68A' }
-            : { backgroundColor: '#FFFFFF', color: NAVY, borderColor: '#D4CFC8' }}>
+            : { backgroundColor: '#1F2D42', color: NAVY, borderColor: '#2B3D57' }}>
           {following ? <BellOff className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
           {following ? 'Following' : 'Follow'}
           {followerCount > 0 && <span className="text-xs ml-1" style={{color: MUTED}}>({followerCount})</span>}
@@ -231,7 +231,7 @@ export default function CigarDetail() {
             {t === 'reviews' ? `Reviews (${stats.review_count})` : t}
             {t === 'where to buy' && availability.length > 0 && (
               <span className="ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-bold"
-                style={{backgroundColor: '#DCFCE7', color: '#166534'}}>
+                style={{backgroundColor: '#0B3320', color: '#4ADE80'}}>
                 {availability.length}
               </span>
             )}
@@ -245,7 +245,7 @@ export default function CigarDetail() {
           {cigar.description && (
             <div className="card p-5">
               <SectionLabel>About</SectionLabel>
-              <p className="leading-relaxed" style={{color: '#374151'}}>{cigar.description}</p>
+              <p className="leading-relaxed" style={{color: '#BCC8D8'}}>{cigar.description}</p>
             </div>
           )}
 
@@ -289,7 +289,7 @@ export default function CigarDetail() {
                     {top_flavors.slice(0, 5).map(({ note, count }) => (
                       <div key={note} className="flex items-center gap-2">
                         <span className="text-sm w-28 capitalize" style={{color: NAVY}}>{note}</span>
-                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#2B3D57'}}>
                           <div className="h-full rounded-full bg-amber-600"
                             style={{ width: `${(count / top_flavors[0].count) * 100}%` }} />
                         </div>
@@ -317,7 +317,7 @@ export default function CigarDetail() {
                       <span style={{color: MUTED}}>{label}</span>
                       <span className="font-semibold" style={{color: NAVY}}>{Math.round(value)}</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#E8E4DE'}}>
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#2B3D57'}}>
                       <div className="h-full bg-amber-600 rounded-full" style={{ width: `${value}%` }} />
                     </div>
                   </div>
@@ -360,7 +360,7 @@ export default function CigarDetail() {
         <div className="flex flex-col gap-4">
           {availability.length === 0 ? (
             <div className="text-center py-12">
-              <Store className="w-10 h-10 mx-auto mb-3" style={{color: '#D4CFC8'}} />
+              <Store className="w-10 h-10 mx-auto mb-3" style={{color: '#3A4858'}} />
               <p className="font-medium" style={{color: NAVY}}>Not currently listed at any stores</p>
               <p className="text-sm mt-1" style={{color: MUTED}}>Check back later or search nearby shops</p>
             </div>
@@ -372,7 +372,7 @@ export default function CigarDetail() {
                     <h3 className="font-semibold" style={{color: NAVY}}>{store.name}</h3>
                     {store.verified && (
                       <span className="text-xs px-2 py-0.5 rounded-full font-semibold border"
-                        style={{backgroundColor: '#DCFCE7', color: '#166534', borderColor: '#BBF7D0'}}>
+                        style={{backgroundColor: '#0B3320', color: '#4ADE80', borderColor: '#155E36'}}>
                         Verified
                       </span>
                     )}
@@ -389,7 +389,7 @@ export default function CigarDetail() {
               <div className="flex flex-col gap-0">
                 {store.vitolas.map(v => (
                   <div key={v.vitola_id} className="flex items-center justify-between py-2.5 border-t"
-                    style={{borderColor: '#EAE6E0'}}>
+                    style={{borderColor: '#2B3D57'}}>
                     <div>
                       <span className="text-sm font-medium" style={{color: NAVY}}>{v.name}</span>
                       <span className="text-xs ml-2" style={{color: MUTED}}>{v.length}" × {v.ring_gauge}</span>

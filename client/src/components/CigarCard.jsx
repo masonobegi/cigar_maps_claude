@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Star, Store, MapPin } from 'lucide-react';
 
-const NAVY  = '#12213D';
-const AMBER = '#92510A';
-const MUTED = '#6B7280';
-const LABEL = '#4B5563';
+const NAVY  = '#DCE5F0';
+const AMBER = '#D4882A';
+const MUTED = '#7B8C9C';
+const LABEL = '#96A8B8';
 
 const STRENGTH_CONFIG = {
-  'mild':        { label: 'Mild',     bar: 'w-1/5',  barColor: '#22C55E',  textColor: '#166534' },
-  'mild-medium': { label: 'Mild-Med', bar: 'w-2/5',  barColor: '#84CC16',  textColor: '#3F6212' },
-  'medium':      { label: 'Medium',   bar: 'w-3/5',  barColor: '#F59E0B',  textColor: '#92400E' },
-  'medium-full': { label: 'Med-Full', bar: 'w-4/5',  barColor: '#F97316',  textColor: '#9A3412' },
-  'full':        { label: 'Full',     bar: 'w-full', barColor: '#EF4444',  textColor: '#991B1B' },
+  'mild':        { label: 'Mild',     bar: 'w-1/5',  barColor: '#22C55E',  textColor: '#4ADE80' },
+  'mild-medium': { label: 'Mild-Med', bar: 'w-2/5',  barColor: '#84CC16',  textColor: '#A3E635' },
+  'medium':      { label: 'Medium',   bar: 'w-3/5',  barColor: '#F59E0B',  textColor: '#FCD34D' },
+  'medium-full': { label: 'Med-Full', bar: 'w-4/5',  barColor: '#F97316',  textColor: '#FB923C' },
+  'full':        { label: 'Full',     bar: 'w-full', barColor: '#EF4444',  textColor: '#F87171' },
 };
 
 const WRAPPER_COLORS = {
@@ -29,20 +29,20 @@ function WrapperSwatch({ wrapper }) {
     : null;
   return color ? (
     <div className="w-3 h-3 rounded-full flex-shrink-0"
-      style={{ backgroundColor: color, border: '1px solid #D4CFC8' }} title={wrapper} />
+      style={{ backgroundColor: color, border: '1px solid #3A4858' }} title={wrapper} />
   ) : null;
 }
 
 function ScoreRing({ value, size = 36 }) {
   if (!value) return null;
-  const color = value >= 95 ? '#059669' : value >= 90 ? '#D97706' : value >= 85 ? '#EA580C' : '#6B7280';
+  const color = value >= 95 ? '#4ADE80' : value >= 90 ? '#D4882A' : value >= 85 ? '#FB923C' : '#596B7A';
   const r = 14;
   const circ = 2 * Math.PI * r;
   const dash = (value / 100) * circ;
   return (
     <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-        <circle cx="18" cy="18" r={r} fill="none" stroke="#E8E4DE" strokeWidth="3.5" />
+        <circle cx="18" cy="18" r={r} fill="none" stroke="#2B3D57" strokeWidth="3.5" />
         <circle cx="18" cy="18" r={r} fill="none" stroke={color} strokeWidth="3.5"
           strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       </svg>
@@ -87,7 +87,7 @@ export default function CigarCard({ cigar }) {
         {/* Strength bar */}
         {sc && (
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E4DE' }}>
+            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#2B3D57' }}>
               <div className={`h-full ${sc.bar} rounded-full`} style={{ backgroundColor: sc.barColor }} />
             </div>
             <span className="text-xs font-semibold flex-shrink-0" style={{ color: sc.textColor }}>
@@ -113,11 +113,11 @@ export default function CigarCard({ cigar }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-auto pt-1.5"
-          style={{ borderTop: '1px solid #EAE6E0' }}>
+          style={{ borderTop: '1px solid #2B3D57' }}>
           {cigar.store_count > 0 ? (
             <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}>
-              <Store className="w-2.5 h-2.5" style={{ color: '#059669' }} />
-              <span className="font-medium" style={{ color: '#059669' }}>{cigar.store_count}</span>
+              <Store className="w-2.5 h-2.5" style={{ color: '#4ADE80' }} />
+              <span className="font-medium" style={{ color: '#4ADE80' }}>{cigar.store_count}</span>
               {cigar.store_count === 1 ? ' store' : ' stores'}
             </span>
           ) : (
@@ -129,7 +129,7 @@ export default function CigarCard({ cigar }) {
             </span>
           ) : cigar.review_count > 0 ? (
             <span className="text-xs flex items-center gap-0.5" style={{ color: MUTED }}>
-              <Star className="w-2.5 h-2.5" style={{ color: '#D97706' }} />{cigar.review_count}
+              <Star className="w-2.5 h-2.5" style={{ color: '#D4882A' }} />{cigar.review_count}
             </span>
           ) : null}
         </div>
