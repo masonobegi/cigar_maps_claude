@@ -132,4 +132,7 @@ export const api = {
   adminAddVitola: (cigarId, b) => request(`/admin/cigars/${cigarId}/vitolas`, { method: 'POST', body: JSON.stringify(b) }),
   adminUpdateVitola: (id, b) => request(`/admin/vitolas/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
   adminDeleteVitola: (id) => request(`/admin/vitolas/${id}`, { method: 'DELETE' }),
+
+  // Sheet sync
+  syncSheet: (storeId) => request(`/stores/${storeId}/sync-sheet`, { method: 'POST' }),
 };

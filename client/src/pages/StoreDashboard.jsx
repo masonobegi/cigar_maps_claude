@@ -358,8 +358,8 @@ function InventoryManager({ storeId, toast, externalOpen, onExternalOpen }) {
               </div>
               <div className="text-center flex-shrink-0 w-20">
                 <p className="text-xs text-stone-600 mb-0.5">Stock</p>
-                <p className={`font-bold text-sm ${item.quantity === 0 || !item.in_stock ? 'text-red-400' : item.quantity < 5 ? 'text-orange-400' : 'text-stone-200'}`}>
-                  {!item.in_stock ? 'Out' : item.quantity}
+                <p className={`font-bold text-sm ${item.quantity === 0 || !item.in_stock ? 'text-red-400' : item.quantity !== null && item.quantity < 5 ? 'text-orange-400' : 'text-stone-200'}`}>
+                  {!item.in_stock ? 'Out' : item.quantity !== null ? item.quantity : '?'}
                 </p>
               </div>
               <div className="text-right flex-shrink-0 w-20">
@@ -1345,8 +1345,11 @@ function StoreSettings({ store, onSave }) {
     has_lounge: !!store.has_lounge, has_walk_in_humidor: !!store.has_walk_in_humidor,
     tags: store.tags || [],
     hours: typeof store.hours === 'object' ? store.hours : (store.hours ? JSON.parse(store.hours) : { ...HOURS_TEMPLATE }),
+    sheet_url: store.sheet_url || '',
   });
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState(null);
   const TAG_OPTIONS = ['Walk-in Humidor', 'Lounge', 'Bar', 'Accessories', 'Events', 'Rare Finds', 'Members Club', 'Custom Humidors', 'Whiskey Bar'];
   function set(k, v) { setForm(f => ({ ...f, [k]: v })); }
   function toggleTag(t) { setForm(f => ({ ...f, tags: f.tags.includes(t) ? f.tags.filter(x => x !== t) : [...f.tags, t] })); }
@@ -1416,6 +1419,60 @@ function StoreSettings({ store, onSave }) {
             {form.hours[day] === 'Closed' && <button onClick={() => setHour(day, '10am-8pm')} className="text-xs text-stone-600 hover:text-amber-400">Set hours</button>}
           </div>
         ))}
+      </div>
+
+      <div className="card p-5 flex flex-col gap-4">
+        <div>
+          <h3 className="font-semibold text-stone-100 mb-1">Inventory Sheet Sync</h3>
+          <p className="text-xs text-stone-500">Auto-syncs every 15 min. Paste the Google Sheets URL you received from us.</p>
+        </div>
+        <div className="bg-amber-900/20 border border-amber-800/30 rounded-xl p-4 text-xs text-amber-300 space-y-1">
+          <p className="font-semibold mb-2">Required sheet format (row 1 = header, ignored):</p>
+          <p className="font-mono bg-stone-900/50 rounded p-2 text-[11px]">Brand | Cigar Name | Size | Price | Qty</p>
+          <ul className="mt-2 space-y-1 text-stone-400 list-disc list-inside">
+            <li>Brand and Cigar Name must match our catalog exactly (case + extra spaces are OK)</li>
+            <li>Size must match a vitola name in the catalog</li>
+            <li>Price is required — enter as a number (e.g. 12.50)</li>
+            <li className="text-amber-300 font-medium">Leave Qty blank to mean "we carry it — quantity unknown"</li>
+          </ul>
+        </div>
+        <div>
+          <label className="block text-xs text-stone-400 mb-1.5">Google Sheets URL</label>
+          <input className="input" placeholder="https://docs.google.com/spreadsheets/d/..." value={form.sheet_url} onChange={e => set('sheet_url', e.target.value)} />
+          <p className="text-[10px] text-stone-600 mt-1">Sheet must be set to "Anyone with the link can view"</p>
+        </div>
+        {store.sheet_last_synced && (
+          <p className="text-xs text-stone-500">Last synced: {new Date(store.sheet_last_synced).toLocaleString()}</p>
+        )}
+        {syncResult && (
+          <div className={`rounded-xl p-3 text-xs ${syncResult.error ? 'bg-red-900/20 border border-red-800/30 text-red-400' : 'bg-emerald-900/20 border border-emerald-800/30 text-emerald-400'}`}>
+            {syncResult.error ? syncResult.error : (
+              <>
+                <p className="font-semibold mb-1">✓ Synced {syncResult.synced} items</p>
+                {syncResult.unmatched?.length > 0 && (
+                  <div>
+                    <p className="text-stone-400 mb-1">{syncResult.unmatched.length} rows couldn't be matched:</p>
+                    <ul className="space-y-0.5 text-stone-500">
+                      {syncResult.unmatched.slice(0, 5).map((u, i) => (
+                        <li key={i}>• {u.brand} {u.cigar} — {u.vitola}: <span className="text-red-400">{u.reason}</span></li>
+                      ))}
+                      {syncResult.unmatched.length > 5 && <li>…and {syncResult.unmatched.length - 5} more</li>}
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+        <button onClick={async () => {
+          setSyncing(true); setSyncResult(null);
+          try { setSyncResult(await api.syncSheet(store.id)); }
+          catch (e) { setSyncResult({ error: e.message }); }
+          finally { setSyncing(false); }
+        }} disabled={syncing || !store.sheet_url} className="btn-secondary flex items-center gap-2 self-start disabled:opacity-40">
+          <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+          {syncing ? 'Syncing...' : 'Sync Now'}
+        </button>
       </div>
 
       <button onClick={save} disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Save Changes'}</button>

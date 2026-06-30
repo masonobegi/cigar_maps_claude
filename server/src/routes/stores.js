@@ -222,14 +222,14 @@ router.put('/:id', requireAuth, asyncRoute(async (req, res) => {
   if (!store) return res.status(404).json({ error: 'Store not found' });
   if (store.user_id !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
 
-  const { name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags } = req.body;
+  const { name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, sheet_url } = req.body;
   const n = v => v ?? null;
   await db.run(`
     UPDATE stores SET name=?, description=?, address=?, city=?, state=?, zip=?, phone=?, website=?,
-    hours=?, has_lounge=?, has_walk_in_humidor=?, tags=?, setup_complete=1 WHERE id=?
+    hours=?, has_lounge=?, has_walk_in_humidor=?, tags=?, sheet_url=?, setup_complete=1 WHERE id=?
   `, [name, n(description), n(address), city, state, n(zip), n(phone), n(website),
     typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
-    has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0, JSON.stringify(tags || []), req.params.id]);
+    has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0, JSON.stringify(tags || []), n(sheet_url), req.params.id]);
 
   res.json({ success: true });
 }));
@@ -558,6 +558,16 @@ router.post('/admin/geocode-all', requireAuth, asyncRoute(async (req, res) => {
     await new Promise(r => setTimeout(r, 1100));
   }
   res.json({ geocoded: done, total: stores.length });
+}));
+
+const { syncSheet } = require('../utils/sheetSync');
+
+router.post('/:id/sync-sheet', requireAuth, asyncRoute(async (req, res) => {
+  const store = await db.get('SELECT * FROM stores WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
+  if (!store) return res.status(403).json({ error: 'Forbidden' });
+  if (!store.sheet_url) return res.status(400).json({ error: 'No sheet URL configured' });
+  const result = await syncSheet(req.params.id, store.sheet_url);
+  res.json(result);
 }));
 
 module.exports = router;

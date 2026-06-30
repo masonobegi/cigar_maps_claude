@@ -50,6 +50,11 @@ async function start() {
   await runMigrations();   // ALTER TABLE / new indexes — each runs exactly once
   await seed();            // upsert staff account; demo data only on empty DB
   app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
+
+  const { syncAllSheets } = require('./utils/sheetSync');
+  setInterval(() => {
+    syncAllSheets().catch(err => console.error('[sheet-sync] background error:', err.message));
+  }, 15 * 60 * 1000);
 }
 
 start().catch(err => { console.error('Failed to start:', err); process.exit(1); });

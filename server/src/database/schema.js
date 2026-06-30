@@ -278,6 +278,9 @@ async function initSchema() {
 const MIGRATIONS = [
   // Example (do not delete this comment — it shows the format):
   // { name: '001_stores_add_slug', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS slug TEXT' },
+  { name: '001_stores_add_sheet_url', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS sheet_url TEXT' },
+  { name: '002_stores_add_sheet_last_synced', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS sheet_last_synced TIMESTAMP' },
+  { name: '003_inventory_synced_from_sheet', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS synced_from_sheet BOOLEAN DEFAULT false' },
 ];
 
 async function runMigrations() {
