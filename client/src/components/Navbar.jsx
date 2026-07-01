@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Store, LayoutDashboard, Menu, X, Flame, Bell } from 'lucide-react';
+import { LogOut, Store, LayoutDashboard, Menu, X, Flame, Bell, CalendarDays } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -57,6 +57,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             <Link to="/stores" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname.startsWith('/stores') ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>Stores</Link>
             <Link to="/deals" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname === '/deals' ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>Deals</Link>
+            {user && !isStore && (
+              <Link to="/calendar" className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${location.pathname === '/calendar' ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>
+                <CalendarDays className="w-4 h-4" />
+                Calendar
+              </Link>
+            )}
             {user ? (
               <>
                 <Link to={dashPath} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${location.pathname === dashPath ? 'text-amber-300' : 'text-blue-200 hover:text-white hover:bg-white/10'}`}>
@@ -115,6 +121,11 @@ export default function Navbar() {
             <div className="p-2 flex flex-col gap-1">
               <Link to="/stores" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Stores</Link>
               <Link to="/deals" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Deals</Link>
+              {user && !isStore && (
+                <Link to="/calendar" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <CalendarDays className="w-4 h-4" /> Calendar
+                </Link>
+              )}
               {user ? (
                 <>
                   <Link to={dashPath} onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-2">

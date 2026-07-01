@@ -237,4 +237,27 @@ router.post('/events/:id/rsvp', requireAuth, asyncRoute(async (req, res) => {
   res.json({ success: true, status });
 }));
 
+router.get('/events/calendar', requireAuth, asyncRoute(async (req, res) => {
+  // Events from followed stores (with community notify on)
+  // UNION events where user has RSVP'd
+  const events = await db.all(`
+    SELECT DISTINCT e.*, s.name as store_name, s.id as store_id,
+      r.status as my_rsvp,
+      COUNT(DISTINCT r2.user_id) FILTER (WHERE r2.status = 'going') as going_count,
+      COUNT(DISTINCT r2.user_id) FILTER (WHERE r2.status = 'maybe') as maybe_count
+    FROM store_events e
+    JOIN stores s ON s.id = e.store_id
+    LEFT JOIN event_rsvps r ON r.event_id = e.id AND r.user_id = ?
+    LEFT JOIN event_rsvps r2 ON r2.event_id = e.id
+    WHERE e.store_id IN (
+      SELECT store_id FROM store_follows WHERE user_id = ? AND notify_community = 1
+    ) OR e.id IN (
+      SELECT event_id FROM event_rsvps WHERE user_id = ?
+    )
+    GROUP BY e.id, s.id, r.status
+    ORDER BY e.event_date ASC
+  `, [req.user.id, req.user.id, req.user.id]);
+  res.json(events);
+}));
+
 module.exports = router;

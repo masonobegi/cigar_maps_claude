@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound';
 import Passport from './pages/Passport';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import EventCalendar from './pages/EventCalendar';
 import Footer from './components/Footer';
 
 function RequireAuth({ children }) {
@@ -50,6 +51,7 @@ function AnimatedRoutes() {
       <Route path="/store-dashboard" element={<RequireAuth><StoreDashboard /></RequireAuth>} />
       <Route path="/passport" element={<RequireAuth><Passport /></RequireAuth>} />
       <Route path="/admin" element={<RequireAuth><AdminPanel /></RequireAuth>} />
+      <Route path="/calendar" element={<RequireAuth><EventCalendar /></RequireAuth>} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="*" element={<NotFound />} />

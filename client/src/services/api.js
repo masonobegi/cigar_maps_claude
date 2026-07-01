@@ -152,4 +152,5 @@ export const api = {
   createStoreEvent: (storeId, b) => request(`/stores/${storeId}/events`, { method: 'POST', body: JSON.stringify(b) }),
   deleteStoreEvent: (storeId, eventId) => request(`/stores/${storeId}/events/${eventId}`, { method: 'DELETE' }),
   rsvpEvent: (eventId, status) => request(`/events/${eventId}/rsvp`, { method: 'POST', body: JSON.stringify({ status }) }),
+  getCalendarEvents: () => request('/events/calendar'),
 };
