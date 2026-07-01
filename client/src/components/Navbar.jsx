@@ -77,6 +77,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center">
+            <NavLink to="/search" exact>Cigars</NavLink>
             <NavLink to="/stores">Stores</NavLink>
             <NavLink to="/deals" exact>Deals</NavLink>
             {user && !isStore && (
@@ -163,6 +164,7 @@ export default function Navbar() {
               <SearchAutocomplete onSubmit={() => setMenuOpen(false)} />
             </div>
             <div className="p-3 flex flex-col gap-0.5">
+              <MobileNavLink to="/search" onClick={() => setMenuOpen(false)}>Cigars</MobileNavLink>
               <MobileNavLink to="/stores" onClick={() => setMenuOpen(false)}>Stores</MobileNavLink>
               <MobileNavLink to="/deals" onClick={() => setMenuOpen(false)}>Deals</MobileNavLink>
               {user && !isStore && (

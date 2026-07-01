@@ -66,4 +66,22 @@ router.delete('/:id', requireAuth, asyncRoute(async (req, res) => {
   res.json({ success: true });
 }));
 
+router.post('/toggle', requireAuth, asyncRoute(async (req, res) => {
+  const { cigar_id } = req.body;
+  if (!cigar_id) return res.status(400).json({ error: 'cigar_id required' });
+
+  const existing = await db.get("SELECT id FROM smoke_list WHERE user_id = ? AND cigar_id = ? AND status = 'pending'", [req.user.id, cigar_id]);
+  if (existing) {
+    await db.run('DELETE FROM smoke_list WHERE id = ?', [existing.id]);
+    return res.json({ on_list: false });
+  }
+  await db.run('INSERT INTO smoke_list (user_id, cigar_id, priority) VALUES (?, ?, ?)', [req.user.id, cigar_id, 'medium']);
+  res.json({ on_list: true });
+}));
+
+router.get('/check/:cigar_id', requireAuth, asyncRoute(async (req, res) => {
+  const item = await db.get("SELECT id FROM smoke_list WHERE user_id = ? AND cigar_id = ? AND status = 'pending'", [req.user.id, req.params.cigar_id]);
+  res.json({ on_list: !!item, item_id: item?.id || null });
+}));
+
 module.exports = router;

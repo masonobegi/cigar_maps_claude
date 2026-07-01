@@ -342,6 +342,7 @@ const MIGRATIONS = [
   { name: '013_store3_dallas', sql: `UPDATE stores SET address='2803 Elm St', city='Dallas', state='TX', zip='75226', phone='(214) 555-2803', lat=32.7834, lng=-96.7908, description='Upscale Deep Ellum lounge. Craft cocktail bar, private lockers, and a curated walk-in humidor.' WHERE user_id=(SELECT id FROM users WHERE email='store3@demo.com')` },
   { name: '014_store4_tampa',  sql: `UPDATE stores SET address='712 S Dale Mabry Hwy', city='Tampa', state='FL', zip='33609', phone='(813) 555-0712', lat=27.9395, lng=-82.4991, description='Hyde Park cigar shop. Friendly staff, fair prices, over 150 SKUs. Great everyday selection.' WHERE user_id=(SELECT id FROM users WHERE email='store4@demo.com')` },
   { name: '015_store5_newyork', sql: `UPDATE stores SET address='19 W 44th St', city='New York', state='NY', zip='10036', phone='(212) 555-0019', lat=40.7553, lng=-73.9822, description='Midtown Manhattan cigar lounge. Whiskey bar, private events, and a world-class humidor.' WHERE user_id=(SELECT id FROM users WHERE email='store5@demo.com')` },
+  { name: '016_user_cigars_size_label', sql: 'ALTER TABLE user_cigars ADD COLUMN IF NOT EXISTS size_label TEXT' },
 ];
 
 async function runMigrations() {

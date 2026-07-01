@@ -12,7 +12,7 @@ function haversine(lat1, lng1, lat2, lng2) {
 
 router.get('/', asyncRoute(async (req, res) => {
   const { q, brand, strength, wrapper, country, city, state, min_price, max_price,
-    in_stock_only, sort = 'popular' } = req.query;
+    in_stock_only, min_rating, sort = 'popular' } = req.query;
   const page  = Math.max(1, parseInt(req.query.page)  || 1);
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 24));
   const offset = (page - 1) * limit;
@@ -43,6 +43,10 @@ router.get('/', asyncRoute(async (req, res) => {
   if (max_price) { where.push('(SELECT MIN(i2.price) FROM inventory i2 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) <= ?'); params.push(+max_price); }
   if (in_stock_only === '1') {
     where.push('EXISTS (SELECT 1 FROM inventory i3 WHERE i3.cigar_id = c.id AND i3.in_stock = 1)');
+  }
+  if (min_rating) {
+    where.push('(SELECT COALESCE(AVG(r2.rating),0) FROM reviews r2 WHERE r2.cigar_id = c.id) >= ?');
+    params.push(+min_rating);
   }
 
   const sortClause = {
@@ -115,7 +119,8 @@ router.get('/filters', asyncRoute(async (req, res) => {
   `, [])).map(r => r.strength);
   const countries = (await db.all('SELECT DISTINCT country FROM cigars WHERE country IS NOT NULL ORDER BY country', [])).map(r => r.country);
   const wrappers = (await db.all('SELECT DISTINCT wrapper FROM cigars WHERE wrapper IS NOT NULL ORDER BY wrapper', [])).map(r => r.wrapper);
-  res.json({ strengths, countries, wrappers });
+  const brands = (await db.all('SELECT brand, COUNT(*) as n FROM cigars GROUP BY brand ORDER BY n DESC, brand', [])).map(r => r.brand);
+  res.json({ strengths, countries, wrappers, brands });
 }));
 
 router.get('/:id', optionalAuth, asyncRoute(async (req, res) => {

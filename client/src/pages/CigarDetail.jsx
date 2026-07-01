@@ -80,8 +80,10 @@ export default function CigarDetail() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('overview');
   const [humidorModal, setHumidorModal] = useState(false);
+  const [humidorModalMode, setHumidorModalMode] = useState('humidor');
   const [reviewModal, setReviewModal] = useState(false);
-  const [humidorForm, setHumidorForm] = useState({ vitola_id: '', status: 'humidor', quantity: 1, purchase_price: '', purchase_date: '', notes: '' });
+  const [humidorForm, setHumidorForm] = useState({ size_label: '', quantity: 1, purchase_price: '', purchase_date: '', notes: '' });
+  const [onSmokeList, setOnSmokeList] = useState(false);
   const [stores, setStores] = useState([]);
   const [saving, setSaving] = useState(false);
   const [following, setFollowing] = useState(false);
@@ -93,6 +95,7 @@ export default function CigarDetail() {
   useEffect(() => {
     const loc = (() => { try { return JSON.parse(localStorage.getItem('cb_location_v1')); } catch { return null; } })();
     const availParams = loc?.lat ? { lat: loc.lat, lng: loc.lng } : {};
+    const smokeListCheck = user ? api.checkSmokeList(id).catch(() => ({ on_list: false })) : Promise.resolve({ on_list: false });
     Promise.all([
       api.getCigar(id),
       api.getCigarAvailability(id, availParams),
@@ -100,10 +103,11 @@ export default function CigarDetail() {
       api.searchStores(),
       api.getCigarFollowStatus(id),
       api.getCigarImages(id),
-    ]).then(([d, avail, rev, storeList, followStatus, imgs]) => {
+      smokeListCheck,
+    ]).then(([d, avail, rev, storeList, followStatus, imgs, smokeStatus]) => {
       setData(d);
       setImages(imgs);
-      // Sort by distance if available
+      setOnSmokeList(smokeStatus.on_list);
       const sorted = [...avail].sort((a, b) => {
         if (a.distance_mi != null && b.distance_mi != null) return a.distance_mi - b.distance_mi;
         if (a.distance_mi != null) return -1;
@@ -116,7 +120,6 @@ export default function CigarDetail() {
       setFollowing(followStatus.following);
       setFollowerCount(followStatus.follower_count);
       addRecentlyViewed(d.cigar);
-      if (d.vitolas.length > 0) setHumidorForm(f => ({ ...f, vitola_id: d.vitolas[0].id }));
     }).finally(() => setLoading(false));
   }, [id]);
 
@@ -124,9 +127,9 @@ export default function CigarDetail() {
     if (!user) return navigate('/login');
     setSaving(true);
     try {
-      await api.addToHumidor({ cigar_id: id, ...humidorForm });
+      await api.addToHumidor({ cigar_id: id, status: humidorModalMode, ...humidorForm });
       setHumidorModal(false);
-      toast('Added to your collection');
+      toast(humidorModalMode === 'smoked' ? 'Logged as smoked' : 'Added to your humidor');
     } catch (e) { toast(e.message, 'error'); }
     finally { setSaving(false); }
   }
@@ -144,10 +147,13 @@ export default function CigarDetail() {
     finally { setSaving(false); }
   }
 
-  async function addToSmokeList() {
+  async function toggleSmokeList() {
     if (!user) return navigate('/login');
-    try { await api.addToSmokeList({ cigar_id: id }); toast('Added to Smoke List'); }
-    catch (e) { toast(e.message, 'error'); }
+    try {
+      const { on_list } = await api.toggleSmokeList({ cigar_id: id });
+      setOnSmokeList(on_list);
+      toast(on_list ? 'Added to Smoke List' : 'Removed from Smoke List');
+    } catch (e) { toast(e.message, 'error'); }
   }
 
   async function handleImageUpload(e) {
@@ -285,14 +291,22 @@ export default function CigarDetail() {
 
       {/* Action buttons */}
       <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-8">
-        <button onClick={() => setHumidorModal(true)} className="btn-primary flex items-center justify-center gap-2">
+        <button onClick={() => { setHumidorModalMode('humidor'); setHumidorModal(true); }} className="btn-primary flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> Add to Humidor
+        </button>
+        <button onClick={() => { setHumidorModalMode('smoked'); setHumidorModal(true); }} className="btn-secondary flex items-center justify-center gap-2">
+          <BookOpen className="w-4 h-4" /> Log as Smoked
         </button>
         <button onClick={() => setReviewModal(true)} className="btn-secondary flex items-center justify-center gap-2">
           <BookOpen className="w-4 h-4" /> Log to Journal
         </button>
-        <button onClick={addToSmokeList} className="btn-secondary flex items-center justify-center gap-2">
-          <ListChecks className="w-4 h-4" /> Smoke List
+        <button onClick={toggleSmokeList}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all"
+          style={onSmokeList
+            ? { backgroundColor: '#0B3320', color: '#4ADE80', borderColor: '#2D6B42', border: '1px solid #2D6B42', borderRadius: 5 }
+            : { backgroundColor: 'transparent', color: '#9A8A75', borderColor: '#3D3428', border: '1px solid #3D3428', borderRadius: 5 }}>
+          <ListChecks className="w-4 h-4" />
+          {onSmokeList ? 'On Smoke List ✓' : 'Smoke List'}
         </button>
         <button onClick={toggleFollow}
           className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all"
@@ -528,51 +542,59 @@ export default function CigarDetail() {
           onClick={() => setHumidorModal(false)}>
           <div className="card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
             onClick={e => e.stopPropagation()}>
-            <h2 className="font-serif text-lg font-bold" style={{color: NAVY}}>Add to Collection</h2>
-            <div>
-              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Size</label>
-              <select className="input" value={humidorForm.vitola_id} onChange={e => setHumidorForm(f => ({ ...f, vitola_id: e.target.value }))}>
-                {vitolas.map(v => <option key={v.id} value={v.id}>{v.name} ({v.length}" × {v.ring_gauge})</option>)}
-              </select>
-            </div>
+            <h2 className="font-serif text-lg font-bold" style={{color: NAVY}}>
+              {humidorModalMode === 'smoked' ? 'Log as Smoked' : 'Add to Humidor'}
+            </h2>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Status</label>
-                <select className="input" value={humidorForm.status} onChange={e => setHumidorForm(f => ({ ...f, status: e.target.value }))}>
-                  <option value="humidor">In Humidor</option>
-                  <option value="smoked">Already Smoked</option>
-                  <option value="wishlist">Wishlist</option>
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Size <span style={{color: '#5A4A3A'}}>(optional)</span></label>
+                <select className="input" value={humidorForm.size_label}
+                  onChange={e => setHumidorForm(f => ({ ...f, size_label: e.target.value }))}>
+                  <option value="">— Select —</option>
+                  <option>Petit Corona</option>
+                  <option>Corona</option>
+                  <option>Robusto</option>
+                  <option>Toro</option>
+                  <option>Churchill</option>
+                  <option>Gordo</option>
+                  <option>Belicoso</option>
+                  <option>Lancero</option>
+                  <option>Other</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Quantity</label>
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Quantity <span style={{color: '#C9882A'}}>*</span></label>
                 <input type="number" min="1" className="input" value={humidorForm.quantity}
                   onChange={e => setHumidorForm(f => ({ ...f, quantity: +e.target.value }))} />
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Price Paid</label>
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Price Paid <span style={{color: '#5A4A3A'}}>(optional)</span></label>
                 <input type="number" step="0.01" placeholder="0.00" className="input" value={humidorForm.purchase_price}
                   onChange={e => setHumidorForm(f => ({ ...f, purchase_price: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Date Purchased</label>
+                <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Date <span style={{color: '#5A4A3A'}}>(optional)</span></label>
                 <input type="date" className="input" value={humidorForm.purchase_date}
                   onChange={e => setHumidorForm(f => ({ ...f, purchase_date: e.target.value }))} />
               </div>
             </div>
+
             <div>
-              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Notes</label>
+              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Notes <span style={{color: '#5A4A3A'}}>(optional)</span></label>
               <textarea rows={2} className="input resize-none"
                 placeholder="Tasting notes, occasion, where you got it..."
                 value={humidorForm.notes}
                 onChange={e => setHumidorForm(f => ({ ...f, notes: e.target.value }))} />
             </div>
+
             <div className="flex gap-2 pt-1">
               <button onClick={() => setHumidorModal(false)} className="btn-secondary flex-1">Cancel</button>
               <button onClick={addToHumidor} disabled={saving} className="btn-primary flex-1">
-                {saving ? 'Adding...' : 'Add to Collection'}
+                {saving ? 'Saving...' : humidorModalMode === 'smoked' ? 'Log as Smoked' : 'Add to Humidor'}
               </button>
             </div>
           </div>

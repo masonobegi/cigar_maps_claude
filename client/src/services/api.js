@@ -81,6 +81,8 @@ export const api = {
   updateSmokeListItem: (id, b) => request(`/smoke-list/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
   markSmokeListSmoked: (id) => request(`/smoke-list/${id}/mark-smoked`, { method: 'POST' }),
   deleteSmokeListItem: (id) => request(`/smoke-list/${id}`, { method: 'DELETE' }),
+  checkSmokeList: (cigar_id) => request(`/smoke-list/check/${cigar_id}`),
+  toggleSmokeList: (b) => request('/smoke-list/toggle', { method: 'POST', body: JSON.stringify(b) }),
 
   // Notifications
   getNotifications: () => request('/notifications'),

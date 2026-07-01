@@ -36,26 +36,27 @@ router.get('/me/humidor', requireAuth, asyncRoute(async (req, res) => {
 }));
 
 router.post('/me/humidor', requireAuth, asyncRoute(async (req, res) => {
-  const { cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
+  const { cigar_id, size_label, status, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
   if (!cigar_id) return res.status(400).json({ error: 'cigar_id required' });
 
-  const n = v => v ?? null;
+  // Treat empty strings as NULL so PostgreSQL typed columns don't error
+  const n = v => (v === '' || v == null) ? null : v;
   const result = await db.run(`
-    INSERT INTO user_cigars (user_id, cigar_id, vitola_id, status, quantity, purchase_price, purchase_date, notes, aging_goal_date)
+    INSERT INTO user_cigars (user_id, cigar_id, size_label, status, quantity, purchase_price, purchase_date, notes, aging_goal_date)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
-  `, [req.user.id, cigar_id, n(vitola_id), status || 'humidor', quantity || 1,
+  `, [req.user.id, cigar_id, n(size_label), status || 'humidor', quantity || 1,
     n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date)]);
 
   res.json({ id: result.lastInsertRowid });
 }));
 
 router.put('/me/humidor/:id', requireAuth, asyncRoute(async (req, res) => {
-  const { status, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
-  const n = v => v ?? null;
+  const { status, size_label, quantity, purchase_price, purchase_date, notes, aging_goal_date } = req.body;
+  const n = v => (v === '' || v == null) ? null : v;
   await db.run(`
-    UPDATE user_cigars SET status=?, quantity=?, purchase_price=?, purchase_date=?, notes=?, aging_goal_date=?
+    UPDATE user_cigars SET status=?, size_label=?, quantity=?, purchase_price=?, purchase_date=?, notes=?, aging_goal_date=?
     WHERE id=? AND user_id=?
-  `, [n(status), n(quantity), n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date), req.params.id, req.user.id]);
+  `, [n(status), n(size_label), n(quantity), n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date), req.params.id, req.user.id]);
   res.json({ success: true });
 }));
 
