@@ -9,7 +9,7 @@ const StoreMap = lazy(() => import('../components/StoreMap'));
 const NAVY   = '#E8DDD0';
 const MUTED  = '#9E8E7E';
 const LABEL  = '#B0A090';
-const BORDER = '#3D3020';
+const BORDER = '#453C2E';
 const AMBER  = '#D4882A';
 
 const RADII = [10, 25, 50, 100];
@@ -140,11 +140,11 @@ export default function Stores() {
         </div>
 
         {/* Map / List toggle */}
-        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#0F0C09' }}>
+        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#201C16' }}>
           <button onClick={() => setViewMode('list')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
             style={viewMode === 'list'
-              ? { backgroundColor: '#221C15', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
+              ? { backgroundColor: '#262018', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
               : { color: MUTED }}>
             <List className="w-4 h-4" /> List
           </button>
@@ -160,7 +160,7 @@ export default function Stores() {
 
       {/* Location banner */}
       {userLocation && (
-        <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl text-sm" style={{ backgroundColor: '#1A1410', border: '1px solid #3D3020' }}>
+        <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl text-sm" style={{ backgroundColor: '#1A1410', border: '1px solid #453C2E' }}>
           <Navigation className="w-3.5 h-3.5 flex-shrink-0" style={{ color: AMBER }} />
           <span style={{ color: MUTED }}>
             {userLocation.isTemp ? 'Traveling to' : 'Near'}{' '}
@@ -254,7 +254,7 @@ export default function Stores() {
           {cities.map(c => (
             <button key={`${c.city}-${c.state}`} onClick={() => setCity(c.city)}
               className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full flex-shrink-0 transition-colors"
-              style={{ backgroundColor: '#2A2018', color: LABEL, border: `1px solid ${BORDER}` }}>
+              style={{ backgroundColor: '#2E2820', color: LABEL, border: `1px solid ${BORDER}` }}>
               {c.city}, {c.state}
               <span className="ml-1" style={{ color: MUTED }}>({c.store_count})</span>
             </button>
@@ -284,7 +284,7 @@ export default function Stores() {
 
             const statusStyle = status.isOpen
               ? { backgroundColor: '#0B3320', color: '#4ADE80' }
-              : { backgroundColor: '#2A2018', color: '#9E8E7E' };
+              : { backgroundColor: '#2E2820', color: '#9E8E7E' };
 
             return (
               <Link key={store.id} to={`/stores/${store.id}`}
@@ -294,7 +294,7 @@ export default function Stores() {
                 onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: '#2D2010' }}>
+                    style={{ backgroundColor: '#352A18' }}>
                     <Store className="w-6 h-6" style={{ color: AMBER }} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -354,7 +354,7 @@ export default function Stores() {
                       <div className="flex flex-wrap gap-1 mt-2">
                         {store.tags.map(t => (
                           <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ backgroundColor: '#2A2018', color: LABEL, border: `1px solid ${BORDER}` }}>
+                            style={{ backgroundColor: '#2E2820', color: LABEL, border: `1px solid ${BORDER}` }}>
                             {t}
                           </span>
                         ))}

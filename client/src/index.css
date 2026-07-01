@@ -5,8 +5,8 @@
 @layer base {
   body {
     @apply antialiased;
-    background-color: #0F0B09;
-    background-image: radial-gradient(ellipse 120% 60% at 50% 0%, #261B11 0%, #0F0B09 70%);
+    background-color: #1C1914;
+    background-image: radial-gradient(ellipse 120% 60% at 50% 0%, #2E2419 0%, #1C1914 70%);
     background-attachment: fixed;
     color: #E8DDD0;
     overscroll-behavior-y: none;
@@ -31,11 +31,11 @@
     @apply font-medium py-3 px-5 rounded-xl
            transition-colors duration-150 min-h-[44px] inline-flex items-center justify-center gap-2
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
-    background-color: #221C15;
+    background-color: #2A2318;
     color: #E8DDD0;
-    border: 1px solid #3D3020;
+    border: 1px solid #453C2E;
   }
-  .btn-secondary:hover { background-color: #2A2018; }
+  .btn-secondary:hover { background-color: #322A1E; }
 
   .btn-ghost {
     @apply font-medium py-2.5 px-4 rounded-xl
@@ -43,29 +43,29 @@
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500;
     color: #9E8E7E;
   }
-  .btn-ghost:hover { color: #E8DDD0; background-color: #2A2018; }
+  .btn-ghost:hover { color: #E8DDD0; background-color: #2A2318; }
 
   .input {
     @apply rounded-xl px-4 py-3 w-full
            focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent
            transition-all duration-150 min-h-[48px];
     font-size: 16px;
-    background-color: #0F0C09;
+    background-color: #201C16;
     color: #E8DDD0;
-    border: 1px solid #3D3020;
+    border: 1px solid #453C2E;
   }
-  .input::placeholder { color: #5A4A3A; }
+  .input::placeholder { color: #6A5A4A; }
 
   .card {
     @apply rounded-2xl overflow-hidden;
-    background-color: #221C15;
-    border: 1px solid #3D3020;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.3);
+    background-color: #262018;
+    border: 1px solid #453C2E;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.2);
   }
 
   .tab-bar {
     @apply flex overflow-x-auto gap-0;
-    border-bottom: 1px solid #3D3020;
+    border-bottom: 1px solid #453C2E;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -112,15 +112,15 @@
 /* ── Scrollbars ──────────────────────────────────────────────────────────── */
 @media (hover: hover) {
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #1A1510; }
-  ::-webkit-scrollbar-thumb { background: #3D3020; border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: #201C16; }
+  ::-webkit-scrollbar-thumb { background: #453C2E; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #5C4A34; }
 }
 
 /* ── Skeleton ────────────────────────────────────────────────────────────── */
 .skeleton {
   @apply rounded-xl;
-  background: linear-gradient(90deg, #221C15 25%, #2A2018 50%, #221C15 75%);
+  background: linear-gradient(90deg, #262018 25%, #2E2820 50%, #262018 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -134,22 +134,22 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 /* Backgrounds */
-.bg-stone-950  { background-color: #0D0A07; }
-.bg-stone-900  { background-color: #1A1510; }
-.bg-stone-800  { background-color: #221C15; }
-.bg-stone-700  { background-color: #2A2018; }
+.bg-stone-950  { background-color: #161210; }
+.bg-stone-900  { background-color: #201C16; }
+.bg-stone-800  { background-color: #2A2318; }
+.bg-stone-700  { background-color: #322A1E; }
 
-.bg-stone-950\/95 { background-color: rgba(13,10,7,0.95); }
-.bg-stone-950\/98 { background-color: rgba(13,10,7,0.98); }
-.bg-stone-900\/50 { background-color: rgba(26,21,16,0.5); }
-.bg-stone-900\/80 { background-color: rgba(26,21,16,0.8); }
-.bg-stone-900\/90 { background-color: rgba(26,21,16,0.9); }
-.bg-stone-800\/50 { background-color: rgba(34,28,21,0.5); }
+.bg-stone-950\/95 { background-color: rgba(22,18,16,0.95); }
+.bg-stone-950\/98 { background-color: rgba(22,18,16,0.98); }
+.bg-stone-900\/50 { background-color: rgba(32,28,22,0.5); }
+.bg-stone-900\/80 { background-color: rgba(32,28,22,0.8); }
+.bg-stone-900\/90 { background-color: rgba(32,28,22,0.9); }
+.bg-stone-800\/50 { background-color: rgba(42,35,24,0.5); }
 
-.hover\:bg-stone-800:hover  { background-color: #2A2018; }
-.hover\:bg-stone-700:hover  { background-color: #382C1E; }
-.hover\:bg-stone-900:hover  { background-color: #2A2018; }
-.active\:bg-stone-900:active { background-color: #221C15; }
+.hover\:bg-stone-800:hover  { background-color: #322A1E; }
+.hover\:bg-stone-700:hover  { background-color: #3C3226; }
+.hover\:bg-stone-900:hover  { background-color: #2A2318; }
+.active\:bg-stone-900:active { background-color: #262018; }
 
 /* Text */
 .text-stone-100 { color: #E8DDD0; }
@@ -165,22 +165,22 @@
 .hover\:text-stone-400:hover { color: #9E8E7E; }
 
 /* Borders */
-.border-stone-800 { border-color: #3D3020; }
+.border-stone-800 { border-color: #453C2E; }
 .border-stone-700 { border-color: #5C4A34; }
 .border-stone-600 { border-color: #7A6848; }
 
-.divide-stone-800 > * + * { border-color: #3D3020; }
+.divide-stone-800 > * + * { border-color: #453C2E; }
 .divide-stone-700 > * + * { border-color: #5C4A34; }
-.divide-stone-200 > * + * { border-color: #3D3020; }
+.divide-stone-200 > * + * { border-color: #453C2E; }
 
 /* Placeholders */
-.placeholder-stone-500::placeholder { color: #5A4A3A; }
+.placeholder-stone-500::placeholder { color: #6A5A4A; }
 .placeholder-stone-600::placeholder { color: #7A6858; }
 
 /* Ring offset */
-.focus-visible\:ring-offset-stone-950:focus-visible { --tw-ring-offset-color: #1A1510; }
+.focus-visible\:ring-offset-stone-950:focus-visible { --tw-ring-offset-color: #201C16; }
 
 /* Gradients */
-.from-stone-950 { --tw-gradient-from: #0D0A07; }
-.to-stone-900   { --tw-gradient-to: #1A1510; }
-.via-stone-900  { --tw-gradient-via: #1A1510; }
+.from-stone-950 { --tw-gradient-from: #161210; }
+.to-stone-900   { --tw-gradient-to: #201C16; }
+.via-stone-900  { --tw-gradient-via: #201C16; }

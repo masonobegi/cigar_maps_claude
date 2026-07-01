@@ -204,7 +204,7 @@ export default function SearchPage() {
         <div className="flex flex-wrap gap-2 mb-4">
           {activeFilters.map(f => (
             <span key={f.key} className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
-              style={{backgroundColor: '#2A2018', border: '1px solid #3D3020', color: LABEL}}>
+              style={{backgroundColor: '#2E2820', border: '1px solid #453C2E', color: LABEL}}>
               {f.label}
               <button onClick={f.clear} className="ml-0.5 transition-colors"
                 style={{color: MUTED}}

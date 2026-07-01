@@ -1,7 +1,25 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "Bash(node -e ' *)",
+      "Bash(cat package.json)",
+      "Bash(cat server/package.json)",
+      "Bash(where playwright *)",
+      "Bash(npx playwright *)",
+      "Bash(npm list *)",
+      "Bash(node audit.js)",
+      "Bash(node -e \"const {FileSpreadsheet, AlertOctagon, Upload} = require\\('lucide-react'\\); console.log\\('FileSpreadsheet:', !!FileSpreadsheet, 'AlertOctagon:', !!AlertOctagon, 'Upload:', !!Upload\\);\")",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; Write-Host \"Token: $\\($token.Substring\\(0,20\\)\\)...\")",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\" }; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/reset-database\" -Method POST -Headers $headers -ContentType \"application/json\"; Write-Host $result.message)",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\" }; $stores = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/stores\" -Headers $headers; $stores | ForEach-Object { Write-Host \"Store $\\($_.id\\): $\\($_.name\\) \\(owner: $\\($_.owner_email\\)\\)\" })",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\" }; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/stores/6\" -Method DELETE -Headers $headers; Write-Host $result.success)",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\"; \"Content-Type\" = \"application/json\" }; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/stores/6\" -Method DELETE -Headers $headers; Write-Host \"Deleted:\" $result.success)",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\" }; $users = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/users\" -Headers $headers; $users | Where-Object { $_.email -eq \"mason.obegi@gmail.com\" } | ForEach-Object { Write-Host \"User $\\($_.id\\): $\\($_.email\\) \\($\\($_.account_type\\)\\)\" })",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"mobegibusiness@gmail.com\",\"password\":\"W@ffle871\"}'; $token = $login.token; $headers = @{ Authorization = \"Bearer $token\"; \"Content-Type\" = \"application/json\" }; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/users/12\" -Method DELETE -Headers $headers; Write-Host \"Deleted:\" $result.success)",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"admin@cigarbuddy.com\",\"password\":\"adminpass123\"}'; $token = $login.token; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/users/12\" -Method DELETE -Headers @{ Authorization = \"Bearer $token\" }; Write-Output \"Deleted: $\\($result.success\\)\")",
+      "PowerShell($login = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"admin@cigarbuddy.com\",\"password\":\"admin123\"}'; $token = $login.token; Write-Output \"Token: $token\"; $result = Invoke-RestMethod -Uri \"https://cigarmapsclaude-production.up.railway.app/api/admin/users/12\" -Method DELETE -Headers @{ Authorization = \"Bearer $token\" }; Write-Output \"Deleted: $\\($result.success\\)\")"
     ]
   }
 }

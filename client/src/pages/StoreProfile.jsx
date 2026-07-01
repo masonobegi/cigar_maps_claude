@@ -11,8 +11,8 @@ const NAVY  = '#E8DDD0';
 const LABEL = '#B0A090';
 const MUTED = '#9E8E7E';
 const AMBER = '#D4882A';
-const BORDER= '#3D3020';
-const BG_ALT= '#2A2018';
+const BORDER= '#453C2E';
+const BG_ALT= '#2E2820';
 
 function StarRating({ value, onChange, size = 'md' }) {
   const sz = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
@@ -255,7 +255,7 @@ export default function StoreProfile() {
       <div className="card mb-4 overflow-hidden">
         <div className="flex items-start gap-4 p-5">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: '#2D2010' }}>
+            style={{ backgroundColor: '#352A18' }}>
             <Store className="w-7 h-7" style={{ color: AMBER }} />
           </div>
           <div className="flex-1 min-w-0">
@@ -635,7 +635,7 @@ export default function StoreProfile() {
             <div className="flex flex-col gap-3">{[1,2,3].map(i => <div key={i} className="card h-20 animate-pulse bg-stone-800" />)}</div>
           ) : communityPosts.length === 0 ? (
             <div className="text-center py-10">
-              <MessageSquare className="w-10 h-10 mx-auto mb-3" style={{ color: '#3D3020' }} />
+              <MessageSquare className="w-10 h-10 mx-auto mb-3" style={{ color: '#453C2E' }} />
               <p style={{ color: MUTED }}>No community posts yet. Be the first!</p>
             </div>
           ) : (
@@ -680,7 +680,7 @@ export default function StoreProfile() {
                     </div>
                   )}
                   {/* Like + Reply bar */}
-                  <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid #2A2018' }}>
+                  <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid #2E2820' }}>
                     <button onClick={() => toggleLike(post.id)}
                       className="flex items-center gap-1.5 text-xs transition-colors"
                       style={{ color: post.my_like ? '#F87171' : MUTED }}>
@@ -699,7 +699,7 @@ export default function StoreProfile() {
                   </div>
                   {/* Replies section */}
                   {getReply(post.id).open && (
-                    <div className="mt-3 space-y-2 pl-3" style={{ borderLeft: '2px solid #2A2018' }}>
+                    <div className="mt-3 space-y-2 pl-3" style={{ borderLeft: '2px solid #2E2820' }}>
                       {getReply(post.id).list.map(r => (
                         <div key={r.id} className="flex items-start gap-2">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
@@ -730,7 +730,7 @@ export default function StoreProfile() {
                             onClick={() => submitReply(post.id)}
                             disabled={getReply(post.id).submitting || !getReply(post.id).content.trim()}
                             className="text-xs px-3 py-1.5 rounded-lg font-medium disabled:opacity-50"
-                            style={{ backgroundColor: AMBER, color: '#1A0F00' }}>
+                            style={{ backgroundColor: AMBER, color: '#2A2018' }}>
                             Send
                           </button>
                         </div>

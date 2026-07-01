@@ -49,7 +49,7 @@ function ScoreGauge({ value }) {
   return (
     <div className="relative w-20 h-20">
       <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3D3020" strokeWidth="3" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#453C2E" strokeWidth="3" />
         <circle cx="18" cy="18" r="15.9" fill="none"
           stroke={color} strokeWidth="3"
           strokeDasharray={`${value} 100`}
@@ -219,9 +219,9 @@ export default function CigarDetail() {
             ) : isVerifiedStore ? (
               <button onClick={() => setImageUploadOpen(true)}
                 className="w-full rounded-2xl border-2 border-dashed py-8 flex flex-col items-center gap-2 transition-colors"
-                style={{ borderColor: '#3D3020', color: MUTED }}
+                style={{ borderColor: '#453C2E', color: MUTED }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = AMBER; e.currentTarget.style.color = AMBER; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#3D3020'; e.currentTarget.style.color = MUTED; }}>
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#453C2E'; e.currentTarget.style.color = MUTED; }}>
                 <Camera className="w-7 h-7" />
                 <span className="text-sm font-medium">Be the first to add a photo of this cigar</span>
                 <span className="text-xs">As a verified store, your photo becomes the default thumbnail site-wide</span>
@@ -230,7 +230,7 @@ export default function CigarDetail() {
 
             {imageUploadOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setImageUploadOpen(false)}>
-                <div className="rounded-2xl p-6 w-full max-w-sm flex flex-col gap-4" style={{ backgroundColor: '#221C15', border: '1px solid #3D3020' }} onClick={e => e.stopPropagation()}>
+                <div className="rounded-2xl p-6 w-full max-w-sm flex flex-col gap-4" style={{ backgroundColor: '#262018', border: '1px solid #453C2E' }} onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold" style={{ color: NAVY }}>Upload Cigar Photo</h3>
                     <button onClick={() => setImageUploadOpen(false)} className="btn-ghost p-1"><X className="w-4 h-4" /></button>
@@ -289,7 +289,7 @@ export default function CigarDetail() {
           className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all"
           style={following
             ? { backgroundColor: '#FEF3C7', color: '#92400E', borderColor: '#FDE68A' }
-            : { backgroundColor: '#221C15', color: NAVY, borderColor: '#3D3020' }}>
+            : { backgroundColor: '#262018', color: NAVY, borderColor: '#453C2E' }}>
           {following ? <BellOff className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
           {following ? 'Following' : 'Follow'}
           {followerCount > 0 && <span className="text-xs ml-1" style={{color: MUTED}}>({followerCount})</span>}
@@ -362,7 +362,7 @@ export default function CigarDetail() {
                     {top_flavors.slice(0, 5).map(({ note, count }) => (
                       <div key={note} className="flex items-center gap-2">
                         <span className="text-sm w-28 capitalize" style={{color: NAVY}}>{note}</span>
-                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#3D3020'}}>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#453C2E'}}>
                           <div className="h-full rounded-full bg-amber-600"
                             style={{ width: `${(count / top_flavors[0].count) * 100}%` }} />
                         </div>
@@ -390,7 +390,7 @@ export default function CigarDetail() {
                       <span style={{color: MUTED}}>{label}</span>
                       <span className="font-semibold" style={{color: NAVY}}>{Math.round(value)}</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#3D3020'}}>
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{backgroundColor: '#453C2E'}}>
                       <div className="h-full bg-amber-600 rounded-full" style={{ width: `${value}%` }} />
                     </div>
                   </div>
@@ -462,7 +462,7 @@ export default function CigarDetail() {
               <div className="flex flex-col gap-0">
                 {store.vitolas.map(v => (
                   <div key={v.vitola_id} className="flex items-center justify-between py-2.5 border-t"
-                    style={{borderColor: '#3D3020'}}>
+                    style={{borderColor: '#453C2E'}}>
                     <div>
                       <span className="text-sm font-medium" style={{color: NAVY}}>{v.name}</span>
                       <span className="text-xs ml-2" style={{color: MUTED}}>{v.length}" × {v.ring_gauge}</span>

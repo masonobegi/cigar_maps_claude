@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50" style={{backgroundColor: '#120E0A'}}>
+      <nav className="sticky top-0 z-50" style={{backgroundColor: '#201C16'}}>
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1.5 flex-shrink-0 mr-1">
@@ -108,7 +108,7 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-white/10" style={{backgroundColor: '#0D0A07'}}>
+          <div className="md:hidden border-t border-white/10" style={{backgroundColor: '#1A1612'}}>
             <div className="p-4 border-b border-white/10">
               <SearchAutocomplete onSubmit={() => setMenuOpen(false)} />
             </div>
