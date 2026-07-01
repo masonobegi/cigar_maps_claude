@@ -22,9 +22,10 @@ router.get('/', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'event' AND sf.notify_community = 1)
     )
     AND (n.created_by_user_id IS NULL OR n.created_by_user_id != ?)
+    AND NOT (n.type IN ('community', 'event') AND s.user_id = ?)
     ORDER BY n.created_at DESC
     LIMIT 50
-  `, [req.user.id, req.user.id, req.user.id]);
+  `, [req.user.id, req.user.id, req.user.id, req.user.id]);
   res.json(notifications);
 }));
 
@@ -33,6 +34,7 @@ router.get('/count', requireAuth, asyncRoute(async (req, res) => {
     SELECT COUNT(*) as count
     FROM notifications n
     JOIN store_follows sf ON sf.store_id = n.store_id AND sf.user_id = ?
+    JOIN stores s ON s.id = n.store_id
     LEFT JOIN notification_reads nr ON nr.notification_id = n.id AND nr.user_id = ?
     WHERE nr.user_id IS NULL
     AND (
@@ -43,7 +45,8 @@ router.get('/count', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'event' AND sf.notify_community = 1)
     )
     AND (n.created_by_user_id IS NULL OR n.created_by_user_id != ?)
-  `, [req.user.id, req.user.id, req.user.id]);
+    AND NOT (n.type IN ('community', 'event') AND s.user_id = ?)
+  `, [req.user.id, req.user.id, req.user.id, req.user.id]);
   res.json({ count: parseInt(row.count) });
 }));
 
