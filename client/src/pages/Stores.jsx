@@ -121,16 +121,6 @@ export default function Stores() {
 
   const hasFilters = q || city || openNow || hasLounge || hasHumidor;
 
-  if (viewMode === 'map') {
-    return (
-      <div className="fixed inset-0 z-40" style={{ top: '56px', bottom: '64px' }}>
-        <Suspense fallback={<div className="w-full h-full flex items-center justify-center"><div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" /></div>}>
-          <StoreMap stores={stores} userLocation={userLocation} onClose={() => setViewMode('list')} />
-        </Suspense>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-5">
@@ -140,19 +130,21 @@ export default function Stores() {
         </div>
 
         {/* Map / List toggle */}
-        <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: '#201C16' }}>
-          <button onClick={() => setViewMode('list')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+        <div className="flex border-b" style={{ borderColor: BORDER }}>
+          <button
+            onClick={() => setViewMode('list')}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-all"
             style={viewMode === 'list'
-              ? { backgroundColor: '#262018', color: NAVY, boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }
-              : { color: MUTED }}>
+              ? { color: AMBER, borderBottom: `2px solid ${AMBER}`, marginBottom: '-1px' }
+              : { color: MUTED, borderBottom: '2px solid transparent', marginBottom: '-1px' }}>
             <List className="w-4 h-4" /> List
           </button>
-          <button onClick={() => { setViewMode('map'); if (!userLocation) useMyLocation(); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+          <button
+            onClick={() => setViewMode('map')}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-all"
             style={viewMode === 'map'
-              ? { backgroundColor: AMBER, color: '#FFFFFF' }
-              : { color: MUTED }}>
+              ? { color: AMBER, borderBottom: `2px solid ${AMBER}`, marginBottom: '-1px' }
+              : { color: MUTED, borderBottom: '2px solid transparent', marginBottom: '-1px' }}>
             <Map className="w-4 h-4" /> Map
           </button>
         </div>
@@ -266,16 +258,30 @@ export default function Stores() {
         {loading ? 'Loading...' : `${stores.length} store${stores.length !== 1 ? 's' : ''} found`}
       </p>
 
-      {loading ? (
+      {/* Map view */}
+      {viewMode === 'map' && (
+        <div className="mb-6 rounded-xl overflow-hidden" style={{ border: `1px solid ${BORDER}` }}>
+          <Suspense fallback={
+            <div className="flex items-center justify-center" style={{ height: '500px', backgroundColor: '#1A1410' }}>
+              <div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+          }>
+            <StoreMap stores={stores} userLocation={userLocation} />
+          </Suspense>
+        </div>
+      )}
+
+      {/* List view */}
+      {viewMode === 'list' && loading ? (
         <div className="flex flex-col gap-4">
           {[1, 2, 3].map(i => <div key={i} className="card h-32 skeleton" />)}
         </div>
-      ) : stores.length === 0 ? (
+      ) : viewMode === 'list' && stores.length === 0 ? (
         <div className="text-center py-16">
           <Store className="w-10 h-10 mx-auto mb-3" style={{ color: '#D4CFC8' }} />
           <p style={{ color: MUTED }}>No stores found. Try different filters.</p>
         </div>
-      ) : (
+      ) : viewMode === 'list' ? (
         <div className="flex flex-col gap-4">
           {stores.map(store => {
             let parsedHours = {};
@@ -366,7 +372,7 @@ export default function Stores() {
             );
           })}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
