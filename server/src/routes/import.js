@@ -147,4 +147,95 @@ router.post('/stores/:id/import/confirm', requireAuth, asyncRoute(async (req, re
   res.json({ added, updated, skipped });
 }));
 
+// Smoke log import — preview
+router.post('/users/me/import-smoke-log/preview', requireAuth, upload.single('file'), asyncRoute(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file provided' });
+
+  const ext = (req.file.originalname || '').split('.').pop().toLowerCase();
+  if (!['csv', 'xlsx', 'xls'].includes(ext)) return res.status(400).json({ error: 'Only CSV and XLSX files are supported' });
+
+  let rows;
+  try {
+    const wb = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+  } catch (e) {
+    return res.status(400).json({ error: 'Could not parse file. Ensure it is a valid CSV or XLSX.' });
+  }
+
+  if (rows.length === 0) return res.status(400).json({ error: 'File is empty or has no data rows' });
+  if (rows.length > 1000) return res.status(400).json({ error: 'Max 1000 rows per import' });
+
+  // Detect columns
+  const colMap = {};
+  for (const k of Object.keys(rows[0])) {
+    const nk = normalize(k);
+    if (/brand/.test(nk)) colMap.brand = k;
+    else if (/name|cigar/.test(nk)) colMap.name = k;
+    else if (/date|smoked|when/.test(nk)) colMap.date = k;
+    else if (/rating|score|points/.test(nk)) colMap.rating = k;
+    else if (/notes?|review|tasting|comment/.test(nk)) colMap.notes = k;
+    else if (/pairing|drink|beverage|with/.test(nk)) colMap.pairing = k;
+  }
+
+  const cigars = await db.all('SELECT id, brand, name FROM cigars', []);
+
+  const preview = [];
+  for (const row of rows) {
+    const rawBrand  = (row[colMap.brand]   || '').toString().trim();
+    const rawName   = (row[colMap.name]    || '').toString().trim();
+    const rawDate   = (row[colMap.date]    || '').toString().trim();
+    const rawRating = parseInt((row[colMap.rating] || '').toString()) || null;
+    const rawNotes  = (row[colMap.notes]   || '').toString().trim();
+    const rawPairing= (row[colMap.pairing] || '').toString().trim();
+
+    if (!rawBrand && !rawName) continue;
+
+    const searchStr = [rawBrand, rawName].filter(Boolean).join(' ');
+    let bestCigar = null, bestScore = 0;
+    for (const c of cigars) {
+      const score = similarity(searchStr, `${c.brand} ${c.name}`);
+      if (score > bestScore) { bestScore = score; bestCigar = c; }
+    }
+
+    preview.push({
+      row_index: preview.length,
+      raw: { brand: rawBrand, name: rawName, date: rawDate, rating: rawRating, notes: rawNotes, pairing: rawPairing },
+      match: bestCigar && bestScore >= 0.35 ? {
+        cigar_id: bestCigar.id,
+        brand: bestCigar.brand,
+        name: bestCigar.name,
+        confidence: Math.round(bestScore * 100),
+      } : null,
+    });
+  }
+
+  res.json({ preview, total: preview.length, matched: preview.filter(r => r.match).length });
+}));
+
+// Smoke log import — confirm
+router.post('/users/me/import-smoke-log/confirm', requireAuth, asyncRoute(async (req, res) => {
+  const { rows } = req.body;
+  if (!Array.isArray(rows) || rows.length === 0) return res.status(400).json({ error: 'No rows to import' });
+
+  let imported = 0, skipped = 0;
+  for (const row of rows) {
+    if (!row.cigar_id || !row.rating) { skipped++; continue; }
+
+    // Skip exact duplicates (same user, cigar, date)
+    if (row.date) {
+      const dup = await db.get('SELECT id FROM reviews WHERE user_id = ? AND cigar_id = ? AND logged_date = ?', [req.user.id, row.cigar_id, row.date]);
+      if (dup) { skipped++; continue; }
+    }
+
+    await db.run(
+      'INSERT INTO reviews (user_id, cigar_id, logged_date, rating, review_text, pairing) VALUES (?, ?, ?, ?, ?, ?)',
+      [req.user.id, row.cigar_id, row.date || null, row.rating, row.notes || null, row.pairing || null]
+    );
+    imported++;
+  }
+
+  res.json({ imported, skipped });
+}));
+
 module.exports = router;

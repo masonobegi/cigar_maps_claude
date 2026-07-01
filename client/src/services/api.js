@@ -117,6 +117,17 @@ export const api = {
   },
   importConfirm: (storeId, rows) => request(`/stores/${storeId}/import/confirm`, { method: 'POST', body: JSON.stringify({ rows }) }),
 
+  // Smoke Log Import
+  importSmokeLogPreview: (formData) => {
+    const t = getToken();
+    return fetch(`${BASE}/users/me/import-smoke-log/preview`, {
+      method: 'POST',
+      headers: t ? { Authorization: `Bearer ${t}` } : {},
+      body: formData,
+    }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Preview failed'); return d; });
+  },
+  importSmokeLogConfirm: (rows) => request('/users/me/import-smoke-log/confirm', { method: 'POST', body: JSON.stringify({ rows }) }),
+
   // Admin
   adminGetStats: () => request('/admin/stats'),
   adminGetVerifications: (status) => request(`/admin/verifications${status ? `?status=${status}` : ''}`),

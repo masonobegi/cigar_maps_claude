@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square, AlertCircle } from 'lucide-react';
+import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square, AlertCircle, Upload, Download, X } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -308,6 +308,198 @@ function timeAgo(dateStr) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
+function ImportSmokeLogModal({ onClose, onImported }) {
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState([]);
+  const [selected, setSelected] = useState({});
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  function downloadTemplate() {
+    const csv = [
+      'brand,cigar_name,date_smoked,rating,notes,pairing',
+      'Padron,1964 Anniversary Series,2024-01-15,94,"Rich dark chocolate and earth",Scotch whisky',
+      'Arturo Fuente,Opus X,2024-02-20,96,"Pepper and cedar with a long finish",Coffee',
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'cigarbuddy-smoke-log-template.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('file', file);
+    setLoading(true); setError('');
+    try {
+      const data = await api.importSmokeLogPreview(fd);
+      setPreview(data.preview);
+      const sel = {};
+      for (const row of data.preview) {
+        sel[row.row_index] = !!(row.match && row.match.confidence >= 50 && row.raw.rating);
+      }
+      setSelected(sel);
+      setStep(2);
+    } catch (e2) { setError(e2.message); }
+    finally { setLoading(false); }
+  }
+
+  async function confirmImport() {
+    const rows = preview
+      .filter(r => selected[r.row_index] && r.match)
+      .map(r => ({ cigar_id: r.match.cigar_id, date: r.raw.date || null, rating: r.raw.rating || null, notes: r.raw.notes || null, pairing: r.raw.pairing || null }));
+    if (rows.length === 0) { setError('No rows selected'); return; }
+    setLoading(true);
+    try {
+      const res = await api.importSmokeLogConfirm(rows);
+      setResult(res); setStep(3); onImported?.();
+    } catch (e2) { setError(e2.message); }
+    finally { setLoading(false); }
+  }
+
+  const selectedCount = preview.filter(r => selected[r.row_index] && r.match).length;
+  const matchedCount = preview.filter(r => r.match && r.match.confidence >= 50).length;
+  const unmatchedCount = preview.filter(r => !r.match || r.match.confidence < 50).length;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={onClose}>
+      <div className="w-full max-w-xl max-h-[85vh] flex flex-col rounded-xl overflow-hidden"
+        style={{ backgroundColor: '#1D1912', border: '1px solid #3D3428' }}
+        onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #3D3428' }}>
+          <div>
+            <h2 className="font-serif text-lg font-bold" style={{ color: '#E8DDD0' }}>Import Smoke Log</h2>
+            <p className="text-xs mt-0.5" style={{ color: '#7A6858' }}>Step {step} of 3</p>
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#7A6858', cursor: 'pointer', padding: 4 }}>
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-5">
+
+          {step === 1 && (
+            <div className="flex flex-col gap-5">
+              <div className="rounded-lg p-4 text-sm" style={{ backgroundColor: 'rgba(168,104,26,0.08)', border: '1px solid rgba(168,104,26,0.2)' }}>
+                <p className="font-medium mb-2" style={{ color: '#D4A040' }}>How it works</p>
+                <ul className="space-y-1 text-xs" style={{ color: '#9A8A75' }}>
+                  <li>• Your file needs <strong style={{ color: '#E8DDD0' }}>brand</strong> and <strong style={{ color: '#E8DDD0' }}>cigar_name</strong> columns (required)</li>
+                  <li>• Also reads: date_smoked, rating (0–100), notes, pairing</li>
+                  <li>• Each row is matched against cigars in our catalog</li>
+                  <li>• You review matches before anything is imported</li>
+                </ul>
+              </div>
+
+              <div>
+                <button onClick={downloadTemplate} className="btn-secondary flex items-center gap-2 text-sm mb-4">
+                  <Download className="w-4 h-4" /> Download CSV Template
+                </button>
+
+                <label className="flex flex-col items-center gap-3 rounded-lg p-8 cursor-pointer transition-colors"
+                  style={{ border: '2px dashed #3D3428' }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = '#A8681A'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = '#3D3428'}>
+                  <Upload className="w-8 h-8" style={{ color: '#5A4A3A' }} />
+                  <div className="text-center">
+                    <p className="text-sm font-medium" style={{ color: '#C8BAA8' }}>Drop CSV or XLSX here</p>
+                    <p className="text-xs mt-1" style={{ color: '#5A4A3A' }}>or click to browse · max 1,000 rows</p>
+                  </div>
+                  <input type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFile} disabled={loading} />
+                </label>
+              </div>
+
+              {loading && <p className="text-center text-sm" style={{ color: '#9A8A75' }}>Parsing file and matching cigars...</p>}
+              {error && <p className="text-sm" style={{ color: '#F87171' }}>{error}</p>}
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4 text-sm">
+                <span style={{ color: '#4ADE80' }}><CheckCircle className="w-4 h-4 inline mr-1" />{matchedCount} matched</span>
+                {unmatchedCount > 0 && <span style={{ color: '#5A4A3A' }}><AlertCircle className="w-4 h-4 inline mr-1" />{unmatchedCount} unmatched (skipped)</span>}
+              </div>
+
+              <p className="text-xs" style={{ color: '#7A6858' }}>
+                Only rows with a rating will be imported. Uncheck any you want to skip.
+              </p>
+
+              <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '340px' }}>
+                {preview.map(row => {
+                  const conf = row.match?.confidence;
+                  const confColor = conf >= 80 ? '#4ADE80' : conf >= 50 ? '#FCD34D' : '#F87171';
+                  const canImport = row.match && conf >= 50 && row.raw.rating;
+                  return (
+                    <label key={row.row_index}
+                      className="flex items-start gap-3 rounded-lg p-3 cursor-pointer"
+                      style={{ backgroundColor: '#201D15', border: '1px solid #3D3428', opacity: canImport ? 1 : 0.45 }}>
+                      <input type="checkbox"
+                        checked={!!selected[row.row_index]}
+                        onChange={e => setSelected(s => ({ ...s, [row.row_index]: e.target.checked }))}
+                        disabled={!canImport}
+                        className="mt-0.5 flex-shrink-0 accent-amber-600" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-medium truncate" style={{ color: '#E8DDD0' }}>
+                            {row.raw.brand} {row.raw.name}
+                          </span>
+                          {row.raw.date && <span className="text-xs" style={{ color: '#5A4A3A' }}>{row.raw.date}</span>}
+                          {row.raw.rating
+                            ? <span className="text-xs font-bold" style={{ color: '#C9882A' }}>{row.raw.rating}pts</span>
+                            : <span className="text-xs" style={{ color: '#F87171' }}>no rating</span>}
+                        </div>
+                        {canImport
+                          ? <p className="text-xs mt-0.5" style={{ color: confColor }}>→ {row.match.brand} {row.match.name} ({conf}% match)</p>
+                          : !row.match || conf < 50
+                            ? <p className="text-xs mt-0.5" style={{ color: '#F87171' }}>No catalog match — skipped</p>
+                            : <p className="text-xs mt-0.5" style={{ color: '#F87171' }}>Rating required to import</p>}
+                        {row.raw.notes && <p className="text-xs mt-0.5 truncate italic" style={{ color: '#5A4A3A' }}>"{row.raw.notes}"</p>}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+              {error && <p className="text-sm" style={{ color: '#F87171' }}>{error}</p>}
+            </div>
+          )}
+
+          {step === 3 && result && (
+            <div className="text-center py-8">
+              <CheckCircle className="w-14 h-14 mx-auto mb-4" style={{ color: '#4ADE80' }} />
+              <h3 className="font-serif text-xl font-bold mb-2" style={{ color: '#E8DDD0' }}>Import Complete</h3>
+              <p style={{ color: '#9A8A75' }}>
+                <span style={{ color: '#4ADE80', fontWeight: 700 }}>{result.imported}</span> entries added to your journal.
+                {result.skipped > 0 && <span style={{ color: '#5A4A3A' }}> {result.skipped} skipped (no match or duplicate).</span>}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex gap-2 p-5" style={{ borderTop: '1px solid #3D3428' }}>
+          {step === 1 && <button onClick={onClose} className="btn-secondary flex-1">Cancel</button>}
+          {step === 2 && (
+            <>
+              <button onClick={() => { setStep(1); setError(''); }} className="btn-secondary">← Back</button>
+              <button onClick={confirmImport} disabled={loading || selectedCount === 0} className="btn-primary flex-1 disabled:opacity-50">
+                {loading ? 'Importing...' : `Import ${selectedCount} Entr${selectedCount === 1 ? 'y' : 'ies'}`}
+              </button>
+            </>
+          )}
+          {step === 3 && <button onClick={onClose} className="btn-primary flex-1">Done</button>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -328,6 +520,7 @@ export default function Dashboard() {
   const [profileForm, setProfileForm] = useState({ name: user?.name || '', bio: '', location_city: '', location_state: '' });
   const [saving, setSaving] = useState(false);
   const [expandedReview, setExpandedReview] = useState(null);
+  const [importModal, setImportModal] = useState(false);
   const [sheetLoading, setSheetLoading] = useState(false);
   const [sessionNote, setSessionNote] = useState(null); // { minutes, label } — shows after timer stops
 
@@ -604,14 +797,25 @@ export default function Dashboard() {
       {/* Journal / logbook reviews */}
       {tab === 'journal' && (
         <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs" style={{ color: '#5A4A3A' }}>{reviews.length} entr{reviews.length === 1 ? 'y' : 'ies'}</p>
+            <button onClick={() => setImportModal(true)} className="btn-secondary text-xs flex items-center gap-1.5 py-1.5">
+              <Upload className="w-3.5 h-3.5" /> Import from CSV
+            </button>
+          </div>
           {reviews.length === 0 ? (
             <div className="text-center py-12">
               <BookOpen className="w-10 h-10 text-stone-700 mx-auto mb-3" />
               <p className="text-stone-400 font-medium">Your journal is empty</p>
-              <p className="text-stone-600 text-sm mt-1">Log your next smoke from any cigar page.</p>
-              <Link to="/search" className="btn-primary mt-4 inline-flex items-center gap-2">
-                Browse Cigars <ArrowRight className="w-4 h-4" />
-              </Link>
+              <p className="text-stone-600 text-sm mt-1">Log your next smoke from any cigar page — or import from a spreadsheet.</p>
+              <div className="flex gap-2 justify-center mt-4">
+                <Link to="/search" className="btn-primary inline-flex items-center gap-2">
+                  Browse Cigars <ArrowRight className="w-4 h-4" />
+                </Link>
+                <button onClick={() => setImportModal(true)} className="btn-secondary inline-flex items-center gap-2">
+                  <Upload className="w-4 h-4" /> Import
+                </button>
+              </div>
             </div>
           ) : reviews.map(r => (
             <LogbookEntry
@@ -867,6 +1071,16 @@ export default function Dashboard() {
             />
           </div>
         </div>
+      )}
+
+      {importModal && (
+        <ImportSmokeLogModal
+          onClose={() => setImportModal(false)}
+          onImported={async () => {
+            const rev = await api.getMyReviews();
+            setReviews(rev);
+          }}
+        />
       )}
     </div>
   );
