@@ -41,11 +41,16 @@ router.post('/me/humidor', requireAuth, asyncRoute(async (req, res) => {
 
   // Treat empty strings as NULL so PostgreSQL typed columns don't error
   const n = v => (v === '' || v == null) ? null : v;
+  const finalStatus = status || 'humidor';
   const result = await db.run(`
     INSERT INTO user_cigars (user_id, cigar_id, size_label, status, quantity, purchase_price, purchase_date, notes, aging_goal_date)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
-  `, [req.user.id, cigar_id, n(size_label), status || 'humidor', quantity || 1,
+  `, [req.user.id, cigar_id, n(size_label), finalStatus, quantity || 1,
     n(purchase_price), n(purchase_date), n(notes), n(aging_goal_date)]);
+
+  if (finalStatus === 'smoked') {
+    await db.run("DELETE FROM smoke_list WHERE user_id = ? AND cigar_id = ? AND status = 'pending'", [req.user.id, cigar_id]);
+  }
 
   res.json({ id: result.lastInsertRowid });
 }));

@@ -80,9 +80,8 @@ export default function CigarDetail() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('overview');
   const [humidorModal, setHumidorModal] = useState(false);
-  const [humidorModalMode, setHumidorModalMode] = useState('humidor');
   const [reviewModal, setReviewModal] = useState(false);
-  const [humidorForm, setHumidorForm] = useState({ size_label: '', quantity: 1, purchase_price: '', purchase_date: '', notes: '' });
+  const [humidorForm, setHumidorForm] = useState({ size_label: '', status: 'humidor', quantity: 1, purchase_price: '', purchase_date: '', notes: '' });
   const [onSmokeList, setOnSmokeList] = useState(false);
   const [stores, setStores] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -127,9 +126,10 @@ export default function CigarDetail() {
     if (!user) return navigate('/login');
     setSaving(true);
     try {
-      await api.addToHumidor({ cigar_id: id, status: humidorModalMode, ...humidorForm });
+      await api.addToHumidor({ cigar_id: id, ...humidorForm });
       setHumidorModal(false);
-      toast(humidorModalMode === 'smoked' ? 'Logged as smoked' : 'Added to your humidor');
+      if (humidorForm.status === 'smoked') setOnSmokeList(false);
+      toast(humidorForm.status === 'smoked' ? 'Logged as smoked' : 'Added to your humidor');
     } catch (e) { toast(e.message, 'error'); }
     finally { setSaving(false); }
   }
@@ -291,11 +291,8 @@ export default function CigarDetail() {
 
       {/* Action buttons */}
       <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-8">
-        <button onClick={() => { setHumidorModalMode('humidor'); setHumidorModal(true); }} className="btn-primary flex items-center justify-center gap-2">
+        <button onClick={() => setHumidorModal(true)} className="btn-primary flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> Add to Humidor
-        </button>
-        <button onClick={() => { setHumidorModalMode('smoked'); setHumidorModal(true); }} className="btn-secondary flex items-center justify-center gap-2">
-          <BookOpen className="w-4 h-4" /> Log as Smoked
         </button>
         <button onClick={() => setReviewModal(true)} className="btn-secondary flex items-center justify-center gap-2">
           <BookOpen className="w-4 h-4" /> Log to Journal
@@ -542,9 +539,27 @@ export default function CigarDetail() {
           onClick={() => setHumidorModal(false)}>
           <div className="card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
             onClick={e => e.stopPropagation()}>
-            <h2 className="font-serif text-lg font-bold" style={{color: NAVY}}>
-              {humidorModalMode === 'smoked' ? 'Log as Smoked' : 'Add to Humidor'}
-            </h2>
+            <h2 className="font-serif text-lg font-bold" style={{color: NAVY}}>Add to Collection</h2>
+
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{color: MUTED}}>Status</label>
+              <div className="flex gap-2">
+                {[
+                  { value: 'humidor', label: 'In Humidor' },
+                  { value: 'smoked', label: 'Already Smoked' },
+                  { value: 'wishlist', label: 'Wishlist' },
+                ].map(opt => (
+                  <button key={opt.value} type="button"
+                    onClick={() => setHumidorForm(f => ({ ...f, status: opt.value }))}
+                    className="flex-1 py-2 text-xs font-semibold rounded transition-all"
+                    style={humidorForm.status === opt.value
+                      ? { backgroundColor: '#A8681A', color: '#F5EAD8', border: '1px solid #A8681A' }
+                      : { backgroundColor: 'transparent', color: '#9A8A75', border: '1px solid #3D3428' }}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -594,7 +609,7 @@ export default function CigarDetail() {
             <div className="flex gap-2 pt-1">
               <button onClick={() => setHumidorModal(false)} className="btn-secondary flex-1">Cancel</button>
               <button onClick={addToHumidor} disabled={saving} className="btn-primary flex-1">
-                {saving ? 'Saving...' : humidorModalMode === 'smoked' ? 'Log as Smoked' : 'Add to Humidor'}
+                {saving ? 'Saving...' : humidorForm.status === 'smoked' ? 'Log as Smoked' : 'Save'}
               </button>
             </div>
           </div>
