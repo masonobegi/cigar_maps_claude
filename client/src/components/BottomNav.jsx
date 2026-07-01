@@ -36,18 +36,29 @@ export default function BottomNav() {
   ].filter(item => !(isStore && item.label === 'Humidor'));
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/10" style={{backgroundColor: '#201C16', paddingBottom: 'env(safe-area-inset-bottom)'}}>
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50"
+      style={{
+        backgroundColor: '#1D1912',
+        borderTop: '1px solid #3D3428',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}>
       <div className="flex">
         {items.map(({ to, icon: Icon, label }) => {
           const active = path === to || (to !== '/' && path.startsWith(to));
           const showBadge = label === 'Humidor' && notifCount > 0;
           return (
-            <Link key={to} to={to}
-              className={`flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] transition-colors relative ${active ? 'text-amber-400' : 'text-blue-300 hover:text-white'}`}>
+            <Link
+              key={to}
+              to={to}
+              className="flex-1 flex flex-col items-center justify-center pt-2 pb-2 gap-0.5 min-h-[52px] relative transition-colors"
+              style={{ color: active ? '#C9882A' : '#5A4A3A', textDecoration: 'none' }}
+              onMouseEnter={e => !active && (e.currentTarget.style.color = '#9A8A75')}
+              onMouseLeave={e => !active && (e.currentTarget.style.color = '#5A4A3A')}>
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {showBadge && (
-                  <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-amber-500 rounded-full text-[8px] font-bold text-white flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 rounded-full text-[8px] font-bold flex items-center justify-center"
+                    style={{ backgroundColor: '#C9882A', color: '#17130E' }}>
                     {notifCount > 9 ? '9+' : notifCount}
                   </span>
                 )}
