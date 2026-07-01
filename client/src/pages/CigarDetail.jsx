@@ -91,9 +91,11 @@ export default function CigarDetail() {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
+    const loc = (() => { try { return JSON.parse(localStorage.getItem('cb_location_v1')); } catch { return null; } })();
+    const availParams = loc?.lat ? { lat: loc.lat, lng: loc.lng } : {};
     Promise.all([
       api.getCigar(id),
-      api.getCigarAvailability(id),
+      api.getCigarAvailability(id, availParams),
       api.getCigarReviews(id, { limit: 20 }),
       api.searchStores(),
       api.getCigarFollowStatus(id),
@@ -101,7 +103,14 @@ export default function CigarDetail() {
     ]).then(([d, avail, rev, storeList, followStatus, imgs]) => {
       setData(d);
       setImages(imgs);
-      setAvailability(avail);
+      // Sort by distance if available
+      const sorted = [...avail].sort((a, b) => {
+        if (a.distance_mi != null && b.distance_mi != null) return a.distance_mi - b.distance_mi;
+        if (a.distance_mi != null) return -1;
+        if (b.distance_mi != null) return 1;
+        return 0;
+      });
+      setAvailability(sorted);
       setReviews(rev.reviews);
       setStores(storeList);
       setFollowing(followStatus.following);
@@ -450,7 +459,10 @@ export default function CigarDetail() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs mt-0.5" style={{color: MUTED}}>{store.city}, {store.state}</p>
+                  <p className="text-xs mt-0.5" style={{color: MUTED}}>
+                    {store.city}, {store.state}
+                    {store.distance_mi != null && <span className="ml-2" style={{color: AMBER}}>{store.distance_mi} mi away</span>}
+                  </p>
                 </div>
                 {store.phone && (
                   <a href={`tel:${store.phone}`} className="text-xs font-medium hover:underline whitespace-nowrap"

@@ -329,6 +329,7 @@ export default function Dashboard() {
   const [saving, setSaving] = useState(false);
   const [expandedReview, setExpandedReview] = useState(null);
   const [sheetLoading, setSheetLoading] = useState(false);
+  const [sessionNote, setSessionNote] = useState(null); // { minutes, label } — shows after timer stops
 
   async function loadAll() {
     setLoading(true);
@@ -491,7 +492,7 @@ export default function Dashboard() {
                 <p className="text-xs text-stone-400 truncate">{timer.label}</p>
               </div>
               <span className="font-mono text-xl font-bold text-amber-400 flex-shrink-0">{timer.formattedTime}</span>
-              <button onClick={() => timer.stop()} className="btn-secondary text-xs py-1.5 px-3 flex-shrink-0">Stop</button>
+              <button onClick={() => { const mins = timer.stop(); setSessionNote({ minutes: mins, label: timer.label }); }} className="btn-secondary text-xs py-1.5 px-3 flex-shrink-0">Stop</button>
             </div>
           )}
 
@@ -844,6 +845,62 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Smoke session notes modal */}
+      {sessionNote && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70"
+          onClick={() => setSessionNote(null)}>
+          <div className="rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 flex flex-col gap-4"
+            style={{ backgroundColor: '#262018', border: '1px solid #453C2E' }}
+            onClick={e => e.stopPropagation()}>
+            <div>
+              <h2 className="text-lg font-bold" style={{ color: '#E8DDD0' }}>Session complete 🎉</h2>
+              <p className="text-sm mt-1" style={{ color: '#9E8E7E' }}>
+                {sessionNote.label} — {sessionNote.minutes} min
+              </p>
+            </div>
+            <SessionNoteForm
+              minutes={sessionNote.minutes}
+              label={sessionNote.label}
+              onClose={() => setSessionNote(null)}
+              toast={toast}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SessionNoteForm({ minutes, label, onClose, toast }) {
+  const [note, setNote] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    try {
+      const sessions = JSON.parse(localStorage.getItem('cb_smoke_sessions') || '[]');
+      sessions.unshift({ label, minutes, note: note.trim(), date: new Date().toISOString() });
+      localStorage.setItem('cb_smoke_sessions', JSON.stringify(sessions.slice(0, 50)));
+      toast(note.trim() ? 'Session notes saved!' : 'Session logged!');
+      onClose();
+    } finally { setSaving(false); }
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <textarea
+        value={note}
+        onChange={e => setNote(e.target.value)}
+        placeholder="How was it? Flavor notes, draw, burn quality..."
+        rows={4}
+        className="input resize-none"
+        autoFocus
+      />
+      <div className="flex gap-2">
+        <button onClick={onClose} className="btn-secondary flex-1">Skip</button>
+        <button onClick={save} disabled={saving} className="btn-primary flex-1">Save Notes</button>
+      </div>
     </div>
   );
 }

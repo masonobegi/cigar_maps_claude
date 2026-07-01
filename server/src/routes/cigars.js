@@ -3,6 +3,13 @@ const db = require('../database/db');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3958.8, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
 router.get('/', asyncRoute(async (req, res) => {
   const { q, brand, strength, wrapper, country, city, state, min_price, max_price,
     in_stock_only, sort = 'popular' } = req.query;
@@ -157,7 +164,7 @@ router.get('/:id', optionalAuth, asyncRoute(async (req, res) => {
 }));
 
 router.get('/:id/availability', asyncRoute(async (req, res) => {
-  const { city, state } = req.query;
+  const { city, state, lat, lng } = req.query;
   let where = 'i.cigar_id = ? AND i.in_stock = 1';
   const params = [req.params.id];
   if (city) { where += ' AND s.city LIKE ?'; params.push(`%${city}%`); }
@@ -165,7 +172,7 @@ router.get('/:id/availability', asyncRoute(async (req, res) => {
 
   const rows = await db.all(`
     SELECT s.id as store_id, s.name as store_name, s.city, s.state, s.phone, s.verified,
-      s.has_lounge, s.has_walk_in_humidor,
+      s.has_lounge, s.has_walk_in_humidor, s.lat, s.lng,
       v.name as vitola_name, v.length, v.ring_gauge,
       i.price, i.quantity, i.in_stock, i.vitola_id, i.is_new_arrival
     FROM inventory i
@@ -176,12 +183,17 @@ router.get('/:id/availability', asyncRoute(async (req, res) => {
   `, params);
 
   const storeMap = {};
+  const userLat = parseFloat(lat), userLng = parseFloat(lng);
   for (const row of rows) {
     if (!storeMap[row.store_id]) {
+      let distance_mi = null;
+      if (!isNaN(userLat) && !isNaN(userLng) && row.lat && row.lng) {
+        distance_mi = Math.round(haversine(userLat, userLng, row.lat, row.lng) * 10) / 10;
+      }
       storeMap[row.store_id] = {
         store_id: row.store_id, name: row.store_name, city: row.city, state: row.state,
         phone: row.phone, verified: row.verified, has_lounge: row.has_lounge,
-        has_walk_in_humidor: row.has_walk_in_humidor, vitolas: []
+        has_walk_in_humidor: row.has_walk_in_humidor, distance_mi, vitolas: []
       };
     }
     storeMap[row.store_id].vitolas.push({

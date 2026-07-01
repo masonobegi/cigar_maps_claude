@@ -4,17 +4,9 @@ const https = require('https');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { createInventorySheet } = require('../utils/googleSheets');
+const { sendMail } = require('../utils/email');
 
-let transporter = null;
-try {
-  const nodemailer = require('nodemailer');
-  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-    });
-  }
-} catch (_) {}
+const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 3958.8;
@@ -433,8 +425,8 @@ router.get('/:id/analytics', requireAuth, asyncRoute(async (req, res) => {
 }));
 
 router.post('/:id/deals', requireAuth, asyncRoute(async (req, res) => {
-  const store = await db.get('SELECT id FROM stores WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
-  if (!store) return res.status(403).json({ error: 'Forbidden' });
+  const storeRow = await db.get('SELECT id, name FROM stores WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
+  if (!storeRow) return res.status(403).json({ error: 'Forbidden' });
 
   const { title, description, discount_percent, deal_price, cigar_id, expires_at } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
@@ -443,6 +435,39 @@ router.post('/:id/deals', requireAuth, asyncRoute(async (req, res) => {
     INSERT INTO deals (store_id, title, description, discount_percent, deal_price, cigar_id, expires_at)
     VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
   `, [req.params.id, title, description, discount_percent || null, deal_price || null, cigar_id || null, expires_at || null]);
+
+  // Insert in-app notification
+  await db.pool.query(
+    `INSERT INTO notifications (store_id, title, message, type) VALUES ($1, $2, $3, 'deal')`,
+    [req.params.id, `New deal at ${storeRow.name}`, `${title}${description ? ' — ' + description.slice(0, 80) : ''}`]
+  );
+
+  // Email followers who have notify_deals on
+  const followers = await db.all(`
+    SELECT u.email, u.name FROM store_follows sf
+    JOIN users u ON u.id = sf.user_id
+    WHERE sf.store_id = ? AND sf.notify_deals = 1 AND u.email IS NOT NULL
+  `, [req.params.id]);
+
+  const storeUrl = `${APP_URL}/stores/${req.params.id}?tab=deals`;
+  for (const f of followers) {
+    sendMail({
+      to: f.email,
+      subject: `New deal at ${storeRow.name}: ${title}`,
+      text: [
+        `${storeRow.name} just posted a new deal:`,
+        ``,
+        title,
+        description ? description : '',
+        discount_percent ? `-${discount_percent}% off` : deal_price ? `$${deal_price}` : '',
+        expires_at ? `Expires: ${new Date(expires_at).toLocaleDateString()}` : '',
+        ``,
+        `View deal: ${storeUrl}`,
+        ``,
+        `— CigarBuddy`,
+      ].filter(Boolean).join('\n'),
+    }).catch(() => {});
+  }
 
   res.json({ id: result.lastInsertRowid });
 }));
@@ -501,10 +526,11 @@ router.post('/:id/verification-request', requireAuth, asyncRoute(async (req, res
     VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
   `, [req.params.id, business_name, n(business_ein), n(business_phone), n(business_address), n(business_website), n(license_number), n(notes)]);
 
-  if (transporter) {
-    const body = `New verification request submitted:\n\nStore: ${store.name} (ID: ${store.id})\nBusiness Name: ${business_name}\nEIN: ${business_ein || 'N/A'}\nPhone: ${business_phone || 'N/A'}\nAddress: ${business_address || 'N/A'}\nWebsite: ${business_website || 'N/A'}\nLicense: ${license_number || 'N/A'}\nNotes: ${notes || 'N/A'}\n\nReview at: https://cigarmapsclaude-production.up.railway.app/admin`;
-    transporter.sendMail({ from: process.env.SMTP_USER, to: 'mason.obegi@gmail.com', subject: `[CigarBuddy] Verification Request: ${store.name}`, text: body }).catch(() => {});
-  }
+  sendMail({
+    to: 'mason.obegi@gmail.com',
+    subject: `[CigarBuddy] Verification Request: ${store.name}`,
+    text: `New verification request submitted:\n\nStore: ${store.name} (ID: ${store.id})\nBusiness Name: ${business_name}\nEIN: ${business_ein || 'N/A'}\nPhone: ${business_phone || 'N/A'}\nAddress: ${business_address || 'N/A'}\nWebsite: ${business_website || 'N/A'}\nLicense: ${license_number || 'N/A'}\nNotes: ${notes || 'N/A'}\n\nReview at: ${APP_URL}/admin`,
+  }).catch(() => {});
 
   res.json({ id: result.lastInsertRowid });
 }));
