@@ -50,7 +50,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
   const meta = await db.get("SELECT value FROM seed_meta WHERE key = 'osm_import_version'");
   if (!force && meta && meta.value === version) return { skipped: true, reason: `already imported ${version}` };
 
-  const existing = await db.all('SELECT id, name, lat, lng, source, source_id, osm_id, claimed, staff_edited, visible, store_type FROM stores');
+  const existing = await db.all('SELECT id, name, lat, lng, source, source_id, osm_id, claimed, staff_edited, visible, store_type, storefront FROM stores');
   // Directory rows are addressed by source + id. An OSM id is also indexed on
   // its own so a listing first imported from OSM is upgraded in place when a
   // later build folds it into an Overture record.
@@ -100,6 +100,12 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // listing's type or visibility by hand, a refreshed source file must
         // not silently undo it.
         const keepStaff = !!found.staff_edited;
+        // A sweep has already ruled this listing out: it is a wholesaler, an
+        // online-only seller, or a shop that has shut. Re-importing must not
+        // put it back on the map just because the classifier still likes its
+        // name — that regression put Cigar City Brewing back among the cigar
+        // shops once already.
+        const ruledOut = ['not_retail', 'online_only', 'closed'].includes(found.storefront);
         await db.run(`
           UPDATE stores SET
             name = ?, address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),
@@ -115,7 +121,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw,
             keepStaff ? found.store_type : store_type,
             confidence,
-            keepStaff ? found.visible : (closedAtSource ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
+            keepStaff ? found.visible : ((closedAtSource || ruledOut) ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
             opStatus, closedAtSource,
             s.has_lounge || 0, s.has_walk_in_humidor || 0, found.id]);
         updated++;
