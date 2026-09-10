@@ -465,6 +465,14 @@ const MIGRATIONS = [
   // Which matcher read this shop's menu. A fix to the matcher makes every
   // shop read by the old one stale, so the correction reaches existing rows.
   { name: '085_stores_menu_matcher_version', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_matcher_version INTEGER' },
+
+  // Where a catalog line came from. 'curated' lines were written by a person
+  // and carry tasting notes; 'shop_feed' lines were learned from what shops
+  // actually sell, and know only brand, line and sizes until someone fills
+  // them in. Keeping them apart means a curator can find the thin ones.
+  { name: '086_cigars_source', sql: "ALTER TABLE cigars ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'curated'" },
+  { name: '087_cigars_seen_at_stores', sql: 'ALTER TABLE cigars ADD COLUMN IF NOT EXISTS seen_at_stores INTEGER DEFAULT 0' },
+  { name: '088_cigars_brand_name_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_cigars_brand_name ON cigars (LOWER(brand), LOWER(name))' },
 ];
 
 async function runMigrations() {

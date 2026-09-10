@@ -515,24 +515,33 @@ export default function CigarDetail() {
             </div>
           )}
 
-          <div className="card p-5">
-            <SectionLabel>Blend Details</SectionLabel>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {[
-                { label: 'Wrapper', value: cigar.wrapper },
-                { label: 'Binder', value: cigar.binder },
-                { label: 'Filler', value: cigar.filler },
-                { label: 'Origin', value: cigar.country },
-                { label: 'Strength', value: STRENGTH_LABEL[cigar.strength] },
-                { label: 'Est.', value: cigar.year_introduced },
-              ].filter(i => i.value).map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-xs uppercase tracking-wider mb-1" style={{color: LABEL}}>{label}</p>
-                  <p className="text-sm font-semibold" style={{color: NAVY}}>{value}</p>
+          {/* Lines learned from shop feeds know their brand and sizes but not
+              yet their blend, so this card only appears once there is
+              something to put in it. */}
+          {(() => {
+            const blend = [
+              { label: 'Wrapper', value: cigar.wrapper },
+              { label: 'Binder', value: cigar.binder },
+              { label: 'Filler', value: cigar.filler },
+              { label: 'Origin', value: cigar.country },
+              { label: 'Strength', value: STRENGTH_LABEL[cigar.strength] },
+              { label: 'Est.', value: cigar.year_introduced },
+            ].filter(i => i.value);
+            if (!blend.length) return null;
+            return (
+              <div className="card p-5">
+                <SectionLabel>Blend Details</SectionLabel>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {blend.map(({ label, value }) => (
+                    <div key={label}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{color: LABEL}}>{label}</p>
+                      <p className="text-sm font-semibold" style={{color: NAVY}}>{value}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })()}
 
           {(cigar.flavor_notes.length > 0 || top_flavors.length > 0) && (
             <div className="card p-5">

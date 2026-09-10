@@ -105,7 +105,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // put it back on the map just because the classifier still likes its
         // name — that regression put Cigar City Brewing back among the cigar
         // shops once already.
-        const ruledOut = ['not_retail', 'online_only', 'closed'].includes(found.storefront);
+        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate'].includes(found.storefront);
         await db.run(`
           UPDATE stores SET
             name = ?, address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),

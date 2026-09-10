@@ -967,7 +967,11 @@ export default function StoreProfile() {
                       <p className="font-bold mb-2" style={{ color: AMBER }}>{range}</p>
                     )}
 
-                    {item.sizes.length > 0 && (
+                    {/* A line learned from a shop feed with no size in its
+                        titles carries a single "Assorted" placeholder so its
+                        stock has somewhere to attach. The price range above
+                        already says everything that row would. */}
+                    {item.sizes.length > 0 && !(item.sizes.length === 1 && item.sizes[0].name === 'Assorted') && (
                       <div className="flex flex-col gap-1 mt-auto">
                         {item.sizes.slice(0, 4).map(s => {
                           const sr = priceRange(s.price_min, s.price_max);

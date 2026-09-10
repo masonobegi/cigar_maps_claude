@@ -466,7 +466,7 @@ function runStartupMenuScan({ log = console.log } = {}) {
 
 module.exports = {
   detectPlatform, fetchProducts, isCigarProduct, syncStoreMenu, scanStale,
-  runStartupMenuScan, loadIndex,
+  runStartupMenuScan, loadIndex, fetchUrl, safeUrl,
 };
 
 if (require.main === module) {
