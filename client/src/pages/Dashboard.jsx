@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square, AlertCircle, Upload, Download, X } from 'lucide-react';
+import { Package, Star, Heart, Clock, Flame, Plus, Trash2, Edit2, Bell, Store, CheckCircle, User, ListChecks, ChevronDown, ChevronUp, BookOpen, ArrowRight, Timer, Square, AlertCircle, Upload, Download, X, UserPlus } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -134,6 +134,15 @@ function LogbookEntry({ review, expanded, onToggle }) {
               <p className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Notes</p>
               <p className="text-sm text-stone-300 leading-relaxed italic">"{review.review_text}"</p>
             </div>
+          )}
+
+          {review.has_photo && (
+            <img
+              src={`/api/review-images/${review.id}`}
+              alt="Session photo"
+              className="w-full max-h-64 object-cover rounded-xl"
+              style={{ border: '1px solid #2A2218' }}
+            />
           )}
         </div>
       )}
@@ -511,7 +520,7 @@ export default function Dashboard() {
   const [reviews, setReviews] = useState([]);
   const [followedStores, setFollowedStores] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [feed, setFeed] = useState({ reviews: [], deals: [] });
+  const [feed, setFeed] = useState({ reviews: [], deals: [], suggestions: [], following_ids: [] });
   const [smokeList, setSmokeList] = useState([]);
   const [smokeFilter, setSmokeFilter] = useState('pending');
   const [loading, setLoading] = useState(true);
@@ -523,17 +532,20 @@ export default function Dashboard() {
   const [importModal, setImportModal] = useState(false);
   const [sheetLoading, setSheetLoading] = useState(false);
   const [sessionNote, setSessionNote] = useState(null); // { minutes, label } — shows after timer stops
+  const [recommendations, setRecommendations] = useState({ recommendations: [], has_profile: false, profile: null });
+  const [followingIds, setFollowingIds] = useState(new Set());
 
   async function loadAll() {
     setLoading(true);
     try {
-      const [h, r, stores, notifs, f, sl] = await Promise.all([
+      const [h, r, stores, notifs, f, sl, recs] = await Promise.all([
         api.getHumidor({ status: statusFilter }),
         api.getMyReviews(),
         api.getFollowedStores(),
         api.getNotifications(),
         api.getFeed(),
         api.getSmokeList(),
+        api.getRecommendations().catch(() => ({ recommendations: [], has_profile: false })),
       ]);
       setHumidor(h.items);
       setStats(h.stats);
@@ -542,6 +554,8 @@ export default function Dashboard() {
       setNotifications(notifs);
       setFeed(f);
       setSmokeList(sl);
+      setRecommendations(recs);
+      setFollowingIds(new Set(f.following_ids || []));
     } finally { setLoading(false); }
   }
 
@@ -598,6 +612,22 @@ export default function Dashboard() {
     setNotifications(ns => ns.map(n => n.id === id ? { ...n, is_read: 1 } : n));
   }
 
+  async function handleFollowUser(userId) {
+    try {
+      const { following } = await api.followUser(userId);
+      setFollowingIds(prev => {
+        const next = new Set(prev);
+        following ? next.add(userId) : next.delete(userId);
+        return next;
+      });
+      // Also update suggestions in feed so card disappears if needed
+      if (following) {
+        setFeed(f => ({ ...f, suggestions: (f.suggestions || []).filter(u => u.id !== userId) }));
+      }
+      toast(following ? 'Following' : 'Unfollowed');
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
   async function unfollowStore(storeId) {
     await api.followStore(storeId);
     setFollowedStores(s => s.filter(x => x.id !== storeId));
@@ -616,6 +646,7 @@ export default function Dashboard() {
     { key: 'collection', label: 'My Humidor' },
     { key: 'smokelist', label: 'Smoke List', badge: pendingSmoke },
     { key: 'journal', label: `Journal (${reviews.length})` },
+    { key: 'for_you', label: 'For You ✨' },
     { key: 'following', label: `Following (${followedStores.length})` },
     { key: 'notifications', label: 'Notifications', badge: unreadNotifs },
     { key: 'feed', label: 'Community' },
@@ -828,6 +859,75 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* For You — recommendations */}
+      {tab === 'for_you' && (
+        <div className="flex flex-col gap-4">
+          {recommendations.has_profile && recommendations.profile && (
+            <div className="rounded-xl p-3 text-sm" style={{ backgroundColor: 'rgba(168,104,26,0.08)', border: '1px solid rgba(168,104,26,0.2)' }}>
+              <p className="text-xs font-semibold mb-2" style={{ color: '#C9882A' }}>Your taste profile</p>
+              <div className="flex flex-wrap gap-1.5">
+                {recommendations.profile.strengths.map(s => (
+                  <span key={s} className="text-xs px-2 py-0.5 rounded-full capitalize" style={{ backgroundColor: '#2A1E0A', color: '#C9882A', border: '1px solid rgba(168,104,26,0.3)' }}>{s}</span>
+                ))}
+                {recommendations.profile.wrappers.map(w => (
+                  <span key={w} className="text-xs px-2 py-0.5 rounded-full capitalize" style={{ backgroundColor: '#1A1A2A', color: '#9090C0', border: '1px solid rgba(100,100,160,0.3)' }}>{w}</span>
+                ))}
+                {recommendations.profile.countries.map(c => (
+                  <span key={c} className="text-xs px-2 py-0.5 rounded-full capitalize" style={{ backgroundColor: '#1A2A1A', color: '#70B070', border: '1px solid rgba(80,140,80,0.3)' }}>{c}</span>
+                ))}
+                {recommendations.profile.flavors.map(f => (
+                  <span key={f} className="text-xs px-2 py-0.5 rounded-full capitalize" style={{ backgroundColor: '#221811', color: '#9A8A75', border: '1px solid #3A2E20' }}>{f}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!recommendations.has_profile && (
+            <div className="rounded-xl p-4 text-center" style={{ border: '1px solid #2A2218' }}>
+              <p className="text-sm text-stone-400 mb-1">Rate 5+ cigars 85+ to unlock your taste profile</p>
+              <p className="text-xs text-stone-600">These are the top-rated cigars in our catalog for now</p>
+            </div>
+          )}
+
+          {recommendations.recommendations.length === 0 ? (
+            <div className="text-center py-12 text-stone-500">No recommendations yet</div>
+          ) : (
+            <div className="grid grid-cols-1 gap-3">
+              {recommendations.recommendations.map(cigar => (
+                <Link key={cigar.id} to={`/cigars/${cigar.id}`} className="card p-4 flex items-start gap-3 hover:bg-stone-800/50 transition-colors no-underline">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#C9882A' }}>{cigar.brand}</p>
+                    <p className="font-semibold text-stone-200 leading-tight mt-0.5">{cigar.name}</p>
+                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-stone-500 mt-1">
+                      {cigar.strength && <span className="capitalize">{cigar.strength}</span>}
+                      {cigar.wrapper && <span className="capitalize">{cigar.wrapper}</span>}
+                      {cigar.country && <span>{cigar.country}</span>}
+                    </div>
+                    {cigar.flavor_notes?.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {cigar.flavor_notes.slice(0, 4).map(n => (
+                          <span key={n} className="text-[10px] px-1.5 py-0.5 rounded-full capitalize" style={{ backgroundColor: '#221811', color: '#9A8A75', border: '1px solid #3A2E20' }}>{n}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    {+cigar.avg_rating > 0 && (
+                      <div className="flex items-center gap-1 justify-end">
+                        <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                        <span className="text-sm font-bold text-amber-400">{cigar.avg_rating}</span>
+                      </div>
+                    )}
+                    {cigar.min_price && <p className="text-xs text-stone-500 mt-0.5">from ${(+cigar.min_price).toFixed(2)}</p>}
+                    {+cigar.store_count > 0 && <p className="text-[10px] text-stone-600 mt-0.5">{cigar.store_count} store{cigar.store_count !== 1 ? 's' : ''}</p>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Following */}
       {tab === 'following' && (
         <div className="flex flex-col gap-4">
@@ -934,12 +1034,13 @@ export default function Dashboard() {
       {/* Community Feed */}
       {tab === 'feed' && (
         <div className="flex flex-col gap-4">
-          {feed.deals.length > 0 && (
-            <div className="mb-2">
+          {/* Deals */}
+          {feed.deals?.length > 0 && (
+            <div className="mb-1">
               <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">Current Deals</h3>
               <div className="flex flex-col gap-2">
                 {feed.deals.map(d => (
-                  <Link key={d.id} to={`/stores/${d.store_id}`} className="card p-3 hover:border-stone-600 transition-colors">
+                  <Link key={d.id} to={`/stores/${d.store_id}?tab=deals`} className="card p-3 hover:border-stone-600 transition-colors">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-stone-200">{d.title}</p>
@@ -952,8 +1053,54 @@ export default function Dashboard() {
               </div>
             </div>
           )}
-          <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Recent Reviews</h3>
-          {feed.reviews.map(r => <ReviewCard key={r.id} review={r} showCigar />)}
+
+          {/* Reviews from followed users */}
+          {feed.reviews?.length > 0 ? (
+            <div className="flex flex-col gap-3">
+              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider">From people you follow</h3>
+              {feed.reviews.map(r => (
+                <ReviewCard key={r.id} review={r} showCigar
+                  onFollow={handleFollowUser}
+                  isFollowing={followingIds.has(r.user_id)} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl p-4 text-center" style={{ border: '1px solid #2A2218' }}>
+              <p className="text-sm text-stone-400 mb-1">Your feed is empty</p>
+              <p className="text-xs text-stone-600">Follow other members to see their reviews here</p>
+            </div>
+          )}
+
+          {/* Suggestions — people to discover */}
+          {feed.suggestions?.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">
+                {feed.reviews?.length > 0 ? 'Discover more reviewers' : 'Reviewers to follow'}
+              </h3>
+              <div className="flex flex-col gap-2">
+                {feed.suggestions.map(u => (
+                  <div key={u.id} className="card p-3 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+                      <User className="w-4 h-4 text-amber-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-stone-200">{u.name}</p>
+                      <p className="text-xs text-stone-500">
+                        {u.review_count} review{u.review_count !== 1 ? 's' : ''}
+                        {+u.avg_rating > 0 && <span className="ml-2">· avg {u.avg_rating}</span>}
+                        {u.location_city && <span className="ml-2">· {u.location_city}{u.location_state ? `, ${u.location_state}` : ''}</span>}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleFollowUser(u.id)}
+                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 flex-shrink-0">
+                      <UserPlus className="w-3.5 h-3.5" /> Follow
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

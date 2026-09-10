@@ -1,9 +1,34 @@
-const { Pool } = require('pg');
+const path = require('path');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
-});
+/**
+ * Database connection.
+ *
+ * Production (Railway): DATABASE_URL is set and we use a normal pg Pool.
+ * Local development: when DATABASE_URL is missing we fall back to PGlite, an
+ * embedded Postgres that needs no install or native build. Data lives in
+ * server/data/pglite (gitignored). Delete that folder to reset.
+ */
+let pool;
+
+if (process.env.DATABASE_URL) {
+  const { Pool } = require('pg');
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+} else {
+  const { PGlite } = require('@electric-sql/pglite');
+  const dir = process.env.PGLITE_DIR || path.join(__dirname, '..', '..', 'data', 'pglite');
+  const pg = new PGlite(dir);
+  console.log(`[db] No DATABASE_URL set — using embedded PGlite at ${dir}`);
+  pool = {
+    query: async (text, params = []) => {
+      const r = await pg.query(text, params);
+      return { rows: r.rows, rowCount: r.affectedRows || r.rows.length };
+    },
+    end: () => pg.close(),
+  };
+}
 
 function toPositional(sql) {
   let i = 0;

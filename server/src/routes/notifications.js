@@ -22,7 +22,7 @@ router.get('/', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'event' AND sf.notify_community = 1)
     )
     AND (n.created_by_user_id IS NULL OR n.created_by_user_id != ?)
-    AND NOT (n.type IN ('community', 'event') AND s.user_id = ?)
+    AND NOT (n.type IN ('community', 'event') AND s.user_id IS NOT DISTINCT FROM ?)
     ORDER BY n.created_at DESC
     LIMIT 50
   `, [req.user.id, req.user.id, req.user.id, req.user.id]);
@@ -45,7 +45,7 @@ router.get('/count', requireAuth, asyncRoute(async (req, res) => {
       (n.type = 'event' AND sf.notify_community = 1)
     )
     AND (n.created_by_user_id IS NULL OR n.created_by_user_id != ?)
-    AND NOT (n.type IN ('community', 'event') AND s.user_id = ?)
+    AND NOT (n.type IN ('community', 'event') AND s.user_id IS NOT DISTINCT FROM ?)
   `, [req.user.id, req.user.id, req.user.id, req.user.id]);
   res.json({ count: parseInt(row.count) });
 }));

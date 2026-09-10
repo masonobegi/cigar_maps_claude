@@ -10,10 +10,15 @@ try {
   }
 } catch (_) {}
 
+/**
+ * Resolves with the transporter result on success and `false` when nothing was
+ * sent (SMTP not configured, or the send failed). Never rejects, so callers
+ * that do not care about delivery can fire and forget.
+ */
 async function sendMail({ to, subject, text, html }) {
-  if (!transporter) return;
+  if (!transporter) return false;
   return transporter.sendMail({ from: process.env.SMTP_USER, to, subject, text, html })
-    .catch(err => console.error('[email] send failed:', err.message));
+    .catch(err => { console.error('[email] send failed:', err.message); return false; });
 }
 
 module.exports = { sendMail };

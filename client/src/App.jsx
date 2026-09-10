@@ -20,6 +20,12 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import EventCalendar from './pages/EventCalendar';
 import Footer from './components/Footer';
+import AgeGate from './components/AgeGate';
+import EmailVerifyBanner from './components/EmailVerifyBanner';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
+import Pricing from './pages/Pricing';
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -47,6 +53,10 @@ function AnimatedRoutes() {
       <Route path="/deals" element={<Deals />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/pricing" element={<Pricing />} />
       <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
       <Route path="/store-dashboard" element={<RequireAuth><StoreDashboard /></RequireAuth>} />
       <Route path="/passport" element={<RequireAuth><Passport /></RequireAuth>} />
@@ -62,7 +72,9 @@ function AnimatedRoutes() {
 function AppLayout() {
   return (
     <div className="min-h-screen flex flex-col">
+      <AgeGate />
       <Navbar />
+      <EmailVerifyBanner />
       {/* pb-20 ensures content clears the bottom nav on mobile; safe-area handled in CSS */}
       <main className="flex-1 pb-20 md:pb-6 page-enter">
         <AnimatedRoutes />

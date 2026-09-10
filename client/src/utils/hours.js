@@ -48,6 +48,19 @@ export function getStoreStatus(hours) {
   const parsed = parseHoursString(todayStr);
   if (!parsed) return { isOpen: null, label: todayStr, todayHours: todayStr };
 
+  // Closing after midnight ("11am-2am") gives a close time at or before open.
+  if (parsed.close <= parsed.open) {
+    if (nowMins >= parsed.open || nowMins < parsed.close) {
+      return { isOpen: true, label: `Open until ${formatTime(parsed.close)}`, todayHours: todayStr };
+    }
+    const minsUntil = parsed.open - nowMins;
+    return {
+      isOpen: false,
+      label: minsUntil < 60 ? `Opens in ${minsUntil}m` : `Opens at ${formatTime(parsed.open)}`,
+      todayHours: todayStr,
+    };
+  }
+
   if (nowMins < parsed.open) {
     const minsUntil = parsed.open - nowMins;
     const label = minsUntil < 60

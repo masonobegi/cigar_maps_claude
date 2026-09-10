@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Star, Check, X, Flame } from 'lucide-react';
+import { ChevronDown, ChevronUp, Star, Check, X, Flame, Camera } from 'lucide-react';
 
 const ALL_FLAVOR_NOTES = [
   'cedar', 'leather', 'earth', 'coffee', 'chocolate', 'dark chocolate', 'espresso',
@@ -74,6 +74,8 @@ function FlavorPicker({ label, value, onChange }) {
 }
 
 export default function ReviewLogbookForm({ cigar, vitolas, stores = [], onSubmit, onClose, saving }) {
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [form, setForm] = useState({
     vitola_id: vitolas[0]?.id || '',
     store_id: '',
@@ -271,12 +273,44 @@ export default function ReviewLogbookForm({ cigar, vitolas, stores = [], onSubmi
         </div>
       </Section>
 
+      {/* Session Photo */}
+      <Section title="Session Photo" subtitle="Optional photo from your smoke">
+        <label className="flex flex-col items-center gap-2 rounded-xl p-4 cursor-pointer transition-colors"
+          style={{ border: '2px dashed #3A2E20' }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#A8681A'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = '#3A2E20'}>
+          {photoPreview ? (
+            <img src={photoPreview} className="w-full max-h-44 object-cover rounded-lg" alt="preview" />
+          ) : (
+            <>
+              <Camera className="w-6 h-6 text-stone-600" />
+              <p className="text-xs text-stone-500 text-center">Tap to add a photo</p>
+            </>
+          )}
+          <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+            onChange={e => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setPhotoFile(file);
+              const reader = new FileReader();
+              reader.onload = ev => setPhotoPreview(ev.target.result);
+              reader.readAsDataURL(file);
+            }} />
+        </label>
+        {photoFile && (
+          <button type="button" className="text-xs text-red-400 mt-1"
+            onClick={() => { setPhotoFile(null); setPhotoPreview(null); }}>
+            Remove photo
+          </button>
+        )}
+      </Section>
+
       {/* Actions */}
       <div className="flex gap-2 pt-1">
         <button type="button" onClick={onClose} className="btn-secondary flex-1">Cancel</button>
         <button
           type="button"
-          onClick={() => onSubmit(form)}
+          onClick={() => onSubmit(form, photoFile)}
           disabled={saving || !form.rating || !form.vitola_id}
           className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
         >

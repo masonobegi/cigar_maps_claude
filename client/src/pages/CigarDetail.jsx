@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff, Camera, X, CheckCircle } from 'lucide-react';
+import { Star, MapPin, Store, Plus, Clock, BookOpen, ListChecks, Bell, BellOff, Camera, X, CheckCircle, Navigation } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -10,10 +10,45 @@ import ShareButton from '../components/ShareButton';
 import BackButton from '../components/BackButton';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
-const NAVY  = '#E8DDD0';
-const MUTED = '#9E8E7E';
-const LABEL = '#B0A090';
-const AMBER = '#D4882A';
+const NAVY   = '#E8DDD0';
+const MUTED  = '#9E8E7E';
+const LABEL  = '#B0A090';
+const AMBER  = '#D4882A';
+const BORDER = '#453C2E';
+
+const TYPE_LABEL = { cigar_lounge: 'Lounge', cigar_shop: 'Cigar shop', tobacco_shop: 'Tobacco shop', smoke_shop: 'Smoke shop' };
+const AVAIL_PREVIEW = 6;
+
+// Same key and shape the Stores page uses, so a location saved on either page
+// is the one both read back.
+function loadSavedLocation() {
+  try { return JSON.parse(localStorage.getItem('cb_location_v1') || 'null'); } catch { return null; }
+}
+
+function timeAgo(ts) {
+  if (!ts) return null;
+  const then = new Date(ts).getTime();
+  if (isNaN(then)) return null;
+  const mins = Math.floor((Date.now() - then) / 60000);
+  if (mins < 2) return 'just now';
+  if (mins < 60) return `${mins} minutes ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 31) return `${days} day${days === 1 ? '' : 's'} ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months === 1 ? '' : 's'} ago`;
+  const years = Math.floor(months / 12);
+  return `${years} year${years === 1 ? '' : 's'} ago`;
+}
+
+function priceLabel(s) {
+  const prices = (s.vitolas || []).map(v => v.price).filter(p => p != null);
+  const min = s.min_price != null ? s.min_price : (prices.length ? Math.min(...prices) : null);
+  const max = s.max_price != null ? s.max_price : (prices.length ? Math.max(...prices) : null);
+  if (min == null) return null;
+  return min === max ? `$${min.toFixed(2)}` : `$${min.toFixed(2)} – $${max.toFixed(2)}`;
+}
 
 const STRENGTH_LABEL = { mild: 'Mild', 'mild-medium': 'Mild-Medium', medium: 'Medium', 'medium-full': 'Medium-Full', full: 'Full' };
 
@@ -90,30 +125,24 @@ export default function CigarDetail() {
   const [images, setImages] = useState([]);
   const [imageUploadOpen, setImageUploadOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [userLoc, setUserLoc] = useState(loadSavedLocation);
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [availLoading, setAvailLoading] = useState(true);
+  const [showAllStores, setShowAllStores] = useState(false);
 
   useEffect(() => {
-    const loc = (() => { try { return JSON.parse(localStorage.getItem('cb_location_v1')); } catch { return null; } })();
-    const availParams = loc?.lat ? { lat: loc.lat, lng: loc.lng } : {};
     const smokeListCheck = user ? api.checkSmokeList(id).catch(() => ({ on_list: false })) : Promise.resolve({ on_list: false });
     Promise.all([
       api.getCigar(id),
-      api.getCigarAvailability(id, availParams),
       api.getCigarReviews(id, { limit: 20 }),
       api.searchStores(),
       api.getCigarFollowStatus(id),
       api.getCigarImages(id),
       smokeListCheck,
-    ]).then(([d, avail, rev, storeList, followStatus, imgs, smokeStatus]) => {
+    ]).then(([d, rev, storeList, followStatus, imgs, smokeStatus]) => {
       setData(d);
       setImages(imgs);
       setOnSmokeList(smokeStatus.on_list);
-      const sorted = [...avail].sort((a, b) => {
-        if (a.distance_mi != null && b.distance_mi != null) return a.distance_mi - b.distance_mi;
-        if (a.distance_mi != null) return -1;
-        if (b.distance_mi != null) return 1;
-        return 0;
-      });
-      setAvailability(sorted);
       setReviews(rev.reviews);
       setStores(storeList);
       setFollowing(followStatus.following);
@@ -121,6 +150,40 @@ export default function CigarDetail() {
       addRecentlyViewed(d.cigar);
     }).finally(() => setLoading(false));
   }, [id]);
+
+  // Availability reloads on its own so saving a location refreshes distances
+  // without re-fetching the whole page. The server does the sorting.
+  useEffect(() => {
+    let cancelled = false;
+    setAvailLoading(true);
+    setShowAllStores(false);
+    const params = userLoc?.lat != null && userLoc?.lng != null ? { lat: userLoc.lat, lng: userLoc.lng } : {};
+    api.getCigarAvailability(id, params)
+      .then(rows => { if (!cancelled) setAvailability(Array.isArray(rows) ? rows : []); })
+      .catch(() => { if (!cancelled) setAvailability([]); })
+      .finally(() => { if (!cancelled) setAvailLoading(false); });
+    return () => { cancelled = true; };
+  }, [id, userLoc?.lat, userLoc?.lng]);
+
+  function requestLocation() {
+    if (!navigator.geolocation) return toast('Location is not available in this browser.', 'error');
+    setGeoLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude, label: 'Current Location', isTemp: false };
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${loc.lat}&lon=${loc.lng}&format=json`);
+          const j = await res.json();
+          loc.label = j.address?.city || j.address?.town || j.address?.village || 'My Location';
+        } catch {}
+        try { localStorage.setItem('cb_location_v1', JSON.stringify(loc)); } catch {}
+        setUserLoc(loc);
+        setGeoLoading(false);
+      },
+      () => { setGeoLoading(false); toast('Could not read your location.', 'error'); },
+      { timeout: 8000 }
+    );
+  }
 
   async function addToHumidor() {
     if (!user) return navigate('/login');
@@ -134,11 +197,16 @@ export default function CigarDetail() {
     finally { setSaving(false); }
   }
 
-  async function submitReview(form) {
+  async function submitReview(form, photoFile) {
     if (!user) return navigate('/login');
     setSaving(true);
     try {
-      await api.postReview(id, form);
+      const { id: reviewId } = await api.postReview(id, form);
+      if (photoFile && reviewId) {
+        const fd = new FormData();
+        fd.append('photo', photoFile);
+        await api.uploadReviewPhoto(reviewId, fd).catch(() => {});
+      }
       const rev = await api.getCigarReviews(id, { limit: 20 });
       setReviews(rev.reviews);
       setReviewModal(false);
@@ -316,13 +384,118 @@ export default function CigarDetail() {
         </button>
       </div>
 
+      {/* Where to find it */}
+      <div className="mb-8">
+        <div className="flex items-end justify-between gap-3 mb-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{color: LABEL}}>Where to find it</p>
+            {userLoc?.lat != null && (
+              <p className="text-xs mt-1" style={{color: MUTED}}>
+                Nearest to {userLoc.label || 'your location'}
+              </p>
+            )}
+          </div>
+          <button onClick={requestLocation} disabled={geoLoading}
+            className="flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap disabled:opacity-60"
+            style={{color: AMBER}}>
+            <Navigation className="w-3.5 h-3.5" />
+            {geoLoading ? 'Locating…' : userLoc?.lat != null ? 'Update location' : 'Use my location'}
+          </button>
+        </div>
+
+        {availLoading ? (
+          <div className="card p-4 flex flex-col gap-3">
+            {[0, 1, 2].map(i => (
+              <div key={i} className="flex items-center justify-between gap-4">
+                <div className="flex-1 flex flex-col gap-2">
+                  <div className="h-4 skeleton rounded w-44" />
+                  <div className="h-3 skeleton rounded w-28" />
+                </div>
+                <div className="h-4 skeleton rounded w-16" />
+              </div>
+            ))}
+          </div>
+        ) : availability.length === 0 ? (
+          <div className="card p-6 text-center">
+            <Store className="w-8 h-8 mx-auto mb-3" style={{color: '#3D3428'}} />
+            <p className="font-medium" style={{color: NAVY}}>No shop has listed this cigar yet</p>
+            <p className="text-sm mt-1 mb-4" style={{color: MUTED}}>
+              Follow it and we'll tell you the moment a shop stocks it.
+            </p>
+            <button onClick={toggleFollow}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all"
+              style={following
+                ? { backgroundColor: '#FEF3C7', color: '#92400E', borderColor: '#FDE68A' }
+                : { backgroundColor: '#262018', color: NAVY, borderColor: BORDER }}>
+              {following ? <BellOff className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
+              {following ? 'Following for in-stock alerts' : 'Alert me when it is in stock'}
+            </button>
+          </div>
+        ) : (
+          <div className="card overflow-hidden">
+            {(showAllStores ? availability : availability.slice(0, AVAIL_PREVIEW)).map((s, idx) => {
+              const fresh = timeAgo(s.updated_at);
+              const price = priceLabel(s);
+              const sizes = (s.vitolas || []).length;
+              return (
+                <div key={s.store_id} className="flex items-start justify-between gap-3 px-4 py-3.5"
+                  style={idx > 0 ? { borderTop: `1px solid ${BORDER}` } : undefined}>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <Link to={`/stores/${s.store_id}`} className="font-semibold text-sm hover:underline" style={{color: NAVY}}>
+                        {s.name}
+                      </Link>
+                      {s.verified ? (
+                        <CheckCircle className="w-3.5 h-3.5" style={{color: '#4ADE80'}} aria-label="Verified shop" />
+                      ) : !s.claimed ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full border font-semibold uppercase tracking-wide"
+                          style={{backgroundColor: '#241E18', color: MUTED, borderColor: BORDER}}>
+                          Unclaimed
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="text-xs mt-1" style={{color: MUTED}}>
+                      {TYPE_LABEL[s.store_type] || 'Cigar shop'}
+                      {s.city ? ` · ${s.city}${s.state ? `, ${s.state}` : ''}` : s.state ? ` · ${s.state}` : ''}
+                      {s.distance_mi != null && (
+                        <span style={{color: AMBER}}> · {s.distance_mi} mi</span>
+                      )}
+                    </p>
+                    {(fresh || s.source === 'web') && (
+                      <p className="text-[11px] mt-1" style={{color: '#7A6A5A'}}>
+                        {fresh ? `updated ${fresh}` : ''}
+                        {fresh && s.source === 'web' ? ' · ' : ''}
+                        {s.source === 'web' ? "from the shop's website" : ''}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    {price && <p className="font-bold text-sm" style={{color: AMBER}}>{price}</p>}
+                    {sizes > 0 && (
+                      <p className="text-[11px] mt-0.5" style={{color: MUTED}}>{sizes} size{sizes === 1 ? '' : 's'}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {availability.length > AVAIL_PREVIEW && (
+              <button onClick={() => setShowAllStores(v => !v)}
+                className="w-full py-2.5 text-xs font-semibold"
+                style={{borderTop: `1px solid ${BORDER}`, color: AMBER}}>
+                {showAllStores ? 'Show fewer' : `Show all ${availability.length}`}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Tabs */}
       <div className="tab-bar mb-6">
-        {['overview', 'vitolas', 'where to buy', 'reviews'].map(t => (
+        {['overview', 'vitolas', 'where to find it', 'reviews'].map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`tab-btn capitalize ${tab === t ? 'tab-btn-active' : 'tab-btn-inactive'}`}>
             {t === 'reviews' ? `Reviews (${stats.review_count})` : t}
-            {t === 'where to buy' && availability.length > 0 && (
+            {t === 'where to find it' && availability.length > 0 && (
               <span className="ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-bold"
                 style={{backgroundColor: '#0B3320', color: '#4ADE80'}}>
                 {availability.length}
@@ -448,8 +621,8 @@ export default function CigarDetail() {
         </div>
       )}
 
-      {/* Where to buy */}
-      {tab === 'where to buy' && (
+      {/* Where to find it */}
+      {tab === 'where to find it' && (
         <div className="flex flex-col gap-4">
           {availability.length === 0 ? (
             <div className="text-center py-12">

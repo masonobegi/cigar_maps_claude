@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Store, MapPin, Package, Search, CheckCircle, Star, Users, Filter, X, Clock, Navigation, Map, List } from 'lucide-react';
 import { api } from '../services/api';
@@ -13,6 +13,25 @@ const BORDER = '#453C2E';
 const AMBER  = '#D4882A';
 
 const RADII = [10, 25, 50, 100];
+const TYPE_LABEL = { cigar_lounge: 'Lounge', cigar_shop: 'Cigar shop', tobacco_shop: 'Tobacco shop', smoke_shop: 'Smoke shop' };
+const TYPE_CHIPS = [
+  { value: 'cigar_shop', label: 'Cigar shop' },
+  { value: 'cigar_lounge', label: 'Lounge' },
+  { value: 'tobacco_shop', label: 'Tobacco shop' },
+  { value: 'smoke_shop', label: 'Smoke shop' },
+];
+
+function Chip({ label, active, onClick }) {
+  return (
+    <button type="button" onClick={onClick}
+      className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full font-medium transition-colors"
+      style={active
+        ? { color: AMBER, border: `1px solid ${AMBER}`, backgroundColor: '#2E2820' }
+        : { color: MUTED, border: `1px solid ${BORDER}`, backgroundColor: '#1A1410' }}>
+      {label}
+    </button>
+  );
+}
 
 function loadSavedLocation() {
   try { return JSON.parse(localStorage.getItem('cb_location_v1') || 'null'); } catch { return null; }
@@ -28,6 +47,9 @@ export default function Stores() {
   const [openNow, setOpenNow] = useState(searchParams.get('open_now') === '1');
   const [hasLounge, setHasLounge] = useState(false);
   const [hasHumidor, setHasHumidor] = useState(false);
+  const [types, setTypes] = useState([]);
+  const [hasInventory, setHasInventory] = useState(false);
+  const [claimedOnly, setClaimedOnly] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('list');
@@ -36,6 +58,45 @@ export default function Stores() {
   const [showTempAddr, setShowTempAddr] = useState(false);
   const [tempAddr, setTempAddr] = useState('');
   const [tempGeoLoading, setTempGeoLoading] = useState(false);
+  // Map mode loads whatever is in the viewport (the directory has thousands of listings)
+  const [mapStores, setMapStores] = useState(null);
+  const [mapLoading, setMapLoading] = useState(false);
+  const [mapBbox, setMapBbox] = useState(null);
+  const mapReq = useRef({ timer: null, seq: 0 });
+
+  // Panning only records where we are. The fetch lives in the effect below so
+  // that changing a filter refreshes the map even when it never moves.
+  function handleBounds({ bbox }) {
+    clearTimeout(mapReq.current.timer);
+    mapReq.current.timer = setTimeout(() => setMapBbox(bbox.join(',')), 350);
+  }
+
+  // Serialized so the effects below can depend on the type selection by value.
+  const typeKey = types.join(',');
+
+  // Every filter the list and the map viewport share.
+  function filterParams() {
+    const p = {};
+    if (q) p.q = q;
+    if (openNow) p.open_now = '1';
+    if (hasLounge) p.has_lounge = '1';
+    if (hasHumidor) p.has_walk_in_humidor = '1';
+    if (typeKey) p.store_type = typeKey;
+    if (hasInventory) p.has_inventory = '1';
+    if (claimedOnly) p.claimed = '1';
+    return p;
+  }
+
+  useEffect(() => {
+    if (viewMode !== 'map' || !mapBbox) return;
+    const seq = ++mapReq.current.seq;
+    setMapLoading(true);
+    const p = { ...filterParams(), bbox: mapBbox, limit: 1000 };
+    api.searchStores(p)
+      .then(rows => { if (seq === mapReq.current.seq) setMapStores(rows); })
+      .catch(() => {})
+      .finally(() => { if (seq === mapReq.current.seq) setMapLoading(false); });
+  }, [mapBbox, viewMode, q, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly]);
 
   useEffect(() => { api.getStoreCities().then(setCities); }, []);
 
@@ -46,15 +107,11 @@ export default function Stores() {
 
   useEffect(() => {
     setLoading(true);
-    const p = {};
-    if (q) p.q = q;
+    const p = filterParams();
     if (city && !userLocation) p.city = city;
-    if (openNow) p.open_now = '1';
-    if (hasLounge) p.has_lounge = '1';
-    if (hasHumidor) p.has_walk_in_humidor = '1';
     if (userLocation?.lat) { p.lat = userLocation.lat; p.lng = userLocation.lng; p.radius = radius; }
     api.searchStores(p).then(setStores).finally(() => setLoading(false));
-  }, [q, city, openNow, hasLounge, hasHumidor, userLocation, radius]);
+  }, [q, city, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly, userLocation, radius]);
 
   function applySearch(e) {
     e.preventDefault();
@@ -119,14 +176,33 @@ export default function Stores() {
     setTempGeoLoading(false);
   }
 
-  const hasFilters = q || city || openNow || hasLounge || hasHumidor;
+  function toggleType(value) {
+    setTypes(prev => prev.includes(value) ? prev.filter(t => t !== value) : [...prev, value]);
+  }
+
+  function clearFilters() {
+    setQ(''); setCity(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false);
+    setTypes([]); setHasInventory(false); setClaimedOnly(false);
+    setSearchParams({});
+  }
+
+  const FEATURE_CHIPS = [
+    { label: 'Open now',        active: openNow,      onClick: () => setOpenNow(v => !v) },
+    { label: 'Has inventory',   active: hasInventory, onClick: () => setHasInventory(v => !v) },
+    { label: 'Claimed only',    active: claimedOnly,  onClick: () => setClaimedOnly(v => !v) },
+    { label: 'Lounge',          active: hasLounge,    onClick: () => setHasLounge(v => !v) },
+    { label: 'Walk-in humidor', active: hasHumidor,   onClick: () => setHasHumidor(v => !v) },
+  ];
+
+  const activeCount = types.length + FEATURE_CHIPS.filter(f => f.active).length;
+  const hasFilters = !!q || !!city || activeCount > 0;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="font-serif text-2xl font-bold mb-1" style={{ color: NAVY }}>Cigar Retailers</h1>
-          <p className="text-sm" style={{ color: MUTED }}>Find premium cigar shops with real-time inventory</p>
+          <p className="text-sm" style={{ color: MUTED }}>Every cigar shop and lounge in the US. Live inventory where owners have claimed their listing.</p>
         </div>
 
         {/* Map / List toggle */}
@@ -216,25 +292,35 @@ export default function Stores() {
           className="btn-secondary flex items-center gap-1.5"
           style={hasFilters ? { borderColor: AMBER, color: AMBER } : {}}>
           <Filter className="w-4 h-4" />
+          {activeCount > 0 && (
+            <span className="text-xs font-semibold px-1.5 rounded-full"
+              style={{ backgroundColor: AMBER, color: '#1A1410' }}>{activeCount}</span>
+          )}
         </button>
       </form>
 
       {showFilters && (
-        <div className="card p-4 mb-4 flex flex-wrap gap-4">
-          {[
-            { label: 'Open right now', checked: openNow, onChange: e => setOpenNow(e.target.checked) },
-            { label: 'Has Lounge',     checked: hasLounge, onChange: e => setHasLounge(e.target.checked) },
-            { label: 'Walk-in Humidor',checked: hasHumidor,onChange: e => setHasHumidor(e.target.checked) },
-          ].map(({ label, checked, onChange }) => (
-            <label key={label} className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={checked} onChange={onChange} className="accent-amber-600" />
-              <span className="text-sm font-medium" style={{ color: LABEL }}>{label}</span>
-            </label>
-          ))}
+        <div className="card p-4 mb-4 flex flex-col gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: LABEL }}>Type</p>
+            <div className="flex flex-wrap gap-2">
+              {TYPE_CHIPS.map(t => (
+                <Chip key={t.value} label={t.label} active={types.includes(t.value)} onClick={() => toggleType(t.value)} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: LABEL }}>Features</p>
+            <div className="flex flex-wrap gap-2">
+              {FEATURE_CHIPS.map(f => (
+                <Chip key={f.label} label={f.label} active={f.active} onClick={f.onClick} />
+              ))}
+            </div>
+          </div>
           {hasFilters && (
-            <button onClick={() => { setQ(''); setCity(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false); setSearchParams({}); }}
-              className="flex items-center gap-1 text-xs" style={{ color: MUTED }}>
-              <X className="w-3 h-3" /> Clear
+            <button type="button" onClick={clearFilters}
+              className="flex items-center gap-1 text-xs self-start" style={{ color: MUTED }}>
+              <X className="w-3 h-3" /> Clear all
             </button>
           )}
         </div>
@@ -255,7 +341,9 @@ export default function Stores() {
       )}
 
       <p className="text-xs mb-4" style={{ color: MUTED }}>
-        {loading ? 'Loading...' : `${stores.length} store${stores.length !== 1 ? 's' : ''} found`}
+        {viewMode === 'map'
+          ? (mapLoading ? 'Loading map...' : `${(mapStores || stores).length}${(mapStores || stores).length >= 1000 ? '+' : ''} stores in view. Drag or zoom to explore.`)
+          : loading ? 'Loading...' : `${stores.length}${stores.length >= 300 ? '+' : ''} store${stores.length !== 1 ? 's' : ''} found${!userLocation && !city && !q && stores.length >= 300 ? '. Use Near Me or pick a city to narrow it down.' : ''}`}
       </p>
 
       {/* Map view */}
@@ -266,7 +354,7 @@ export default function Stores() {
               <div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
             </div>
           }>
-            <StoreMap stores={stores} userLocation={userLocation} />
+            <StoreMap stores={mapStores || stores} userLocation={userLocation} onBoundsChange={handleBounds} height="560px" />
           </Suspense>
         </div>
       )}
@@ -312,6 +400,17 @@ export default function Stores() {
                       {store.verified === 1 && (
                         <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#4ADE80' }} />
                       )}
+                      {store.is_featured > 0 && (
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: '#2D1E06', color: AMBER, border: `1px solid #4D3010` }}>
+                          Featured
+                        </span>
+                      )}
+                      {store.claimed === 0 && (
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ color: MUTED, border: `1px solid ${BORDER}` }}>
+                          Unclaimed
+                        </span>
+                      )}
                       {status.label && (
                         <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={statusStyle}>
                           {status.label}
@@ -321,7 +420,10 @@ export default function Stores() {
 
                     {/* Location + distance */}
                     <div className="flex items-center gap-2 text-xs mb-2" style={{ color: MUTED }}>
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{store.city}, {store.state}</span>
+                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{[store.city, store.state].filter(Boolean).join(', ') || store.address || 'Location on map'}</span>
+                      {TYPE_LABEL[store.store_type] && store.store_type !== 'cigar_shop' && (
+                        <span style={{ color: LABEL }}>{TYPE_LABEL[store.store_type]}</span>
+                      )}
                       {store.distance_mi !== null && store.distance_mi !== undefined && (
                         <span className="font-semibold" style={{ color: AMBER }}>{store.distance_mi} mi</span>
                       )}

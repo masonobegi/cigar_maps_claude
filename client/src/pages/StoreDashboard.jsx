@@ -5,7 +5,7 @@ import {
   Search, Megaphone, BarChart2, Eye, Users, TrendingUp, RefreshCw,
   AlertTriangle, ChevronDown, ChevronUp, Bell, Star, X, Check,
   ToggleLeft, ToggleRight, ArrowRight, Clock, Upload, FileSpreadsheet, AlertOctagon,
-  MessageSquare, Calendar, Pin, Coffee
+  MessageSquare, Calendar, Pin, Coffee, Globe, CreditCard, Sparkles
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -1247,7 +1247,8 @@ function SetupChecklist({ store, onTabChange }) {
 }
 
 export default function StoreDashboard() {
-  const { user, store: storeCtx, refreshStore } = useAuth();
+  const { user, store: storeCtx, refreshStore, pendingClaim } = useAuth();
+  const [forceWizard, setForceWizard] = useState(false);
   const { toast: globalToast } = useToast();
   const [store, setStore] = useState(storeCtx);
   const [tab, setTab] = useState('inventory');
@@ -1279,7 +1280,25 @@ export default function StoreDashboard() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
 
-      {!store ? (
+      {!store && pendingClaim && !forceWizard ? (
+        <div className="max-w-xl mx-auto text-center py-10">
+          <div className="w-14 h-14 bg-amber-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3">
+            <Clock className="w-7 h-7 text-amber-500" />
+          </div>
+          <h1 className="font-serif text-2xl font-bold text-stone-100 mb-2">Claim pending review</h1>
+          <p className="text-stone-400 text-sm mb-1">
+            You asked to claim <span className="text-stone-100 font-medium">{pendingClaim.store_name}</span>
+            {pendingClaim.city ? ` in ${pendingClaim.city}, ${pendingClaim.state}` : ''}.
+          </p>
+          <p className="text-stone-500 text-sm mb-6">
+            We review claims within one to two business days and email you when it is approved. Your dashboard unlocks automatically.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link to={`/stores/${pendingClaim.store_id}`} className="btn-secondary">View the listing</Link>
+            <button type="button" onClick={() => setForceWizard(true)} className="btn-ghost text-sm">This is not my shop, set up a new one</button>
+          </div>
+        </div>
+      ) : !store ? (
         <div>
           <div className="mb-8 text-center">
             <div className="w-14 h-14 bg-amber-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -1287,6 +1306,9 @@ export default function StoreDashboard() {
             </div>
             <h1 className="font-serif text-2xl font-bold text-stone-100 mb-1">Set Up Your Store</h1>
             <p className="text-stone-500 text-sm">Get your shop on CigarBuddy in 3 simple steps</p>
+            <p className="text-stone-500 text-xs mt-2">
+              Already listed? <Link to="/stores" className="text-amber-400 hover:text-amber-300">Find your shop on the map and claim it</Link> instead.
+            </p>
           </div>
           <SetupWizard onComplete={(s) => { setStore(s); refreshStore(s); }} />
         </div>
@@ -1332,7 +1354,10 @@ export default function StoreDashboard() {
             <VerificationSection store={store} toast={showToast} onVerified={(s) => { setStore(s); refreshStore(s); }} />
           )}
           {tab === 'settings' && (
-            <StoreSettings store={store} onSave={(updated) => { setStore(updated); refreshStore(updated); showToast('Store updated!'); }} />
+            <>
+              <BillingSection store={store} toast={showToast} />
+              <StoreSettings store={store} onSave={(updated) => { setStore(updated); refreshStore(updated); showToast('Store updated!'); }} />
+            </>
           )}
         </>
       )}
@@ -1507,6 +1532,203 @@ function CommunityManager({ storeId, storeName, toast }) {
   );
 }
 
+const PLATFORM_LABEL = {
+  shopify: 'Shopify', woocommerce: 'WooCommerce', bigcommerce: 'BigCommerce',
+  squarespace: 'Squarespace', wix: 'Wix', unknown: 'Not recognised',
+};
+
+// Human wording for the machine status we store on the store row.
+function menuStatusText(status) {
+  if (!status) return 'Not checked yet';
+  if (status.startsWith('ok:')) {
+    const [matched, seen] = status.slice(3).split('/');
+    return `${matched} of ${seen} cigar products matched to our catalog`;
+  }
+  if (status === 'unsupported') return 'This website does not publish a product feed we can read';
+  if (status === 'no_products') return 'The product feed came back empty';
+  if (status.startsWith('error:')) return `Could not read the site (${status.slice(6)})`;
+  return status;
+}
+
+
+/**
+ * Billing: what this shop is paying for, and how to change it. Everything a
+ * shop needs to be found stays free, so this block never blocks any feature.
+ */
+function BillingSection({ store, toast }) {
+  const [info, setInfo] = useState(null);
+  const [busy, setBusy] = useState('');
+
+  useEffect(() => {
+    api.getStoreBilling(store.id).then(setInfo).catch(() => setInfo(null));
+  }, [store.id]);
+
+  async function open(action) {
+    setBusy(action);
+    try {
+      const { url } = action === 'portal'
+        ? await api.openBillingPortal(store.id)
+        : await api.startCheckout(store.id, action);
+      window.location.href = url;
+    } catch (err) {
+      toast(err.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  const plan = info?.plan || 'free';
+  const paid = plan !== 'free';
+  const renews = info?.renews_at ? new Date(info.renews_at).toLocaleDateString() : null;
+
+  return (
+    <div className="card p-5 mb-4">
+      <h3 className="font-semibold text-stone-200 mb-1 flex items-center gap-2">
+        <CreditCard className="w-4 h-4 text-amber-500" /> Plan and billing
+      </h3>
+      <p className="text-xs text-stone-500 mb-4">
+        Your listing, inventory, deals, and events are free forever. Paid plans decide where you sit in results.
+      </p>
+
+      <div className="flex items-center gap-3 flex-wrap mb-4">
+        <span className="text-sm font-medium text-stone-200 capitalize">{plan} plan</span>
+        {info?.plan_status && info.plan_status !== 'active' && (
+          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-900/40 text-amber-400">
+            {info.plan_status === 'past_due' ? 'Payment failed' : info.plan_status}
+          </span>
+        )}
+        {paid && renews && (
+          <span className="text-xs text-stone-500">
+            {info.plan_status === 'cancelling' ? `Ends ${renews}` : `Renews ${renews}`}
+          </span>
+        )}
+      </div>
+
+      {!info?.configured ? (
+        <p className="text-xs text-stone-500">
+          Paid plans are not switched on yet. Your listing works exactly the same either way.
+        </p>
+      ) : (
+        <div className="flex gap-2 flex-wrap">
+          {!paid && (
+            <button onClick={() => open('featured')} disabled={busy === 'featured'} className="btn-primary text-sm flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4" /> {busy === 'featured' ? 'Opening...' : 'Get featured for $49/mo'}
+            </button>
+          )}
+          {info?.can_manage && (
+            <button onClick={() => open('portal')} disabled={busy === 'portal'} className="btn-secondary text-sm">
+              {busy === 'portal' ? 'Opening...' : 'Manage billing'}
+            </button>
+          )}
+          <Link to="/pricing" className="btn-ghost text-sm self-center">Compare plans</Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Online menu: what we read off the shop's own website, and the owner's
+ * controls over it.
+ */
+function OnlineMenuSettings({ store }) {
+  const { toast } = useToast();
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    api.getStoreMenuStatus(store.id)
+      .then(s => { if (alive) setStatus(s); })
+      .catch(() => { if (alive) setStatus(null); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
+  }, [store.id]);
+
+  async function refresh() {
+    setRefreshing(true);
+    try {
+      const r = await api.refreshStoreMenu(store.id);
+      toast(r.status && r.status.startsWith('ok')
+        ? `Read ${r.products} products — ${r.matched} matched, ${r.inserted} added.`
+        : menuStatusText(r.status));
+      setStatus(await api.getStoreMenuStatus(store.id));
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally { setRefreshing(false); }
+  }
+
+  async function toggleAuto(enabled) {
+    setSaving(true);
+    try {
+      await api.setMenuOptOut(store.id, !enabled);
+      setStatus(s => (s ? { ...s, opt_out: !enabled } : s));
+      toast(enabled ? 'We will keep your website menu in sync.' : 'Website products hidden from your listing.');
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally { setSaving(false); }
+  }
+
+  const lastSynced = status && status.last_synced ? new Date(status.last_synced).toLocaleString() : 'Never';
+
+  return (
+    <div className="card p-5 flex flex-col gap-4">
+      <div>
+        <h3 className="font-semibold text-stone-100 flex items-center gap-2">
+          <Globe className="w-4 h-4 text-amber-500" /> Online menu
+        </h3>
+        <p className="text-xs text-stone-500 mt-1">
+          If your website runs Shopify or WooCommerce we can read its product list and keep your listing stocked automatically.
+        </p>
+      </div>
+
+      {loading ? (
+        <div className="h-16 rounded-lg animate-pulse bg-stone-800" />
+      ) : !status ? (
+        <p className="text-sm text-stone-400">Menu status is unavailable right now.</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-stone-500 mb-0.5">Platform</p>
+              <p className="text-stone-200">{status.platform ? (PLATFORM_LABEL[status.platform] || status.platform) : 'Unknown'}</p>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-stone-500 mb-0.5">Last synced</p>
+              <p className="text-stone-200">{lastSynced}</p>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-stone-500 mb-0.5">Items live</p>
+              <p className="text-stone-200">{status.web_items}</p>
+            </div>
+          </div>
+          <p className="text-xs text-stone-400">{menuStatusText(status.status)}</p>
+
+          <label className="flex items-start gap-2.5 text-sm text-stone-300 cursor-pointer">
+            <input type="checkbox" className="mt-0.5" disabled={saving}
+              checked={!status.opt_out} onChange={e => toggleAuto(e.target.checked)} />
+            <span>
+              Show products from my website automatically
+              <span className="block text-xs text-stone-500">Uncheck to keep your listing to the inventory you enter here.</span>
+            </span>
+          </label>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            <button onClick={refresh} disabled={refreshing || status.opt_out || !store.website}
+              className="btn-secondary text-sm flex items-center gap-1.5 disabled:opacity-50">
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Reading your site...' : 'Refresh from my website'}
+            </button>
+            {!store.website && <span className="text-xs text-stone-500">Add your website above and save first.</span>}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function StoreSettings({ store, onSave }) {
   const [form, setForm] = useState({
     name: store.name || '', description: store.description || '', address: store.address || '',
@@ -1559,6 +1781,8 @@ function StoreSettings({ store, onSave }) {
           <div><label className="block text-xs text-stone-400 mb-1.5">Website</label><input className="input" value={form.website} onChange={e => set('website', e.target.value)} /></div>
         </div>
       </div>
+
+      <OnlineMenuSettings store={store} />
 
       <div className="card p-5 flex flex-col gap-4">
         <h3 className="font-semibold text-stone-100">Amenities & Tags</h3>

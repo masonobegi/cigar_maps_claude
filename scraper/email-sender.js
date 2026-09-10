@@ -39,41 +39,44 @@ const CSV_PATH = path.join(__dirname, 'results', 'stores.csv');
 // ─── Email templates ────────────────────────────────────────────────────────
 
 const TEMPLATES = {
-  intro: {
-    name: 'Email 1 - Cold intro',
-    subject: (store) => `${store.name || 'Your shop'} on CigarBuddy`,
+  // The shop is already on the map. Every template below leads with that fact,
+  // because "claim what already exists" converts far better than "sign up for
+  // a new thing" -- it is how Yelp and Weedmaps built their retailer networks.
+  claim: {
+    name: 'Email 1 - Your shop is already listed',
+    subject: (store) => `${store.name || 'Your shop'} is on CigarBuddy`,
     body: (store) => `Hi,
 
-I built something I think you'd actually find useful.
+Quick heads up: ${store.name || 'your shop'} is already listed on CigarBuddy, a search site for people looking for a specific cigar near them.
 
-It's called CigarBuddy. The short version: someone searches "Padron 1964 Toro near me" and your shop comes up with your current price and stock. They show up already knowing what they want.
+The listing is live right now with your address and hours. Nobody at ${store.name || 'the shop'} put it there, so some of it is probably wrong.
 
-It works like Weedmaps does for dispensaries -- your inventory is live on the platform, customers search by cigar name, size, strength, whatever, and you show up in results. When you sell out, you update stock. That's it.
+If you claim it (free, about two minutes) you can fix the details and add what you actually carry. Then when someone searches "Padron 1964 near me" in ${store.city || 'your area'}, you come up with your price and your stock, and they walk in already knowing what they want.
 
-Listing is completely free. No monthly fee, no commission, nothing. I'm trying to sign up the first 50 shops before I start charging, so you'd be grandfathered in at free.
+Claim it here: cigarbuddy.com/stores
 
-Setup takes about 10 minutes. Happy to walk you through it if that helps.
+No fee, no commission, no contract. I am signing up the first shops in ${store.city || 'the area'} now.
 
-Interested?
+Worth two minutes?
 
 [YOUR NAME]
 cigarbuddy.com`,
   },
 
-  intro_v2: {
-    name: 'Email 1 (alt) - Lead with the problem',
-    subject: (store) => `How do cigar guys find ${store.name || 'your shop'}?`,
+  claim_v2: {
+    name: 'Email 1 (alt) - Lead with what is wrong on the listing',
+    subject: (store) => `Are these hours right for ${store.name || 'your shop'}?`,
     body: (store) => `Hi,
 
-Real question: when someone in ${store.city || 'your area'} is looking for a specific cigar, how do they find out you have it?
+I run CigarBuddy, a site where people search for a specific cigar and find which nearby shop has it.
 
-Google is a mess. Yelp is mostly reviews. There's no good answer right now.
+${store.name || 'Your shop'} is already on it. The problem is that the hours and details came from public map data, not from you, so I would not bet on them being current.
 
-That's what I built CigarBuddy for. It's a search platform specifically for cigar shops. Customers type in a cigar name and find which local stores have it in stock, at what size, and at what price. Think of it like a live inventory search for premium cigars.
+You can claim the listing for free and fix it yourself, plus add the cigars you carry so you turn up when someone searches for them by name.
 
-${store.name || 'Your shop'} would have a full store page with your inventory, hours, and contact info. Free to list. I'm building out the retailer network now so I'm personally reaching out to shops to get them set up.
+Here is the page: cigarbuddy.com/stores
 
-Takes about 10 minutes. Worth it?
+Takes a couple of minutes. No cost either way, I would just rather the information about your shop be right.
 
 [YOUR NAME]
 cigarbuddy.com`,
@@ -84,11 +87,11 @@ cigarbuddy.com`,
     subject: (store) => `Re: ${store.name || 'Your shop'} on CigarBuddy`,
     body: (store) => `Hi,
 
-Sent a note a few days ago about CigarBuddy, wasn't sure it got through.
+Following up on the note about your CigarBuddy listing.
 
-The quick pitch: it's a free platform where cigar enthusiasts search for specific cigars and find which local shops carry them. Your inventory shows up live. No subscription, no fees.
+Short version: ${store.name || 'your shop'} is already on the map there, and claiming it is free. Once you do, you can correct the details and list what you stock, so people searching for a specific cigar in ${store.city || 'your area'} find you instead of driving to three shops.
 
-If you want to see what the store page looks like before committing to anything, I can send you a demo link. Five minutes and you'd know if it's worth it.
+If you would rather I just fix something on the listing for you, reply and tell me what is wrong and I will do it.
 
 [YOUR NAME]`,
   },
@@ -100,9 +103,9 @@ If you want to see what the store page looks like before committing to anything,
 
 Won't bug you again after this.
 
-I'm building a cigar shop directory where enthusiasts search live inventory by cigar name, strength, price -- basically Weedmaps for cigars. Listing is free. I'm trying to get the first shops in ${store.city || 'your area'} on before I open it up.
+${store.name || 'Your shop'} is listed on CigarBuddy either way. Claiming it is free and lets you control what it says and show what you carry: cigarbuddy.com/stores
 
-If it's ever a fit, the link to set up your free page is cigarbuddy.com/register.
+If you would rather not be listed at all, reply and I will take it down, no hard feelings.
 
 Good luck out there.
 

@@ -83,8 +83,19 @@ const vitolasMap = {
 //    full demo set so the app works out of the box.
 async function seed() {
   // ── Phase 1: essential accounts ───────────────────────────────────────────
-  const adminHash = await bcrypt.hash('admin123', 10);
-  const staffHash = await bcrypt.hash('W@ffle871', 10);
+  // Passwords come from the environment. This repository is public, so a
+  // literal here would be a published credential. With nothing set we generate
+  // a random one and print it once, which keeps local development working and
+  // makes a production deploy safe by default.
+  const crypto = require('crypto');
+  const randomPassword = () => crypto.randomBytes(12).toString('base64url');
+
+  const adminPassword = process.env.ADMIN_PASSWORD || (process.env.DATABASE_URL ? randomPassword() : 'admin123');
+  const staffPassword = process.env.STAFF_PASSWORD || (process.env.DATABASE_URL ? randomPassword() : 'staff123');
+  const staffEmail = process.env.STAFF_EMAIL || 'mobegibusiness@gmail.com';
+
+  const adminHash = await bcrypt.hash(adminPassword, 10);
+  const staffHash = await bcrypt.hash(staffPassword, 10);
 
   await db.pool.query(
     `INSERT INTO users (email, password_hash, name, account_type)
@@ -97,7 +108,7 @@ async function seed() {
     `INSERT INTO users (email, password_hash, name, account_type)
      VALUES ($1, $2, 'Mason (Staff)', 'staff')
      ON CONFLICT (email) DO NOTHING`,
-    ['mobegibusiness@gmail.com', staffHash]
+    [staffEmail, staffHash]
   );
 
   // ── Phase 2: demo catalog ─────────────────────────────────────────────────
@@ -343,8 +354,11 @@ async function seed() {
   console.log('  smoker@demo.com / password123');
   console.log('  jane@demo.com   / password123');
   console.log('  store1@demo.com / password123');
-  console.log('  admin@cigarbuddy.com / admin123');
-  console.log('  mobegibusiness@gmail.com / W@ffle871');
+  console.log(`  admin@cigarbuddy.com / ${adminPassword}`);
+  console.log(`  ${staffEmail} / ${staffPassword}`);
+  if (process.env.DATABASE_URL && !process.env.ADMIN_PASSWORD) {
+    console.log('  (generated for this deploy: set ADMIN_PASSWORD and STAFF_PASSWORD to pick your own)');
+  }
 }
 
 module.exports = { seed };

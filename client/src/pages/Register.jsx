@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Flame, User, Store } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
-  const [form, setForm] = useState({ email: '', password: '', name: '', account_type: 'user' });
+  const [searchParams] = useSearchParams();
+  const claimId = searchParams.get('claim');
+  const [form, setForm] = useState({ email: '', password: '', name: '', account_type: (searchParams.get('type') === 'store' || claimId) ? 'store' : 'user' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -18,7 +20,7 @@ export default function Register() {
     setLoading(true);
     try {
       const user = await register(form.email, form.password, form.name, form.account_type);
-      navigate(user.account_type === 'store' ? '/store-dashboard' : '/dashboard');
+      navigate(claimId ? `/stores/${claimId}?claim=1` : user.account_type === 'store' ? '/store-dashboard' : '/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -107,7 +109,9 @@ export default function Register() {
 
             {form.account_type === 'store' && (
               <div className="bg-amber-900/20 border border-amber-800/30 rounded-lg p-3 text-xs text-amber-400">
-                After registering, you'll set up your store profile including location, hours, and inventory.
+                {claimId
+                  ? 'You are claiming an existing listing. After creating your account you will verify that you own the shop, then manage its hours, inventory, and deals.'
+                  : 'After registering, you can claim your shop if it is already on the map, or set up a new store profile with location, hours, and inventory.'}
               </div>
             )}
 

@@ -17,7 +17,7 @@ async function initSchema() {
 
     CREATE TABLE IF NOT EXISTS stores (
       id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id),
+      user_id INTEGER REFERENCES users(id),
       name TEXT NOT NULL,
       description TEXT,
       address TEXT,
@@ -37,6 +37,42 @@ async function initSchema() {
       has_walk_in_humidor INTEGER DEFAULT 0,
       verified INTEGER DEFAULT 0,
       setup_complete INTEGER DEFAULT 0,
+      claimed INTEGER DEFAULT 0,
+      claimed_at TIMESTAMP,
+      source TEXT DEFAULT 'owner',
+      source_id TEXT,
+      osm_id TEXT,
+      store_type TEXT DEFAULT 'cigar_shop',
+      confidence FLOAT DEFAULT 1,
+      visible INTEGER DEFAULT 1,
+      hours_raw TEXT,
+      last_verified_at TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS store_claims (
+      id SERIAL PRIMARY KEY,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      method TEXT NOT NULL DEFAULT 'manual',
+      contact_email TEXT,
+      contact_phone TEXT,
+      message TEXT,
+      code_hash TEXT,
+      code_expires_at TIMESTAMP,
+      status TEXT NOT NULL DEFAULT 'pending',
+      admin_notes TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      reviewed_at TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS store_reports (
+      id SERIAL PRIMARY KEY,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      reason TEXT NOT NULL,
+      details TEXT,
+      status TEXT NOT NULL DEFAULT 'open',
       created_at TIMESTAMP DEFAULT NOW()
     );
 
@@ -150,6 +186,8 @@ async function initSchema() {
       pairing TEXT,
       occasion TEXT,
       review_text TEXT,
+      photo_data TEXT,
+      photo_type TEXT,
       created_at TIMESTAMP DEFAULT NOW()
     );
 
@@ -343,6 +381,68 @@ const MIGRATIONS = [
   { name: '014_store4_tampa',  sql: `UPDATE stores SET address='712 S Dale Mabry Hwy', city='Tampa', state='FL', zip='33609', phone='(813) 555-0712', lat=27.9395, lng=-82.4991, description='Hyde Park cigar shop. Friendly staff, fair prices, over 150 SKUs. Great everyday selection.' WHERE user_id=(SELECT id FROM users WHERE email='store4@demo.com')` },
   { name: '015_store5_newyork', sql: `UPDATE stores SET address='19 W 44th St', city='New York', state='NY', zip='10036', phone='(212) 555-0019', lat=40.7553, lng=-73.9822, description='Midtown Manhattan cigar lounge. Whiskey bar, private events, and a world-class humidor.' WHERE user_id=(SELECT id FROM users WHERE email='store5@demo.com')` },
   { name: '016_user_cigars_size_label', sql: 'ALTER TABLE user_cigars ADD COLUMN IF NOT EXISTS size_label TEXT' },
+  { name: '017_reviews_photo_data', sql: 'ALTER TABLE reviews ADD COLUMN IF NOT EXISTS photo_data TEXT' },
+  { name: '018_reviews_photo_type', sql: 'ALTER TABLE reviews ADD COLUMN IF NOT EXISTS photo_type TEXT' },
+  { name: '019_user_follows', sql: `CREATE TABLE IF NOT EXISTS user_follows (follower_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, followed_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_at TIMESTAMP DEFAULT NOW(), PRIMARY KEY (follower_id, followed_id))` },
+  // ── Unclaimed store listings (auto-imported directory) ──
+  { name: '020_stores_user_id_nullable', sql: 'ALTER TABLE stores ALTER COLUMN user_id DROP NOT NULL' },
+  { name: '021_stores_claimed', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS claimed INTEGER DEFAULT 0' },
+  { name: '022_stores_claimed_backfill', sql: 'UPDATE stores SET claimed = 1 WHERE user_id IS NOT NULL' },
+  { name: '023_stores_claimed_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMP' },
+  { name: '024_stores_source', sql: "ALTER TABLE stores ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'owner'" },
+  { name: '025_stores_source_id', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS source_id TEXT' },
+  { name: '026_stores_store_type', sql: "ALTER TABLE stores ADD COLUMN IF NOT EXISTS store_type TEXT DEFAULT 'cigar_shop'" },
+  { name: '027_stores_confidence', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS confidence FLOAT DEFAULT 1' },
+  { name: '028_stores_visible', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS visible INTEGER DEFAULT 1' },
+  { name: '029_stores_hours_raw', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS hours_raw TEXT' },
+  { name: '030_stores_last_verified_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS last_verified_at TIMESTAMP' },
+  { name: '031_stores_osm_id', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS osm_id TEXT' },
+  { name: '032_stores_source_idx', sql: 'CREATE UNIQUE INDEX IF NOT EXISTS idx_stores_source ON stores(source, source_id) WHERE source_id IS NOT NULL' },
+  { name: '033_stores_geo_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_lat_lng ON stores(lat, lng)' },
+  { name: '034_stores_visible_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_visible ON stores(visible, claimed)' },
+  { name: '035_store_claims', sql: `CREATE TABLE IF NOT EXISTS store_claims (id SERIAL PRIMARY KEY, store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, method TEXT NOT NULL DEFAULT 'manual', contact_email TEXT, contact_phone TEXT, message TEXT, code_hash TEXT, code_expires_at TIMESTAMP, status TEXT NOT NULL DEFAULT 'pending', admin_notes TEXT, created_at TIMESTAMP DEFAULT NOW(), reviewed_at TIMESTAMP)` },
+  { name: '036_store_reports', sql: `CREATE TABLE IF NOT EXISTS store_reports (id SERIAL PRIMARY KEY, store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE, user_id INTEGER REFERENCES users(id) ON DELETE SET NULL, reason TEXT NOT NULL, details TEXT, status TEXT NOT NULL DEFAULT 'open', created_at TIMESTAMP DEFAULT NOW())` },
+  { name: '037_inventory_store_cigar_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_inventory_store_cigar ON inventory(store_id, cigar_id)' },
+  { name: '038_inventory_cigar_stock_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_inventory_cigar_stock ON inventory(cigar_id, in_stock)' },
+  // ── Inventory provenance (owner-entered vs. read from the shop's own website / POS) ──
+  { name: '039_inventory_source', sql: "ALTER TABLE inventory ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'owner'" },
+  { name: '040_inventory_source_url', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS source_url TEXT' },
+  { name: '041_inventory_external_id', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS external_id TEXT' },
+  { name: '042_inventory_last_confirmed', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS last_confirmed_at TIMESTAMP DEFAULT NOW()' },
+  { name: '043_inventory_external_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_inventory_external ON inventory(store_id, source, external_id)' },
+  { name: '044_stores_menu_url', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_url TEXT' },
+  { name: '045_stores_menu_platform', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_platform TEXT' },
+  { name: '046_stores_menu_last_synced', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_last_synced TIMESTAMP' },
+  { name: '047_stores_menu_status', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_status TEXT' },
+  { name: '048_stores_menu_opt_out', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_opt_out INTEGER DEFAULT 0' },
+  { name: '049_stores_menu_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_checked_at TIMESTAMP' },
+  // ── Account security: password reset + email verification ──
+  { name: '050_password_resets', sql: `CREATE TABLE IF NOT EXISTS password_resets (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, token_hash TEXT NOT NULL, expires_at TIMESTAMP NOT NULL, used_at TIMESTAMP, created_at TIMESTAMP DEFAULT NOW())` },
+  { name: '051_password_resets_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets(user_id)' },
+  { name: '052_users_email_verified', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified INTEGER DEFAULT 0' },
+  { name: '053_users_verify_token_hash', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_token_hash TEXT' },
+  { name: '054_users_verify_sent_at', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_sent_at TIMESTAMP' },
+  // ── Pending catalog entries discovered from menus/imports that did not match a known cigar ──
+  { name: '055_catalog_pending', sql: `CREATE TABLE IF NOT EXISTS catalog_pending (id SERIAL PRIMARY KEY, raw_name TEXT NOT NULL, normalized TEXT NOT NULL, store_id INTEGER REFERENCES stores(id) ON DELETE SET NULL, source TEXT, price FLOAT, seen_count INTEGER DEFAULT 1, suggested_cigar_id INTEGER REFERENCES cigars(id) ON DELETE SET NULL, status TEXT DEFAULT 'pending', created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW())` },
+  { name: '056_catalog_pending_idx', sql: 'CREATE UNIQUE INDEX IF NOT EXISTS idx_catalog_pending_norm ON catalog_pending(normalized)' },
+  // ── Claim abuse controls and staff edits that survive a directory re-import ──
+  { name: '057_store_claims_attempts', sql: 'ALTER TABLE store_claims ADD COLUMN IF NOT EXISTS attempts INTEGER DEFAULT 0' },
+  { name: '058_store_claims_last_sent', sql: 'ALTER TABLE store_claims ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP' },
+  { name: '059_stores_staff_edited', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS staff_edited INTEGER DEFAULT 0' },
+  { name: '060_store_reports_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_store_reports_store ON store_reports(store_id, created_at)' },
+  // ── Billing: paid placement for claimed stores ──
+  { name: '061_stores_plan', sql: "ALTER TABLE stores ADD COLUMN IF NOT EXISTS plan TEXT DEFAULT 'free'" },
+  { name: '062_stores_plan_status', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS plan_status TEXT' },
+  { name: '063_stores_stripe_customer', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT' },
+  { name: '064_stores_stripe_subscription', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT' },
+  { name: '065_stores_plan_renews_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS plan_renews_at TIMESTAMP' },
+  { name: '066_stores_featured_until', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS featured_until TIMESTAMP' },
+  { name: '067_billing_events', sql: `CREATE TABLE IF NOT EXISTS billing_events (id TEXT PRIMARY KEY, store_id INTEGER REFERENCES stores(id) ON DELETE SET NULL, type TEXT, payload TEXT, created_at TIMESTAMP DEFAULT NOW())` },
+  { name: '068_stores_plan_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_plan ON stores(plan, featured_until)' },
+  // ── Images moved out of Postgres: a URL replaces the base64 blob ──
+  { name: '069_cigar_images_url', sql: 'ALTER TABLE cigar_images ADD COLUMN IF NOT EXISTS image_url TEXT' },
+  { name: '070_cigar_images_data_nullable', sql: 'ALTER TABLE cigar_images ALTER COLUMN image_data DROP NOT NULL' },
+  { name: '071_reviews_photo_url', sql: 'ALTER TABLE reviews ADD COLUMN IF NOT EXISTS photo_url TEXT' },
 ];
 
 async function runMigrations() {

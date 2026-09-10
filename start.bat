@@ -1,12 +1,12 @@
 @echo off
-echo Starting Habano...
-start "Habano API" cmd /k "cd /d "%~dp0server" && node src/index.js"
+echo Starting CigarBuddy...
+start "CigarBuddy API" cmd /k "cd /d "%~dp0server" && node src/index.js"
 timeout /t 2 >nul
-start "Habano App" cmd /k "cd /d "%~dp0client" && npm run dev"
+start "CigarBuddy App" cmd /k "cd /d "%~dp0client" && npm run dev"
 timeout /t 3 >nul
 start http://localhost:3000
 echo.
-echo Habano is running at http://localhost:3000
+echo CigarBuddy is running at http://localhost:3000
 echo API running at http://localhost:3001
 echo.
 echo Demo accounts:

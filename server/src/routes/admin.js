@@ -21,7 +21,13 @@ router.get('/stats', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
       (SELECT COUNT(*) FROM smoke_list WHERE status = 'pending') as smoke_list_pending,
       (SELECT COUNT(*) FROM verification_requests WHERE status = 'pending') as pending_verifications,
       (SELECT COUNT(*) FROM store_follows) as total_follows,
-      (SELECT COUNT(*) FROM notifications) as total_broadcasts
+      (SELECT COUNT(*) FROM notifications) as total_broadcasts,
+      (SELECT COUNT(*) FROM stores WHERE visible = 1) as total_listings,
+      (SELECT COUNT(*) FROM stores WHERE visible = 1 AND claimed = 0) as unclaimed_listings,
+      (SELECT COUNT(*) FROM stores WHERE claimed = 1) as claimed_stores,
+      (SELECT COUNT(*) FROM stores WHERE visible = 0) as hidden_listings,
+      (SELECT COUNT(*) FROM store_claims WHERE status = 'pending') as pending_claims,
+      (SELECT COUNT(*) FROM store_reports WHERE status = 'open') as open_reports
   `, []);
 
   const recentUsers = await db.all(`
@@ -101,10 +107,116 @@ router.get('/stores', requireAuth, requireAdmin, asyncRoute(async (req, res) => 
     LEFT JOIN verification_requests vr ON vr.store_id = s.id AND vr.id = (
       SELECT id FROM verification_requests WHERE store_id = s.id ORDER BY submitted_at DESC LIMIT 1
     )
+    WHERE s.user_id IS NOT NULL
     GROUP BY s.id, u.id, vr.id, vr.status, vr.submitted_at
     ORDER BY s.created_at DESC
   `, []);
   res.json(stores);
+}));
+
+// ── Store claims (unclaimed listing → owner) ────────────────────────────────
+
+const { approveClaim, rejectClaim } = require('../utils/claims');
+
+router.get('/claims', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { status } = req.query;
+  const params = [];
+  let where = '1=1';
+  if (status) { where = 'sc.status = ?'; params.push(status); }
+  const rows = await db.all(`
+    SELECT sc.*, s.name as store_name, s.city, s.state, s.website as store_website, s.phone as store_phone, s.address as store_address,
+      u.email as user_email, u.name as user_name
+    FROM store_claims sc
+    JOIN stores s ON s.id = sc.store_id
+    JOIN users u ON u.id = sc.user_id
+    WHERE ${where}
+    ORDER BY CASE sc.status WHEN 'pending' THEN 1 WHEN 'approved' THEN 2 ELSE 3 END, sc.created_at DESC
+    LIMIT 200
+  `, params);
+  res.json(rows);
+}));
+
+router.post('/claims/:id/approve', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  try {
+    const store = await approveClaim(req.params.id, { verify: true, adminNotes: req.body?.admin_notes || 'Approved by staff' });
+    if (process.env.GOOGLE_SERVICE_ACCOUNT && !store.sheet_url) {
+      const owner = await db.get('SELECT email FROM users WHERE id = ?', [store.user_id]);
+      if (owner) createInventorySheet(owner.email, store.name)
+        .then(url => db.run('UPDATE stores SET sheet_url = ? WHERE id = ?', [url, store.id]))
+        .catch(err => console.error('[sheets] Failed to create sheet on claim approve:', err.message));
+    }
+    res.json({ success: true });
+  } catch (e) {
+    if (e.status) return res.status(e.status).json({ error: e.message });
+    throw e;
+  }
+}));
+
+router.post('/claims/:id/reject', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  try {
+    await rejectClaim(req.params.id, req.body?.admin_notes);
+    res.json({ success: true });
+  } catch (e) {
+    if (e.status) return res.status(e.status).json({ error: e.message });
+    throw e;
+  }
+}));
+
+// ── Directory listings (auto-imported, unclaimed) ───────────────────────────
+
+router.get('/listings', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { q, state, visible, min_conf, max_conf } = req.query;
+  const limit = Math.min(500, parseInt(req.query.limit) || 100);
+  const where = ["s.source = 'osm'", 's.claimed = 0'];
+  const params = [];
+  if (q) { where.push('(s.name ILIKE ? OR s.city ILIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
+  if (state) { where.push('s.state = ?'); params.push(String(state).toUpperCase()); }
+  if (visible === '0' || visible === '1') { where.push('s.visible = ?'); params.push(+visible); }
+  if (min_conf) { where.push('s.confidence >= ?'); params.push(+min_conf); }
+  if (max_conf) { where.push('s.confidence <= ?'); params.push(+max_conf); }
+  const rows = await db.all(`
+    SELECT s.id, s.name, s.city, s.state, s.address, s.phone, s.website, s.store_type, s.confidence, s.visible, s.source_id, s.lat, s.lng,
+      (SELECT COUNT(*) FROM store_views sv WHERE sv.store_id = s.id) as views,
+      (SELECT COUNT(*) FROM store_reports sr WHERE sr.store_id = s.id AND sr.status = 'open') as open_reports
+    FROM stores s
+    WHERE ${where.join(' AND ')}
+    ORDER BY s.confidence DESC, s.name
+    LIMIT ?
+  `, [...params, limit]);
+  res.json(rows);
+}));
+
+const STORE_TYPES = ['cigar_shop', 'cigar_lounge', 'tobacco_shop', 'smoke_shop'];
+
+router.patch('/stores/:id/visible', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { visible, store_type } = req.body || {};
+  if (store_type && !STORE_TYPES.includes(store_type)) return res.status(400).json({ error: 'Unknown store type' });
+  // staff_edited pins this row: the next directory import keeps these values.
+  if (visible !== undefined) await db.run('UPDATE stores SET visible = ?, staff_edited = 1 WHERE id = ?', [visible ? 1 : 0, req.params.id]);
+  if (store_type) await db.run('UPDATE stores SET store_type = ?, staff_edited = 1 WHERE id = ?', [store_type, req.params.id]);
+  res.json({ success: true });
+}));
+
+router.get('/reports', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const status = req.query.status || 'open';
+  const rows = await db.all(`
+    SELECT r.*, s.name as store_name, s.city, s.state, s.claimed, s.visible, u.email as reporter_email
+    FROM store_reports r
+    JOIN stores s ON s.id = r.store_id
+    LEFT JOIN users u ON u.id = r.user_id
+    WHERE r.status = ?
+    ORDER BY r.created_at DESC LIMIT 200
+  `, [status]);
+  res.json(rows);
+}));
+
+router.patch('/reports/:id', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const { status, hide_store } = req.body || {};
+  const report = await db.get('SELECT * FROM store_reports WHERE id = ?', [req.params.id]);
+  if (!report) return res.status(404).json({ error: 'Not found' });
+  if (status) await db.run('UPDATE store_reports SET status = ? WHERE id = ?', [status, report.id]);
+  if (hide_store) await db.run('UPDATE stores SET visible = 0, staff_edited = 1 WHERE id = ? AND claimed = 0', [report.store_id]);
+  res.json({ success: true });
 }));
 
 router.patch('/stores/:id/verified', requireAuth, requireAdmin, asyncRoute(async (req, res) => {

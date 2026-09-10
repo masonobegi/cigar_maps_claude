@@ -1,4 +1,4 @@
-import { Star, Clock, User } from 'lucide-react';
+import { Star, Clock, User, UserPlus, UserCheck } from 'lucide-react';
 
 const FLAVOR_COLORS = {
   'cedar': 'bg-amber-900/30 text-amber-400',
@@ -33,19 +33,29 @@ function MiniStars({ value, max = 5 }) {
   );
 }
 
-export default function ReviewCard({ review, showCigar = false }) {
+export default function ReviewCard({ review, showCigar = false, onFollow, isFollowing }) {
   const date = new Date(review.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <div className="card p-4 flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className="w-8 h-8 rounded-full bg-amber-900/50 flex items-center justify-center flex-shrink-0">
             <User className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-sm text-stone-200 truncate">{review.user_name || 'Anonymous'}</p>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <p className="font-semibold text-sm text-stone-200 truncate">{review.user_name || 'Anonymous'}</p>
+              {onFollow && (
+                <button
+                  onClick={() => onFollow(review.user_id)}
+                  className={`flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full border transition-all flex-shrink-0 ${isFollowing ? 'border-stone-700 text-stone-500' : 'border-amber-700/50 text-amber-500 hover:bg-amber-900/20'}`}>
+                  {isFollowing ? <UserCheck className="w-3 h-3" /> : <UserPlus className="w-3 h-3" />}
+                  {isFollowing ? 'Following' : 'Follow'}
+                </button>
+              )}
+            </div>
             {showCigar && (
               <p className="text-xs text-stone-500 truncate">{review.brand} {review.cigar_name} — {review.vitola_name}</p>
             )}

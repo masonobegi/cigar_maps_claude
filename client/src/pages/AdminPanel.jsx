@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check } from 'lucide-react';
+import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, EyeOff, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check, MapPin, Flag, ExternalLink, BadgeCheck } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -441,10 +441,316 @@ function CigarManager({ toast }) {
   );
 }
 
+const TYPE_LABEL = { cigar_lounge: 'Lounge', cigar_shop: 'Cigar shop', tobacco_shop: 'Tobacco shop', smoke_shop: 'Smoke shop' };
+
+function domainOf(v) {
+  return (v || '').toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0].split('@').pop().split('.').slice(-2).join('.');
+}
+
+function ClaimsQueue({ onAction }) {
+  const [filter, setFilter] = useState('pending');
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(null);
+  const [notes, setNotes] = useState({});
+
+  useEffect(() => { setLoading(true); api.adminGetClaims(filter).then(setRows).finally(() => setLoading(false)); }, [filter]);
+
+  async function act(id, fn, msg) {
+    setBusy(id);
+    try { await fn(); setRows(r => r.filter(x => x.id !== id)); onAction(msg); }
+    catch (e) { onAction(e.message); }
+    finally { setBusy(null); }
+  }
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-4">
+        {['pending', 'approved', 'rejected'].map(s => (
+          <button key={s} onClick={() => setFilter(s)}
+            className={`text-sm px-4 py-1.5 rounded-full capitalize transition-all ${filter === s ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>{s}</button>
+        ))}
+      </div>
+      {loading ? <div className="card h-24 skeleton" /> : rows.length === 0 ? (
+        <p className="text-stone-500 text-sm text-center py-10">No {filter} claims.</p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {rows.map(c => {
+            const emailMatch = c.store_website && domainOf(c.contact_email) === domainOf(c.store_website);
+            return (
+              <div key={c.id} className="card p-4">
+                <div className="flex items-start gap-3 flex-wrap">
+                  <div className="flex-1 min-w-[220px]">
+                    <p className="font-semibold text-stone-200 flex items-center gap-2">
+                      {c.store_name}
+                      <a href={`/stores/${c.store_id}`} target="_blank" rel="noreferrer" className="text-stone-500 hover:text-amber-400"><ExternalLink className="w-3.5 h-3.5" /></a>
+                    </p>
+                    <p className="text-xs text-stone-500">{[c.store_address, c.city, c.state].filter(Boolean).join(', ')}</p>
+                    <p className="text-xs text-stone-500">Listing: {c.store_phone || 'no phone'} · {c.store_website || 'no website'}</p>
+                  </div>
+                  <div className="flex-1 min-w-[220px] text-xs">
+                    <p className="text-stone-300 font-medium">{c.user_name} <span className="text-stone-500">({c.user_email})</span></p>
+                    <p className="text-stone-400 mt-0.5">
+                      Contact: {c.contact_email}
+                      {emailMatch && <span className="ml-1.5 text-emerald-400">matches website domain</span>}
+                      {c.contact_phone && ` · ${c.contact_phone}`}
+                    </p>
+                    {c.message && <p className="text-stone-400 mt-1 italic">"{c.message}"</p>}
+                    <p className="text-stone-600 mt-1">{c.method} · {new Date(c.created_at).toLocaleString()}{c.admin_notes ? ` · ${c.admin_notes}` : ''}</p>
+                  </div>
+                </div>
+                {c.status === 'pending' && (
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    <input value={notes[c.id] || ''} onChange={e => setNotes(n => ({ ...n, [c.id]: e.target.value }))} placeholder="Note (optional)" className="input py-1.5 text-xs flex-1 min-w-[160px]" />
+                    <button disabled={busy === c.id} onClick={() => act(c.id, () => api.adminApproveClaim(c.id, notes[c.id]), 'Claim approved. Store is now owner-managed and verified.')}
+                      className="text-xs px-3 py-1.5 rounded-lg border border-emerald-700 text-emerald-400 hover:bg-emerald-900/20 disabled:opacity-50 flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5" /> Approve
+                    </button>
+                    <button disabled={busy === c.id} onClick={() => act(c.id, () => api.adminRejectClaim(c.id, notes[c.id]), 'Claim rejected.')}
+                      className="text-xs px-3 py-1.5 rounded-lg border border-red-800 text-red-400 hover:bg-red-900/20 disabled:opacity-50 flex items-center gap-1">
+                      <X className="w-3.5 h-3.5" /> Reject
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ListingsQueue({ onAction }) {
+  const [visible, setVisible] = useState('0');
+  const [q, setQ] = useState('');
+  const [state, setState] = useState('');
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  function load() {
+    setLoading(true);
+    const p = { visible, limit: 200 };
+    if (q) p.q = q;
+    if (state) p.state = state;
+    if (visible === '0') p.min_conf = '0.25';
+    api.adminGetListings(p).then(setRows).finally(() => setLoading(false));
+  }
+  useEffect(load, [visible, state]);
+
+  async function setListing(id, patch, msg) {
+    await api.adminSetListing(id, patch);
+    setRows(r => r.map(x => x.id === id ? { ...x, ...patch } : x));
+    onAction(msg);
+  }
+
+  return (
+    <div>
+      <p className="text-xs text-stone-500 mb-3">
+        Listings are imported from OpenStreetMap and scored by how likely they are a real cigar shop. Anything under 0.5 is hidden from the public map.
+        Borderline ones (0.25 to 0.5) show here so you can unhide the good ones.
+      </p>
+      <div className="flex gap-2 mb-4 flex-wrap items-center">
+        {[['0', 'Hidden (review)'], ['1', 'Public']].map(([v, l]) => (
+          <button key={v} onClick={() => setVisible(v)}
+            className={`text-sm px-4 py-1.5 rounded-full transition-all ${visible === v ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>{l}</button>
+        ))}
+        <input value={state} onChange={e => setState(e.target.value.toUpperCase().slice(0, 2))} placeholder="State" className="input py-1.5 text-xs w-20" />
+        <form onSubmit={e => { e.preventDefault(); load(); }} className="flex gap-2">
+          <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name or city" className="input py-1.5 text-xs w-48" />
+          <button type="submit" className="btn-secondary text-xs px-3 py-1.5"><Search className="w-3.5 h-3.5" /></button>
+        </form>
+      </div>
+      {loading ? <div className="card h-24 skeleton" /> : rows.length === 0 ? (
+        <p className="text-stone-500 text-sm text-center py-10">Nothing here.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {rows.map(s => (
+            <div key={s.id} className="card p-3 flex items-center gap-3 flex-wrap">
+              <div className="flex-1 min-w-[200px]">
+                <p className="font-medium text-stone-200 text-sm flex items-center gap-2">
+                  {s.name}
+                  <a href={`/stores/${s.id}`} target="_blank" rel="noreferrer" className="text-stone-500 hover:text-amber-400"><ExternalLink className="w-3.5 h-3.5" /></a>
+                  {s.open_reports > 0 && <span className="text-[10px] bg-red-900/40 text-red-400 px-1.5 py-0.5 rounded-full">{s.open_reports} report{s.open_reports > 1 ? 's' : ''}</span>}
+                </p>
+                <p className="text-xs text-stone-500">{[s.address, s.city, s.state].filter(Boolean).join(', ') || `${s.lat?.toFixed(3)}, ${s.lng?.toFixed(3)}`}{s.website ? ` · ${s.website}` : ''}{s.phone ? ` · ${s.phone}` : ''}</p>
+                <p className="text-[11px] text-stone-600">confidence {Number(s.confidence).toFixed(2)} · {s.views} views · osm {s.source_id}</p>
+              </div>
+              <select value={s.store_type || 'cigar_shop'} onChange={e => setListing(s.id, { store_type: e.target.value }, 'Type updated')} className="input py-1 text-xs w-36">
+                {Object.entries(TYPE_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              </select>
+              <button onClick={() => setListing(s.id, { visible: s.visible ? 0 : 1 }, s.visible ? 'Listing hidden' : 'Listing is now public')}
+                className={`text-xs px-3 py-1.5 rounded-lg border flex items-center gap-1 ${s.visible ? 'border-stone-700 text-stone-400 hover:border-red-700 hover:text-red-400' : 'border-emerald-700 text-emerald-400 hover:bg-emerald-900/20'}`}>
+                {s.visible ? <><EyeOff className="w-3.5 h-3.5" /> Hide</> : <><Eye className="w-3.5 h-3.5" /> Show</>}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const REASON_LABEL = { closed: 'Permanently closed', not_cigar_shop: 'Not a cigar shop', wrong_location: 'Wrong location', wrong_info: 'Wrong info', duplicate: 'Duplicate', other: 'Other' };
+
+function ReportsQueue({ onAction }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { api.adminGetReports('open').then(setRows).finally(() => setLoading(false)); }, []);
+
+  async function resolve(r, hide) {
+    await api.adminUpdateReport(r.id, { status: 'resolved', hide_store: hide });
+    setRows(x => x.filter(y => y.id !== r.id));
+    onAction(hide ? 'Listing hidden and report resolved.' : 'Report resolved.');
+  }
+
+  return loading ? <div className="card h-24 skeleton" /> : rows.length === 0 ? (
+    <p className="text-stone-500 text-sm text-center py-10">No open reports.</p>
+  ) : (
+    <div className="flex flex-col gap-2">
+      {rows.map(r => (
+        <div key={r.id} className="card p-3 flex items-center gap-3 flex-wrap">
+          <div className="flex-1 min-w-[220px]">
+            <p className="font-medium text-stone-200 text-sm flex items-center gap-2">
+              {r.store_name}
+              <a href={`/stores/${r.store_id}`} target="_blank" rel="noreferrer" className="text-stone-500 hover:text-amber-400"><ExternalLink className="w-3.5 h-3.5" /></a>
+              {r.claimed ? <span className="text-[10px] text-amber-400">claimed</span> : null}
+            </p>
+            <p className="text-xs text-stone-400"><span className="text-red-400">{REASON_LABEL[r.reason] || r.reason}</span>{r.details ? ` · ${r.details}` : ''}</p>
+            <p className="text-[11px] text-stone-600">{r.reporter_email || 'anonymous'} · {new Date(r.created_at).toLocaleString()} · {r.city}, {r.state}</p>
+          </div>
+          {!r.claimed && (
+            <button onClick={() => resolve(r, true)} className="text-xs px-3 py-1.5 rounded-lg border border-red-800 text-red-400 hover:bg-red-900/20 flex items-center gap-1">
+              <EyeOff className="w-3.5 h-3.5" /> Hide listing
+            </button>
+          )}
+          <button onClick={() => resolve(r, false)} className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-400 hover:text-stone-200 flex items-center gap-1">
+            <Check className="w-3.5 h-3.5" /> Resolve
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Catalog queue: product titles our menu reader pulled off shop websites but
+ * could not match to a cigar. Linking one teaches the matcher — the next scan
+ * treats that exact title as an alias for the cigar chosen here.
+ */
+function CatalogQueue({ onAction }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(null);
+  const [scanning, setScanning] = useState(false);
+  const [openRow, setOpenRow] = useState(null);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+
+  function load() {
+    setLoading(true);
+    api.adminGetCatalogPending({ status: 'pending', limit: 100 })
+      .then(d => setRows(d.items || []))
+      .finally(() => setLoading(false));
+  }
+  useEffect(load, []);
+
+  useEffect(() => {
+    if (!query.trim()) { setResults([]); return; }
+    const t = setTimeout(() => {
+      api.searchCigars({ q: query, limit: 8 }).then(d => setResults(d.cigars || [])).catch(() => setResults([]));
+    }, 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  async function link(row, cigar) {
+    setBusy(row.id);
+    try {
+      await api.adminResolveCatalogPending(row.id, { cigar_id: cigar.id });
+      setRows(r => r.filter(x => x.id !== row.id));
+      setOpenRow(null); setQuery(''); setResults([]);
+      onAction(`Linked to ${cigar.brand} ${cigar.name}.`);
+    } catch (e) { onAction(e.message); } finally { setBusy(null); }
+  }
+
+  async function dismiss(row) {
+    setBusy(row.id);
+    try {
+      await api.adminResolveCatalogPending(row.id, { dismiss: true });
+      setRows(r => r.filter(x => x.id !== row.id));
+      onAction('Dismissed.');
+    } catch (e) { onAction(e.message); } finally { setBusy(null); }
+  }
+
+  async function scan() {
+    setScanning(true);
+    try {
+      await api.adminRunMenuScan({ limit: 40 });
+      onAction('Menu scan started — check back in a few minutes.');
+    } catch (e) { onAction(e.message); } finally { setScanning(false); }
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-stone-500">
+          Unmatched product titles read from shop websites, most-seen first.
+        </p>
+        <button onClick={scan} disabled={scanning}
+          className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-300 hover:text-amber-400 flex items-center gap-1.5 disabled:opacity-50">
+          <Search className="w-3.5 h-3.5" /> {scanning ? 'Starting...' : 'Scan 40 stale stores'}
+        </button>
+      </div>
+
+      {loading ? <div className="card h-24 skeleton" /> : rows.length === 0 ? (
+        <p className="text-stone-500 text-sm text-center py-10">Nothing waiting in the catalog queue.</p>
+      ) : rows.map(r => (
+        <div key={r.id} className="card p-3 flex flex-col gap-2">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex-1 min-w-[240px]">
+              <p className="font-medium text-stone-200 text-sm">{r.raw_name}</p>
+              <p className="text-[11px] text-stone-600">
+                seen {r.seen_count}x
+                {r.price ? ` · $${Number(r.price).toFixed(2)}` : ''}
+                {r.store_name ? ` · ${r.store_name}` : ''}
+                {r.suggested_brand ? ` · suggested: ${r.suggested_brand} ${r.suggested_name}` : ''}
+              </p>
+            </div>
+            <button onClick={() => { setOpenRow(openRow === r.id ? null : r.id); setQuery(''); setResults([]); }}
+              className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-300 hover:text-amber-400 flex items-center gap-1">
+              <Search className="w-3.5 h-3.5" /> {openRow === r.id ? 'Close' : 'Link cigar'}
+            </button>
+            <button onClick={() => dismiss(r)} disabled={busy === r.id}
+              className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-400 hover:text-stone-200 flex items-center gap-1 disabled:opacity-50">
+              <X className="w-3.5 h-3.5" /> Dismiss
+            </button>
+          </div>
+
+          {openRow === r.id && (
+            <div className="pt-2 border-t border-stone-800 flex flex-col gap-2">
+              <input autoFocus value={query} onChange={e => setQuery(e.target.value)}
+                placeholder="Search the catalog by brand or line..." className="input py-1.5 text-sm" />
+              {results.map(c => (
+                <button key={c.id} onClick={() => link(r, c)} disabled={busy === r.id}
+                  className="text-left text-sm px-3 py-2 rounded-lg border border-stone-800 hover:border-amber-700 text-stone-300 disabled:opacity-50">
+                  <span className="text-amber-500 text-xs font-semibold uppercase tracking-wide">{c.brand}</span> {c.name}
+                </button>
+              ))}
+              {query.trim() && results.length === 0 && (
+                <p className="text-xs text-stone-600">No catalog match. Add the cigar under the Cigars tab first.</p>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function AdminPanel() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState('verifications');
+  const [tab, setTab] = useState('claims');
   const [stats, setStats] = useState(null);
   const [stores, setStores] = useState([]);
   const [users, setUsers] = useState([]);
@@ -480,7 +786,11 @@ export default function AdminPanel() {
   }
 
   const TABS = [
-    { key: 'verifications', label: 'Verifications' },
+    { key: 'claims', label: 'Claims', badge: stats?.stats.pending_claims },
+    { key: 'verifications', label: 'Verifications', badge: stats?.stats.pending_verifications },
+    { key: 'listings', label: 'Listings' },
+    { key: 'reports', label: 'Reports', badge: stats?.stats.open_reports },
+    { key: 'catalog', label: 'Catalog queue' },
     { key: 'stores', label: 'Stores' },
     { key: 'users', label: 'Users' },
     { key: 'cigars', label: 'Cigars' },
@@ -513,6 +823,10 @@ export default function AdminPanel() {
           <StatCard label="Stores" value={stats.stats.total_stores} icon={Store} color="text-amber-400" />
           <StatCard label="Verified" value={stats.stats.verified_stores} icon={CheckCircle} color="text-emerald-400" />
           <StatCard label="Pending Verif." value={stats.stats.pending_verifications} icon={AlertCircle} color={stats.stats.pending_verifications > 0 ? 'text-orange-400' : 'text-stone-500'} />
+          <StatCard label="Listings on map" value={stats.stats.total_listings ?? 0} icon={MapPin} color="text-amber-400" />
+          <StatCard label="Unclaimed" value={stats.stats.unclaimed_listings ?? 0} icon={Store} color="text-stone-400" />
+          <StatCard label="Pending claims" value={stats.stats.pending_claims ?? 0} icon={BadgeCheck} color={stats.stats.pending_claims > 0 ? 'text-orange-400' : 'text-stone-500'} />
+          <StatCard label="Open reports" value={stats.stats.open_reports ?? 0} icon={Flag} color={stats.stats.open_reports > 0 ? 'text-red-400' : 'text-stone-500'} />
         </div>
       )}
 
@@ -522,15 +836,19 @@ export default function AdminPanel() {
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors ${tab === t.key ? 'text-amber-400 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}>
             {t.label}
-            {t.key === 'verifications' && stats?.stats.pending_verifications > 0 && (
+            {t.badge > 0 && (
               <span className="ml-1.5 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                {stats.stats.pending_verifications}
+                {t.badge}
               </span>
             )}
           </button>
         ))}
       </div>
 
+      {tab === 'claims' && <ClaimsQueue onAction={showToast} />}
+      {tab === 'listings' && <ListingsQueue onAction={showToast} />}
+      {tab === 'reports' && <ReportsQueue onAction={showToast} />}
+      {tab === 'catalog' && <CatalogQueue onAction={showToast} />}
       {tab === 'verifications' && <VerificationQueue onAction={showToast} />}
 
       {tab === 'stores' && (

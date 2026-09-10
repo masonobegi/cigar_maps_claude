@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee, Reply, ChevronDown, ChevronUp } from 'lucide-react';
+import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee, Reply, ChevronDown, ChevronUp, Flag, BadgeCheck, Mail } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -28,9 +28,210 @@ function StarRating({ value, onChange, size = 'md' }) {
   );
 }
 
+const TYPE_LABEL = { cigar_lounge: 'Cigar lounge', cigar_shop: 'Cigar shop', tobacco_shop: 'Tobacco shop', smoke_shop: 'Smoke shop' };
+
+function Modal({ title, onClose, children }) {
+  return (
+    <div className="fixed inset-0 z-[1100] flex items-end sm:items-center justify-center px-0 sm:px-4" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }} onClick={onClose}>
+      <div className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto"
+        style={{ backgroundColor: '#1A1410', border: `1px solid ${BORDER}` }} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-serif text-lg font-bold" style={{ color: NAVY }}>{title}</h2>
+          <button onClick={onClose} className="p-1" style={{ color: MUTED }}><X className="w-5 h-5" /></button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// "checked 3 days ago" for a web-read inventory row.
+function freshness(ts) {
+  if (!ts) return null;
+  const then = new Date(ts).getTime();
+  if (!Number.isFinite(then)) return null;
+  const hours = (Date.now() - then) / 3600000;
+  if (hours < 1) return 'checked just now';
+  if (hours < 24) return `checked ${Math.max(1, Math.round(hours))}h ago`;
+  const days = Math.round(hours / 24);
+  if (days === 1) return 'checked yesterday';
+  if (days < 30) return `checked ${days} days ago`;
+  const months = Math.round(days / 30);
+  return `checked ${months} month${months === 1 ? '' : 's'} ago`;
+}
+
+const domainOf = (website) => String(website || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+
+function UnclaimedBanner({ store, myClaim, menuStatus, onClaim, onReport }) {
+  const autoMenu = menuStatus && typeof menuStatus.status === 'string' && menuStatus.status.startsWith('ok');
+  return (
+    <div className="mb-4 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3"
+      style={{ backgroundColor: '#241C12', border: '1px solid #4D3A1A' }}>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold flex items-center gap-2" style={{ color: NAVY }}>
+          <MapPin className="w-4 h-4" style={{ color: AMBER }} /> Unclaimed listing
+        </p>
+        <p className="text-xs mt-1" style={{ color: MUTED }}>
+          Details come from OpenStreetMap contributors and may be out of date. Inventory, deals, and events appear once the owner claims this shop.
+        </p>
+        {autoMenu && (
+          <p className="text-xs mt-1" style={{ color: MUTED }}>
+            Menu read automatically from {domainOf(menuStatus.url || store.website)}. Prices and stock may lag the shop.
+          </p>
+        )}
+      </div>
+      <div className="flex items-center gap-3 flex-shrink-0">
+        {myClaim?.status === 'pending' ? (
+          <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: '#2D1E06', color: AMBER, border: '1px solid #4D3010' }}>
+            Your claim is pending review
+          </span>
+        ) : (
+          <button onClick={onClaim} className="btn-primary text-sm flex items-center gap-1.5">
+            <BadgeCheck className="w-4 h-4" /> Own this shop? Claim it
+          </button>
+        )}
+        <button onClick={onReport} className="text-xs flex items-center gap-1 hover:text-amber-500" style={{ color: MUTED }} title="Report a problem with this listing">
+          <Flag className="w-3.5 h-3.5" /> Report
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ClaimModal({ store, user, onClose, onClaimed, onPending }) {
+  const [form, setForm] = useState({ contact_email: user?.email || '', contact_phone: store.phone || '', message: '' });
+  const [step, setStep] = useState('form');
+  const [code, setCode] = useState('');
+  const [emailHint, setEmailHint] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  async function submit(e) {
+    e.preventDefault(); setBusy(true); setError('');
+    try {
+      const r = await api.claimStore(store.id, form);
+      if (r.status === 'code_sent') { setEmailHint(r.email_hint); setStep('code'); }
+      else { setStep('pending'); onPending(r); }
+    } catch (err) { setError(err.message); } finally { setBusy(false); }
+  }
+  async function verify(e) {
+    e.preventDefault(); setBusy(true); setError('');
+    try { const r = await api.verifyClaim(store.id, code); setStep('done'); onClaimed(r.store); }
+    catch (err) { setError(err.message); } finally { setBusy(false); }
+  }
+
+  const domain = (store.website || '').replace(/^www\./, '').split('/')[0];
+
+  if (!user) return (
+    <Modal title={`Claim ${store.name}`} onClose={onClose}>
+      <p className="text-sm mb-4" style={{ color: LABEL }}>Claiming is free. Create a retailer account (or sign in) to prove you run this shop, then manage its hours, inventory, deals, and events.</p>
+      <div className="flex flex-col gap-2">
+        <Link to={`/register?type=store&claim=${store.id}`} className="btn-primary text-center">Create a retailer account</Link>
+        <Link to={`/login?next=${encodeURIComponent(`/stores/${store.id}?claim=1`)}`} className="btn-secondary text-center">I already have an account</Link>
+      </div>
+    </Modal>
+  );
+
+  if (user.account_type !== 'store') return (
+    <Modal title={`Claim ${store.name}`} onClose={onClose}>
+      <p className="text-sm mb-3" style={{ color: LABEL }}>You are signed in with an enthusiast account. Claims need a retailer account, ideally registered with your shop's email.</p>
+      <Link to={`/register?type=store&claim=${store.id}`} className="btn-primary text-center block">Create a retailer account</Link>
+    </Modal>
+  );
+
+  return (
+    <Modal title={`Claim ${store.name}`} onClose={onClose}>
+      {step === 'form' && (
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <p className="text-xs" style={{ color: MUTED }}>
+            {domain
+              ? <>Use an email at <span style={{ color: NAVY }}>@{domain}</span> and we can verify you instantly with a code. Any other email goes to a quick manual review.</>
+              : 'Tell us how to confirm you run this shop. We review claims within one to two business days.'}
+          </p>
+          <div>
+            <label className="text-xs font-medium block mb-1" style={{ color: LABEL }}>Business email</label>
+            <input type="email" required value={form.contact_email} onChange={e => set('contact_email', e.target.value)} className="input" placeholder={domain ? `you@${domain}` : 'you@yourshop.com'} />
+          </div>
+          <div>
+            <label className="text-xs font-medium block mb-1" style={{ color: LABEL }}>Phone</label>
+            <input value={form.contact_phone} onChange={e => set('contact_phone', e.target.value)} className="input" placeholder="(555) 555-5555" />
+          </div>
+          <div>
+            <label className="text-xs font-medium block mb-1" style={{ color: LABEL }}>Anything that helps us verify (optional)</label>
+            <textarea value={form.message} onChange={e => set('message', e.target.value)} className="input min-h-[80px]" placeholder="Your name and role, your website, Instagram, or a note about the shop" />
+          </div>
+          {error && <p className="text-xs" style={{ color: '#F87171' }}>{error}</p>}
+          <button type="submit" disabled={busy} className="btn-primary">{busy ? 'Submitting...' : 'Submit claim'}</button>
+        </form>
+      )}
+      {step === 'code' && (
+        <form onSubmit={verify} className="flex flex-col gap-3">
+          <p className="text-sm flex items-start gap-2" style={{ color: LABEL }}><Mail className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: AMBER }} /> We emailed a 6-digit code to {emailHint}. Enter it to finish.</p>
+          <input inputMode="numeric" maxLength={6} value={code} onChange={e => setCode(e.target.value.replace(/\D/g, ''))} className="input text-center text-2xl tracking-[0.4em]" placeholder="------" />
+          {error && <p className="text-xs" style={{ color: '#F87171' }}>{error}</p>}
+          <button type="submit" disabled={busy || code.length !== 6} className="btn-primary">{busy ? 'Checking...' : 'Verify and claim'}</button>
+          <button type="button" onClick={() => setStep('form')} className="text-xs" style={{ color: MUTED }}>Use a different email</button>
+        </form>
+      )}
+      {step === 'pending' && (
+        <div className="text-center py-2">
+          <Clock className="w-8 h-8 mx-auto mb-2" style={{ color: AMBER }} />
+          <p className="text-sm font-medium mb-1" style={{ color: NAVY }}>Claim submitted</p>
+          <p className="text-xs mb-4" style={{ color: MUTED }}>We will review it within one to two business days and email you. Your store dashboard unlocks automatically once approved.</p>
+          <button onClick={onClose} className="btn-secondary">Done</button>
+        </div>
+      )}
+      {step === 'done' && (
+        <div className="text-center py-2">
+          <CheckCircle className="w-8 h-8 mx-auto mb-2" style={{ color: '#4ADE80' }} />
+          <p className="text-sm font-medium mb-1" style={{ color: NAVY }}>You now manage {store.name}</p>
+          <p className="text-xs mb-4" style={{ color: MUTED }}>Head to your dashboard to fix hours, add inventory, and post your first deal.</p>
+          <Link to="/store-dashboard" className="btn-primary inline-block">Open store dashboard</Link>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+const REPORT_REASONS = [
+  { value: 'closed', label: 'Permanently closed' },
+  { value: 'not_cigar_shop', label: 'Not a cigar shop (vape, convenience, other)' },
+  { value: 'wrong_location', label: 'Wrong location on the map' },
+  { value: 'wrong_info', label: 'Wrong name, phone, hours, or website' },
+  { value: 'duplicate', label: 'Duplicate of another listing' },
+  { value: 'other', label: 'Something else' },
+];
+
+function ReportModal({ store, onClose, onDone }) {
+  const [reason, setReason] = useState('wrong_info');
+  const [details, setDetails] = useState('');
+  const [busy, setBusy] = useState(false);
+  async function submit(e) {
+    e.preventDefault(); setBusy(true);
+    try { await api.reportStore(store.id, { reason, details }); onDone(); } catch {} finally { setBusy(false); }
+  }
+  return (
+    <Modal title="Report a problem" onClose={onClose}>
+      <form onSubmit={submit} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5">
+          {REPORT_REASONS.map(r => (
+            <label key={r.value} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: LABEL }}>
+              <input type="radio" name="reason" value={r.value} checked={reason === r.value} onChange={() => setReason(r.value)} className="accent-amber-600" />
+              {r.label}
+            </label>
+          ))}
+        </div>
+        <textarea value={details} onChange={e => setDetails(e.target.value)} className="input min-h-[70px]" placeholder="Details (optional)" />
+        <button type="submit" disabled={busy} className="btn-primary">{busy ? 'Sending...' : 'Send report'}</button>
+      </form>
+    </Modal>
+  );
+}
+
 export default function StoreProfile() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, refreshStore, refreshMe } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -56,6 +257,14 @@ export default function StoreProfile() {
   const [selectedCigar, setSelectedCigar] = useState(null);
   // replies: { [postId]: { open: bool, list: [], content: string, submitting: bool } }
   const [replyState, setReplyState] = useState({});
+  const [claimModal, setClaimModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
+  const [menuStatus, setMenuStatus] = useState(null);
+
+  // Deep link from registration: /stores/:id?claim=1 opens the claim dialog
+  useEffect(() => {
+    if (searchParams.get('claim') === '1' && data?.store && data.store.claimed === 0 && user) setClaimModal(true);
+  }, [data, user]);
 
   useEffect(() => {
     Promise.all([
@@ -67,6 +276,8 @@ export default function StoreProfile() {
       setFollowing(d.is_following);
       if (d.follow_prefs) setFollowPrefs(d.follow_prefs);
     }).finally(() => setLoading(false));
+    // Whether this shop's website is being read for us. Never blocks the page.
+    api.getStoreMenuStatus(id).then(setMenuStatus).catch(() => setMenuStatus(null));
   }, [id]);
 
   async function handleFollow() {
@@ -228,8 +439,14 @@ export default function StoreProfile() {
   );
   const byCigar = {};
   for (const item of filteredInv) {
-    if (!byCigar[item.cigar_id]) byCigar[item.cigar_id] = { ...item, vitolas: [] };
-    byCigar[item.cigar_id].vitolas.push({ vitola_id: item.vitola_id, name: item.vitola_name, price: item.price, quantity: item.quantity, is_new_arrival: item.is_new_arrival });
+    if (!byCigar[item.cigar_id]) byCigar[item.cigar_id] = { ...item, vitolas: [], web: null };
+    byCigar[item.cigar_id].vitolas.push({ vitola_id: item.vitola_id, name: item.vitola_name, price: item.price, quantity: item.quantity, is_new_arrival: item.is_new_arrival, source: item.source });
+    // Rows we read off the shop's own website are labelled as such.
+    if (item.source === 'web') {
+      const web = byCigar[item.cigar_id].web;
+      const at = item.last_confirmed_at ? new Date(item.last_confirmed_at).getTime() : 0;
+      if (!web || at > web.at) byCigar[item.cigar_id].web = { at, url: item.source_url, label: freshness(item.last_confirmed_at) };
+    }
   }
 
   const TABS = [
@@ -250,6 +467,30 @@ export default function StoreProfile() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
       <BackButton label="Stores" to="/stores" />
+
+      {store.claimed === 0 && (
+        <UnclaimedBanner store={store} myClaim={data.my_claim} menuStatus={menuStatus} onClaim={() => setClaimModal(true)} onReport={() => setReportModal(true)} />
+      )}
+      {claimModal && (
+        <ClaimModal store={store} user={user} onClose={() => setClaimModal(false)}
+          onClaimed={(s) => {
+            refreshStore(s);
+            // The page keeps its own copy of the store, so update it too or the
+            // "Unclaimed listing" banner stays up over a store you now own.
+            setData(d => d && ({ ...d, store: { ...d.store, ...s, claimed: 1 }, my_claim: null }));
+            toast('Store claimed. Welcome aboard!');
+          }}
+          onPending={(claim) => {
+            // A manual claim leaves the account with no store yet; refresh so
+            // the dashboard shows "claim pending" instead of the setup wizard.
+            refreshMe().catch(() => {});
+            setData(d => d && ({ ...d, my_claim: { id: claim?.id, status: 'pending', method: claim?.method || 'manual' } }));
+          }} />
+      )}
+      {reportModal && (
+        <ReportModal store={store} onClose={() => setReportModal(false)}
+          onDone={() => { setReportModal(false); toast('Thanks, we will take a look.'); }} />
+      )}
 
       {/* Store header card */}
       <div className="card mb-4 overflow-hidden">
@@ -320,6 +561,14 @@ export default function StoreProfile() {
                   <span style={{ color: LABEL, fontWeight: 500 }}>{stats.avg_rating}</span>
                   <span>({stats.rating_count} ratings)</span>
                 </span>
+              )}
+              {TYPE_LABEL[store.store_type] && store.store_type !== 'cigar_shop' && (
+                <span style={{ color: LABEL }}>{TYPE_LABEL[store.store_type]}</span>
+              )}
+              {store.claimed !== 0 && (
+                <button onClick={() => setReportModal(true)} className="flex items-center gap-1 hover:text-amber-500" style={{ color: MUTED }} title="Report a problem">
+                  <Flag className="w-3 h-3" /> Report
+                </button>
               )}
             </div>
           </div>
@@ -468,6 +717,24 @@ export default function StoreProfile() {
                       </div>
                     ))}
                   </div>
+
+                  {item.web && (
+                    <p className="text-xs mt-2 flex items-center gap-1.5 flex-wrap" style={{ color: MUTED }}>
+                      <Globe className="w-3 h-3 flex-shrink-0" />
+                      {item.web.url ? (
+                        // A nested <a> inside the card link is invalid markup, so
+                        // this opens the product page itself.
+                        <span role="link" tabIndex={0} className="underline hover:text-amber-500"
+                          onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(item.web.url, '_blank', 'noopener'); }}
+                          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(item.web.url, '_blank', 'noopener'); } }}>
+                          From the shop&rsquo;s website
+                        </span>
+                      ) : (
+                        <span>From the shop&rsquo;s website</span>
+                      )}
+                      {item.web.label && <span>· {item.web.label}</span>}
+                    </p>
+                  )}
                 </Link>
               ))}
             </div>

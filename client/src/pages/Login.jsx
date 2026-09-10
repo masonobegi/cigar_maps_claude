@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Flame } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,6 +10,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // The claim flow sends people here with ?next=/stores/12?claim=1 so they land
+  // back on the listing they were claiming. Only same-site paths are honored.
+  const next = searchParams.get('next');
+  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -17,7 +22,7 @@ export default function Login() {
     setLoading(true);
     try {
       const user = await login(email, password);
-      navigate(user.account_type === 'store' ? '/store-dashboard' : '/dashboard');
+      navigate(safeNext || (user.account_type === 'store' ? '/store-dashboard' : '/dashboard'));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -57,7 +62,10 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-300 mb-1.5">Password</label>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <label className="block text-sm font-medium text-stone-300">Password</label>
+                <Link to="/forgot-password" className="text-xs text-stone-500 hover:text-amber-400">Forgot password?</Link>
+              </div>
               <input
                 type="password"
                 value={password}
