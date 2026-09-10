@@ -78,8 +78,21 @@ Verification on a clean database: `api_test.js`, `fix_test.js`, `auth_test.js` a
 4. Publish the roadmap page (scratchpad `cigarbuddy-roadmap.html`) and update its figures if they changed.
 5. Final recap to Mason with the short "what's left" list (see ROADMAP.md section 10 and the phases).
 
-## Not done / needs Mason
+## Shipped
 
-- No git commit has been made (nothing was asked to be committed). Everything is in the working tree: run `git status` to see it. Suggested: commit on a branch, deploy to Railway, then set `SMTP_USER`/`SMTP_PASS`/`ADMIN_EMAIL`/`APP_URL` on Railway.
-- Delete the placeholder "Brand 1..5" cigars and "Store 1..5" demo stores from production via the admin panel once real data is in.
-- Decisions in ROADMAP.md section 9 (web-first vs app store, name/domain).
+Committed as `284823f` and pushed to `master`, which triggers the Railway deploy of the "cigar maps" project.
+
+## Still needs Mason
+
+**Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used.
+
+**Railway environment variables**, in rough priority order:
+1. `ADMIN_PASSWORD` and `STAFF_PASSWORD` — otherwise the deploy prints one-time random ones in its boot log.
+2. `SMTP_USER` / `SMTP_PASS` / `ADMIN_EMAIL` / `APP_URL` — turns on claim codes, password reset, and claim notifications.
+3. `S3_*` for Cloudflare R2, then run `node src/jobs/migrateImages.js` once to move existing photos out of Postgres.
+4. `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_FEATURED`, `STRIPE_PRICE_PARTNER` — until these exist the pricing page reports billing as switched off, which is the correct state for now.
+
+**Other:**
+- Delete the placeholder "Brand 1..5" cigars and "Store 1..5" demo stores from production in the admin panel once real shops have claimed listings.
+- Buy cigarbuddy.com, check the trademark, and point the Railway domain at it.
+- Spot-check the launch metro in the admin Listings queue and unhide anything the classifier scored too low.
