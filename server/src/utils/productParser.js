@@ -23,6 +23,8 @@ const SHAPES = [
   'petit corona', 'petit robusto', 'petit lancero', 'petit belicoso',
   'corona gorda', 'corona corta', 'corona larga', 'corona extra',
   'toro gordo', 'toro grande', 'gran toro', 'grand toro', 'gordo extra',
+  'churchill extra', 'robusto extra', 'toro extra', 'torpedo extra', 'belicoso extra',
+  'robusto grande', 'gran robusto', 'corona doble', 'doble corona', 'toro doble',
   'short churchill', 'short robusto', 'short torpedo', 'short perfecto',
   'half corona', 'long panetela', 'gran corona', 'super toro',
   'churchill', 'robusto', 'belicoso', 'torpedo', 'lancero', 'lonsdale',
@@ -30,32 +32,70 @@ const SHAPES = [
   'sublime', 'salomon', 'salomone', 'piramide', 'pyramid', 'culebra',
   'corona', 'gordo', 'toro', 'magnum', 'gigante', 'petit', 'nub', 'demi',
   'cigarillo', 'cigarillos', 'minuto', 'mareva', 'campana', 'hermoso',
+  'pequenos', 'pequeno', 'puritos', 'purito', 'minis', 'mini', 'clubs', 'club', 'petite',
 ];
 
 // How it is sold. None of this identifies the cigar.
 const PACKAGING = [
-  /\bbox(?:es)?\s+of\s+\d+\b/g,
-  /\bbundle\s+of\s+\d+\b/g,
-  /\btin\s+of\s+\d+\b/g,
-  /\bpack\s+of\s+\d+\b/g,
-  /\bcase\s+of\s+\d+\b/g,
-  /\b\d+\s*-?\s*(?:count|ct|pack|pk|cigars?)\b/g,
+  // The order matters: each rule must see its words before a later, greedier
+  // rule takes one of them away.
+  //
+  // Awards and ratings first, or "#1 Cigar In 2020" loses "1 cigar" to the
+  // count rule and strands "in 2020".
+  /\b(?:\d+\s+)?cigar\s+(?:of\s+the\s+year|in\s+\d{4})(?:\s+\d{4})?\b/g,
+  /\btop\s+\d+\b/g,
+  /\b(?:rated\s+)?\d{2}\s*(?:points?|pts|rating)\b/g,
+  /\brated\s+\d{2}\b/g,
+  // "6 Packs of 6", "5 tins of 10": a count of containers of a count.
+  /\b\d+\s+(?:packs?|tins?|boxes|bundles?|sleeves?)\s+of\s+\d+\b/g,
+  // "10 count", "5-pack": a number that owns the word after it. Before the
+  // container rule, or "Tin 10 count" loses "Tin 10" and strands "count".
+  /\b\d+\s*-?\s*(?:count|ct|packs?|pks?|cigars?|units?|tins?)\b/g,
+  // A container and its count, with or without "of": "Box of 20", "Box 23".
+  /\b(?:box(?:es)?|bundles?|tins?|packs?|cases?|sleeves?|cabinets?|jars?)\s+(?:of\s+)?\d+\b/g,
+  /\b(?:available\s+for\s+)?special\s+order\b/g,
+  /\bcigars?\s+\d+\b/g,                    // "Robusto - Cigars 20"
   /\b\d+\s*er\b/g,
-  /\b(?:single|singles|loose|each|box|bundle|tin|sampler|gift\s+set|carton)\b/g,
+  /\b(?:single|singles|loose|each|box|boxes|bundle|bundles|tin|tins|packs?|sleeves?|sampler|gift\s+set|carton|units?)\b/g,
+  // Stock notes some shops leave in the title itself.
+  /\b(?:out\s+of\s+stock|sold\s+out|pre-?\s*order|back\s*order(?:ed)?|in\s+stock|discontinued)\b/g,
+  // Shop promotions. Not "new" or "limited": New World and Limited Edition are
+  // the names of real lines.
+  /\b(?:save|sale|clearance|discount)\b(?:\s+\$?\d+%?)?/g,
+  // A count left stranded once its container word went ("Dorado of 5").
+  /\bof\s+\d+\b/g,
 ];
 
-// "5x50", "6 1/2 x 52", "(5.5 X 48)"
-const DIMENSIONS = /\(?\b\d+(?:\s+\d+\/\d+|[.,]\d+)?\s*[x×]\s*\d+(?:[.,]\d+)?\b\)?/gi;
+// "5x50", "6 1/2 x 52", "(5.5 X 48)", and "6x54BP" with a box-pressed suffix
+const DIMENSIONS = /\(?\b\d+(?:\s+\d+\/\d+|[.,]\d+)?\s*[x×]\s*\d+(?:[.,]\d+)?(?:bp|tp|p)?\b\)?/gi;
+
+// The same size printed without the x: "Churchill 7 48", "Toro 6 1/4 54",
+// "Robusto 5.5 55". A length of 4-9 inches then a ring of 30-80, at the end.
+// Tight on purpose so "Vintage 1990", "Nub 460" and "Monument 20" survive.
+const BARE_DIMENSIONS = /\s+[4-9](?:\.\d{1,2}|\s+\d\/\d{1,2})?\s+(?:[3-7]\d|80)\s*$/;
+
+// How a cigar is finished or wrapped for sale, not which cigar it is.
+const FINISH = /\b(?:box[\s-]?pressed|pressed|(?:en|in)\s+tubos?|(?:in\s+)?tubes?|tubos?)\b/g;
 
 const SHAPE_SET = new Set(SHAPES);
 
 function clean(str) {
   return String(str || '')
+    // Typographic fractions: "4 3⁄16" and "6½" are sizes like any other.
+    .replace(/⁄/g, '/')
+    .replace(/½/g, ' 1/2').replace(/¼/g, ' 1/4').replace(/¾/g, ' 3/4')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/&(amp|nbsp|quot|#\d+);/g, ' ')
     .replace(/[^a-z0-9/.\s-]+/g, ' ')
+    // A dash with a space on either side separates words ("Liga Privada - H99");
+    // one inside a word ("E.R.H", "T-52") is part of it.
+    .replace(/\s-+|-+\s|^-+|-+$/g, ' ')
+    // A slash separates words ("Lancero/Panatela") unless it is a fraction.
+    .replace(/(^|[^0-9])\/|\/(?![0-9])/g, '$1 ')
+    // A full stop that is not inside an abbreviation or a number.
+    .replace(/(^|\s)\.+|\.+(\s|$)/g, '$1$2')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -83,8 +123,27 @@ function recase(lowered, rawTitle) {
     .map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     .join('[^A-Za-z0-9]+');
   const m = raw.match(new RegExp(pattern, 'i'));
-  if (m) return m[0].replace(/\s+/g, ' ').trim();
+  // Keep the shop's capitals, not its separators: "Liga Privada - H99" is
+  // shown as "Liga Privada H99".
+  if (m) {
+    return m[0]
+      .replace(/\s+[-–—|:]+\s+/g, ' ')
+      .replace(/[“”"(){}[\]]/g, ' ')
+      .replace(/\s*\/\s*/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
   return titleCase(lowered);
+}
+
+/**
+ * Shops type in capitals more often than makers do. "ROCKY PATEL VINTAGE
+ * 1990" reads as "Rocky Patel Vintage 1990"; short all-capital words stay as
+ * they are, because VSG, CAO and H99 are names, not shouting.
+ */
+function calmCapitals(s) {
+  if (!s || s !== s.toUpperCase() || !/[A-Z]{4,}/.test(s)) return s;
+  return s.split(' ').map(w => (/^[A-Z]{4,}$/.test(w) ? w.charAt(0) + w.slice(1).toLowerCase() : w)).join(' ');
 }
 
 /**
@@ -108,6 +167,31 @@ function splitShape(text) {
   return { size: null, rest: text };
 }
 
+const dedot = t => t.replace(/[^a-z0-9]/g, '');
+const COMPANY_WORDS = new Set(['cigars', 'cigar', 'co', 'company', 'tobacco', 'tabacos', 'tabaco', 'inc', 'llc', 'ltd']);
+
+/**
+ * The ways a brand can open a title, longest first. A shop's vendor field says
+ * "Plasencia Cigars" while its titles say "Plasencia Reserva Original", so the
+ * brand without its company words has to count as a prefix too.
+ */
+function brandPrefixes(brandClean) {
+  const tokens = brandClean.split(' ').map(dedot).filter(Boolean);
+  const out = [tokens];
+  let trimmed = tokens.slice();
+  while (trimmed.length > 1 && COMPANY_WORDS.has(trimmed[trimmed.length - 1])) {
+    trimmed = trimmed.slice(0, -1);
+    out.push(trimmed);
+  }
+  return out;
+}
+
+/** Token-wise prefix test that ignores punctuation: "a.j." equals "aj". */
+function startsWithTokens(lineTokens, prefix) {
+  if (!prefix.length || lineTokens.length < prefix.length) return false;
+  return prefix.every((t, i) => dedot(lineTokens[i]) === t);
+}
+
 /**
  * parseProductTitle("My Father Blue Toro Gordo Box of 20", "My Father")
  *   -> { brand: 'My Father', line: 'My Father Blue', size: 'Toro Gordo' }
@@ -116,13 +200,35 @@ function splitShape(text) {
  * as a prefix — a vendor of "My Father" on a title that never says so tells us
  * the brand but cannot tell us where the line begins.
  */
-function parseProductTitle(rawTitle, vendor = '') {
+/**
+ * A title with everything about how it is sold taken out: packaging, counts,
+ * printed dimensions, finishes, promotions, awards. What is left names the
+ * cigar and its size.
+ *
+ * The matcher reads titles through this too. A "5-Pack" left in place hands
+ * the matcher a stray 5, and "Serie R No. 8 ... 5-Pack" then satisfies the
+ * number check for "Serie R No. 5".
+ */
+function stripPackaging(rawTitle) {
   let text = clean(rawTitle);
-  if (!text) return null;
-
+  if (!text) return '';
   text = text.replace(DIMENSIONS, ' ');
-  for (const re of PACKAGING) text = text.replace(re, ' ');
+  // Twice, because taking one word out can leave another pattern behind it:
+  // "Cigars Box 23" is only "Cigars 23" after the first pass.
+  for (let pass = 0; pass < 2; pass++) {
+    for (const re of PACKAGING) text = text.replace(re, ' ');
+    text = text.replace(/\s+/g, ' ').trim();
+  }
+  text = text.replace(FINISH, ' ');
   text = text.replace(/\s+/g, ' ').replace(/[-\s]+$/, '').trim();
+  // "... Petit Corona Cigars": the word says what the product is, not which.
+  text = text.replace(/\s+cigars?$/, '').trim();
+  // Bare dimensions only come off once packaging has, so they sit at the end.
+  return text.replace(BARE_DIMENSIONS, '').trim();
+}
+
+function parseProductTitle(rawTitle, vendor = '') {
+  const text = stripPackaging(rawTitle);
   if (!text) return null;
 
   const { size, rest } = splitShape(text);
@@ -134,11 +240,14 @@ function parseProductTitle(rawTitle, vendor = '') {
   // ("Fuente Fuente OpusX" filed under vendor "Arturo Fuente") keeps its whole
   // title as the line, which is exactly how the catalog already spells it.
   const brandClean = clean(vendor);
-  let brand = null;
   if (brandClean) {
-    brand = titleCase(brandClean);
-    if (line === brandClean) return null;             // brand alone names no line
-    if (line.startsWith(brandClean + ' ')) line = line.slice(brandClean.length).trim();
+    const lineTokens = line.split(' ');
+    for (const prefix of brandPrefixes(brandClean)) {
+      if (!startsWithTokens(lineTokens, prefix)) continue;
+      if (lineTokens.length === prefix.length) return null;   // brand alone names no line
+      line = lineTokens.slice(prefix.length).join(' ');
+      break;
+    }
   }
 
   // A line that is nothing but a shape ("Robusto") identifies no cigar.
@@ -149,11 +258,20 @@ function parseProductTitle(rawTitle, vendor = '') {
     // case would quietly ruin.
     brand: vendor ? String(vendor).trim() : null,
     line: recase(line, rawTitle),
-    size: size,
+    // A numbered size takes its punctuation back from the title: "No. 1".
+    size: size && /\d/.test(size) ? calmCapitals(recase(size, rawTitle)) : size,
   };
 }
 
-module.exports = { parseProductTitle, splitShape, clean, titleCase, recase, SHAPES };
+/** Does this title open with this brand, however either is punctuated? */
+function titleStartsWithBrand(title, brand) {
+  const b = clean(brand);
+  if (!b) return false;
+  const tokens = clean(title).split(' ');
+  return brandPrefixes(b).some(prefix => startsWithTokens(tokens, prefix));
+}
+
+module.exports = { parseProductTitle, stripPackaging, splitShape, clean, titleCase, recase, calmCapitals, titleStartsWithBrand, SHAPES };
 
 // ── Self-test ───────────────────────────────────────────────────────────────
 if (require.main === module) {
@@ -218,6 +336,56 @@ if (require.main === module) {
   ok(p('') === null, 'empty title');
   ok(p('   ') === null, 'blank title');
   ok(p('Box of 20') === null, 'packaging only');
+
+  console.log('\nfailures seen in the real feeds:');
+  const ch = p('Plasencia Reserva Original Churchill 7 48', 'Plasencia');
+  ok(ch.line === 'Reserva Original' && ch.size === 'Churchill', 'dimensions without an x come off ("7 48")', ch);
+  const tq = p('Plasencia Alma Fuerte Nestor IV Toro 6 1/4 54', 'Plasencia');
+  ok(tq.line === 'Alma Fuerte Nestor IV' && tq.size === 'Toro', 'fractional bare dimensions come off', tq);
+  const sv = p('Ashton VSG Robusto Save 10', 'Ashton');
+  ok(sv.line === 'VSG' && sv.size === 'Robusto', 'a promotion is not part of the name', sv);
+  const of5 = p('AJ Fernandez New World Dorado Pack of 5', 'AJ Fernandez');
+  ok(of5.line === 'New World Dorado' && !/of/i.test(of5.line), 'New World survives, the count does not', of5);
+  const lp = p('Liga Privada - H99 Robusto Single', 'Drew Estate');
+  ok(lp.line === 'Liga Privada H99' || lp.line === 'Liga Privada - H99', 'a spaced dash separates, it is not part of the line', lp);
+  ok(!/^-|-$/.test(lp.line), 'no stray dash left on the line', lp);
+  const bp = p('Padron 1964 Anniversary Principe Box Pressed', 'Padron');
+  ok(!/pressed/i.test(bp.line), 'box pressed is a finish, not a line', bp);
+  ok(p('Rocky Patel Vintage 1990 Robusto', 'Rocky Patel').line === 'Vintage 1990', 'a year stays in the line');
+  ok(p('Nub Maduro 460', 'Oliva').line.includes('460'), 'Nub 460 keeps its number');
+  ok(p('CAO America Monument 20', 'CAO').line.includes('20'), 'a number that is not a ring gauge survives');
+
+  const bpDim = p('Plasencia Alma Del Campo Travesia 6x54BP', 'Plasencia');
+  ok(bpDim.line === 'Alma Del Campo Travesia', 'a box-pressed dimension suffix comes off', bpDim);
+  const trailing = p('Oliva Serie V Melanio Petit Corona Cigars', 'Oliva');
+  ok(trailing.line === 'Serie V Melanio' && trailing.size === 'Petit Corona', 'a trailing "Cigars" is dropped', trailing);
+
+  console.log('\nmore real titles:');
+  const box23 = p('My Father Connecticut Robusto - Box 23', 'My Father');
+  ok(box23.line === 'Connecticut' && box23.size === 'Robusto', '"Box 23" with no "of" comes off whole', box23);
+  const cbox = p('My Father Connecticut Robusto Cigars Box 23', 'My Father Cigars');
+  ok(cbox.line === 'Connecticut' && cbox.size === 'Robusto', '"Cigars Box 23" needs two passes', cbox);
+  const award = p('Pledge Prequel 5x50 #1 Cigar In 2020 Single', 'EP Carrillo');
+  ok(award.line === 'Pledge Prequel', 'an award printed in the title is not the name', award);
+  const frac = p('Cohiba Blue Pequenos 4 3⁄16 x 36', 'Cohiba');
+  ok(frac.line === 'Blue' && frac.size === 'Pequenos', 'a typographic fraction reads as a size', frac);
+  const sleeve = p('Cohiba Blue Pequeno 6ct Tin Sleeve of 5', 'Cohiba');
+  ok(sleeve.line === 'Blue' && sleeve.size === 'Pequeno', 'tins and sleeves are packaging', sleeve);
+  ok(p('Oliva Serie V 94 Points Robusto', 'Oliva').line === 'Serie V', 'a rating is not the name');
+  const et = p('Romeo y Julieta 1875 Rothschild en Tubo Box of 10', 'Romeo y Julieta');
+  ok(et.line === '1875' && et.size === 'Rothschild', '"en Tubo" comes off whole, leaving no stray "en"', et);
+  const dt = p('Don Pepin Garcia Blue Demi-Tasse Petite Cigars 6 Packs of 6', 'Don Pepin Garcia Cigars');
+  ok(dt.line === 'Blue Demi-Tasse' && dt.size === 'Petite', '"6 Packs of 6" comes off whole', dt);
+  const so = p('Drew Estate Krush Classic **Available for Special Order** Blue Connecticut (Tin) - 10 count', 'Drew Estate');
+  ok(!/special|order|available|tin|count/i.test(so.line), 'a special-order note is not part of the name', so);
+
+  console.log('\nbrand prefixes that differ only in punctuation or company words:');
+  const aj = p('A.J. Fernandez New World Toro', 'AJ Fernandez');
+  ok(aj.line === 'New World', '"A.J." in the title matches vendor "AJ"', aj);
+  const pc = p('Plasencia Reserva Original Robusto', 'Plasencia Cigars');
+  ok(pc.line === 'Reserva Original', 'vendor "Plasencia Cigars" still strips "Plasencia"', pc);
+  const erh = p('Don Pepin Garcia E.R.H Robusto', 'Don Pepin Garcia');
+  ok(erh.line === 'E.R.H', 'punctuation inside the line itself is kept', erh);
 
   console.log('\ndimensions:');
   const dim = p('Padron 1964 Anniversary Exclusivo 5 1/2 x 50 Box of 25', 'Padron');

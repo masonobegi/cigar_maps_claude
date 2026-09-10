@@ -15,6 +15,8 @@
  */
 'use strict';
 
+const { stripPackaging } = require('./productParser');
+
 // Words that carry no identity: they show up in half of all product titles and
 // would inflate every score if they counted as name tokens.
 const NOISE = new Set([
@@ -29,6 +31,19 @@ const SHAPE_WORDS = [
   'gordo', 'perfecto', 'lonsdale', 'panetela', 'panatela', 'figurado',
   'petit', 'gigante', 'double', 'magnum', 'presidente', 'rothschild', 'sublime',
 ];
+
+// The nouns that name a size and nothing else. A title's "Corona" says how
+// big the cigar is, not which cigar it is, so it is not evidence for a line
+// that happens to carry the word. Modifiers ("double", "gran", "petit") are
+// left out on purpose: they are part of real names like Double Ligero and
+// Gran Reserva.
+const SIZE_NOUNS = new Set([
+  'robusto', 'toro', 'churchill', 'torpedo', 'belicoso', 'lancero', 'corona',
+  'gordo', 'perfecto', 'lonsdale', 'panetela', 'panatela', 'figurado', 'gigante',
+  'magnum', 'presidente', 'rothschild', 'sublime', 'salomon', 'piramide',
+  'pyramid', 'culebra', 'cigarillo', 'cigarillos', 'petite', 'pequeno', 'pequenos',
+  'minuto', 'mareva',
+]);
 
 /**
  * lowercase, drop accents, drop punctuation, drop noise words.
@@ -104,7 +119,15 @@ function buildIndex(cigars = [], vitolas = [], aliases = []) {
     // left — here, "opusx" alone. Without this, any Arturo Fuente title
     // scored 2/3 against OpusX and the whole shop collapsed onto one line.
     const brandSet = new Set(brandTokens);
-    const scoreTokens = nameTokens.filter(t => !brandSet.has(t));
+    // Each distinct word counts once: a name that repeats a word
+    // ("Moontrance Moontrance") must not score twice for it.
+    const distinct = [...new Set(nameTokens.filter(t => !brandSet.has(t)))];
+    // Score on the words that identify the line. A size noun only counts when
+    // it is all the name has left — Davidoff "Winston Churchill" still scores
+    // on "winston", but a line named only "Churchill" keeps its one word.
+    const identity = distinct.filter(t => !SIZE_NOUNS.has(t));
+    const scoreTokens = identity.length ? identity : distinct;
+    const sizeWords = distinct.length - scoreTokens.length;
     const entry = {
       id: c.id,
       brand: c.brand,
@@ -113,6 +136,10 @@ function buildIndex(cigars = [], vitolas = [], aliases = []) {
       brandTokens,
       nameTokens,
       scoreTokens,
+      sizeWords,
+      // A name that is nothing but a size ("Toro") identifies no line; it
+      // loses every tie to a name that does.
+      sizeOnly: identity.length === 0,
       nameNumbers: nameTokens.filter(isNumeric),
       vitolas: [],
     };
@@ -204,14 +231,19 @@ function result(entry, vitola, score) {
  */
 function matchCigar(rawName, index) {
   if (!rawName || !index || !index.byId || !index.byId.size) return null;
-  const norm = normalizeName(rawName);
+  // Aliases were recorded against the whole title as a shop wrote it.
+  const aliasNorm = normalizeName(rawName);
+  // Scoring reads the title with its packaging taken out, so a "5-Pack" or a
+  // "Box of 20" cannot pass itself off as the 5 in "No. 5" or the 20 in a
+  // line's name.
+  const norm = normalizeName(stripPackaging(rawName)) || aliasNorm;
   if (!norm) return null;
   const tokens = norm.split(' ');
   const tokenSet = new Set(tokens);
   const size = parseSize(rawName);
 
   // Curated alias: a human already told us what this title is.
-  const aliasId = index.aliases.get(norm);
+  const aliasId = index.aliases.get(aliasNorm);
   if (aliasId) {
     const entry = index.byId.get(aliasId);
     if (entry) return result(entry, pickVitola(entry, rawName, tokens, size), 1);
@@ -244,12 +276,16 @@ function matchCigar(rawName, index) {
       if (score < threshold) continue;
 
       // Longer brand match, then higher score, then more literal tokens matched.
+      // Longer brand match, then higher score, then more identifying words
+      // matched, then the name carrying fewer size words: "Flavours
+      // Moontrance" over "Flavours Corona Moontrance" for a Petit Corona.
+      const sameSoFar = brand.tokens.length === best?.brandLen && score === best.score && hits === best.hits;
       const better = !best
         || brand.tokens.length > best.brandLen
         || (brand.tokens.length === best.brandLen && score > best.score)
         || (brand.tokens.length === best.brandLen && score === best.score && hits > best.hits)
-        || (brand.tokens.length === best.brandLen && score === best.score && hits === best.hits
-            && entry.scoreTokens.length > best.entry.scoreTokens.length);
+        || (sameSoFar && best.entry.sizeOnly && !entry.sizeOnly)
+        || (sameSoFar && entry.sizeOnly === best.entry.sizeOnly && entry.sizeWords < best.entry.sizeWords);
       if (better) best = { entry, score, hits, brandLen: brand.tokens.length };
     }
   }
@@ -269,10 +305,12 @@ function matchCigar(rawName, index) {
  *
  *  1 — original
  *  2 — a line's name no longer earns credit for repeating its own brand
+ *  3 — titles are read with packaging and counts removed, and a repeated
+ *      word in a line's name counts once
  */
-const MATCHER_VERSION = 2;
+const MATCHER_VERSION = 3;
 
-module.exports = { normalizeName, tokenize, parseSize, buildIndex, matchCigar, NOISE, SHAPE_WORDS, MATCHER_VERSION };
+module.exports = { normalizeName, tokenize, parseSize, buildIndex, matchCigar, NOISE, SHAPE_WORDS, SIZE_NOUNS, MATCHER_VERSION };
 
 // ── Self-test ───────────────────────────────────────────────────────────────
 if (require.main === module) {
@@ -381,6 +419,51 @@ if (require.main === module) {
 
   ok(matchCigar('', index) === null, 'empty title -> null');
   ok(matchCigar('Padron Robusto', buildIndex([], [], [])) === null, 'empty index -> null');
+
+  // Real failures from Anthony's shelf.
+  const real = buildIndex(
+    [
+      { id: 501, brand: 'La Gloria Cubana', name: 'Serie R No. 5' },
+      { id: 502, brand: 'La Gloria Cubana', name: 'Serie R No. 8' },
+      { id: 503, brand: 'CAO', name: 'Moontrance Moontrance' },
+      { id: 504, brand: 'CAO', name: 'Flavours Moontrance' },
+    ],
+    [
+      { id: 601, cigar_id: 501, name: 'Robusto' }, { id: 602, cigar_id: 502, name: 'Robusto' },
+      { id: 603, cigar_id: 503, name: 'Robusto' }, { id: 604, cigar_id: 504, name: 'Robusto' },
+    ], []);
+  m = matchCigar('La Gloria Cubana Serie R No. 8 Natural 5-Pack', real);
+  ok(m && m.cigar_id === 502, 'a "5-Pack" is not the 5 in "No. 5"', m);
+  m = matchCigar('La Gloria Cubana Serie R No. 8 Maduro Box of 25', real);
+  ok(m && m.cigar_id === 502, 'nor is "Box of 25" a number in the name', m);
+  m = matchCigar('CAO Flavours Moontrance Robusto Box of 20', real);
+  ok(m && m.cigar_id === 504, 'a name that repeats a word does not score twice for it', m);
+
+  const sizeIdx = buildIndex(
+    [
+      { id: 701, brand: 'CAO', name: 'Flavours Moontrance' },
+      { id: 702, brand: 'CAO', name: 'Flavours Corona Moontrance' },
+      { id: 703, brand: 'Davidoff', name: 'Winston Churchill' },
+      { id: 704, brand: 'Davidoff', name: 'Winston Churchill The Late Hour' },
+      { id: 705, brand: 'Davidoff', name: 'Signature' },
+    ],
+    [701, 702, 703, 704, 705].map((c, i) => ({ id: 800 + i, cigar_id: c, name: 'Robusto' })), []);
+  m = matchCigar('CAO Flavours Moontrance Petit Corona 5-Pack', sizeIdx);
+  ok(m && m.cigar_id === 701, 'the size in a title is not evidence for a line carrying that word', m);
+  m = matchCigar('Davidoff Winston Churchill Robusto', sizeIdx);
+  ok(m && m.cigar_id === 703, 'Winston Churchill still matches on Winston', m);
+  m = matchCigar('Davidoff Winston Churchill The Late Hour Toro', sizeIdx);
+  ok(m && m.cigar_id === 704, 'and The Late Hour is still told apart from it', m);
+  m = matchCigar('Davidoff Churchill Box of 25', sizeIdx);
+  ok(!m || m.cigar_id !== 703, 'a bare "Churchill" size does not claim Winston Churchill', m);
+
+  const onlySize = buildIndex(
+    [{ id: 901, brand: 'Romeo y Julieta', name: 'Toro of' }, { id: 902, brand: 'Romeo y Julieta', name: 'Reserve' }],
+    [{ id: 911, cigar_id: 901, name: 'Toro' }, { id: 912, cigar_id: 902, name: 'Toro' }], []);
+  m = matchCigar('Romeo y Julieta Reserve Toro 5-Pack', onlySize);
+  ok(m && m.cigar_id === 902, 'a line named only for a size loses the tie to one with a name', m);
+  m = matchCigar('Romeo y Julieta Toro of 25', onlySize);
+  ok(m && m.cigar_id === 902 || m && m.cigar_id === 901, 'and still matches when it is all there is', m);
 
   console.log(`\ncigarMatcher self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
