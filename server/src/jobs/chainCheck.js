@@ -55,6 +55,54 @@ function milesBetween(lat1, lng1, lat2, lng2) {
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 
+// Words every cigar shop's name might carry, which say nothing about which
+// business it is.
+const GENERIC_NAME_WORDS = new Set([
+  'cigar', 'cigars', 'tobacco', 'tobacconist', 'tobacconists', 'smoke', 'smokes',
+  'shop', 'shoppe', 'store', 'lounge', 'bar', 'club', 'co', 'company', 'inc',
+  'llc', 'ltd', 'the', 'and', 'of', 'humidor', 'emporium', 'house', 'room',
+]);
+
+function nameWords(name) {
+  return new Set(String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ')
+    .split(' ').filter(w => w && !GENERIC_NAME_WORDS.has(w)));
+}
+
+/**
+ * Do two listings carry the same business's name? "Omerta Cigar Co Monroe"
+ * and "Omerta Cigar Co" do; "Tobacco Express Pinson" and "Birmingham Cigars"
+ * do not. Judged on the distinctive words, so "Cigar Co" never counts.
+ */
+function sameName(a, b) {
+  const wa = nameWords(a), wb = nameWords(b);
+  if (!wa.size || !wb.size) return false;
+  let shared = 0;
+  for (const w of wa) if (wb.has(w)) shared++;
+  return shared / Math.min(wa.size, wb.size) >= 0.5;
+}
+
+/**
+ * What a listing the chain does not publish most likely is.
+ *
+ *  former_branch  it sits among the chain's confirmed branches and carries the
+ *                 chain's name: a shop the chain closed or moved. Hide it.
+ *  wrong_website  it is far from every confirmed branch and its name is not
+ *                 the chain's: a different business handed this link by
+ *                 mistake. Keep the shop, clear the link.
+ *  unclear        anything else — same name far away (a franchise or a
+ *                 branch the site forgot), or a different name nearby. Nothing
+ *                 is done on a guess.
+ */
+function classify(m, confirmed) {
+  const near = confirmed.some(c => c.state === m.state
+    && Number.isFinite(c.lat) && Number.isFinite(m.lat)
+    && milesBetween(c.lat, c.lng, m.lat, m.lng) <= NEAR_SIBLING_MI);
+  const named = confirmed.some(c => sameName(c.name, m.name));
+  if (near && named) return 'former_branch';
+  if (!near && !named) return 'wrong_website';
+  return 'unclear';
+}
+
 const STREET_WORDS = {
   street: 'st', avenue: 'ave', road: 'rd', boulevard: 'blvd', drive: 'dr',
   highway: 'hwy', lane: 'ln', place: 'pl', court: 'ct', parkway: 'pkwy',
@@ -183,7 +231,7 @@ async function checkChains({ confirm = false, host: onlyHost = null, limit = 0, 
   log(`${chains.length} websites are shared by more than one listing`);
 
   const doubted = [];
-  const stats = { checked: 0, unreachable: 0, tooFewPublished: 0, lowCoverage: 0, noneConfirmed: 0, weakAgreement: 0, confirmedAll: 0 };
+  const stats = { checked: 0, unreachable: 0, tooFewPublished: 0, lowCoverage: 0, noneConfirmed: 0, weakAgreement: 0, confirmedAll: 0, unclear: 0 };
 
   for (const [host, list] of chains) {
     stats.checked++;
@@ -215,16 +263,15 @@ async function checkChains({ confirm = false, host: onlyHost = null, limit = 0, 
     }
 
     for (const m of missing) {
-      // A former branch sits among its siblings. A listing far from every
-      // branch the chain confirms is a different business that was handed
-      // this website by mistake — the shop is real, the link is wrong.
-      const near = confirmed.some(c => c.state === m.state
-        && Number.isFinite(c.lat) && Number.isFinite(m.lat)
-        && milesBetween(c.lat, c.lng, m.lat, m.lng) <= NEAR_SIBLING_MI);
-      const verdict = near ? 'former_branch' : 'wrong_website';
+      const verdict = classify(m, confirmed);
+      if (verdict === 'unclear') {
+        stats.unclear++;
+        log(`  ${host}: #${m.id} ${m.name} (${m.city}, ${m.state}) — not listed, but not clearly either; left alone`);
+        continue;
+      }
       doubted.push({ ...m, host, published: pooled.size, siblings: list.length, confirmedCount: confirmed.length, verdict });
       log(`  ${host}: #${m.id} ${m.name} — ${m.address} (${m.city}, ${m.state}) ` +
-          `${near ? 'is a branch the chain no longer lists' : 'is not this business — clearing the link'} ` +
+          `${verdict === 'former_branch' ? 'is a branch the chain no longer lists' : 'is not this business — clearing the link'} ` +
           `[${confirmed.length} of ${list.length} confirmed, ${pooled.size} published]`);
     }
     await sleep(PAUSE_MS);
@@ -235,7 +282,7 @@ async function checkChains({ confirm = false, host: onlyHost = null, limit = 0, 
   log(`\nchecked ${stats.checked} chains — ${stats.unreachable} unreachable, ` +
       `${stats.tooFewPublished} publish too few addresses, ${stats.lowCoverage} below coverage bar, ` +
       `${stats.noneConfirmed} matched none of our listings, ${stats.weakAgreement} agreed on too few, ` +
-      `${stats.confirmedAll} fully confirmed`);
+      `${stats.confirmedAll} fully confirmed, ${stats.unclear} unlisted listings left alone as unclear`);
   log(`branches the chain no longer lists (would hide): ${branches.length}`);
   log(`unrelated shops carrying this website (would clear the link, keep the shop): ${wrongSites.length}`);
 
@@ -295,7 +342,41 @@ async function applyDecisions(file, { log = console.log } = {}) {
   return { hidden, cleared, skipped, remaining: left.n };
 }
 
-module.exports = { checkChains, applyDecisions, addressKey, extractAddresses, hostOf };
+/**
+ * Re-judge a saved dry run under the current rules without reading any site
+ * again. Which listings a chain publishes does not change; only what we make
+ * of the ones it leaves out.
+ */
+async function reclassifyDecisions(file, out, { log = console.log } = {}) {
+  const decisions = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const doubtedIds = new Set(decisions.map(d => d.id));
+  const byHost = new Map();
+  for (const d of decisions) {
+    if (!byHost.has(d.host)) byHost.set(d.host, []);
+    byHost.get(d.host).push(d);
+  }
+  const kept = [];
+  const counts = { former_branch: 0, wrong_website: 0, unclear: 0 };
+  for (const [host, list] of byHost) {
+    const rows = (await db.all(
+      "SELECT id, name, state, lat, lng, website FROM stores WHERE visible = 1 AND website ILIKE ?",
+      [`%${host}%`])).filter(r => hostOf(r.website) === host);
+    const confirmed = rows.filter(r => !doubtedIds.has(r.id));
+    for (const d of list) {
+      const m = rows.find(r => r.id === d.id);
+      if (!m) continue;                               // gone since the dry run
+      const verdict = classify(m, confirmed);
+      counts[verdict]++;
+      if (verdict !== 'unclear') kept.push({ ...d, verdict });
+    }
+  }
+  fs.writeFileSync(out, JSON.stringify(kept, null, 2));
+  log(`re-judged ${decisions.length}: ${counts.former_branch} former branches, ` +
+      `${counts.wrong_website} wrong links, ${counts.unclear} left alone as unclear. Written to ${out}`);
+  return { ...counts, kept: kept.length };
+}
+
+module.exports = { checkChains, applyDecisions, reclassifyDecisions, classify, sameName, addressKey, extractAddresses, hostOf };
 
 if (require.main === module) {
   const argv = process.argv.slice(2);
