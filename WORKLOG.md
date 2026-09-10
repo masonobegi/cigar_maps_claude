@@ -103,6 +103,20 @@ It is necessary but not sufficient. Broadway Cigar Company in Camas WA is shut b
 
 A claimed listing is never auto-hidden by any of these. An owner who claimed their shop knows better than our data does.
 
+### What actually shipped (2026-09-10)
+
+- **Source status**: 560 listings marked `permanently_closed` by Overture; 162 were still public and are hidden.
+- **Website signal**: swept 3,867 listings with a working site, found 4 genuine closures the source still calls open (Redland Cigar Co in San Antonio says "closed permanently" on its own page).
+- **No contact route**: 49 listings with a dead site, no phone and no hours flagged `likely_closed`. Left visible on purpose and sent to the staff queue, because it is suggestive, not proof.
+- **Visitor reports**: two independent "permanently closed" reports hide an unclaimed listing; claimed and staff-decided listings are never auto-hidden.
+- Public map: 7,483 listings.
+
+### Three bugs caught during this pass, all worth remembering
+
+1. **The importer un-did the sweeps.** A deploy re-ran the directory import, which recomputes `visible` from the classifier for any row without `staff_edited`. The storefront sweep writes its verdict to `stores.storefront` but not `staff_edited`, so 519 ruled-out listings came back, Cigar City Brewing included. Fixed: the importer now treats `storefront IN ('not_retail','online_only','closed')` as binding. Proven with a forced re-import against a scratch database (`scratchpad/test_reimport.js`). **Any future sweep that hides rows must either set `staff_edited` or be honoured explicitly by `importStores.js`.**
+2. **A closure notice on someone else's page.** OC Cigar Lounge is listed with an Eventbrite URL reading "online ticket sales are now closed". The lounge trades. Now a listing pointing at a platform (Eventbrite, Facebook, Yelp, directories) is never read for closure, and closure sentences about tickets, registration or waitlists are disqualified.
+3. **A trade word in the name is not proof.** Adding brewery/barbershop words to the reject list caught the airport brewpub but also six genuine lounges sharing premises with another trade. The trade word now only disqualifies a name that never states a cigar premises of its own.
+
 ## Superseded plan: closed shops
 
 Broadway Cigar Company in Camas WA (store 10022) is shut down but was still listed. Hidden by hand and marked `storefront='closed'`. The wider problem is that nothing in the pipeline knows a shop has closed: the source data lags by months, and roughly 1,361 listings already have a dead website, which is itself a strong closure signal.
