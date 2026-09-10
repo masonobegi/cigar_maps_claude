@@ -10,6 +10,11 @@ const BRASS = '#C9882A';
 const MUTED = '#7A6858';
 const DIM   = '#5A4A3A';
 
+/** 7483 -> "7,483". Returns null for anything that is not a real count. */
+function fmt(n) {
+  return Number.isFinite(n) && n > 0 ? n.toLocaleString('en-US') : null;
+}
+
 function OpenBadge({ isOpen }) {
   if (isOpen === null) return null;
   return (
@@ -77,6 +82,9 @@ export default function Home() {
   const { user } = useAuth();
   const [topCigars, setTopCigars] = useState([]);
   const [cigarTotal, setCigarTotal] = useState(0);
+  // Real directory totals. Counting the fetched page instead would report the
+  // page size: 300 retailers and 40 cities, not the thousands actually listed.
+  const [stats, setStats] = useState(null);
   const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
   const [cities, setCities] = useState([]);
@@ -89,6 +97,7 @@ export default function Home() {
     api.searchStores().then(setStores);
     api.getDeals().then(setDeals);
     api.getStoreCities().then(setCities);
+    api.getDirectoryStats().then(setStats).catch(() => {});
   }, []);
 
   function handleSearch(e) {
@@ -168,9 +177,9 @@ export default function Home() {
           {/* Stats column */}
           <div className="hidden lg:flex flex-col gap-7 pt-2 min-w-[120px]">
             {[
-              { n: stores.length || '5', label: 'Retailers' },
-              { n: cigarTotal || '—', label: 'Cigars' },
-              { n: cities.length || '3', label: 'Cities' },
+              { n: fmt(stats?.retailers) || '—', label: 'Retailers' },
+              { n: fmt(stats?.cigars ?? cigarTotal) || '—', label: 'Cigars' },
+              { n: fmt(stats?.cities) || '—', label: 'Cities' },
             ].map(({ n, label }) => (
               <div key={label} className="pl-5" style={{ borderLeft: '2px solid #5A4A3A' }}>
                 <p className="font-serif font-bold leading-none" style={{ fontSize: '2.75rem', color: TEXT }}>{n}</p>

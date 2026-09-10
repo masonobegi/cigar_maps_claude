@@ -171,6 +171,22 @@ router.get('/', asyncRoute(async (req, res) => {
   res.json(result);
 }));
 
+// Real totals for the home page. The list endpoint pages at 300 and the cities
+// endpoint returns a top 40, so counting either of those understates the
+// directory by an order of magnitude.
+router.get('/stats', asyncRoute(async (req, res) => {
+  const row = await db.get(`
+    SELECT
+      (SELECT COUNT(*) FROM stores WHERE visible = 1)::int AS retailers,
+      (SELECT COUNT(DISTINCT (city, state)) FROM stores WHERE visible = 1 AND city IS NOT NULL AND city <> '')::int AS cities,
+      (SELECT COUNT(DISTINCT state) FROM stores WHERE visible = 1 AND state IS NOT NULL)::int AS states,
+      (SELECT COUNT(*) FROM cigars)::int AS cigars,
+      (SELECT COUNT(*) FROM stores WHERE visible = 1 AND claimed = 1)::int AS claimed
+  `);
+  res.set('Cache-Control', 'public, max-age=300');
+  res.json(row);
+}));
+
 router.get('/cities', asyncRoute(async (req, res) => {
   const cities = await db.all(`
     SELECT city, state, COUNT(*) as store_count, SUM(claimed) as claimed_count

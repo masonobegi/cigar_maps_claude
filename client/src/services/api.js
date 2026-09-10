@@ -60,6 +60,7 @@ export const api = {
   // Stores
   searchStores: (p = {}) => request(`/stores?${new URLSearchParams(p)}`),
   getStoreCities: () => request('/stores/cities'),
+  getDirectoryStats: () => request('/stores/stats'),
   getStore: (id) => request(`/stores/${id}`),
   getStoreInventory: (id, p = {}) => request(`/stores/${id}/inventory?${new URLSearchParams(p)}`),
   createStore: (b) => request('/stores', { method: 'POST', body: JSON.stringify(b) }),
