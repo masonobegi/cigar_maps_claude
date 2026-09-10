@@ -68,14 +68,24 @@ router.get('/admin/closures', requireAuth, requireAdmin, asyncRoute(async (req, 
   // Why each one was flagged, folded onto the stable half of the reason: every
   // website verdict quotes a different sentence, and 40 rows of one-apiece
   // tells staff nothing.
+  //
+  // A row can carry the closed status with no reason written next to it: the
+  // directory import sets operating_status straight from the source, and a row
+  // that was already off the map never went through the sweep that writes a
+  // sentence. The status is still the reason, so say so rather than filing
+  // hundreds of listings under "no reason recorded".
   const reasonRows = await db.all(`
-    SELECT closed_reason, COUNT(*)::int AS n
+    SELECT closed_reason, operating_status, COUNT(*)::int AS n
     FROM stores WHERE ${FLAGGED}
-    GROUP BY closed_reason
+    GROUP BY closed_reason, operating_status
   `);
   const byReason = {};
   for (const r of reasonRows) {
-    const key = reasonKey(r.closed_reason);
+    const key = r.closed_reason
+      ? reasonKey(r.closed_reason)
+      : (r.operating_status === 'permanently_closed'
+        ? 'map data marks this place permanently closed'
+        : 'flagged with no reason recorded');
     byReason[key] = (byReason[key] || 0) + (Number(r.n) || 0);
   }
 
@@ -84,10 +94,12 @@ router.get('/admin/closures', requireAuth, requireAdmin, asyncRoute(async (req, 
     SELECT COUNT(*)::int AS n FROM stores
     WHERE ${FLAGGED} AND COALESCE(staff_edited, 0) = 0 AND claimed = 0
   `);
-  // Flagged closed but still on the public map: the ones that can still send a
-  // customer to a locked door.
+  // Believed shut but still on the public map — the ones that can still send a
+  // customer to a locked door, and the only number here that is an emergency.
+  // 'likely_closed' rows are deliberately left visible, so they are not counted.
   const stillVisible = await db.get(`
-    SELECT COUNT(*)::int AS n FROM stores WHERE ${FLAGGED} AND visible = 1
+    SELECT COUNT(*)::int AS n FROM stores
+    WHERE operating_status = 'permanently_closed' AND visible = 1
   `);
 
   res.json({
@@ -107,9 +119,13 @@ router.post('/admin/closures/scan', requireAuth, requireAdmin, asyncRoute(async 
   const confirm = req.body?.confirm === true || req.body?.confirm === 'true';
 
   if (!confirm) {
-    // A dry run is fast enough to wait for when it stays off the network.
-    const { counts } = await findClosures({ limit, useWeb, log: () => {} });
-    return res.json({ dry_run: true, counts });
+    // A dry run is fast enough to wait for when it stays off the network. With
+    // the website pass on it is not — every listing is an HTTP round trip — so
+    // a synchronous preview gets a small slice rather than holding the request
+    // open for several minutes.
+    const previewLimit = useWeb ? Math.min(limit, 50) : limit;
+    const { counts } = await findClosures({ limit: previewLimit, useWeb, log: () => {} });
+    return res.json({ dry_run: true, limit: previewLimit, web: useWeb, counts });
   }
   // Applying can take minutes with --web, so it runs detached.
   applyClosures({ confirm: true, limit, useWeb })

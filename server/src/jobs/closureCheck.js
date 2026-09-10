@@ -244,6 +244,22 @@ const NEGATION = /\b(?:not\s+(?:permanently\s+)?clos(?:ed|ing)|never\s+closed|ar
 // blog post, not this shop's obituary.
 const THIRD_PARTY = /\b(?:report(?:ed|s)?\s+(?:as\s+)?closed|marked\s+(?:as\s+)?(?:permanently\s+)?closed|has\s+this\s+(?:place|business)\s+closed|suggest\s+an\s+edit|claim\s+this\s+business)\b/;
 
+// Hosts that are somebody else's page. A listing's "website" is often an
+// Eventbrite link, a Facebook page or a directory entry, and a closure notice
+// there is about that page, not about the shop. OC Cigar Lounge in Woodbridge
+// VA is listed with an Eventbrite URL reading "online ticket sales are now
+// closed" while the lounge trades happily; believing that would delete it.
+const NOT_THE_SHOPS_OWN_SITE = /(?:^|\.)(?:eventbrite\.[a-z.]+|facebook\.com|fb\.me|instagram\.com|twitter\.com|x\.com|tiktok\.com|yelp\.[a-z.]+|yahoo\.com|google\.[a-z.]+|business\.site|mapquest\.com|foursquare\.com|tripadvisor\.[a-z.]+|linktr\.ee|linkedin\.com|youtube\.com|opentable\.com|square\.site|toasttab\.com|doordash\.com|ubereats\.com|grubhub\.com|cigarplaces\.com|yellowpages\.com|bbb\.org|proxibid\.com|eventful\.com|meetup\.com|patch\.com)$/i;
+
+/** True when the URL belongs to a platform rather than to the shop itself. */
+function isThirdPartyHost(host) {
+  return NOT_THE_SHOPS_OWN_SITE.test(String(host || '').replace(/^www\./, ''));
+}
+
+// A closure sentence about something other than the business: ticket sales,
+// registration, a waitlist, submissions. Common on event pages.
+const CLOSED_THING_IS_NOT_THE_SHOP = /\b(?:ticket|tickets|ticketing|sales|registration|registrations|sign-?ups?|entries|submissions|applications|rsvps?|waitlist|voting|nominations|bookings?|reservations|the\s+raffle|the\s+contest|the\s+giveaway|comments)\b/;
+
 const WINDOW_BEFORE = 90;
 const WINDOW_AFTER = 110;
 
@@ -261,6 +277,8 @@ function windowAround(text, index, length) {
  */
 function disqualified(win, dayProof) {
   if (NEGATION.test(win) || THIRD_PARTY.test(win) || TEMPORARY.test(win)) return true;
+  // "Online ticket sales are now closed" says nothing about the shop.
+  if (CLOSED_THING_IS_NOT_THE_SHOP.test(win)) return true;
   if (!dayProof && (DAY_WORDS.test(win) || HOURS_SHAPE.test(win))) return true;
   return false;
 }
@@ -316,6 +334,8 @@ function readClosureText(text) {
 async function checkWebsiteForClosure(website) {
   const parsed = parseWebsite(website);
   if (!parsed) return null;
+  // Only the shop's own site can testify about the shop.
+  if (isThirdPartyHost(parsed.host)) return null;
 
   const deadline = Date.now() + OVERALL_BUDGET_MS;
   let page = await getText('https://' + parsed.host + parsed.path, deadline);
@@ -377,8 +397,9 @@ function toItem(row, signal, reason, extra = {}) {
  *        limit 300 looks at up to 300 rows per signal.
  * useWeb turns on signal (b), the only one that touches the network.
  *
- * Returns { closed, likely, counts }. 'closed' is safe to hide; 'likely' is a
- * flag for staff and never hides anything on its own.
+ * Returns { closed, likely, counts, checkedIds }. 'closed' is safe to hide;
+ * 'likely' is a flag for staff and never hides anything on its own; checkedIds
+ * is every listing whose website was actually read this run.
  */
 async function findClosures({ limit = 500, useWeb = false, log = console.log } = {}) {
   const take = Math.max(1, Math.min(Math.floor(Number(limit)) || 500, 5000));
@@ -386,6 +407,7 @@ async function findClosures({ limit = 500, useWeb = false, log = console.log } =
 
   const closed = [];
   const likely = [];
+  let checkedIds = [];
   const counts = {
     examined: 0,
     source_closed: 0,
@@ -474,9 +496,10 @@ async function findClosures({ limit = 500, useWeb = false, log = console.log } =
       }
     };
     await Promise.all(Array.from({ length: Math.min(CONCURRENCY, webRows.length || 1) }, worker));
-    // Remember which rows were read, so applyClosures can stamp them as checked
-    // and the next run moves on to different listings.
-    counts._webRows = webRows.filter(r => r._webChecked).map(r => r.id);
+    // Which rows were actually read, so applyClosures can stamp them as checked
+    // and the next run moves on to different listings. Kept out of counts: that
+    // object is handed straight to API callers.
+    checkedIds = webRows.filter(r => r._webChecked).map(r => r.id);
   }
 
   counts.closed = closed.length;
@@ -486,7 +509,7 @@ async function findClosures({ limit = 500, useWeb = false, log = console.log } =
   log(`[closures] examined ${counts.examined} listings in ${counts.seconds}s — ` +
       `${counts.closed} closed (${counts.source_closed} source, ${counts.web_closed} website), ` +
       `${counts.likely} likely (no contact route)`);
-  return { closed, likely, counts };
+  return { closed, likely, counts, checkedIds };
 }
 
 // ── Writing it down ─────────────────────────────────────────────────────────
@@ -509,7 +532,7 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
   running = true;
   try {
     const result = found || await findClosures({ limit, useWeb, log });
-    const { closed, likely, counts } = result;
+    const { closed, likely, counts, checkedIds } = result;
 
     if (!confirm) {
       log(`\nwould hide ${closed.length}:`);
@@ -549,7 +572,7 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
     }
     // Stamp every website we actually read, closed or not, so the next web pass
     // starts on listings this one never got to.
-    const readIds = (counts && counts._webRows) || [];
+    const readIds = checkedIds || [];
     for (let i = 0; i < readIds.length; i += 200) {
       const chunk = readIds.slice(i, i + 200);
       await db.run(
