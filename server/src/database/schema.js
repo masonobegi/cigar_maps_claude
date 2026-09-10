@@ -461,6 +461,10 @@ const MIGRATIONS = [
   { name: '082_stores_closed_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP' },
   { name: '083_stores_closure_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS closure_checked_at TIMESTAMP' },
   { name: '084_stores_closed_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_operating ON stores(operating_status, visible)' },
+
+  // Which matcher read this shop's menu. A fix to the matcher makes every
+  // shop read by the old one stale, so the correction reaches existing rows.
+  { name: '085_stores_menu_matcher_version', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_matcher_version INTEGER' },
 ];
 
 async function runMigrations() {

@@ -98,6 +98,13 @@ function buildIndex(cigars = [], vitolas = [], aliases = []) {
     const brandTokens = tokenize(c.brand);
     if (!brandTokens.length) continue;
     const nameTokens = tokenize(c.name);
+    // A line whose name repeats its own brand ("Arturo Fuente" / "Fuente
+    // Fuente OpusX") must not earn credit for the brand words: every product
+    // by that brand carries them, so they identify nothing. Score on what is
+    // left — here, "opusx" alone. Without this, any Arturo Fuente title
+    // scored 2/3 against OpusX and the whole shop collapsed onto one line.
+    const brandSet = new Set(brandTokens);
+    const scoreTokens = nameTokens.filter(t => !brandSet.has(t));
     const entry = {
       id: c.id,
       brand: c.brand,
@@ -105,6 +112,7 @@ function buildIndex(cigars = [], vitolas = [], aliases = []) {
       brandKey: brandTokens.join(' '),
       brandTokens,
       nameTokens,
+      scoreTokens,
       nameNumbers: nameTokens.filter(isNumeric),
       vitolas: [],
     };
@@ -225,11 +233,11 @@ function matchCigar(rawName, index) {
 
       let score;
       let hits = 0;
-      if (!entry.nameTokens.length) {
-        score = 0.5; // brand-only line (rare); brand match alone is the signal
+      if (!entry.scoreTokens.length) {
+        score = 0.5; // brand-only line, or a name that is just the brand again
       } else {
-        for (const t of entry.nameTokens) if (tokenSet.has(t)) hits++;
-        score = hits / entry.nameTokens.length;
+        for (const t of entry.scoreTokens) if (tokenSet.has(t)) hits++;
+        score = hits / entry.scoreTokens.length;
       }
 
       const threshold = soloBrand && size ? 0.34 : 0.5;
@@ -241,7 +249,7 @@ function matchCigar(rawName, index) {
         || (brand.tokens.length === best.brandLen && score > best.score)
         || (brand.tokens.length === best.brandLen && score === best.score && hits > best.hits)
         || (brand.tokens.length === best.brandLen && score === best.score && hits === best.hits
-            && entry.nameTokens.length > best.entry.nameTokens.length);
+            && entry.scoreTokens.length > best.entry.scoreTokens.length);
       if (better) best = { entry, score, hits, brandLen: brand.tokens.length };
     }
   }
@@ -250,7 +258,21 @@ function matchCigar(rawName, index) {
   return result(best.entry, pickVitola(best.entry, rawName, tokens, size), best.score);
 }
 
-module.exports = { normalizeName, tokenize, parseSize, buildIndex, matchCigar, NOISE, SHAPE_WORDS };
+/**
+ * Bump whenever scoring changes shape.
+ *
+ * Inventory read from a shop's website is only as good as the matcher that
+ * read it, so a row carries the version that produced it. The menu scanner
+ * treats anything matched by an older version as stale and re-reads that shop,
+ * which is how a matcher fix reaches data that was already written instead of
+ * waiting for the next weekly sweep.
+ *
+ *  1 — original
+ *  2 — a line's name no longer earns credit for repeating its own brand
+ */
+const MATCHER_VERSION = 2;
+
+module.exports = { normalizeName, tokenize, parseSize, buildIndex, matchCigar, NOISE, SHAPE_WORDS, MATCHER_VERSION };
 
 // ── Self-test ───────────────────────────────────────────────────────────────
 if (require.main === module) {

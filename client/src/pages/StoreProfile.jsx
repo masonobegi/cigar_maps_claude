@@ -60,6 +60,31 @@ function freshness(ts) {
   return `checked ${months} month${months === 1 ? '' : 's'} ago`;
 }
 
+function FilterChip({ active, onClick, children }) {
+  return (
+    <button type="button" onClick={onClick}
+      className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap flex-shrink-0 transition-colors"
+      style={active
+        ? { backgroundColor: AMBER, color: '#1A1206', border: `1px solid ${AMBER}`, fontWeight: 600 }
+        : { backgroundColor: BG_ALT, color: LABEL, border: `1px solid ${BORDER}` }}>
+      {children}
+    </button>
+  );
+}
+
+// Whole dollars unless the cents matter: "$6" and "$6.50", never "$6.00".
+const money = (n) => `$${Number(n) % 1 === 0 ? Number(n).toFixed(0) : Number(n).toFixed(2)}`;
+
+/**
+ * A shop sells one line as a single, a five-pack and a box, so its prices span
+ * a range. Show that span rather than pretending there is one price.
+ */
+function priceRange(min, max) {
+  if (min === null || min === undefined || !Number(min)) return null;
+  if (!Number(max) || Number(max) === Number(min)) return money(min);
+  return `${money(min)} – ${money(max)}`;
+}
+
 const domainOf = (website) => String(website || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
 
 // Most of the directory came out of Overture/OpenStreetMap, where a large slice
@@ -428,6 +453,11 @@ export default function StoreProfile() {
   const [searchParams] = useSearchParams();
   const [data, setData] = useState(null);
   const [inventory, setInventory] = useState([]);
+  const [invBrands, setInvBrands] = useState([]);
+  const [invBrand, setInvBrand] = useState('');
+  const [invMeta, setInvMeta] = useState({ total: 0, listings: 0, pages: 0 });
+  const [invPage, setInvPage] = useState(1);
+  const [invLoading, setInvLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [followLoading, setFollowLoading] = useState(false);
   const [following, setFollowing] = useState(false);
@@ -458,18 +488,35 @@ export default function StoreProfile() {
   }, [data, user]);
 
   useEffect(() => {
-    Promise.all([
-      api.getStore(id),
-      api.getStoreInventory(id, { limit: 200 }),
-    ]).then(([d, inv]) => {
+    api.getStore(id).then(d => {
       setData(d);
-      setInventory(inv.items);
       setFollowing(d.is_following);
       if (d.follow_prefs) setFollowPrefs(d.follow_prefs);
     }).finally(() => setLoading(false));
+    api.getStoreInventoryBrands(id).then(r => setInvBrands(r.brands || [])).catch(() => setInvBrands([]));
     // Whether this shop's website is being read for us. Never blocks the page.
     api.getStoreMenuStatus(id).then(setMenuStatus).catch(() => setMenuStatus(null));
   }, [id]);
+
+  // Searching and brand-filtering happen on the server so they reach the whole
+  // shelf, not just the slice already downloaded.
+  useEffect(() => { setInvPage(1); }, [search, invBrand]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setInvLoading(true);
+    const t = setTimeout(() => {
+      api.getStoreInventory(id, { limit: 60, page: invPage, ...(search ? { q: search } : {}), ...(invBrand ? { brand: invBrand } : {}) })
+        .then(inv => {
+          if (cancelled) return;
+          setInventory(inv.items || []);
+          setInvMeta({ total: inv.total || 0, listings: inv.listings || 0, pages: inv.pages || 0 });
+        })
+        .catch(() => { if (!cancelled) setInventory([]); })
+        .finally(() => { if (!cancelled) setInvLoading(false); });
+    }, search ? 300 : 0);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [id, search, invBrand, invPage]);
 
   async function handleFollow() {
     if (!user) return navigate('/login');
@@ -626,29 +673,22 @@ export default function StoreProfile() {
     }
   } else if (todayHours === 'Closed') isOpen = false;
 
-  const filteredInv = inventory.filter(i =>
-    !search || i.brand.toLowerCase().includes(search.toLowerCase()) ||
-    i.cigar_name.toLowerCase().includes(search.toLowerCase())
-  );
-  const byCigar = {};
-  for (const item of filteredInv) {
-    if (!byCigar[item.cigar_id]) byCigar[item.cigar_id] = { ...item, vitolas: [], web: null };
-    byCigar[item.cigar_id].vitolas.push({ vitola_id: item.vitola_id, name: item.vitola_name, price: item.price, quantity: item.quantity, is_new_arrival: item.is_new_arrival, source: item.source });
-    // Rows we read off the shop's own website are labelled as such.
-    if (item.source === 'web') {
-      const web = byCigar[item.cigar_id].web;
-      const at = item.last_confirmed_at ? new Date(item.last_confirmed_at).getTime() : 0;
-      if (!web || at > web.at) byCigar[item.cigar_id].web = { at, url: item.source_url, label: freshness(item.last_confirmed_at) };
-    }
-  }
 
+  // Shops differ: some list a full shelf, some only a handful of lines, most
+  // nothing at all. Show a tab only where there is something behind it rather
+  // than greeting every visitor with three empty sections.
+  const lineCount = invBrands.reduce((n, b) => n + b.lines, 0);
   const TABS = [
-    { key: 'inventory',  label: `Inventory (${inventory_count})` },
-    { key: 'new',        label: `New Arrivals (${new_arrivals.length})` },
-    { key: 'deals',      label: `Deals (${deals.length})` },
+    ...(inventory_count > 0 ? [{ key: 'inventory', label: `Inventory${lineCount ? ` (${lineCount})` : ''}` }] : []),
+    ...(new_arrivals.length ? [{ key: 'new', label: `New Arrivals (${new_arrivals.length})` }] : []),
+    ...(deals.length ? [{ key: 'deals', label: `Deals (${deals.length})` }] : []),
     { key: 'community',  label: 'Community' },
     { key: 'about',      label: 'About' },
   ];
+  // Never leave the page on a tab that no longer exists for this shop.
+  // 'about' always exists, so it is the safe landing place for a shop whose
+  // requested tab (often the default 'inventory') has nothing behind it.
+  const activeTab = TABS.some(t => t.key === tab) ? tab : 'about';
 
   const mapsUrl = store.address
     ? `https://maps.google.com/?q=${encodeURIComponent([store.address, store.city, store.state].filter(Boolean).join(', '))}`
@@ -853,7 +893,7 @@ export default function StoreProfile() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className="px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors"
-            style={tab === t.key
+            style={activeTab === t.key
               ? { color: AMBER, borderBottom: `2px solid ${AMBER}` }
               : { color: MUTED }}>
             {t.label}
@@ -861,73 +901,120 @@ export default function StoreProfile() {
         ))}
       </div>
 
-      {/* ── Inventory ── */}
-      {tab === 'inventory' && (
+      {/* ── Inventory ─────────────────────────────────────────────────────
+          Brand, then line, then the sizes that line comes in. A shop's feed
+          lists every variant separately, so each line shows a price range
+          rather than one chip per purchasable permutation. */}
+      {activeTab === 'inventory' && (
         <>
           <input value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search this store's inventory..." className="input mb-4" />
-          {Object.values(byCigar).length === 0 ? (
-            <p className="text-center py-10" style={{ color: MUTED }}>No inventory found.</p>
+            placeholder="Search this store's inventory..." className="input mb-3" />
+
+          {invBrands.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-3">
+              <FilterChip active={!invBrand} onClick={() => setInvBrand('')}>
+                All brands ({invBrands.length})
+              </FilterChip>
+              {invBrands.map(b => (
+                <FilterChip key={b.brand} active={invBrand === b.brand} onClick={() => setInvBrand(b.brand)}>
+                  {b.brand} <span style={{ opacity: 0.65 }}>({b.lines})</span>
+                </FilterChip>
+              ))}
+            </div>
+          )}
+
+          {invMeta.total > 0 && (
+            <p className="text-xs mb-3" style={{ color: MUTED }}>
+              {invMeta.total} {invMeta.total === 1 ? 'cigar' : 'cigars'}
+              {invMeta.listings > invMeta.total && ` · ${invMeta.listings} listings`}
+              {invBrand && ` · ${invBrand}`}
+            </p>
+          )}
+
+          {invLoading && inventory.length === 0 ? (
+            <p className="text-center py-10" style={{ color: MUTED }}>Loading…</p>
+          ) : inventory.length === 0 ? (
+            <p className="text-center py-10" style={{ color: MUTED }}>
+              {search || invBrand ? 'Nothing here matches that.' : 'This shop has not listed what it carries yet.'}
+            </p>
           ) : (
-            <div className="flex flex-col gap-3">
-              {Object.values(byCigar).map(item => (
-                <Link key={item.cigar_id} to={`/cigars/${item.cigar_id}`}
-                  className="card p-4 transition-colors group"
-                  onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
-                  <div className="mb-3">
-                    <div className="flex items-center gap-1.5 flex-wrap mb-1">
-                      {item.is_featured === 1 && (
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide"
-                          style={{ backgroundColor: '#2D1E06', color: '#D4882A', border: '1px solid #4D3010' }}>
-                          Featured
-                        </span>
+            <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+              {inventory.map(item => {
+                const range = priceRange(item.price_min, item.price_max);
+                const web = item.web_checked_at ? freshness(item.web_checked_at) : null;
+                return (
+                  <Link key={item.cigar_id} to={`/cigars/${item.cigar_id}`}
+                    className="card p-4 flex flex-col transition-colors group"
+                    onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
+                    <div className="flex items-start gap-2 mb-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5 truncate" style={{ color: AMBER }}>{item.brand}</p>
+                        <h3 className="font-semibold leading-tight" style={{ color: NAVY }}>{item.cigar_name}</h3>
+                      </div>
+                      {item.is_new_arrival === 1 && (
+                        <span className="text-xs font-bold uppercase flex-shrink-0" style={{ color: '#60A5FA' }}>NEW</span>
                       )}
                     </div>
-                    <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: AMBER }}>{item.brand}</p>
-                    <h3 className="font-semibold" style={{ color: NAVY }}>{item.cigar_name}</h3>
-                    <p className="text-xs mt-0.5 capitalize" style={{ color: MUTED }}>{item.strength} · {item.country}</p>
-                  </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {item.vitolas.map(v => (
-                      <div key={v.vitola_id} className="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5"
-                        style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
-                        {v.is_new_arrival === 1 && (
-                          <span className="text-xs font-bold uppercase" style={{ color: '#60A5FA' }}>NEW</span>
+                    {(item.strength || item.country) && (
+                      <p className="text-xs mb-2 capitalize" style={{ color: MUTED }}>
+                        {[item.strength, item.country].filter(Boolean).join(' · ')}
+                      </p>
+                    )}
+
+                    {range && (
+                      <p className="font-bold mb-2" style={{ color: AMBER }}>{range}</p>
+                    )}
+
+                    {item.sizes.length > 0 && (
+                      <div className="flex flex-col gap-1 mt-auto">
+                        {item.sizes.slice(0, 4).map(s => {
+                          const sr = priceRange(s.price_min, s.price_max);
+                          return (
+                            <div key={s.vitola_id} className="flex items-baseline justify-between gap-2 text-xs">
+                              <span className="truncate" style={{ color: LABEL }}>
+                                {s.name}
+                                {s.length && s.ring_gauge ? (
+                                  <span style={{ color: MUTED }}> · {s.length}×{s.ring_gauge}</span>
+                                ) : null}
+                              </span>
+                              {sr && <span className="flex-shrink-0" style={{ color: MUTED }}>{sr}</span>}
+                            </div>
+                          );
+                        })}
+                        {item.sizes.length > 4 && (
+                          <p className="text-xs" style={{ color: MUTED }}>+{item.sizes.length - 4} more sizes</p>
                         )}
-                        <span className="font-medium" style={{ color: LABEL }}>{v.name}</span>
-                        <span className="font-bold" style={{ color: AMBER }}>${v.price.toFixed(2)}</span>
                       </div>
-                    ))}
-                  </div>
+                    )}
 
-                  {item.web && (
-                    <p className="text-xs mt-2 flex items-center gap-1.5 flex-wrap" style={{ color: MUTED }}>
-                      <Globe className="w-3 h-3 flex-shrink-0" />
-                      {item.web.url ? (
-                        // A nested <a> inside the card link is invalid markup, so
-                        // this opens the product page itself.
-                        <span role="link" tabIndex={0} className="underline hover:text-amber-500"
-                          onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(item.web.url, '_blank', 'noopener'); }}
-                          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(item.web.url, '_blank', 'noopener'); } }}>
-                          From the shop&rsquo;s website
-                        </span>
-                      ) : (
-                        <span>From the shop&rsquo;s website</span>
-                      )}
-                      {item.web.label && <span>· {item.web.label}</span>}
-                    </p>
-                  )}
-                </Link>
-              ))}
+                    {web && (
+                      <p className="text-xs mt-2 flex items-center gap-1.5" style={{ color: MUTED }}>
+                        <Globe className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">From the shop&rsquo;s site · {web}</span>
+                      </p>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {invMeta.pages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-5">
+              <button className="btn-secondary text-sm px-3 py-1.5" disabled={invPage <= 1}
+                onClick={() => setInvPage(p => Math.max(1, p - 1))}>Previous</button>
+              <span className="text-xs" style={{ color: MUTED }}>Page {invPage} of {invMeta.pages}</span>
+              <button className="btn-secondary text-sm px-3 py-1.5" disabled={invPage >= invMeta.pages}
+                onClick={() => setInvPage(p => p + 1)}>Next</button>
             </div>
           )}
         </>
       )}
 
       {/* ── New Arrivals ── */}
-      {tab === 'new' && (
+      {activeTab === 'new' && (
         <div className="flex flex-col gap-3">
           {new_arrivals.length === 0 ? (
             <p className="text-center py-10" style={{ color: MUTED }}>No new arrivals right now.</p>
@@ -953,7 +1040,7 @@ export default function StoreProfile() {
       )}
 
       {/* ── Deals ── */}
-      {tab === 'deals' && (
+      {activeTab === 'deals' && (
         <div className="flex flex-col gap-4">
           {deals.length === 0 ? (
             <p className="text-center py-10" style={{ color: MUTED }}>No active deals right now.</p>
@@ -976,7 +1063,7 @@ export default function StoreProfile() {
       )}
 
       {/* ── Community ── */}
-      {tab === 'community' && (
+      {activeTab === 'community' && (
         <div className="flex flex-col gap-5">
           {/* Upcoming events */}
           {events.filter(e => new Date(e.event_date) >= new Date()).length > 0 && (
@@ -1217,7 +1304,7 @@ export default function StoreProfile() {
       )}
 
       {/* ── About ── */}
-      {tab === 'about' && (
+      {activeTab === 'about' && (
         <div className="flex flex-col gap-5">
           {store.description && (
             <div className="card p-5">

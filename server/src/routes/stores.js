@@ -277,33 +277,118 @@ router.get('/:id', optionalAuth, asyncRoute(async (req, res) => {
   });
 }));
 
+/**
+ * A shop's shelf, grouped the way a smoker reads it: brand, then line, then
+ * the sizes that line comes in.
+ *
+ * A shop's own web feed lists every purchasable variant — single, five-pack,
+ * box — as its own product, so one line can be a hundred rows at prices from
+ * $6 to $3,500. Returning those rows raw produced a wall of near-identical
+ * chips. We aggregate to one entry per line and hand the client a price range
+ * instead, which is the honest summary: cheapest single to dearest box.
+ */
 router.get('/:id/inventory', asyncRoute(async (req, res) => {
-  const { page = 1, limit = 40, q, strength, is_new_arrival } = req.query;
+  const { page = 1, limit = 60, q, strength, brand, is_new_arrival } = req.query;
   const offset = (page - 1) * limit;
 
-  let where = ['i.store_id = ?', 'i.in_stock = 1'];
+  const where = ['i.store_id = ?', 'i.in_stock = 1'];
   const params = [req.params.id];
 
-  if (q) { where.push('(c.brand LIKE ? OR c.name LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
+  if (q) { where.push('(c.brand ILIKE ? OR c.name ILIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
   if (strength) { where.push('c.strength = ?'); params.push(strength); }
+  if (brand) { where.push('c.brand = ?'); params.push(brand); }
   if (is_new_arrival === '1') { where.push('i.is_new_arrival = 1'); }
+  const clause = where.join(' AND ');
 
-  const items = await db.all(`
-    SELECT i.*, c.brand, c.name as cigar_name, c.strength, c.wrapper, c.country, c.flavor_notes,
-      v.name as vitola_name, v.length, v.ring_gauge, v.msrp
+  const rows = await db.all(`
+    SELECT c.id AS cigar_id, c.brand, c.name AS cigar_name, c.strength, c.wrapper,
+           c.country, c.flavor_notes,
+           COUNT(*)::int AS listing_count,
+           MIN(NULLIF(i.price, 0)) AS price_min,
+           MAX(NULLIF(i.price, 0)) AS price_max,
+           MAX(i.is_featured)::int AS is_featured,
+           MAX(i.is_new_arrival)::int AS is_new_arrival,
+           MAX(CASE WHEN i.source = 'web' THEN i.last_confirmed_at END) AS web_checked_at,
+           MIN(CASE WHEN i.source = 'web' THEN i.source_url END) AS web_url,
+           JSON_AGG(JSON_BUILD_OBJECT(
+             'vitola_id', v.id, 'name', v.name,
+             'length', v.length, 'ring_gauge', v.ring_gauge, 'price', i.price
+           ) ORDER BY v.ring_gauge, v.name) AS size_rows
     FROM inventory i
     JOIN cigars c ON c.id = i.cigar_id
     JOIN vitolas v ON v.id = i.vitola_id
-    WHERE ${where.join(' AND ')}
-    ORDER BY i.is_featured DESC, i.is_new_arrival DESC, c.brand, c.name, v.ring_gauge
+    WHERE ${clause}
+    GROUP BY c.id, c.brand, c.name, c.strength, c.wrapper, c.country, c.flavor_notes
+    ORDER BY MAX(i.is_featured) DESC, MAX(i.is_new_arrival) DESC, c.brand, c.name
     LIMIT ? OFFSET ?
   `, [...params, limit, offset]);
 
-  const total = (await db.get(`SELECT COUNT(*) as n FROM inventory i JOIN cigars c ON c.id = i.cigar_id WHERE ${where.join(' AND ')}`, params)).n;
+  // Collapse the per-row sizes into one entry per vitola, each with its own
+  // range, so "Robusto $12–$290" reads as one size sold three ways.
+  const items = rows.map(r => {
+    const bySize = new Map();
+    for (const s of r.size_rows || []) {
+      const price = Number(s.price) || 0;
+      const cur = bySize.get(s.vitola_id);
+      if (!cur) {
+        bySize.set(s.vitola_id, {
+          vitola_id: s.vitola_id, name: s.name, length: s.length, ring_gauge: s.ring_gauge,
+          price_min: price || null, price_max: price || null, listing_count: 1,
+        });
+      } else {
+        cur.listing_count++;
+        if (price) {
+          cur.price_min = cur.price_min === null ? price : Math.min(cur.price_min, price);
+          cur.price_max = cur.price_max === null ? price : Math.max(cur.price_max, price);
+        }
+      }
+    }
+    const { size_rows, ...rest } = r;
+    return {
+      ...rest,
+      price_min: r.price_min === null ? null : Number(r.price_min),
+      price_max: r.price_max === null ? null : Number(r.price_max),
+      flavor_notes: JSON.parse(r.flavor_notes || '[]'),
+      sizes: [...bySize.values()],
+    };
+  });
+
+  const totals = await db.get(`
+    SELECT COUNT(DISTINCT c.id)::int AS lines, COUNT(*)::int AS listings
+    FROM inventory i
+    JOIN cigars c ON c.id = i.cigar_id
+    JOIN vitolas v ON v.id = i.vitola_id
+    WHERE ${clause}
+  `, params);
 
   res.json({
-    items: items.map(i => ({ ...i, flavor_notes: JSON.parse(i.flavor_notes || '[]') })),
-    total, page: +page, pages: Math.ceil(total / limit)
+    items,
+    total: totals.lines,
+    listings: totals.listings,
+    page: +page,
+    pages: Math.ceil(totals.lines / limit),
+  });
+}));
+
+/** Brands a shop carries, for the filter bar. Cheap enough to be uncached. */
+router.get('/:id/inventory/brands', asyncRoute(async (req, res) => {
+  const brands = await db.all(`
+    SELECT c.brand,
+           COUNT(DISTINCT c.id)::int AS lines,
+           MIN(NULLIF(i.price, 0)) AS price_min,
+           MAX(NULLIF(i.price, 0)) AS price_max
+    FROM inventory i
+    JOIN cigars c ON c.id = i.cigar_id
+    WHERE i.store_id = ? AND i.in_stock = 1
+    GROUP BY c.brand
+    ORDER BY COUNT(DISTINCT c.id) DESC, c.brand
+  `, [req.params.id]);
+  res.json({
+    brands: brands.map(b => ({
+      ...b,
+      price_min: b.price_min === null ? null : Number(b.price_min),
+      price_max: b.price_max === null ? null : Number(b.price_max),
+    })),
   });
 }));
 

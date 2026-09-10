@@ -24,7 +24,7 @@ const https = require('https');
 const http = require('http');
 const { URL } = require('url');
 const db = require('../database/db');
-const { normalizeName, buildIndex, matchCigar } = require('../utils/cigarMatcher');
+const { normalizeName, buildIndex, matchCigar, MATCHER_VERSION } = require('../utils/cigarMatcher');
 
 const UA = 'CigarBuddy/1.0 (+https://cigarbuddy.com; menu reader)';
 const TIMEOUT_MS = 12000;
@@ -395,8 +395,8 @@ async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
   summary.status = `ok:${summary.matched}/${summary.cigarlike}`;
   await db.run(
     `UPDATE stores SET menu_platform = ?, menu_url = ?, menu_checked_at = NOW(),
-       menu_last_synced = NOW(), menu_status = ? WHERE id = ?`,
-    [platform, baseUrl, summary.status, store.id]);
+       menu_last_synced = NOW(), menu_status = ?, menu_matcher_version = ? WHERE id = ?`,
+    [platform, baseUrl, summary.status, MATCHER_VERSION, store.id]);
 
   log(`[menu] ${store.name} (${store.id}) ${platform}: ${summary.products} products, ` +
       `${summary.cigarlike} cigar-like, ${summary.matched} matched, ` +
@@ -404,14 +404,22 @@ async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
   return summary;
 }
 
-/** Read the shops whose menu we have not looked at in a week. */
+/**
+ * Shops due a read: ones we have not looked at in a week, plus any whose
+ * inventory was matched by an older matcher. The second clause is what carries
+ * a matcher fix back through data that is already on the shelf — those shops
+ * go first, because their rows are currently wrong rather than merely old.
+ */
 async function scanStale({ limit = 40, log = console.log } = {}) {
   const stores = await db.all(`
     SELECT id FROM stores
     WHERE website IS NOT NULL AND menu_opt_out = 0 AND visible = 1
-      AND (menu_checked_at IS NULL OR menu_checked_at < NOW() - INTERVAL '7 days')
-    ORDER BY claimed DESC, confidence DESC, id
-    LIMIT ?`, [limit]);
+      AND (menu_checked_at IS NULL
+           OR menu_checked_at < NOW() - INTERVAL '7 days'
+           OR menu_matcher_version IS DISTINCT FROM ?)
+    ORDER BY (menu_matcher_version IS DISTINCT FROM ? AND menu_last_synced IS NOT NULL) DESC,
+             claimed DESC, confidence DESC, id
+    LIMIT ?`, [MATCHER_VERSION, MATCHER_VERSION, limit]);
 
   if (!stores.length) { log('[menu] no stale store menus'); return { scanned: 0, matched: 0, ok: 0, errors: 0 }; }
 

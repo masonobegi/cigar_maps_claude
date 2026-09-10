@@ -63,6 +63,7 @@ export const api = {
   getDirectoryStats: () => request('/stores/stats'),
   getStore: (id) => request(`/stores/${id}`),
   getStoreInventory: (id, p = {}) => request(`/stores/${id}/inventory?${new URLSearchParams(p)}`),
+  getStoreInventoryBrands: (id) => request(`/stores/${id}/inventory/brands`),
   createStore: (b) => request('/stores', { method: 'POST', body: JSON.stringify(b) }),
   updateStore: (id, b) => request(`/stores/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
   claimStore: (id, b) => request(`/stores/${id}/claim`, { method: 'POST', body: JSON.stringify(b || {}) }),
