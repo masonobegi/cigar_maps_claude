@@ -98,12 +98,14 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         await db.run(`
           UPDATE stores SET
             name = ?, address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),
-            zip = COALESCE(?, zip), phone = COALESCE(?, phone), website = COALESCE(?, website),
+            zip = COALESCE(?, zip), phone = COALESCE(?, phone),
+            -- A website staff deliberately cleared must not come back on re-import.
+            website = CASE WHEN ? THEN website ELSE COALESCE(?, website) END,
             instagram = COALESCE(?, instagram), lat = ?, lng = ?, hours = COALESCE(?, hours), hours_raw = ?,
             store_type = ?, confidence = ?, visible = ?,
             has_lounge = GREATEST(COALESCE(has_lounge, 0), ?), has_walk_in_humidor = GREATEST(COALESCE(has_walk_in_humidor, 0), ?)
           WHERE id = ?
-        `, [s.name, s.address, s.city, s.state, s.zip, s.phone, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw,
+        `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw,
             keepStaff ? found.store_type : store_type,
             confidence,
             keepStaff ? found.visible : (confidence >= VISIBLE_THRESHOLD ? 1 : 0),

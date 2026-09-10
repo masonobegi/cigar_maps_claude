@@ -34,7 +34,13 @@ const CONCURRENCY = 6;
 const OVERALL_BUDGET_MS = 30000;  // whole check for one store, redirects included
 
 /** Statuses this module can write. Only 'ok' means the link is usable. */
-const STATUSES = ['ok', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked'];
+const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked'];
+
+// A site that answers but refuses to serve a robot is alive for a customer.
+// Cloudflare and similar front doors return 403 to anything that is not a
+// browser, and several real shops sit behind them, so this is its own verdict
+// and is treated as a working link.
+const BLOCKED_CODES = new Set([401, 402, 403, 407, 429, 451]);
 
 // Hosts that only ever serve a for-sale / parking page. Landing on one of these
 // means the domain is not the shop's site any more, whatever it returns.
@@ -363,8 +369,9 @@ async function checkWebsite(website) {
     return { status: finalUrl && finalUrl !== ('https://' + host + path) ? 'ok' : 'error', code, final_url: finalUrl };
   }
 
-  // 401/403/429 and friends: the page exists but would not show itself to us,
-  // and an unverifiable link is not a link.
+  // 401/403/429: the server is up and answering, it just will not serve a
+  // robot. Treated as working, because a person with a browser gets in.
+  if (BLOCKED_CODES.has(code)) return { status: 'blocked', code, final_url: finalUrl };
   return { status: 'error', code: code || null, final_url: finalUrl };
 }
 

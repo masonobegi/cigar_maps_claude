@@ -84,7 +84,9 @@ const withScheme = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`)
 export function websiteInfo(store) {
   if (!store || !store.website) return null;
   const status = store.website_status || null;
-  const ok = !status || status === 'ok';
+  // 'blocked' means the site answered but would not serve our checker (a
+  // Cloudflare front door). A person with a browser gets in, so it stays a link.
+  const ok = !status || status === 'ok' || status === 'blocked';
   const listed = domainOf(store.website);
   const finalDomain = domainOf(store.website_final_url);
   // A redirect that lands somewhere else means the shop has moved. Send people
