@@ -112,13 +112,17 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
             zip = COALESCE(?, zip), phone = COALESCE(?, phone),
             -- A website staff deliberately cleared must not come back on re-import.
             website = CASE WHEN ? THEN website ELSE COALESCE(?, website) END,
-            instagram = COALESCE(?, instagram), lat = ?, lng = ?, hours = COALESCE(?, hours), hours_raw = ?,
+            instagram = COALESCE(?, instagram), lat = ?, lng = ?,
+            -- Hours read off the shop's own website, or set by its owner or by
+            -- staff, are fresher than map data and must survive a re-import.
+            hours = CASE WHEN ? OR hours_source IN ('website', 'owner') THEN hours ELSE COALESCE(?, hours) END,
+            hours_raw = ?,
             store_type = ?, confidence = ?, visible = ?,
             operating_status = COALESCE(?, operating_status),
             closed_reason = CASE WHEN ? THEN COALESCE(closed_reason, 'Marked permanently closed in the source data') ELSE closed_reason END,
             has_lounge = GREATEST(COALESCE(has_lounge, 0), ?), has_walk_in_humidor = GREATEST(COALESCE(has_walk_in_humidor, 0), ?)
           WHERE id = ?
-        `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw,
+        `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, keepStaff, hours, s.hours_raw,
             keepStaff ? found.store_type : store_type,
             confidence,
             keepStaff ? found.visible : ((closedAtSource || ruledOut) ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
@@ -213,12 +217,34 @@ async function fillMissingCities({ max = 100, log = console.log } = {}) {
 
 // ── Boot hook ───────────────────────────────────────────────────────────────
 
+/**
+ * Give every shop the time zone its door is in, so "open now" is judged on
+ * the shop's clock. Only rows without one are touched, in batches written as
+ * one statement each.
+ */
+async function fillTimezones({ log = console.log } = {}) {
+  const { timeZoneFor } = require('../utils/storeHours');
+  const rows = await db.all('SELECT id, state, lat, lng FROM stores WHERE timezone IS NULL');
+  if (!rows.length) return 0;
+  for (let i = 0; i < rows.length; i += 5000) {
+    const batch = rows.slice(i, i + 5000).map(r => ({ id: r.id, tz: timeZoneFor(r.state, r.lat, r.lng) }));
+    await db.run(`
+      UPDATE stores s SET timezone = x.tz
+      FROM json_to_recordset(?::json) AS x(id int, tz text)
+      WHERE s.id = x.id
+    `, [JSON.stringify(batch)]);
+  }
+  log(`[import] time zone set on ${rows.length} listings`);
+  return rows.length;
+}
+
 async function runStartupImport({ log = console.log } = {}) {
   // Any store with an owner is claimed by definition (covers demo seeds and old rows).
   await db.run('UPDATE stores SET claimed = 1 WHERE user_id IS NOT NULL AND (claimed IS NULL OR claimed = 0)');
   await db.run("UPDATE stores SET source = 'owner' WHERE source IS NULL");
 
   const result = await importStoresFromFile(null, { log });
+  await fillTimezones({ log }).catch(err => log('[import] time zone fill error: ' + err.message));
 
   if (process.env.DISABLE_CITY_FILL !== '1') {
     fillMissingCities({ max: 150, log }).catch(err => log('[import] city fill error: ' + err.message));
@@ -241,4 +267,4 @@ if (require.main === module) {
   })().catch(err => { console.error(err); process.exit(1); });
 }
 
-module.exports = { importStoresFromFile, fillMissingCities, runStartupImport, DIRECTORY_FILE, OSM_ONLY_FILE };
+module.exports = { importStoresFromFile, fillMissingCities, fillTimezones, runStartupImport, DIRECTORY_FILE, OSM_ONLY_FILE };

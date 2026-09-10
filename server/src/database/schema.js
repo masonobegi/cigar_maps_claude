@@ -473,6 +473,17 @@ const MIGRATIONS = [
   { name: '086_cigars_source', sql: "ALTER TABLE cigars ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'curated'" },
   { name: '087_cigars_seen_at_stores', sql: 'ALTER TABLE cigars ADD COLUMN IF NOT EXISTS seen_at_stores INTEGER DEFAULT 0' },
   { name: '088_cigars_brand_name_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_cigars_brand_name ON cigars (LOWER(brand), LOWER(name))' },
+
+  // A shop's own time zone, so "open now" is judged on its clock and not the
+  // visitor's or the server's. Filled from state and longitude on boot.
+  { name: '089_stores_timezone', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS timezone TEXT' },
+  // The picture a shop's own website offers for sharing (og:image), shown as
+  // the listing's thumbnail until the owner uploads their own.
+  { name: '090_stores_web_image', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS web_image_url TEXT' },
+  // Where a listing's hours came from ('osm', 'website', 'owner'), so a
+  // website reading never overwrites an owner's hours and can be traced.
+  { name: '091_stores_hours_source', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS hours_source TEXT' },
+  { name: '092_stores_hours_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS hours_checked_at TIMESTAMP' },
 ];
 
 async function runMigrations() {

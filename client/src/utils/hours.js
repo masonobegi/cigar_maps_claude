@@ -17,6 +17,11 @@ export function parseHoursString(str) {
 
 export function getStoreStatus(hours) {
   if (!hours || typeof hours !== 'object') return { isOpen: null, label: null };
+  // No hours on record is "we don't know", never "closed". Most listings come
+  // from map data without hours, and the fall-through below used to call every
+  // one of them "Closed today" — Anthony's among them, on a weekday afternoon.
+  const known = Object.values(hours).some(v => v && String(v).trim());
+  if (!known) return { isOpen: null, label: null };
 
   const now = new Date();
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

@@ -5,6 +5,8 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import BackButton from '../components/BackButton';
+import { StoreThumb, hasLounge } from '../components/StoreCard';
+import { getStoreStatus } from '../utils/hours';
 
 const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const NAVY  = '#E8DDD0';
@@ -60,15 +62,34 @@ function freshness(ts) {
   return `checked ${months} month${months === 1 ? '' : 's'} ago`;
 }
 
-function FilterChip({ active, onClick, children }) {
+/**
+ * The shelf at a glance: one tile per brand with how many of its cigars the
+ * shop carries and what they cost, largest selection first. Picking a brand
+ * shows its lines.
+ */
+function BrandDirectory({ brands, total, onPick }) {
   return (
-    <button type="button" onClick={onClick}
-      className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap flex-shrink-0 transition-colors"
-      style={active
-        ? { backgroundColor: AMBER, color: '#1A1206', border: `1px solid ${AMBER}`, fontWeight: 600 }
-        : { backgroundColor: BG_ALT, color: LABEL, border: `1px solid ${BORDER}` }}>
-      {children}
-    </button>
+    <>
+      <p className="text-xs mb-3" style={{ color: MUTED }}>
+        {brands.length} brands · {total} cigars. Pick a brand to see its lines, or search above.
+      </p>
+      <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))' }}>
+        {brands.map(b => {
+          const range = priceRange(b.price_min, b.price_max);
+          return (
+            <button key={b.brand} type="button" onClick={() => onPick(b.brand)}
+              className="card px-3.5 py-3 text-left transition-colors"
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#5A4A34'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; }}>
+              <p className="font-semibold leading-snug" style={{ color: NAVY }}>{b.brand}</p>
+              <p className="text-xs mt-0.5" style={{ color: MUTED }}>
+                {b.lines} {b.lines === 1 ? 'cigar' : 'cigars'}{range ? <span style={{ color: AMBER }}> · {range}</span> : null}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -657,27 +678,22 @@ export default function StoreProfile() {
   const site = websiteInfo(store);
   const closure = closureInfo(store);
 
-  const now = new Date();
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const today = dayNames[now.getDay()];
-  const todayHours = hours[today];
-  let isOpen = null;
-  if (todayHours && todayHours !== 'Closed') {
-    const match = todayHours.match(/(\d+)(?::(\d+))?(am|pm)-(\d+)(?::(\d+))?(am|pm)/i);
-    if (match) {
-      let oh = parseInt(match[1]); const oap = match[3].toLowerCase();
-      let ch = parseInt(match[4]); const cap = match[6].toLowerCase();
-      if (oap === 'pm' && oh !== 12) oh += 12; if (oap === 'am' && oh === 12) oh = 0;
-      if (cap === 'pm' && ch !== 12) ch += 12; if (cap === 'am' && ch === 12) ch = 0;
-      isOpen = now.getHours() >= oh && now.getHours() < ch;
-    }
-  } else if (todayHours === 'Closed') isOpen = false;
+  // Open or closed on the shop's own clock, worked out by the server. This used
+  // the visitor's clock, so a Tucson shop looked at from Miami was three hours off.
+  const openNow = store.open_status || getStoreStatus(hours);
+  const isOpen = openNow.isOpen;
+  const today = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
+    new Date(new Date().toLocaleString('en-US', { timeZone: store.timezone || undefined })).getDay()];
+  const todayHours = openNow.today || hours[today];
 
 
   // Shops differ: some list a full shelf, some only a handful of lines, most
   // nothing at all. Show a tab only where there is something behind it rather
   // than greeting every visitor with three empty sections.
   const lineCount = invBrands.reduce((n, b) => n + b.lines, 0);
+  // A big shelf opens on its brands, not on hundreds of cigars at once; a
+  // small one just shows what it has. Search always reaches everything.
+  const showDirectory = invBrands.length > 3 && lineCount > 24 && !invBrand && !search.trim();
   const TABS = [
     ...(inventory_count > 0 ? [{ key: 'inventory', label: `Inventory${lineCount ? ` (${lineCount})` : ''}` }] : []),
     ...(new_arrivals.length ? [{ key: 'new', label: `New Arrivals (${new_arrivals.length})` }] : []),
@@ -736,21 +752,32 @@ export default function StoreProfile() {
       {/* Store header card */}
       <div className="card mb-4 overflow-hidden">
         <div className="flex items-start gap-4 p-5">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: '#352A18' }}>
-            <Store className="w-7 h-7" style={{ color: AMBER }} />
-          </div>
+          <StoreThumb store={store} size={76} />
           <div className="flex-1 min-w-0">
             {/* Name + badges */}
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h1 className="font-serif text-xl font-bold" style={{ color: NAVY }}>{store.name}</h1>
               {store.verified === 1 && <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#4ADE80' }} />}
-              {isOpen !== null && (
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
-                  style={isOpen ? openStyle : closedStyle}>
-                  ● {isOpen ? 'Open Now' : 'Closed'}
-                </span>
+            </div>
+
+            {/* The few things a visitor decides on: open now, when, and whether
+                there is somewhere to sit and smoke. */}
+            <div className="flex items-center flex-wrap gap-2 mb-2">
+              {isOpen === true && (
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full" style={openStyle}>Open now</span>
               )}
+              {isOpen === false && (
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full" style={closedStyle}>Closed</span>
+              )}
+              {hasLounge(store) && (
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
+                  style={{ backgroundColor: '#3A2E0A', color: '#F5C542', border: '1px solid #6B5314' }}>Lounge</span>
+              )}
+              <span className="text-sm" style={{ color: isOpen ? '#9FD9B0' : MUTED }}>
+                {openNow.label
+                  ? <>{openNow.label}{isOpen && todayHours ? <span style={{ color: MUTED }}> · today {String(todayHours).replace('-', '–')}</span> : null}</>
+                  : todayHours ? `Today ${String(todayHours).replace('-', '–')}` : 'Hours not listed yet'}
+              </span>
             </div>
 
             {/* Address / phone / website */}
@@ -910,20 +937,18 @@ export default function StoreProfile() {
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search this store's inventory..." className="input mb-3" />
 
-          {invBrands.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-2 mb-3">
-              <FilterChip active={!invBrand} onClick={() => setInvBrand('')}>
-                All brands ({invBrands.length})
-              </FilterChip>
-              {invBrands.map(b => (
-                <FilterChip key={b.brand} active={invBrand === b.brand} onClick={() => setInvBrand(b.brand)}>
-                  {b.brand} <span style={{ opacity: 0.65 }}>({b.lines})</span>
-                </FilterChip>
-              ))}
+          {/* A brand picked from the directory: say where we are and how back. */}
+          {invBrand && (
+            <div className="flex items-center gap-3 mb-3">
+              <button type="button" onClick={() => setInvBrand('')}
+                className="text-xs px-3 py-1.5 rounded-full" style={{ backgroundColor: BG_ALT, color: LABEL, border: `1px solid ${BORDER}` }}>
+                ← All brands
+              </button>
+              <h3 className="font-serif text-lg font-bold" style={{ color: NAVY }}>{invBrand}</h3>
             </div>
           )}
 
-          {invMeta.total > 0 && (
+          {!showDirectory && invMeta.total > 0 && (
             <p className="text-xs mb-3" style={{ color: MUTED }}>
               {invMeta.total} {invMeta.total === 1 ? 'cigar' : 'cigars'}
               {invMeta.listings > invMeta.total && ` · ${invMeta.listings} listings`}
@@ -931,7 +956,9 @@ export default function StoreProfile() {
             </p>
           )}
 
-          {invLoading && inventory.length === 0 ? (
+          {showDirectory ? (
+            <BrandDirectory brands={invBrands} total={lineCount} onPick={setInvBrand} />
+          ) : invLoading && inventory.length === 0 ? (
             <p className="text-center py-10" style={{ color: MUTED }}>Loading…</p>
           ) : inventory.length === 0 ? (
             <p className="text-center py-10" style={{ color: MUTED }}>
@@ -1005,7 +1032,7 @@ export default function StoreProfile() {
             </div>
           )}
 
-          {invMeta.pages > 1 && (
+          {!showDirectory && invMeta.pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
               <button className="btn-secondary text-sm px-3 py-1.5" disabled={invPage <= 1}
                 onClick={() => setInvPage(p => Math.max(1, p - 1))}>Previous</button>

@@ -4,6 +4,7 @@ const https = require('https');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { createInventorySheet } = require('../utils/googleSheets');
+const { openStatus, timeZoneFor } = require('../utils/storeHours');
 const { sendMail } = require('../utils/email');
 
 const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
@@ -121,36 +122,21 @@ router.get('/', asyncRoute(async (req, res) => {
     LIMIT ?
   `, [...params, limit]);
 
+  // Open or closed on each shop's own clock (see utils/storeHours.js). This
+  // used the server's clock, which on Railway is UTC — seven or eight hours
+  // off for every American shop.
   const now = new Date();
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const today = dayNames[now.getDay()];
-
   const result = stores.map(s => {
-    let hours = {};
-    try { hours = JSON.parse(s.hours || '{}'); } catch {}
-    let isOpen = null;
-    const todayHours = hours[today];
-    if (todayHours && todayHours !== 'Closed') {
-      const match = todayHours.match(/(\d+)(?::(\d+))?(am|pm)-(\d+)(?::(\d+))?(am|pm)/i);
-      if (match) {
-        let openH = parseInt(match[1]);
-        const openAmPm = match[3].toLowerCase();
-        let closeH = parseInt(match[4]);
-        const closeAmPm = match[6].toLowerCase();
-        if (openAmPm === 'pm' && openH !== 12) openH += 12;
-        if (openAmPm === 'am' && openH === 12) openH = 0;
-        if (closeAmPm === 'pm' && closeH !== 12) closeH += 12;
-        if (closeAmPm === 'am' && closeH === 12) closeH = 0;
-        // Lounges routinely close after midnight ("11am-2am"), which reads as
-        // a close hour at or before the open hour.
-        isOpen = closeH <= openH
-          ? (now.getHours() >= openH || now.getHours() < closeH)
-          : (now.getHours() >= openH && now.getHours() < closeH);
-      }
-    } else if (todayHours === 'Closed') {
-      isOpen = false;
-    }
-    return { ...publicStore(s), tags: s.tags ? JSON.parse(s.tags) : [], today_hours: todayHours || null, is_open: isOpen, avg_rating: +parseFloat(s.avg_rating).toFixed(1) };
+    const tz = s.timezone || timeZoneFor(s.state, s.lat, s.lng);
+    const status = openStatus(s.hours, tz, now);
+    return {
+      ...publicStore(s),
+      tags: s.tags ? JSON.parse(s.tags) : [],
+      today_hours: status.today,
+      is_open: status.isOpen,
+      open_status: status,
+      avg_rating: +parseFloat(s.avg_rating).toFixed(1),
+    };
   }).filter(s => open_now === '1' ? s.is_open === true : true);
 
   if (!isNaN(userLat) && !isNaN(userLng)) {
@@ -264,8 +250,13 @@ router.get('/:id', optionalAuth, asyncRoute(async (req, res) => {
     );
   }
 
+  const timezone = store.timezone || timeZoneFor(store.state, store.lat, store.lng);
   res.json({
-    store: { ...publicStore(store, isOwner || isStaff), hours, tags: store.tags ? JSON.parse(store.tags) : [] },
+    store: {
+      ...publicStore(store, isOwner || isStaff), hours, timezone,
+      open_status: openStatus(hours, timezone),
+      tags: store.tags ? JSON.parse(store.tags) : [],
+    },
     inventory_count: inventoryCount,
     deals,
     stats: { ...stats, avg_rating: +parseFloat(stats.avg_rating).toFixed(1) },
@@ -430,7 +421,8 @@ router.put('/:id', requireAuth, asyncRoute(async (req, res) => {
   const n = v => v ?? null;
   await db.run(`
     UPDATE stores SET name=?, description=?, address=?, city=?, state=?, zip=?, phone=?, website=?,
-    hours=?, has_lounge=?, has_walk_in_humidor=?, tags=?, sheet_url=?, setup_complete=1 WHERE id=?
+    hours=?, hours_source='owner', hours_checked_at=NOW(),
+    has_lounge=?, has_walk_in_humidor=?, tags=?, sheet_url=?, setup_complete=1 WHERE id=?
   `, [name, n(description), n(address), city, state, n(zip), n(phone), n(website),
     typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
     has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0, JSON.stringify(tags || []), n(sheet_url), req.params.id]);

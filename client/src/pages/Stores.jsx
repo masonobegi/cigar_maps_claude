@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Store, MapPin, Package, Search, CheckCircle, Star, Users, Filter, X, Clock, Navigation, Map, List } from 'lucide-react';
 import { api } from '../services/api';
-import { getStoreStatus } from '../utils/hours';
+import StoreCard from '../components/StoreCard';
 import { saveLocation as persistLocation, clearSavedLocation } from '../utils/location';
 
 const StoreMap = lazy(() => import('../components/StoreMap'));
@@ -368,112 +368,7 @@ export default function Stores() {
         </div>
       ) : viewMode === 'list' ? (
         <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-          {stores.map(store => {
-            let parsedHours = {};
-            try { parsedHours = JSON.parse(store.hours || '{}'); } catch {}
-            const status = getStoreStatus(parsedHours);
-
-            const statusStyle = status.isOpen
-              ? { backgroundColor: '#0B3320', color: '#4ADE80' }
-              : { backgroundColor: '#2E2820', color: '#9E8E7E' };
-
-            return (
-              <Link key={store.id} to={`/stores/${store.id}`}
-                className="card p-4 transition-colors group"
-                style={{ '--hover-border': '#D4CFC8' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#3A4F68'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = BORDER}>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: '#352A18' }}>
-                    <Store className="w-5 h-5" style={{ color: AMBER }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    {/* Name row */}
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <h2 className="font-semibold transition-colors" style={{ color: NAVY }}>
-                        {store.name}
-                      </h2>
-                      {store.verified === 1 && (
-                        <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#4ADE80' }} />
-                      )}
-                      {store.is_featured > 0 && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: '#2D1E06', color: AMBER, border: `1px solid #4D3010` }}>
-                          Featured
-                        </span>
-                      )}
-                      {store.claimed === 0 && (
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ color: MUTED, border: `1px solid ${BORDER}` }}>
-                          Unclaimed
-                        </span>
-                      )}
-                      {status.label && (
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={statusStyle}>
-                          {status.label}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Location + distance */}
-                    <div className="flex items-center gap-2 text-xs mb-2" style={{ color: MUTED }}>
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{[store.city, store.state].filter(Boolean).join(', ') || store.address || 'Location on map'}</span>
-                      {TYPE_LABEL[store.store_type] && store.store_type !== 'cigar_shop' && (
-                        <span style={{ color: LABEL }}>{TYPE_LABEL[store.store_type]}</span>
-                      )}
-                      {store.distance_mi !== null && store.distance_mi !== undefined && (
-                        <span className="font-semibold" style={{ color: AMBER }}>{store.distance_mi} mi</span>
-                      )}
-                    </div>
-
-                    {/* Description */}
-                    {store.description && (
-                      <p className="text-sm line-clamp-2 mb-2" style={{ color: LABEL }}>
-                        {store.description}
-                      </p>
-                    )}
-
-                    {/* Stats */}
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: MUTED }}>
-                      {store.inventory_count > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Package className="w-3 h-3" />{store.inventory_count} SKUs
-                        </span>
-                      )}
-                      {store.follower_count > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Users className="w-3 h-3" />{store.follower_count} follower{store.follower_count === 1 ? '' : 's'}
-                        </span>
-                      )}
-                      {store.avg_rating > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Star className="w-3 h-3" style={{ color: '#D4882A' }} />
-                          <span style={{ color: LABEL, fontWeight: 500 }}>{store.avg_rating.toFixed(1)}</span>
-                        </span>
-                      )}
-                      {store.today_hours && (
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />{store.today_hours}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Tags */}
-                    {store.tags?.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {store.tags.map(t => (
-                          <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ backgroundColor: '#2E2820', color: LABEL, border: `1px solid ${BORDER}` }}>
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+          {stores.map(store => <StoreCard key={store.id} store={store} />)}
         </div>
       ) : null}
     </div>

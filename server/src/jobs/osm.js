@@ -4,6 +4,8 @@
  */
 'use strict';
 
+const { parseOpeningHoursString, fillClosedPerSpec } = require('../utils/hoursParser');
+
 const https = require('https');
 
 const OVERPASS_HOSTS = ['overpass-api.de', 'overpass.kumi.systems', 'lz4.overpass-api.de', 'overpass.private.coffee'];
@@ -184,6 +186,11 @@ const DAY_OUT  = { Mo: 'Mon', Tu: 'Tue', We: 'Wed', Th: 'Thu', Fr: 'Fri', Sa: 'S
 
 function convertOpeningHours(raw) {
   if (!raw) return null;
+  // The shared parser reads the grammar mappers actually write (commas for
+  // semicolons, "24:00", "Mo-We,Sa", typos like "10:00-07:00") where the old
+  // code below gave up on 24 real shops. The old path stays as a fallback.
+  const parsed = fillClosedPerSpec(parseOpeningHoursString(raw));
+  if (parsed && Object.values(parsed).some(v => v !== 'Closed')) return parsed;
   const s = raw.trim();
   if (/^24\s*\/\s*7$/.test(s)) {
     return Object.fromEntries(Object.values(DAY_OUT).map(d => [d, '12am-11:59pm']));

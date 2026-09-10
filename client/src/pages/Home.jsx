@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Store, ArrowRight, MapPin, CheckCircle, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
+import { StoreThumb, hasLounge } from '../components/StoreCard';
 import { useAuth } from '../context/AuthContext';
 import CigarCard from '../components/CigarCard';
 
@@ -15,35 +16,42 @@ function fmt(n) {
   return Number.isFinite(n) && n > 0 ? n.toLocaleString('en-US') : null;
 }
 
+// Green when open, quiet grey when not (never alarm red: a shop being shut at
+// 9pm is not a warning), gold for a lounge. Same language as the store cards.
 function OpenBadge({ isOpen }) {
-  if (isOpen === null) return null;
+  if (isOpen === null || isOpen === undefined) return null;
   return (
     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
       style={isOpen
-        ? { backgroundColor: '#0B3320', color: '#4ADE80' }
-        : { backgroundColor: '#2D1010', color: '#F87171' }}>
-      {isOpen ? '● Open' : '● Closed'}
+        ? { backgroundColor: '#0B3320', color: '#4ADE80', border: '1px solid #14532D' }
+        : { backgroundColor: '#2A2520', color: '#A8998A', border: '1px solid #453C2E' }}>
+      {isOpen ? 'Open now' : 'Closed'}
     </span>
   );
 }
 
 function StoreRow({ store }) {
+  const status = store.open_status || {};
   return (
     <Link to={`/stores/${store.id}`}
-      className="flex items-center gap-4 py-3.5 group transition-colors rounded-md -mx-3 px-3"
+      className="flex items-center gap-3.5 py-3.5 group transition-colors rounded-md -mx-3 px-3"
       style={{ textDecoration: 'none' }}
       onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'}
       onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
+      <StoreThumb store={store} size={46} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
           <span className="font-medium text-sm" style={{ color: TEXT }}>{store.name}</span>
           {store.verified === 1 && <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />}
           <OpenBadge isOpen={store.is_open} />
+          {hasLounge(store) && (
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
+              style={{ backgroundColor: '#3A2E0A', color: '#F5C542', border: '1px solid #6B5314' }}>Lounge</span>
+          )}
         </div>
-        <p className="text-xs" style={{ color: MUTED }}>
-          {store.city}, {store.state}
-          {store.inventory_count > 0 && ` · ${store.inventory_count} cigars`}
-          {store.avg_rating > 0 && ` · ★ ${store.avg_rating.toFixed(1)}`}
+        <p className="text-xs line-clamp-1" style={{ color: MUTED }}>
+          {[store.address, [store.city, store.state].filter(Boolean).join(', ')].filter(Boolean).join(', ')}
+          {status.label ? ` · ${status.label}` : ''}
         </p>
       </div>
       <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-0.5"
