@@ -48,7 +48,11 @@ const RETAIL_CATEGORIES = new Set([
 ]);
 
 // Not a shop, whatever the name says.
-const NOT_A_SHOP = /\b(factory|manufactur\w+|museum|historical|distillery|plantation|warehouse|corporate\s+office|headquarters)\b/i;
+// A brewpub categorised as "pub" slipped through the category allow-list once:
+// "Cigar City Brewing Brewpub & Taproom". Tampa's nickname puts "Cigar" in the
+// name of businesses in every trade, so the trade word in the name has to be
+// able to veto an otherwise-allowed category.
+const NOT_A_SHOP = /\b(factory|manufactur\w+|museum|historical|distillery|plantation|warehouse|corporate\s+office|headquarters|brewery|brewing|brewpub|taproom|winery|cidery|meadery|barbershop|hair\s+salon|nail\s+salon|car\s+wash|laundromat|pharmacy|dentist|dental|urgent\s+care|storage)\b/i;
 const TRADE = /\b(wholesale\w*|distributor\w*|distributi\w+|import(s|ers?|ing)?|export(s|ers?|ing)?|trading\s+(co|company|inc)|supply|supplies|vending|brokers?|logistics|fulfillment|marketing)\b/i;
 const CORPORATE = /\b(holdings?|enterprises?|ventures?|investments?|management|associates|consulting|properties|realty|capital|industries)\b/i;
 const ONLINE = /\b(online|web\s*store|webstore|e-?commerce|mail\s*order)\b|\.(com|net|shop|store)\b/i;
@@ -66,6 +70,15 @@ function namesACigarShop(name) {
   return TRADE_WORD.test(name) && PREMISES_WORD.test(name);
 }
 
+// A cigar room of its own, rather than "cigar" used as a place name. Tampa is
+// nicknamed Cigar City, so "Cigar City Brewing" must not read as a cigar bar,
+// while "Cigar Lounge and Barbershop" and "Cigars & Winery" must.
+const CIGAR_PREMISES = /\bcigars?\s*(?:&|and)?\s*(?:lounge|bar|shop|shoppe|store|room|club|den|house|emporium|parlou?r)\b|\bcigars\b|\btobacconist\b|\bhumidor\b/i;
+
+function namesACigarPremises(name) {
+  return CIGAR_PREMISES.test(name);
+}
+
 /**
  * @param rec  the directory record (carries the source category in .raw)
  * @param row  the database row (name, phone, website, source)
@@ -77,7 +90,14 @@ function verdict(rec, row) {
   const hasPhone = !!(row?.phone || (rec?.phone));
   const hasSite = !!(row?.website || rec?.website);
 
-  if (NOT_A_SHOP.test(name)) return { storefront: 'not_retail', reason: `"${name}" is a factory, museum or office, not a shop` };
+  // Plenty of genuine lounges share premises with another trade — "Whiskey
+  // Beard Barbershop and Cigar Lounge", "Three Beagles Brewing and Cigar Bar".
+  // The other trade only disqualifies a listing that never names a cigar
+  // premises of its own. "Cigar City Brewing" is a brewery; "Cigar Bar and
+  // Brewery" is a cigar bar.
+  if (NOT_A_SHOP.test(name) && !namesACigarPremises(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" is another kind of business, not a cigar shop` };
+  }
   if (ONLINE.test(name)) return { storefront: 'online_only', reason: `"${name}" reads as an online store` };
   if (TRADE.test(name)) return { storefront: 'not_retail', reason: `"${name}" reads as a wholesaler, distributor or supplier` };
   if (CORPORATE.test(name) && !SHOP_WORD.test(name)) {
