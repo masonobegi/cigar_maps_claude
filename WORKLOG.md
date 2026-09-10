@@ -78,6 +78,16 @@ Verification on a clean database: `api_test.js`, `fix_test.js`, `auth_test.js` a
 4. Publish the roadmap page (scratchpad `cigarbuddy-roadmap.html`) and update its figures if they changed.
 5. Final recap to Mason with the short "what's left" list (see ROADMAP.md section 10 and the phases).
 
+## Cleanup pass (same day, later)
+
+**Demo data gone from production.** `jobs/purgeDemoData.js` removed the 25 "Cigar 1..25" placeholders, the 5 "Store 1..5" shops and the 7 @demo.com accounts, plus 63 vitolas, 165 inventory rows, 7 reviews and the owner's own test humidor/smoke-list entries against a placeholder. 169 real cigars remain. The seed can no longer recreate any of it when DATABASE_URL is set.
+
+**Storefront sweep.** `jobs/storefrontCheck.js` hid 537 listings that are not places you can walk into: wrong categories (a brewery, a barbershop, a title company, a cabinet maker, a fastener supplier, a t-shirt printer, a pressure-washing supplier, all called "Cigar City" because that is Tampa's nickname), wholesalers and distributors, factories and museums, corporate headquarters, and company registrations with no phone or website. A name that says what the business sells outranks a wrong category, so lounges filed under "cafe" or "barber" survive. 7,651 real shops remain public, 35,272 sit in the admin review queue.
+
+**Website sweep.** `jobs/linkCheck.js` checked all 4,977 websites on public listings. 3,616 work and keep their link; 1,361 are dead and the link is now hidden entirely, so a shop with a broken site looks the same as one that never had a site. Breakdown of the dead: 779 domains that no longer resolve (120cigarbar.com among them), 339 not found, 63 refused, 59 timing out, 49 parked on for-sale pages, 72 other errors.
+
+A follow-up pass matters here: the first run treated an HTTP 403 as dead, but Cloudflare answers any non-browser with 403, so 199 real shops (JR Cigar included) were wrongly marked. 401/403/407/429/451 are now a separate 'blocked' verdict that counts as working, and those links were restored.
+
 ## Shipped
 
 Committed as `284823f` and pushed to `master`, which triggers the Railway deploy of the "cigar maps" project.
