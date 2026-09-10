@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee, Reply, ChevronDown, ChevronUp, Flag, BadgeCheck, Mail } from 'lucide-react';
+import { Store, MapPin, Phone, Globe, Clock, Package, Heart, CheckCircle, Tag, Star, Users, Bell, BellOff, Package2, Navigation, X, Search, MessageSquare, Pin, Calendar, UserCheck, Coffee, Reply, ChevronDown, ChevronUp, Flag, BadgeCheck, Mail, AlertTriangle, DoorClosed } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -140,6 +140,51 @@ export function WebsiteAction({ site }) {
       <Globe className="w-5 h-5" />
       <span className="text-xs font-medium">Website</span>
     </a>
+  );
+}
+
+// A listing we believe has shut for good. Two independent things can say so:
+// operating_status, which comes straight from the source directory, and
+// storefront = 'closed', which is what visitor reports and the closure sweep
+// write. Either one is enough to pull the shop off the public map, so either
+// one has to explain itself on the page.
+export function closureInfo(store) {
+  if (!store) return null;
+  const bySource = store.operating_status === 'permanently_closed';
+  const byUs = store.storefront === 'closed';
+  if (!bySource && !byUs) return null;
+  const when = store.closed_at ? new Date(store.closed_at) : null;
+  return {
+    hidden: Number(store.visible) === 0,
+    reason: store.closed_reason || store.storefront_reason
+      || (bySource ? 'The map data this listing came from reports the shop as permanently closed.' : 'This listing was marked closed.'),
+    when: when && !Number.isNaN(when.getTime()) ? when : null,
+  };
+}
+
+// Shown to whoever can still open the page — staff, and the owner of a claimed
+// listing. Everyone else gets a 404 from the API once it is hidden, so this is
+// never the reason a shopper thinks a shop is gone.
+function ClosedBanner({ info }) {
+  return (
+    <div className="mb-4 rounded-xl p-4 flex items-start gap-3"
+      style={{ backgroundColor: '#2A1414', border: '1px solid #6B2A2A' }}>
+      <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#F87171' }} />
+      <div className="min-w-0">
+        <p className="text-sm font-semibold" style={{ color: '#FCA5A5' }}>
+          {info.hidden ? 'Marked closed — hidden from the public map' : 'Marked closed'}
+        </p>
+        <p className="text-xs mt-1" style={{ color: LABEL }}>
+          {info.reason}
+          {info.when && ` · flagged ${info.when.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+        </p>
+        <p className="text-xs mt-1" style={{ color: MUTED }}>
+          {info.hidden
+            ? 'Nobody finds this shop in search or on the map. Staff can put it back from the Closed queue in the admin panel.'
+            : 'It is still on the public map. Staff settle it from the Closed queue in the admin panel.'}
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -289,26 +334,86 @@ const REPORT_REASONS = [
   { value: 'other', label: 'Something else' },
 ];
 
-function ReportModal({ store, onClose, onDone }) {
+// "It's gone" is the report that matters most and the one a passer-by is most
+// likely to have first-hand knowledge of, so it gets its own panel above the
+// rest instead of being the first line of a radio list.
+const OTHER_REPORT_REASONS = REPORT_REASONS.filter(r => r.value !== 'closed');
+
+function ReportModal({ store, onClose, onDone, onClosed }) {
   const [reason, setReason] = useState('wrong_info');
   const [details, setDetails] = useState('');
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  // What the server did with a "permanently closed" report. Reports of anything
+  // else just close the dialog, as before.
+  const [thanks, setThanks] = useState(null);
+  const closing = reason === 'closed';
+
   async function submit(e) {
-    e.preventDefault(); setBusy(true);
-    try { await api.reportStore(store.id, { reason, details }); onDone(); } catch {} finally { setBusy(false); }
+    e.preventDefault(); setBusy(true); setError('');
+    try {
+      const r = await api.reportStore(store.id, { reason, details }) || {};
+      if (closing) {
+        setThanks(r);
+        if (r.removed) onClosed?.(r);
+      } else onDone();
+    } catch (err) {
+      setError(err.message || 'We could not send that just now. Try again in a moment.');
+    } finally { setBusy(false); }
   }
+
+  if (thanks) return (
+    <Modal title="Thanks — that helps" onClose={onClose}>
+      <div className="text-center py-2">
+        <CheckCircle className="w-8 h-8 mx-auto mb-2" style={{ color: '#4ADE80' }} />
+        <p className="text-sm font-medium mb-2" style={{ color: NAVY }}>
+          {thanks.removed ? `${store.name} has been taken off the map.` : 'Report received.'}
+        </p>
+        <p className="text-xs mb-4 leading-relaxed" style={{ color: MUTED }}>
+          {thanks.removed
+            ? 'Enough people have told us this shop has closed, so it no longer shows in search or on the map. Someone on our team will confirm it.'
+            : thanks.needs_review
+              ? 'This listing is looked after by its owner, so nothing changes automatically — someone on our team will check it.'
+              : 'A couple of reports from different people take a listing off the map. One more and this one goes. Until then it stays up, in case the shop was only shut for the day.'}
+        </p>
+        <button onClick={onClose} className="btn-primary">Done</button>
+      </div>
+    </Modal>
+  );
+
   return (
     <Modal title="Report a problem" onClose={onClose}>
       <form onSubmit={submit} className="flex flex-col gap-3">
+        <label className="rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-colors"
+          style={closing
+            ? { backgroundColor: '#2A1414', border: '1px solid #7F3030' }
+            : { backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
+          <input type="radio" name="reason" value="closed" checked={closing}
+            onChange={() => setReason('closed')} className="accent-amber-600 mt-0.5" />
+          <span className="min-w-0">
+            <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: closing ? '#FCA5A5' : NAVY }}>
+              <DoorClosed className="w-4 h-4 flex-shrink-0" style={{ color: closing ? '#F87171' : MUTED }} />
+              This shop has permanently closed
+            </span>
+            <span className="block text-xs mt-1" style={{ color: MUTED }}>
+              A couple of reports from different people take the listing off the map.
+            </span>
+          </span>
+        </label>
+
+        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: MUTED }}>Something else</p>
         <div className="flex flex-col gap-1.5">
-          {REPORT_REASONS.map(r => (
+          {OTHER_REPORT_REASONS.map(r => (
             <label key={r.value} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: LABEL }}>
               <input type="radio" name="reason" value={r.value} checked={reason === r.value} onChange={() => setReason(r.value)} className="accent-amber-600" />
               {r.label}
             </label>
           ))}
         </div>
-        <textarea value={details} onChange={e => setDetails(e.target.value)} className="input min-h-[70px]" placeholder="Details (optional)" />
+
+        <textarea value={details} onChange={e => setDetails(e.target.value)} className="input min-h-[70px]"
+          placeholder={closing ? 'What did you see? An empty unit, a sign on the door, another business at the address (optional)' : 'Details (optional)'} />
+        {error && <p className="text-xs" style={{ color: '#F87171' }}>{error}</p>}
         <button type="submit" disabled={busy} className="btn-primary">{busy ? 'Sending...' : 'Send report'}</button>
       </form>
     </Modal>
@@ -503,6 +608,7 @@ export default function StoreProfile() {
   const { store, inventory_count, deals, stats, recent_ratings, new_arrivals } = data;
   const hours = typeof store.hours === 'object' ? store.hours : {};
   const site = websiteInfo(store);
+  const closure = closureInfo(store);
 
   const now = new Date();
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -555,6 +661,8 @@ export default function StoreProfile() {
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
       <BackButton label="Stores" to="/stores" />
 
+      {closure && <ClosedBanner info={closure} />}
+
       {store.claimed === 0 && (
         <UnclaimedBanner store={store} myClaim={data.my_claim} menuStatus={menuStatus} site={site} onClaim={() => setClaimModal(true)} onReport={() => setReportModal(true)} />
       )}
@@ -576,7 +684,13 @@ export default function StoreProfile() {
       )}
       {reportModal && (
         <ReportModal store={store} onClose={() => setReportModal(false)}
-          onDone={() => { setReportModal(false); toast('Thanks, we will take a look.'); }} />
+          onDone={() => { setReportModal(false); toast('Thanks, we will take a look.'); }}
+          // Enough reports came in to pull the listing: show the closed banner
+          // straight away rather than making the reporter reload to find out.
+          onClosed={() => setData(d => d && ({
+            ...d,
+            store: { ...d.store, visible: 0, storefront: 'closed', closed_reason: 'Reported closed by visitors', closed_at: new Date().toISOString() },
+          }))} />
       )}
 
       {/* Store header card */}

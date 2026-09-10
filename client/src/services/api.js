@@ -183,6 +183,12 @@ export const api = {
   adminUpdateReport: (id, b) => request(`/admin/reports/${id}`, { method: 'PATCH', body: JSON.stringify(b) }),
   adminGetUsers: () => request('/admin/users'),
 
+  // Closed / likely-closed listings. The queue lists them; confirm takes the
+  // shop off the map for good, reopen puts it back and marks it decided.
+  adminGetClosures: (p = {}) => request(`/admin/closures?${new URLSearchParams(p)}`),
+  adminConfirmClosure: (id, b = {}) => request(`/admin/closures/${id}/confirm`, { method: 'POST', body: JSON.stringify(b) }),
+  adminReopenStore: (id, b = {}) => request(`/admin/closures/${id}/reopen`, { method: 'POST', body: JSON.stringify(b) }),
+
   // Cigar catalog management
   adminGetCigars: () => request('/admin/cigars'),
   adminCreateCigar: (b) => request('/admin/cigars', { method: 'POST', body: JSON.stringify(b) }),

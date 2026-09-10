@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, EyeOff, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check, MapPin, Flag, ExternalLink, BadgeCheck, Link2Off, RefreshCw, Globe } from 'lucide-react';
+import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, EyeOff, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check, MapPin, Flag, ExternalLink, BadgeCheck, Link2Off, RefreshCw, Globe, DoorClosed, RotateCcw, Phone } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -942,6 +942,197 @@ function LinksQueue({ onAction, onCounts }) {
   );
 }
 
+/**
+ * Closed queue: listings we believe have shut for good.
+ *
+ * Three separate signals land a shop here and none of them is trusted on its
+ * own — the source directory's operating_status, the closure sweep, and
+ * visitors reporting it. Two different people reporting a shop closed hides an
+ * unclaimed listing immediately; a claimed one never moves without a person.
+ * "Confirm closed" settles it; "Still open" puts the shop back on the map.
+ */
+
+// GET /admin/closures answers either a bare array or { items, counts, unreviewed }.
+const closureItems = (d) => (Array.isArray(d) ? d : (d?.items || []));
+
+// Only a number the server actually sent. Counting the rows of a one-row probe
+// would give the tab badge a badly wrong number.
+function closureUnreviewedFromServer(d) {
+  const n = d?.unreviewed ?? d?.total_unreviewed ?? d?.counts?.unreviewed;
+  return Number.isFinite(Number(n)) ? Number(n) : null;
+}
+
+const closureReviewed = (r) => !!r.reviewed || Number(r.staff_edited) === 1;
+
+function closureReason(r) {
+  return r.closed_reason || r.storefront_reason || r.reason
+    || (r.operating_status === 'permanently_closed' ? 'Source data reports it permanently closed' : 'Flagged closed');
+}
+
+function closureWhen(r) {
+  const raw = r.closed_at || r.flagged_at || r.closure_checked_at || r.storefront_checked_at || null;
+  if (!raw) return null;
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function ClosuresQueue({ onAction, onCount }) {
+  const [rows, setRows] = useState([]);
+  const [meta, setMeta] = useState(null);     // whole-queue tallies, when the endpoint sends them
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reason, setReason] = useState('');   // '' = every reason
+  const [busy, setBusy] = useState(null);
+
+  function load() {
+    setLoading(true); setError('');
+    api.adminGetClosures({ limit: 200 })
+      .then(d => {
+        const items = closureItems(d);
+        const waiting = closureUnreviewedFromServer(d) ?? items.filter(r => !closureReviewed(r)).length;
+        setRows(items);
+        setMeta({
+          total: Number(d?.counts?.total ?? d?.total) || null,
+          unreviewed: waiting,
+          still_visible: Number(d?.still_visible) || 0,
+        });
+        onCount?.(waiting);
+      })
+      .catch(e => {
+        setRows([]);
+        // An endpoint that is not mounted falls through to the SPA and answers
+        // HTML, which surfaces as a JSON parse error. Say what actually happened.
+        setError(/JSON|Unexpected token/i.test(e.message || '')
+          ? 'GET /admin/closures did not answer with data. The closure queue endpoint may not be deployed yet.'
+          : (e.message || 'Could not load the closure queue.'));
+      })
+      .finally(() => setLoading(false));
+  }
+  useEffect(load, []);
+
+  async function act(row, fn, msg) {
+    setBusy(row.id);
+    try {
+      await fn();
+      setRows(rows.filter(x => x.id !== row.id));
+      // The tally spans the whole queue, which can be far longer than this
+      // page, so count this decision down rather than recounting the page.
+      const decided = !closureReviewed(row) && !row.claimed;
+      const next = meta && {
+        ...meta,
+        total: meta.total ? Math.max(0, meta.total - 1) : meta.total,
+        unreviewed: meta.unreviewed === null ? null : Math.max(0, meta.unreviewed - (decided ? 1 : 0)),
+        still_visible: Math.max(0, meta.still_visible - (Number(row.visible) === 1 ? 1 : 0)),
+      };
+      setMeta(next);
+      if (next && next.unreviewed !== null) onCount?.(next.unreviewed);
+      onAction(msg);
+    } catch (e) { onAction(e.message); } finally { setBusy(null); }
+  }
+
+  // Counts by reason, tallied from what is on screen so the chips can never
+  // disagree with the rows underneath them.
+  const byReason = {};
+  for (const r of rows) { const k = closureReason(r); byReason[k] = (byReason[k] || 0) + 1; }
+  const reasons = Object.entries(byReason).sort((a, b) => b[1] - a[1]);
+  const shown = reason ? rows.filter(r => closureReason(r) === reason) : rows;
+
+  return (
+    <div>
+      <p className="text-xs text-stone-500 max-w-2xl mb-2">
+        Shops the directory, the closure sweep, or visitors say have shut down. Source data lags reality by months, so
+        nothing here is certain — check the phone number and the website before you settle one.
+        <strong className="text-stone-400"> Confirm closed</strong> keeps it off the map for good;
+        <strong className="text-stone-400"> Still open</strong> puts it back and stops anything re-flagging it.
+      </p>
+      {meta && (meta.total || meta.unreviewed !== null) && (
+        <p className="text-xs text-stone-600 mb-4">
+          {meta.total ? `${rows.length.toLocaleString()} of ${meta.total.toLocaleString()} flagged listings` : `${rows.length.toLocaleString()} flagged listings`}
+          {meta.unreviewed !== null && ` · ${meta.unreviewed.toLocaleString()} still waiting on a decision`}
+          {meta.still_visible > 0 && ` · ${meta.still_visible.toLocaleString()} still on the public map`}
+        </p>
+      )}
+
+      {/* Counts by reason — each one doubles as the filter */}
+      <div className="flex gap-2 mb-4 flex-wrap items-center">
+        <button onClick={() => setReason('')}
+          className={`text-xs px-3 py-1.5 rounded-full transition-all ${reason === '' ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>
+          All <span className="opacity-70">({rows.length})</span>
+        </button>
+        {reasons.map(([k, n]) => (
+          <button key={k} onClick={() => setReason(k)} title={k}
+            className={`text-xs px-3 py-1.5 rounded-full transition-all max-w-[280px] truncate ${reason === k ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>
+            {k} <span className="opacity-70">({n})</span>
+          </button>
+        ))}
+        <button onClick={load} disabled={loading}
+          className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-300 hover:text-amber-400 flex items-center gap-1.5 disabled:opacity-50 ml-auto">
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Reload
+        </button>
+      </div>
+
+      {error && (
+        <div className="card p-4 mb-4 border-red-900/40 bg-red-900/10">
+          <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
+
+      {loading ? <div className="card h-24 skeleton" /> : shown.length === 0 ? (
+        <p className="text-stone-500 text-sm text-center py-10">
+          {error ? 'Nothing to show.' : reason ? `Nothing left under "${reason}".` : 'No listings are flagged as closed.'}
+        </p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {shown.map(r => {
+            const when = closureWhen(r);
+            const reports = Number(r.closed_reports ?? r.report_count ?? 0);
+            return (
+              <div key={r.id} className="card p-3 flex items-center gap-3 flex-wrap">
+                <div className="flex-1 min-w-[240px]">
+                  <p className="font-medium text-stone-200 text-sm flex items-center gap-2 flex-wrap">
+                    {r.name}
+                    <a href={`/stores/${r.id}`} target="_blank" rel="noreferrer" className="text-stone-500 hover:text-amber-400" title="Open the listing">
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                    {r.claimed ? <span className="text-[10px] text-amber-400">claimed — owner managed</span> : null}
+                    {Number(r.visible) === 1 && <span className="text-[10px] text-emerald-500">still on the map</span>}
+                    {reports > 0 && <span className="text-[10px] bg-red-900/40 text-red-400 px-1.5 py-0.5 rounded-full">{reports} report{reports > 1 ? 's' : ''}</span>}
+                    {closureReviewed(r) && <span className="text-[10px] text-stone-500">reviewed</span>}
+                  </p>
+                  <p className="text-xs text-stone-500">{[r.city, r.state].filter(Boolean).join(', ') || 'location unknown'}</p>
+                  <p className="text-xs text-stone-500 flex items-center gap-3 flex-wrap mt-0.5">
+                    <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{r.phone || <span className="text-stone-600 italic">no phone</span>}</span>
+                    <span className="flex items-center gap-1">
+                      <Globe className="w-3 h-3" />{r.website || <span className="text-stone-600 italic">no website</span>}
+                      {r.website && r.website_status && r.website_status !== 'ok' && (
+                        <span className="text-stone-600">({LINK_STATUS_LABEL[r.website_status] || r.website_status})</span>
+                      )}
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-stone-600">
+                    <span className="text-red-400">{closureReason(r)}</span>
+                    {when ? ` · flagged ${when.toLocaleString()}` : ''}
+                  </p>
+                </div>
+                <button onClick={() => act(r, () => api.adminConfirmClosure(r.id), `${r.name} confirmed closed and kept off the map.`)}
+                  disabled={busy === r.id}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-red-800 text-red-400 hover:bg-red-900/20 disabled:opacity-50 flex items-center gap-1 whitespace-nowrap">
+                  <DoorClosed className="w-3.5 h-3.5" /> Confirm closed
+                </button>
+                <button onClick={() => act(r, () => api.adminReopenStore(r.id), `${r.name} is back on the map.`)}
+                  disabled={busy === r.id}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-emerald-700 text-emerald-400 hover:bg-emerald-900/20 disabled:opacity-50 flex items-center gap-1 whitespace-nowrap">
+                  <RotateCcw className="w-3.5 h-3.5" /> Still open
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminPanel() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -951,6 +1142,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [toast, setToast] = useState('');
   const [linkCounts, setLinkCounts] = useState(null);
+  const [closureCount, setClosureCount] = useState(null);
   useEffect(() => {
     if (!authLoading && (!user || !['admin','staff'].includes(user.account_type))) {
       navigate('/');
@@ -963,6 +1155,11 @@ export default function AdminPanel() {
     // Just the tallies for the tab badge — ask for one row, and only trust a
     // counts block the endpoint actually returned.
     api.adminGetDeadLinks({ limit: 1 }).then(d => setLinkCounts(deadLinkCounts(d))).catch(() => {});
+    // Same idea for the Closed badge, but only a tally the endpoint itself
+    // reported — one row of items says nothing about how many are waiting.
+    api.adminGetClosures({ limit: 1 })
+      .then(d => { const n = closureUnreviewedFromServer(d); if (n !== null) setClosureCount(n); })
+      .catch(() => {});
   }, [user]);
 
   useEffect(() => {
@@ -990,6 +1187,7 @@ export default function AdminPanel() {
     { key: 'listings', label: 'Listings' },
     { key: 'reports', label: 'Reports', badge: stats?.stats.open_reports },
     { key: 'links', label: 'Links', badge: brokenTotal(linkCounts) },
+    { key: 'closed', label: 'Closed', badge: closureCount },
     { key: 'catalog', label: 'Catalog queue' },
     { key: 'stores', label: 'Stores' },
     { key: 'users', label: 'Users' },
@@ -1049,6 +1247,7 @@ export default function AdminPanel() {
       {tab === 'listings' && <ListingsQueue onAction={showToast} />}
       {tab === 'reports' && <ReportsQueue onAction={showToast} />}
       {tab === 'links' && <LinksQueue onAction={showToast} onCounts={setLinkCounts} />}
+      {tab === 'closed' && <ClosuresQueue onAction={showToast} onCount={setClosureCount} />}
       {tab === 'catalog' && <CatalogQueue onAction={showToast} />}
       {tab === 'verifications' && <VerificationQueue onAction={showToast} />}
 

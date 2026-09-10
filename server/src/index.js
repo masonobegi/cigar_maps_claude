@@ -42,6 +42,7 @@ app.use('/api', require('./routes/import'));
 app.use('/api', require('./routes/community'));
 app.use('/api', require('./routes/menus'));
 app.use('/api', require('./routes/links'));
+app.use('/api', require('./routes/closures'));
 app.use('/api/billing', require('./routes/billing'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
@@ -105,6 +106,13 @@ async function start() {
     require('./jobs/linkCheck').runStartupLinkCheck();
   } catch (err) {
     console.error('[links] could not start the link checker:', err.message);
+  }
+
+  // Find shops that have shut down, so the map only shows places still trading.
+  try {
+    require('./jobs/closureCheck').runStartupClosureCheck();
+  } catch (err) {
+    console.error('[closures] could not start the closure checker:', err.message);
   }
 }
 

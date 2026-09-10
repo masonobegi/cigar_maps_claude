@@ -878,23 +878,83 @@ router.get('/:id/claim-status', requireAuth, asyncRoute(async (req, res) => {
   res.json({ claim: claim || null });
 }));
 
+// Two different people saying "this shop is gone" is enough to pull an
+// unclaimed listing off the public map. One is not: a single visitor can be
+// mistaken, or malicious. Anonymous reports cannot be told apart from one
+// another, so all of them together are worth at most one of those two votes.
+const CLOSED_VOTES_TO_HIDE = 2;
+const CLOSED_BY_REPORTS = 'Reported closed by visitors';
+
 router.post('/:id/report', optionalAuth, reportLimiter, asyncRoute(async (req, res) => {
   const { reason, details } = req.body || {};
   const allowed = ['closed', 'not_cigar_shop', 'wrong_location', 'wrong_info', 'duplicate', 'other'];
   if (!allowed.includes(reason)) return res.status(400).json({ error: 'Invalid reason' });
-  const store = await db.get('SELECT id, name FROM stores WHERE id = ?', [req.params.id]);
+  const store = await db.get('SELECT id, name, claimed, visible, staff_edited FROM stores WHERE id = ?', [req.params.id]);
   if (!store) return res.status(404).json({ error: 'Store not found' });
+
+  // A listing its owner has claimed, or one a human has already ruled on, is
+  // never hidden by visitor reports. Those reports stay open so staff decide.
+  const protectedListing = !!store.claimed || Number(store.staff_edited) === 1;
 
   // One open report per person (or per reason when anonymous) keeps the queue
   // readable and stops a single visitor inflating a store's report count.
   const dupe = req.user
     ? await db.get("SELECT id FROM store_reports WHERE store_id = ? AND user_id = ? AND status = 'open'", [store.id, req.user.id])
     : await db.get("SELECT id FROM store_reports WHERE store_id = ? AND user_id IS NULL AND reason = ? AND status = 'open' AND created_at > NOW() - INTERVAL '24 hours'", [store.id, reason]);
-  if (dupe) return res.json({ success: true, duplicate: true });
 
-  await db.run('INSERT INTO store_reports (store_id, user_id, reason, details) VALUES (?, ?, ?, ?)',
-    [store.id, req.user?.id || null, reason, (details || '').slice(0, 1000) || null]);
-  res.json({ success: true });
+  if (!dupe) {
+    await db.run('INSERT INTO store_reports (store_id, user_id, reason, details) VALUES (?, ?, ?, ?)',
+      [store.id, req.user?.id || null, reason, (details || '').slice(0, 1000) || null]);
+  }
+
+  if (reason !== 'closed') return res.json({ success: true, duplicate: !!dupe, reason });
+
+  // How many separate people are saying it. Signed-in reporters count once
+  // each; the whole anonymous pile counts once, because we cannot tell whether
+  // it is ten people or one person on ten connections.
+  const tally = await db.get(`
+    SELECT COUNT(DISTINCT user_id) AS people,
+           SUM(CASE WHEN user_id IS NULL THEN 1 ELSE 0 END) AS anonymous
+    FROM store_reports
+    WHERE store_id = ? AND reason = 'closed' AND status = 'open'
+  `, [store.id]);
+  const votes = Number(tally?.people || 0) + (Number(tally?.anonymous || 0) > 0 ? 1 : 0);
+
+  let removed = false;
+  if (votes >= CLOSED_VOTES_TO_HIDE && !protectedListing) {
+    // staff_edited is deliberately NOT set: visitors are not staff, and a
+    // person reviewing this in the Closed queue must still be able to overrule
+    // them without fighting a flag that says the matter is settled. For the
+    // same reason operating_status becomes 'likely_closed' and not
+    // 'permanently_closed' — that is the value staff stamp on it themselves
+    // when they confirm, and it is what puts the row in the Closed queue
+    // (jobs/closureCheck.js and routes/closures.js read this column) instead of
+    // letting a shop vanish with nobody ever looking at it.
+    const applied = await db.run(`
+      UPDATE stores
+      SET visible = 0, storefront = 'closed', operating_status = 'likely_closed',
+          closed_reason = ?, closed_at = NOW(), closure_checked_at = NOW()
+      WHERE id = ? AND claimed = 0 AND COALESCE(staff_edited, 0) <> 1
+    `, [CLOSED_BY_REPORTS, store.id]);
+    removed = (applied?.changes || 0) > 0;
+    // The reports have been acted on. What staff review now is the closure
+    // itself, in the Closed queue, not each report one at a time.
+    if (removed) {
+      await db.run("UPDATE store_reports SET status = 'resolved' WHERE store_id = ? AND reason = 'closed' AND status = 'open'", [store.id]);
+    }
+  }
+
+  res.json({
+    success: true,
+    duplicate: !!dupe,
+    reason,
+    closed_votes: votes,
+    votes_needed: Math.max(0, CLOSED_VOTES_TO_HIDE - votes),
+    votes_to_hide: CLOSED_VOTES_TO_HIDE,
+    removed,
+    // Claimed or already hand-decided: nothing moves until a person looks.
+    needs_review: !removed && protectedListing,
+  });
 }));
 
 function safeJson(v, fallback) {
