@@ -41,6 +41,7 @@ app.use('/api', require('./routes/images'));
 app.use('/api', require('./routes/import'));
 app.use('/api', require('./routes/community'));
 app.use('/api', require('./routes/menus'));
+app.use('/api', require('./routes/links'));
 app.use('/api/billing', require('./routes/billing'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
@@ -97,6 +98,13 @@ async function start() {
     require('./jobs/webMenu').runStartupMenuScan();
   } catch (err) {
     console.error('[menu] could not start the menu scanner:', err.message);
+  }
+
+  // Verify the websites on listings, so a dead domain is never shown as a link.
+  try {
+    require('./jobs/linkCheck').runStartupLinkCheck();
+  } catch (err) {
+    console.error('[links] could not start the link checker:', err.message);
   }
 }
 

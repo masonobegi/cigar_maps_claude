@@ -443,6 +443,17 @@ const MIGRATIONS = [
   { name: '069_cigar_images_url', sql: 'ALTER TABLE cigar_images ADD COLUMN IF NOT EXISTS image_url TEXT' },
   { name: '070_cigar_images_data_nullable', sql: 'ALTER TABLE cigar_images ALTER COLUMN image_data DROP NOT NULL' },
   { name: '071_reviews_photo_url', sql: 'ALTER TABLE reviews ADD COLUMN IF NOT EXISTS photo_url TEXT' },
+  // ── Website health: source data is full of dead domains ──
+  { name: '072_stores_website_status', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS website_status TEXT' },
+  { name: '073_stores_website_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS website_checked_at TIMESTAMP' },
+  { name: '074_stores_website_final_url', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS website_final_url TEXT' },
+  { name: '075_stores_website_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_website_check ON stores(website_checked_at) WHERE website IS NOT NULL' },
+  // ── Storefront check: the directory is full of companies, wholesalers and
+  //    online-only sellers registered at an address. Only walk-in shops belong.
+  { name: '076_stores_storefront', sql: "ALTER TABLE stores ADD COLUMN IF NOT EXISTS storefront TEXT" },
+  { name: '077_stores_storefront_reason', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS storefront_reason TEXT' },
+  { name: '078_stores_storefront_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS storefront_checked_at TIMESTAMP' },
+  { name: '079_stores_storefront_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_storefront ON stores(storefront, visible)' },
 ];
 
 async function runMigrations() {

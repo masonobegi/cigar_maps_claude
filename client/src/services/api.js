@@ -40,6 +40,8 @@ export const api = {
   adminGetCatalogPending: (p = {}) => request(`/admin/catalog-pending?${new URLSearchParams(p)}`),
   adminResolveCatalogPending: (id, b) => request(`/admin/catalog-pending/${id}/resolve`, { method: 'POST', body: JSON.stringify(b) }),
   adminRunMenuScan: (b = {}) => request('/admin/menu-scan', { method: 'POST', body: JSON.stringify(b) }),
+  adminRunLinkCheck: (b = {}) => request('/admin/link-check', { method: 'POST', body: JSON.stringify(b) }),
+  adminGetDeadLinks: (p = {}) => request(`/admin/dead-links?${new URLSearchParams(p)}`),
   updateProfile: (b) => request('/users/me/profile', { method: 'PUT', body: JSON.stringify(b) }),
 
   // Cigars

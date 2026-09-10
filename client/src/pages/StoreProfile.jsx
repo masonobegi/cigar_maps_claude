@@ -62,7 +62,86 @@ function freshness(ts) {
 
 const domainOf = (website) => String(website || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
 
-function UnclaimedBanner({ store, myClaim, menuStatus, onClaim, onReport }) {
+// Most of the directory came out of Overture/OpenStreetMap, where a large slice
+// of the website column has rotted: dead domains, expired hosting, squatters.
+// A link checker writes stores.website_status; anything other than 'ok' (or
+// NULL, meaning nobody has looked yet) must not be dressed up as a live link.
+const WEBSITE_WHY = {
+  dns_fail:  'That domain does not resolve any more.',
+  timeout:   'The site did not answer when we last checked it.',
+  refused:   'The server refused the connection when we last checked it.',
+  not_found: 'That address came back "not found" when we last checked it.',
+  error:     'The site returned an error when we last checked it.',
+  parked:    'That domain is parked — it lands on a placeholder page, not the shop.',
+  removed:   'That page has been taken down.',
+};
+
+const withScheme = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`);
+
+// Everything the page needs to decide how to render the shop's website, in one
+// place: the header line, the Website action, and the unclaimed banner all read
+// from this so they can never disagree with each other.
+export function websiteInfo(store) {
+  if (!store || !store.website) return null;
+  const status = store.website_status || null;
+  const ok = !status || status === 'ok';
+  const listed = domainOf(store.website);
+  const finalDomain = domainOf(store.website_final_url);
+  // A redirect that lands somewhere else means the shop has moved. Send people
+  // where it actually lives now rather than to the address on the old listing.
+  const moved = ok && !!store.website_final_url && !!finalDomain && finalDomain !== listed;
+  const when = freshness(store.website_checked_at);
+  return {
+    ok,
+    status,
+    moved,
+    listed,
+    href: ok ? withScheme(moved ? store.website_final_url : store.website) : null,
+    label: moved
+      ? String(store.website_final_url).replace(/^https?:\/\//i, '').replace(/\/$/, '')
+      : store.website,
+    note: ok ? null : (status === 'parked' ? 'this domain is parked' : 'link looks broken'),
+    why: ok ? null
+      : `${WEBSITE_WHY[status] || 'We could not reach this website when we last checked it.'}${when ? ` (${when})` : ''}`,
+  };
+}
+
+// The website line in the header. A checked-and-broken domain still gets shown
+// — someone can search the shop by name, or try it themselves — but it gets no
+// href, no hover, and a note saying why it is not clickable.
+export function WebsiteLine({ site }) {
+  // A link that does not work is worse than no link: it makes the whole
+  // listing look stale. Show nothing at all until it works again.
+  if (!site || !site.ok) return null;
+  return (
+    <a href={site.href} target="_blank" rel="noopener"
+      className="flex items-center gap-1 transition-colors"
+      style={{ color: MUTED }}
+      title={site.moved ? `Listed as ${site.listed}, which now redirects here` : undefined}
+      onMouseEnter={e => e.currentTarget.style.color = AMBER}
+      onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+      <Globe className="w-3.5 h-3.5" />{site.label}
+    </a>
+  );
+}
+
+// The Website tile in the quick-contact bar. Absent when there is no working
+// site, exactly as it is for a shop that never had one.
+export function WebsiteAction({ site }) {
+  if (!site || !site.ok) return null;
+  return (
+    <a href={site.href} target="_blank" rel="noopener"
+      className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+      style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}
+      onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
+      onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
+      <Globe className="w-5 h-5" />
+      <span className="text-xs font-medium">Website</span>
+    </a>
+  );
+}
+
+function UnclaimedBanner({ store, myClaim, menuStatus, site, onClaim, onReport }) {
   const autoMenu = menuStatus && typeof menuStatus.status === 'string' && menuStatus.status.startsWith('ok');
   return (
     <div className="mb-4 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3"
@@ -77,6 +156,11 @@ function UnclaimedBanner({ store, myClaim, menuStatus, onClaim, onReport }) {
         {autoMenu && (
           <p className="text-xs mt-1" style={{ color: MUTED }}>
             Menu read automatically from {domainOf(menuStatus.url || store.website)}. Prices and stock may lag the shop.
+          </p>
+        )}
+        {site && !site.ok && (
+          <p className="text-xs mt-1" style={{ color: AMBER }}>
+            The website on this listing ({site.listed}) no longer works — claim the shop and we will point people at the right one.
           </p>
         )}
       </div>
@@ -416,6 +500,7 @@ export default function StoreProfile() {
 
   const { store, inventory_count, deals, stats, recent_ratings, new_arrivals } = data;
   const hours = typeof store.hours === 'object' ? store.hours : {};
+  const site = websiteInfo(store);
 
   const now = new Date();
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -469,7 +554,7 @@ export default function StoreProfile() {
       <BackButton label="Stores" to="/stores" />
 
       {store.claimed === 0 && (
-        <UnclaimedBanner store={store} myClaim={data.my_claim} menuStatus={menuStatus} onClaim={() => setClaimModal(true)} onReport={() => setReportModal(true)} />
+        <UnclaimedBanner store={store} myClaim={data.my_claim} menuStatus={menuStatus} site={site} onClaim={() => setClaimModal(true)} onReport={() => setReportModal(true)} />
       )}
       {claimModal && (
         <ClaimModal store={store} user={user} onClose={() => setClaimModal(false)}
@@ -528,15 +613,7 @@ export default function StoreProfile() {
                   <Phone className="w-3.5 h-3.5" />{store.phone}
                 </a>
               )}
-              {store.website && (
-                <a href={`https://${store.website}`} target="_blank" rel="noopener"
-                  className="flex items-center gap-1 transition-colors"
-                  style={{ color: MUTED }}
-                  onMouseEnter={e => e.currentTarget.style.color = AMBER}
-                  onMouseLeave={e => e.currentTarget.style.color = MUTED}>
-                  <Globe className="w-3.5 h-3.5" />{store.website}
-                </a>
-              )}
+              <WebsiteLine site={site} />
             </div>
 
             {/* Tags */}
@@ -544,7 +621,7 @@ export default function StoreProfile() {
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {store.tags.map(t => (
                   <span key={t} className="text-xs font-medium px-2.5 py-0.5 rounded-full"
-                    style={{ backgroundColor: '#F0EDE8', color: LABEL, border: `1px solid ${BORDER}` }}>
+                    style={{ backgroundColor: BG_ALT, color: NAVY, border: `1px solid ${BORDER}` }}>
                     {t}
                   </span>
                 ))}
@@ -630,16 +707,7 @@ export default function StoreProfile() {
             <Navigation className="w-5 h-5" />
             <span className="text-xs font-medium">Directions</span>
           </a>
-          {store.website && (
-            <a href={`https://${store.website}`} target="_blank" rel="noopener"
-              className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
-              style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}
-              onMouseEnter={e => { e.currentTarget.style.color = AMBER; e.currentTarget.style.backgroundColor = BG_ALT; }}
-              onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.backgroundColor = ''; }}>
-              <Globe className="w-5 h-5" />
-              <span className="text-xs font-medium">Website</span>
-            </a>
-          )}
+          <WebsiteAction site={site} />
           <button onClick={() => { if (!user) navigate('/login'); else setRequestModal(true); }}
             className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
             style={{ color: MUTED, borderLeft: `1px solid ${BORDER}` }}

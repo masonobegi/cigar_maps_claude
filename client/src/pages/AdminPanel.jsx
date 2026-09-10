@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, EyeOff, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check, MapPin, Flag, ExternalLink, BadgeCheck } from 'lucide-react';
+import { CheckCircle, X, Users, Store, Star, Package, Flame, AlertCircle, Eye, EyeOff, ChevronDown, ChevronUp, Shield, Plus, Edit2, Trash2, Search, Check, MapPin, Flag, ExternalLink, BadgeCheck, Link2Off, RefreshCw, Globe } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -747,6 +747,201 @@ function CatalogQueue({ onAction }) {
   );
 }
 
+/**
+ * Links queue: listings whose website column no longer works. The public
+ * profile refuses to render these as links, so this is where staff see what the
+ * checker found and either re-run it or wipe a domain that is never coming back.
+ */
+const LINK_STATUS_LABEL = {
+  dns_fail:  'Domain does not resolve',
+  timeout:   'No answer (timed out)',
+  refused:   'Connection refused',
+  not_found: 'Not found (404)',
+  error:     'Server error',
+  parked:    'Parked / placeholder page',
+  removed:   'Cleared by staff',
+  ok:        'Working',
+};
+
+// The checker only ever writes the statuses above; 'removed' is what the clear
+// endpoint stamps on a listing whose website someone already threw away. Those
+// need no further decision, so they stay out of the badge and the default view
+// and get their own chip.
+const BROKEN_STATUSES = ['dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked'];
+const CLEARED_STATUS = 'removed';
+
+// GET /admin/dead-links answers { items, counts, total_bad, unchecked }, where
+// counts is keyed by website_status and spans the whole table, not just this page.
+const deadLinkCounts = (d) => (d?.counts && typeof d.counts === 'object' ? d.counts : null);
+
+const brokenTotal = (counts) => BROKEN_STATUSES.reduce((n, k) => n + (Number(counts?.[k]) || 0), 0);
+
+// api.js is owned elsewhere and has no helper for the clear endpoint, so post it
+// exactly the way request() in that file does.
+async function adminPost(path, body) {
+  const token = localStorage.getItem('cigarbuddy_token');
+  const res = await fetch(`/api${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: JSON.stringify(body || {}),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+function LinksQueue({ onAction, onCounts }) {
+  const [rows, setRows] = useState([]);
+  const [counts, setCounts] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');   // '' = every broken status
+  const [q, setQ] = useState('');
+  const [busy, setBusy] = useState(null);
+  const [checking, setChecking] = useState(false);
+  const [unchecked, setUnchecked] = useState(null);
+
+  function load() {
+    setLoading(true);
+    const p = { limit: 200 };
+    if (status) p.status = status;
+    if (q.trim()) p.q = q.trim();
+    api.adminGetDeadLinks(p)
+      .then(d => {
+        const c = deadLinkCounts(d) || {};
+        setRows(d?.items || []);
+        setCounts(c);
+        setUnchecked(Number(d?.unchecked) || 0);
+        onCounts?.(c);
+      })
+      .catch(e => { setRows([]); onAction(e.message); })
+      .finally(() => setLoading(false));
+  }
+  useEffect(load, [status]);
+
+  async function clearWebsite(row) {
+    setBusy(row.id);
+    try {
+      await adminPost(`/admin/dead-links/${row.id}/clear`);
+      setRows(r => r.filter(x => x.id !== row.id));
+      setCounts(c => {
+        const k = row.website_status || 'unknown';
+        const next = {
+          ...c,
+          [k]: Math.max(0, (Number(c[k]) || 0) - 1),
+          [CLEARED_STATUS]: (Number(c[CLEARED_STATUS]) || 0) + 1,
+        };
+        onCounts?.(next);
+        return next;
+      });
+      onAction(`Website removed from ${row.name}.`);
+    } catch (e) { onAction(e.message); } finally { setBusy(null); }
+  }
+
+  async function runCheck() {
+    setChecking(true);
+    try {
+      await api.adminRunLinkCheck({ limit: 300 });
+      onAction('Link check started on 300 listings — reload this tab in a few minutes.');
+    } catch (e) { onAction(e.message); } finally { setChecking(false); }
+  }
+
+  // The endpoint may or may not honour ?q, so narrow locally as well. The
+  // unfiltered call also returns listings staff already cleared — keep those out
+  // of the working list unless their own chip is selected.
+  const needle = q.trim().toLowerCase();
+  const shown = rows
+    .filter(r => status ? true : r.website_status !== CLEARED_STATUS)
+    .filter(r => !needle || [r.name, r.city, r.state, r.website].some(v => String(v || '').toLowerCase().includes(needle)));
+
+  const present = BROKEN_STATUSES.filter(s => (Number(counts[s]) || 0) > 0);
+  const total = brokenTotal(counts);
+  const clearedCount = Number(counts[CLEARED_STATUS]) || 0;
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-3 flex-wrap mb-4">
+        <p className="text-xs text-stone-500 max-w-xl">
+          Website addresses imported from Overture and OpenStreetMap that we could not reach. Store profiles show these
+          as plain text instead of a link, so a visitor never clicks into a dead domain. Clearing one drops the address
+          from the listing for good.
+        </p>
+        <div className="flex flex-col items-end gap-1">
+          <button onClick={runCheck} disabled={checking}
+            className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-300 hover:text-amber-400 flex items-center gap-1.5 disabled:opacity-50 whitespace-nowrap">
+            <RefreshCw className={`w-3.5 h-3.5 ${checking ? 'animate-spin' : ''}`} /> {checking ? 'Starting...' : 'Check 300 listings'}
+          </button>
+          {unchecked > 0 && <span className="text-[11px] text-stone-600">{unchecked.toLocaleString()} never checked</span>}
+        </div>
+      </div>
+
+      {/* Counts by status — each one doubles as the filter */}
+      <div className="flex gap-2 mb-4 flex-wrap items-center">
+        <button onClick={() => setStatus('')}
+          className={`text-xs px-3 py-1.5 rounded-full transition-all ${status === '' ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>
+          All broken <span className="opacity-70">({total})</span>
+        </button>
+        {present.map(s => (
+          <button key={s} onClick={() => setStatus(s)}
+            className={`text-xs px-3 py-1.5 rounded-full transition-all ${status === s ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>
+            {LINK_STATUS_LABEL[s] || s} <span className="opacity-70">({counts[s]})</span>
+          </button>
+        ))}
+        {clearedCount > 0 && (
+          <button onClick={() => setStatus(CLEARED_STATUS)}
+            className={`text-xs px-3 py-1.5 rounded-full transition-all ${status === CLEARED_STATUS ? 'bg-stone-600 text-white' : 'bg-stone-900 text-stone-500 hover:bg-stone-800'}`}>
+            {LINK_STATUS_LABEL[CLEARED_STATUS]} <span className="opacity-70">({clearedCount})</span>
+          </button>
+        )}
+        <form onSubmit={e => { e.preventDefault(); load(); }} className="flex gap-2 ml-auto">
+          <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name, city, domain" className="input py-1.5 text-xs w-52" />
+          <button type="submit" className="btn-secondary text-xs px-3 py-1.5"><Search className="w-3.5 h-3.5" /></button>
+        </form>
+      </div>
+
+      {loading ? <div className="card h-24 skeleton" /> : shown.length === 0 ? (
+        <p className="text-stone-500 text-sm text-center py-10">
+          {needle ? `Nothing matches "${q}".` : 'No broken links here. Run a check to look at more listings.'}
+        </p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {shown.map(r => (
+            <div key={r.id} className="card p-3 flex items-center gap-3 flex-wrap">
+              <div className="flex-1 min-w-[240px]">
+                <p className="font-medium text-stone-200 text-sm flex items-center gap-2">
+                  {r.name}
+                  <a href={`/stores/${r.id}`} target="_blank" rel="noreferrer" className="text-stone-500 hover:text-amber-400" title="Open the listing">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                  {r.claimed ? <span className="text-[10px] text-amber-400">claimed</span> : null}
+                </p>
+                <p className="text-xs text-stone-500 flex items-center gap-1.5 flex-wrap">
+                  <span>{[r.city, r.state].filter(Boolean).join(', ') || 'location unknown'}</span>
+                  <span className="text-stone-700">·</span>
+                  <span className="text-stone-400 flex items-center gap-1">
+                    <Globe className="w-3 h-3" />{r.website || <span className="text-stone-600 italic">no website on the listing</span>}
+                  </span>
+                </p>
+                <p className="text-[11px] text-stone-600">
+                  <span className="text-red-400">{LINK_STATUS_LABEL[r.website_status] || r.website_status || 'unchecked'}</span>
+                  {r.website_checked_at ? ` · checked ${new Date(r.website_checked_at).toLocaleString()}` : ' · never checked'}
+                  {r.website_final_url ? ` · landed on ${r.website_final_url}` : ''}
+                </p>
+              </div>
+              {r.website && (
+                <button onClick={() => clearWebsite(r)} disabled={busy === r.id}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-stone-700 text-stone-400 hover:border-red-800 hover:text-red-400 disabled:opacity-50 flex items-center gap-1 whitespace-nowrap"
+                  title="Remove this website from the listing">
+                  <Link2Off className="w-3.5 h-3.5" /> Clear this website
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminPanel() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -755,6 +950,7 @@ export default function AdminPanel() {
   const [stores, setStores] = useState([]);
   const [users, setUsers] = useState([]);
   const [toast, setToast] = useState('');
+  const [linkCounts, setLinkCounts] = useState(null);
   useEffect(() => {
     if (!authLoading && (!user || !['admin','staff'].includes(user.account_type))) {
       navigate('/');
@@ -764,6 +960,9 @@ export default function AdminPanel() {
   useEffect(() => {
     if (!user || !['admin','staff'].includes(user.account_type)) return;
     api.adminGetStats().then(setStats);
+    // Just the tallies for the tab badge — ask for one row, and only trust a
+    // counts block the endpoint actually returned.
+    api.adminGetDeadLinks({ limit: 1 }).then(d => setLinkCounts(deadLinkCounts(d))).catch(() => {});
   }, [user]);
 
   useEffect(() => {
@@ -790,6 +989,7 @@ export default function AdminPanel() {
     { key: 'verifications', label: 'Verifications', badge: stats?.stats.pending_verifications },
     { key: 'listings', label: 'Listings' },
     { key: 'reports', label: 'Reports', badge: stats?.stats.open_reports },
+    { key: 'links', label: 'Links', badge: brokenTotal(linkCounts) },
     { key: 'catalog', label: 'Catalog queue' },
     { key: 'stores', label: 'Stores' },
     { key: 'users', label: 'Users' },
@@ -848,6 +1048,7 @@ export default function AdminPanel() {
       {tab === 'claims' && <ClaimsQueue onAction={showToast} />}
       {tab === 'listings' && <ListingsQueue onAction={showToast} />}
       {tab === 'reports' && <ReportsQueue onAction={showToast} />}
+      {tab === 'links' && <LinksQueue onAction={showToast} onCounts={setLinkCounts} />}
       {tab === 'catalog' && <CatalogQueue onAction={showToast} />}
       {tab === 'verifications' && <VerificationQueue onAction={showToast} />}
 

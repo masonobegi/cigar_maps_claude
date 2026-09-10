@@ -112,6 +112,14 @@ async function seed() {
   );
 
   // ── Phase 2: demo catalog ─────────────────────────────────────────────────
+  // Never in production. The real catalog and the national store directory are
+  // seeded separately, and placeholder shops next to real ones look like a bug
+  // to anyone browsing the map.
+  if (process.env.DATABASE_URL || process.env.DISABLE_DEMO_SEED === '1') {
+    console.log('[seed] Production database — skipping demo shops and placeholder cigars.');
+    return;
+  }
+
   const { rows: [{ count }] } = await db.pool.query(
     'SELECT COUNT(*)::int AS count FROM cigars'
   );

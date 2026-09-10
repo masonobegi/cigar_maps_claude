@@ -10,6 +10,11 @@ const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.ra
 
 // Columns that exist for operations, not for the public: sheet URLs are
 // effectively capability links, and the menu/import bookkeeping is noise.
+//
+// website_status / website_checked_at / website_final_url are deliberately NOT
+// here. The profile needs them to decide whether the listed domain is still a
+// working link, and the answer is not a secret — a link we could not reach must
+// not be rendered as a link.
 const PRIVATE_STORE_FIELDS = ['sheet_url', 'sheet_last_synced', 'menu_url', 'menu_platform', 'menu_status',
   'menu_last_synced', 'menu_checked_at', 'menu_opt_out', 'source_id', 'osm_id', 'staff_edited',
   'stripe_customer_id', 'stripe_subscription_id', 'plan_status', 'plan_renews_at'];
