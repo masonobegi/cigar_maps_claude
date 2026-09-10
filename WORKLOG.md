@@ -127,6 +127,25 @@ Worth trying tomorrow, cheapest first:
 3. **A "permanently closed" reason on the existing report button**, so visitors do the work. The report queue already exists; it just needs closure as a first-class reason that hides the listing after a couple of independent reports.
 4. **Re-import freshness.** Overture publishes monthly; a listing that disappears from two consecutive releases has probably closed.
 
+## Store pages, catalog and chains (2026-09-10, afternoon)
+
+Mason's report: Anthony's Cigar Emporium showed 1,402 "SKUs" as a wall of near-identical "Fuente Fuente $X" chips, OpusX 161 times from $6 to $3,500, while its own site lists dozens of brands the page didn't show. "Near Camas" sat above a nationwide list. The directory was one long column.
+
+**The store page now reads brand → line → sizes, with one price range per line.** A shop's feed lists a single, a five-pack and a box as three products, so a line gets a range ("$5–$300") instead of a chip per variant. Brand filters; search reaches the whole shelf, not the first 200 rows; tabs appear only where there is something behind them.
+
+**The catalog learns from shop feeds.** 169 curated lines became ~6,600 live lines: every shop's product titles, with packaging and size stripped, grouped by line. Measured on Anthony's 5,177 products: 46% placed before, ~98% after, 47 brands on the page instead of 30, OpusX down to its 25 real listings. Rules Mason set, all enforced by tests (`productParser.js` self-test, the catalog tests):
+- sublines stay separate (Camacho Corojo / Connecticut / Broadleaf; Rocky Patel Vintage 1990 / 1992 / 2003);
+- sizes fold under their line, including house size names (Curivari Gloria de Leon Dominante/Fuerza/… are one line in six sizes);
+- a Shopify "vendor" field that is really the store's own name ("handrolledcigars", "My Store") is not a brand.
+
+Old shapes are **retired, never deleted** (`cigars.source = 'retired'`): out of matching, browsing and counts, still joined by the stock that points at them, so no shop page empties while menus are re-read. `MATCHER_VERSION` (now 4) makes the menu scanner re-read every shop matched by an older version.
+
+**Matcher bugs found on the way:** a brand word earned credit as a name word (every Arturo Fuente product scored 2/3 against OpusX); "Serie R No. 8 … 5-Pack" satisfied the number check for "No. 5"; a size word in a title ("Corona") counted as evidence for any line carrying it.
+
+**Directory:** a grid, not a column. A remembered location is only applied if it still has coordinates, and never automatically. 34 same-address duplicates hidden (chains with several branches in one city kept). Anthony's has 3 Tucson shops and 1 in Phoenix, per its own structured data. A fifth listing on N Oracle Rd is not one of them and is hidden.
+
+**Chain check** (`jobs/chainCheck.js`): where listings share a website, compare them with the locations the chain publishes. The first run flagged 59 "closed branches". A second look found 47 were in towns the chain's site still names: real stores whose addresses the scraper couldn't parse, including 14 Sweet Fire Tobacco stores. Applied only the 7 with corroborating evidence (town and phone absent from the chain's site, or structured data), and cleared 2 wrong links rather than hide shops of uncertain identity. Apply only a reviewed decisions file: `--confirm --from`.
+
 ## Still needs Mason
 
 **Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used.
@@ -138,6 +157,5 @@ Worth trying tomorrow, cheapest first:
 4. `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_FEATURED`, `STRIPE_PRICE_PARTNER` — until these exist the pricing page reports billing as switched off, which is the correct state for now.
 
 **Other:**
-- Delete the placeholder "Brand 1..5" cigars and "Store 1..5" demo stores from production in the admin panel once real shops have claimed listings.
 - Buy cigarbuddy.com, check the trademark, and point the Railway domain at it.
 - Spot-check the launch metro in the admin Listings queue and unhide anything the classifier scored too low.
