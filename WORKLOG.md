@@ -92,6 +92,16 @@ A follow-up pass matters here: the first run treated an HTTP 403 as dead, but Cl
 
 Committed as `284823f` and pushed to `master`, which triggers the Railway deploy of the "cigar maps" project.
 
+## Next up: closed shops
+
+Broadway Cigar Company in Camas WA (store 10022) is shut down but was still listed. Hidden by hand and marked `storefront='closed'`. The wider problem is that nothing in the pipeline knows a shop has closed: the source data lags by months, and roughly 1,361 listings already have a dead website, which is itself a strong closure signal.
+
+Worth trying tomorrow, cheapest first:
+1. **Dead website plus no phone answer.** Cross the 1,361 dead-link listings against the ones with no phone. That intersection is very likely closed and is free to compute.
+2. **Google Places on demand.** Their `business_status` field returns CLOSED_PERMANENTLY / CLOSED_TEMPORARILY and is authoritative. The terms allow storing the place id indefinitely but other fields only ~30 days, so query it lazily when a listing is viewed and cache only the status. This is the reliable answer, and the $200/month free credit covers roughly 10,000 lookups.
+3. **A "permanently closed" reason on the existing report button**, so visitors do the work. The report queue already exists; it just needs closure as a first-class reason that hides the listing after a couple of independent reports.
+4. **Re-import freshness.** Overture publishes monthly; a listing that disappears from two consecutive releases has probably closed.
+
 ## Still needs Mason
 
 **Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used.
