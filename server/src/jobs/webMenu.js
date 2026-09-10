@@ -263,7 +263,9 @@ function isCigarProduct(p) {
 
 /** Build the matching index from the whole catalog plus curated aliases. */
 async function loadIndex() {
-  const cigars = await db.all('SELECT id, brand, name FROM cigars', []);
+  // A retired line was replaced by a better-shaped one; matching to it again
+  // would undo the replacement.
+  const cigars = await db.all("SELECT id, brand, name FROM cigars WHERE source IS DISTINCT FROM 'retired'", []);
   const vitolas = await db.all('SELECT id, cigar_id, name, length, ring_gauge FROM vitolas', []);
   const linked = await db.all(
     "SELECT normalized, suggested_cigar_id AS cigar_id FROM catalog_pending WHERE status = 'linked' AND suggested_cigar_id IS NOT NULL", []);

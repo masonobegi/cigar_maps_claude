@@ -307,8 +307,10 @@ function matchCigar(rawName, index) {
  *  2 — a line's name no longer earns credit for repeating its own brand
  *  3 — titles are read with packaging and counts removed, and a repeated
  *      word in a line's name counts once
+ *  4 — the number of a "No. 5" or an "of 4" is never read as a pack count,
+ *      and retired lines leave the index
  */
-const MATCHER_VERSION = 3;
+const MATCHER_VERSION = 4;
 
 module.exports = { normalizeName, tokenize, parseSize, buildIndex, matchCigar, NOISE, SHAPE_WORDS, SIZE_NOUNS, MATCHER_VERSION };
 

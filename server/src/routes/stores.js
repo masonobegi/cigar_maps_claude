@@ -180,7 +180,7 @@ router.get('/stats', asyncRoute(async (req, res) => {
       (SELECT COUNT(*) FROM stores WHERE visible = 1)::int AS retailers,
       (SELECT COUNT(DISTINCT (city, state)) FROM stores WHERE visible = 1 AND city IS NOT NULL AND city <> '')::int AS cities,
       (SELECT COUNT(DISTINCT state) FROM stores WHERE visible = 1 AND state IS NOT NULL)::int AS states,
-      (SELECT COUNT(*) FROM cigars)::int AS cigars,
+      (SELECT COUNT(*) FROM cigars WHERE source IS DISTINCT FROM 'retired')::int AS cigars,
       (SELECT COUNT(*) FROM stores WHERE visible = 1 AND claimed = 1)::int AS claimed
   `);
   res.set('Cache-Control', 'public, max-age=300');

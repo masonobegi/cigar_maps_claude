@@ -76,7 +76,7 @@ async function syncSheet(storeId, sheetUrl) {
 
     // Match cigar
     const { rows: cigarRows } = await db.pool.query(
-      `SELECT id FROM cigars WHERE lower(regexp_replace(trim(brand), '\\s+', ' ', 'g')) = $1 AND lower(regexp_replace(trim(name), '\\s+', ' ', 'g')) = $2`,
+      `SELECT id FROM cigars WHERE source IS DISTINCT FROM 'retired' AND lower(regexp_replace(trim(brand), '\\s+', ' ', 'g')) = $1 AND lower(regexp_replace(trim(name), '\\s+', ' ', 'g')) = $2`,
       [normBrand, normName]
     );
     if (!cigarRows.length) {

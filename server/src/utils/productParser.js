@@ -46,11 +46,16 @@ const PACKAGING = [
   /\btop\s+\d+\b/g,
   /\b(?:rated\s+)?\d{2}\s*(?:points?|pts|rating)\b/g,
   /\brated\s+\d{2}\b/g,
-  // "6 Packs of 6", "5 tins of 10": a count of containers of a count.
-  /\b\d+\s+(?:packs?|tins?|boxes|bundles?|sleeves?)\s+of\s+\d+\b/g,
+  // "6 Packs of 6", "5 tins of 10": a count of containers of a count. The
+  // leading number must not already belong to something: in "No. 5 Pack of 5
+  // Pack of 5" (Shopify appends the variant to the title) the 5 is the size's,
+  // and in "Pack of 4 Pack of 4" it is the first pack's.
+  /(?<!\b(?:no|of|#)\.?\s{0,2})\b\d+\s+(?:packs?|tins?|boxes|bundles?|sleeves?)\s+of\s+\d+\b/g,
   // "10 count", "5-pack": a number that owns the word after it. Before the
   // container rule, or "Tin 10 count" loses "Tin 10" and strands "count".
-  /\b\d+\s*-?\s*(?:count|ct|packs?|pks?|cigars?|units?|tins?)\b/g,
+  // Never the number of a "No. 2", which names a size, nor the number of an
+  // "of 4", which belongs to the container before it.
+  /(?<!\b(?:no|of|#)\.?\s{0,2})\b\d+\s*-?\s*(?:count|ct|packs?|pks?|cigars?|units?|tins?)\b/g,
   // A container and its count, with or without "of": "Box of 20", "Box 23".
   /\b(?:box(?:es)?|bundles?|tins?|packs?|cases?|sleeves?|cabinets?|jars?)\s+(?:of\s+)?\d+\b/g,
   /\b(?:available\s+for\s+)?special\s+order\b/g,
@@ -372,6 +377,15 @@ if (require.main === module) {
   const sleeve = p('Cohiba Blue Pequeno 6ct Tin Sleeve of 5', 'Cohiba');
   ok(sleeve.line === 'Blue' && sleeve.size === 'Pequeno', 'tins and sleeves are packaging', sleeve);
   ok(p('Oliva Serie V 94 Points Robusto', 'Oliva').line === 'Serie V', 'a rating is not the name');
+  // Shopify appends the variant to the title, so packaging arrives twice.
+  const gc = p('Davidoff Grand Cru Grand Cru No. 5 Pack of 5 Pack of 5', 'Davidoff');
+  ok(/No\.? 5$/.test(gc.line) && !/pack/i.test(gc.line), 'the 5 of "No. 5" is never taken as a pack count', gc);
+  const st = p('Davidoff Aniversario Special T Pack of 4 Pack of 4', 'Davidoff');
+  ok(st.line === 'Aniversario Special T', '"Pack of 4 Pack of 4" leaves no stray "of"', st);
+  const mb = p('Davidoff Millennium Blend Petit Corona Pack of 5 Pack of 5', 'Davidoff');
+  ok(mb.line === 'Millennium Blend' && mb.size === 'Petit Corona', 'a doubled pack still leaves the size readable', mb);
+  const tin = p('Davidoff Signature No. 2 Tin of 5', 'Davidoff');
+  ok(tin.line.includes('No. 2') || tin.size === 'No. 2', '"No. 2 Tin" keeps its 2', tin);
   const et = p('Romeo y Julieta 1875 Rothschild en Tubo Box of 10', 'Romeo y Julieta');
   ok(et.line === '1875' && et.size === 'Rothschild', '"en Tubo" comes off whole, leaving no stray "en"', et);
   const dt = p('Don Pepin Garcia Blue Demi-Tasse Petite Cigars 6 Packs of 6', 'Don Pepin Garcia Cigars');

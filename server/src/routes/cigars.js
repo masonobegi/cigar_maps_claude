@@ -17,7 +17,8 @@ router.get('/', asyncRoute(async (req, res) => {
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 24));
   const offset = (page - 1) * limit;
 
-  let where = ['1=1'];
+  // Retired lines stay reachable by id for old links, but are not browsed.
+  let where = ["c.source IS DISTINCT FROM 'retired'"];
   const params = [];
 
   if (q) {
@@ -103,7 +104,7 @@ router.get('/', asyncRoute(async (req, res) => {
 }));
 
 router.get('/brands', asyncRoute(async (req, res) => {
-  const brands = await db.all('SELECT brand, COUNT(*) as cigar_count FROM cigars GROUP BY brand ORDER BY brand', []);
+  const brands = await db.all("SELECT brand, COUNT(*) as cigar_count FROM cigars WHERE source IS DISTINCT FROM 'retired' GROUP BY brand ORDER BY brand", []);
   res.json(brands);
 }));
 
@@ -131,9 +132,9 @@ router.get('/filters', asyncRoute(async (req, res) => {
     GROUP BY strength
     ORDER BY CASE strength WHEN 'mild' THEN 1 WHEN 'mild-medium' THEN 2 WHEN 'medium' THEN 3 WHEN 'medium-full' THEN 4 WHEN 'full' THEN 5 END
   `, [])).map(r => r.strength);
-  const countries = (await db.all('SELECT DISTINCT country FROM cigars WHERE country IS NOT NULL ORDER BY country', [])).map(r => r.country);
-  const wrappers = (await db.all('SELECT DISTINCT wrapper FROM cigars WHERE wrapper IS NOT NULL ORDER BY wrapper', [])).map(r => r.wrapper);
-  const brands = (await db.all('SELECT brand, COUNT(*) as n FROM cigars GROUP BY brand ORDER BY n DESC, brand', [])).map(r => r.brand);
+  const countries = (await db.all("SELECT DISTINCT country FROM cigars WHERE country IS NOT NULL AND source IS DISTINCT FROM 'retired' ORDER BY country", [])).map(r => r.country);
+  const wrappers = (await db.all("SELECT DISTINCT wrapper FROM cigars WHERE wrapper IS NOT NULL AND source IS DISTINCT FROM 'retired' ORDER BY wrapper", [])).map(r => r.wrapper);
+  const brands = (await db.all("SELECT brand, COUNT(*) as n FROM cigars WHERE source IS DISTINCT FROM 'retired' GROUP BY brand ORDER BY n DESC, brand", [])).map(r => r.brand);
   res.json({ strengths, countries, wrappers, brands });
 }));
 

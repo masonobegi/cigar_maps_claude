@@ -63,7 +63,7 @@ router.post('/stores/:id/import/preview', requireAuth, upload.single('file'), as
   }
 
   // Load all cigars for matching
-  const cigars = await db.all('SELECT c.id, c.brand, c.name, v.id as vitola_id, v.name as vitola_name FROM cigars c LEFT JOIN vitolas v ON v.cigar_id = c.id', []);
+  const cigars = await db.all("SELECT c.id, c.brand, c.name, v.id as vitola_id, v.name as vitola_name FROM cigars c LEFT JOIN vitolas v ON v.cigar_id = c.id WHERE c.source IS DISTINCT FROM 'retired'", []);
 
   const preview = [];
   for (const row of rows) {
@@ -178,7 +178,7 @@ router.post('/users/me/import-smoke-log/preview', requireAuth, upload.single('fi
     else if (/pairing|drink|beverage|with/.test(nk)) colMap.pairing = k;
   }
 
-  const cigars = await db.all('SELECT id, brand, name FROM cigars', []);
+  const cigars = await db.all("SELECT id, brand, name FROM cigars WHERE source IS DISTINCT FROM 'retired'", []);
 
   const preview = [];
   for (const row of rows) {

@@ -16,7 +16,7 @@ router.get('/stats', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
       (SELECT COUNT(*) FROM stores WHERE verified = 1) as verified_stores,
       (SELECT COUNT(*) FROM stores WHERE verified = 0) as unverified_stores,
       (SELECT COUNT(*) FROM reviews) as total_reviews,
-      (SELECT COUNT(*) FROM cigars) as total_cigars,
+      (SELECT COUNT(*) FROM cigars WHERE source IS DISTINCT FROM 'retired') as total_cigars,
       (SELECT COUNT(*) FROM inventory WHERE in_stock = 1) as total_inventory,
       (SELECT COUNT(*) FROM smoke_list WHERE status = 'pending') as smoke_list_pending,
       (SELECT COUNT(*) FROM verification_requests WHERE status = 'pending') as pending_verifications,

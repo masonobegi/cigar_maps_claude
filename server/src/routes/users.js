@@ -104,6 +104,7 @@ router.get('/me/recommendations', requireAuth, asyncRoute(async (req, res) => {
       FROM cigars c
       LEFT JOIN reviews r2 ON r2.cigar_id = c.id
       LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+      WHERE c.source IS DISTINCT FROM 'retired'
       GROUP BY c.id HAVING COUNT(DISTINCT r2.id) >= 2
       ORDER BY avg_rating DESC, review_count DESC LIMIT 8
     `, []);
@@ -137,6 +138,7 @@ router.get('/me/recommendations', requireAuth, asyncRoute(async (req, res) => {
     LEFT JOIN reviews r2 ON r2.cigar_id = c.id
     LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
     WHERE c.id NOT IN (SELECT cigar_id FROM reviews WHERE user_id = ?)
+      AND c.source IS DISTINCT FROM 'retired'
     GROUP BY c.id HAVING COUNT(DISTINCT r2.id) >= 1
     ORDER BY avg_rating DESC LIMIT 80
   `, [req.user.id]);

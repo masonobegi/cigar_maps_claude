@@ -49,13 +49,17 @@ const GENERIC_BRAND_WORDS = /\b(?:premium|handmade|hand made|fine|cigars?|cigar 
 // and a line cut for length sends its stock to the wrong parent.
 const MAX_LINE_WORDS_SINGLE_SHOP = 8;
 
+// Cigars whose real name doubles a word. Everything else doubled is a shop
+// typing the name twice, or Shopify appending a variant that repeats it.
+const REAL_DOUBLES = new Set(['kuba', 'fuente']);
+
 /**
  * "Moontrance Moontrance" and "Nica Rustica Nica Rustica" are a shop typing
- * the name twice. "Fuente Fuente OpusX" is the name: a doubled word that is the
- * brand's own is deliberate, and is left alone.
+ * the name twice. "Fuente Fuente OpusX" and Acid "Kuba Kuba" are the names: a
+ * doubled word that is the brand's own, or a known real double, is left alone.
  */
 function collapseRepeats(line, brand) {
-  const brandWords = new Set(clean(brand).split(' '));
+  const brandWords = new Set([...clean(brand).split(' '), ...REAL_DOUBLES]);
   // The repeat must end at a space or the end: "Queen Queen's Sword" names two
   // different words and is left alone.
   return line.replace(/\b([A-Za-z0-9À-ɏ.'-]+(?:\s+[A-Za-z0-9À-ɏ.'-]+)?)\s+\1(?=\s|$)/gi,
@@ -288,6 +292,65 @@ async function fetchFeeds({ log }) {
 const bump = (map, key) => map.set(key, (map.get(key) || 0) + 1);
 
 /**
+ * Fold house-named sizes into their line (see step 3c in proposeLines).
+ *
+ * A word may be read as a size only if it is not a wrapper, an edition, a
+ * colour or a year — those name sublines — and only for lines that are never
+ * sold in a recognisable size of their own (a line that comes in a Robusto and
+ * a Toro is a line). What is left must still be at least two words, so
+ * "Acid Blondie" and "Acid Kuba Kuba" are never folded into "Acid".
+ *
+ * Mutates `groups`. Returns the folds made, for review and for re-pointing
+ * stock that was filed under the old names.
+ */
+function siblingFold(groups) {
+  const folds = [];
+  const candidates = [...groups.entries()].filter(([, g]) => g.sizes.size === 0 && g.line.split(' ').length >= 3);
+  const byBrandKey = new Map();          // "bk|lineKey without one word" -> [{ key, g, index }]
+  for (const [key, g] of candidates) {
+    const words = g.line.split(' ');
+    words.forEach((w, i) => {
+      const lw = clean(w);
+      if (!lw || STOPWORDS.has(lw) || WRAPPERS.test(lw) || RELEASE.test(lw) || /^[a-z]$/.test(lw)) return;
+      const rest = words.filter((_, j) => j !== i).join(' ');
+      if (rest.split(' ').filter(x => !STOPWORDS.has(clean(x))).length < 2) return;
+      const k = `${g.bk}|${lineKey(rest)}`;
+      if (!byBrandKey.has(k)) byBrandKey.set(k, []);
+      byBrandKey.get(k).push({ key, g, index: i, rest });
+    });
+  }
+  const taken = new Set();
+  const order = [...byBrandKey.entries()].sort((a, b) => b[1].length - a[1].length);
+  for (const [, members] of order) {
+    const live = members.filter(m => !taken.has(m.key) && groups.has(m.key));
+    const distinct = [...new Map(live.map(m => [m.key, m])).values()];
+    if (!distinct.length) continue;
+    // Groups are keyed by their words in any order, so look the parent up the
+    // same way: a lone "Gloria de Leon Dominante" can join a "Gloria de Leon"
+    // that already stands on its own, and a new parent never overwrites one.
+    const tk = `${distinct[0].g.bk}|${identityKey(distinct[0].rest)}`;
+    const parent = groups.has(tk) && !distinct.some(m => m.key === tk) ? groups.get(tk) : null;
+    if (distinct.length < 2 && !parent) continue;
+
+    let target = parent;
+    if (!target) {
+      // The line itself is never sold bare; it exists only through its sizes.
+      target = { bk: distinct[0].g.bk, line: distinct[0].rest, lineSpellings: new Map([[distinct[0].rest, 1]]), sizes: new Map(), stores: new Set() };
+      groups.set(tk, target);
+    }
+    for (const m of distinct) {
+      const size = m.g.line.split(' ')[m.index];
+      target.sizes.set(lineKey(size), size);
+      for (const s of m.g.stores) target.stores.add(s);
+      groups.delete(m.key);
+      taken.add(m.key);
+      folds.push({ from: m.g.line, into: target.line, size, bk: m.g.bk });
+    }
+  }
+  return folds;
+}
+
+/**
  * Turn raw feeds into proposed lines. Pure: no I/O, so it can be tested.
  * `catalog` is the [{ brand, name }] the catalog already holds.
  */
@@ -517,6 +580,14 @@ function proposeLines(feeds, catalog = [], { minStores = 1 } = {}) {
     if (parent && foldable(longK.slice(parent.length).trim(), g)) groups.delete(k);
   }
 
+  // 3c. House size names. Curivari sells "Gloria de Leon Dominante", "Gloria
+  //     de Leon Fuerza" and four more: one line in six sizes whose names no
+  //     shape list will ever hold. The tell is that the lines become one when a
+  //     single word comes out. Padrón puts the size in the middle — "1964
+  //     Anniversary Principe Maduro", "... Exclusivo Maduro" — and the same
+  //     test finds it.
+  siblingFold(groups);
+
   // 4. Keep what is new and seen often enough to trust.
   const proposals = [];
   let alreadyKnown = 0;
@@ -579,6 +650,78 @@ async function buildCatalog({ confirm = false, minStores = 1, cache = null, log 
 }
 
 /**
+ * Rebuild the shop-learned part of the catalog under the current rules.
+ *
+ * The first build filed Curivari's "Gloria de Leon Dominante" and five more
+ * as six lines; the rules now know they are one line in six sizes. Deleting
+ * the old lines would empty every shop page that shows them until each shop's
+ * menu is re-read, so instead the old lines are retired: hidden from matching
+ * and browsing, still joined by the stock that points at them. Each shop's
+ * next read moves its stock onto the new lines.
+ *
+ * Order matters, so a failure part way leaves nothing worse than before: new
+ * lines and sizes go in first, and the old lines are retired last.
+ */
+async function restructureCatalog({ cache, confirm = false, log = console.log } = {}) {
+  if (!cache || !fs.existsSync(cache)) throw new Error('restructure needs --cache <file> from a reviewed dry run');
+  const feeds = await loadFeeds({ log, cache });
+  // Proposals are made against the written-up lines only: the shop-learned
+  // lines are the ones being rebuilt.
+  const curated = await db.all("SELECT brand, name FROM cigars WHERE source IS NULL OR source = 'curated'");
+  const { proposals } = proposeLines(feeds, curated);
+  const want = new Map(proposals.map(p => [`${p.brand.toLowerCase()}|${p.line.toLowerCase()}`, p]));
+
+  const learned = await db.all("SELECT id, brand, name, source FROM cigars WHERE source IN ('shop_feed', 'retired')");
+  const nameOf = c => `${c.brand.toLowerCase()}|${c.name.toLowerCase()}`;
+  const retire = learned.filter(c => c.source === 'shop_feed' && !want.has(nameOf(c)));
+  const revive = learned.filter(c => c.source === 'retired' && want.has(nameOf(c)));
+  const keep = learned.filter(c => c.source === 'shop_feed' && want.has(nameOf(c)));
+  const have = new Set(learned.map(nameOf));
+  const fresh = proposals.filter(p => !have.has(`${p.brand.toLowerCase()}|${p.line.toLowerCase()}`));
+
+  log(`proposed ${proposals.length} lines: ${keep.length} kept as they are, ${revive.length} revived, ${fresh.length} new`);
+  log(`${retire.length} shop-learned lines no longer fit and would be retired`);
+  if (!confirm) { log('Dry run. Nothing written.'); return { dryRun: true, proposals: proposals.length, retire: retire.length, fresh: fresh.length }; }
+
+  // 1. New lines and their sizes.
+  const written = await writeLines(fresh);
+  // 2. Sizes the rules now know for lines that stay, and for revived ones.
+  const sizeRows = [...keep, ...revive].map(c => ({ id: c.id, sizes: want.get(nameOf(c)).sizes }))
+    .filter(r => r.sizes.length);
+  let addedSizes = 0;
+  if (sizeRows.length) {
+    const r = await db.get(`
+      WITH input AS (SELECT * FROM json_to_recordset(?::json) AS x(id int, sizes json)),
+      ins AS (
+        INSERT INTO vitolas (cigar_id, name)
+        SELECT i.id, s.value FROM input i
+        CROSS JOIN LATERAL json_array_elements_text(i.sizes) AS s(value)
+        WHERE NOT EXISTS (SELECT 1 FROM vitolas v WHERE v.cigar_id = i.id AND LOWER(v.name) = LOWER(s.value))
+        RETURNING id
+      )
+      SELECT COUNT(*)::int AS n FROM ins
+    `, [JSON.stringify(sizeRows)]);
+    addedSizes = r.n;
+  }
+  // 3. Lines the rules want again come back.
+  if (revive.length) {
+    await db.run(`UPDATE cigars SET source = 'shop_feed' WHERE id = ANY(?::int[])`, [revive.map(c => c.id)]);
+  }
+  // 4. Last: retire what no longer fits.
+  if (retire.length) {
+    await db.run(`UPDATE cigars SET source = 'retired' WHERE id = ANY(?::int[]) AND source = 'shop_feed'`, [retire.map(c => c.id)]);
+  }
+  // Every shop read against the old shapes needs reading again.
+  const reset = await db.run(`
+    UPDATE stores SET menu_matcher_version = NULL
+    WHERE menu_platform IN ('shopify', 'woocommerce') AND menu_url IS NOT NULL
+  `);
+  log(`added ${written.lines} lines and ${written.vitolas + addedSizes} sizes, revived ${revive.length}, ` +
+      `retired ${retire.length}. ${reset.changes} shops queued for a re-read.`);
+  return { ...written, addedSizes, revived: revive.length, retired: retire.length };
+}
+
+/**
  * Write every proposed line and its sizes in one statement.
  *
  * One statement is one transaction: the catalog gains all of these lines or
@@ -638,7 +781,7 @@ async function writeLines(proposals) {
   return { lines: result.lines, vitolas: result.vitolas };
 }
 
-module.exports = { buildCatalog, proposeLines, writeLines, tailIsSize, foldable, keyOf, brandKey, lineKey, pickSpelling, brandFromTitle };
+module.exports = { buildCatalog, restructureCatalog, proposeLines, writeLines, siblingFold, tailIsSize, foldable, keyOf, brandKey, lineKey, pickSpelling, brandFromTitle };
 
 if (require.main === module) {
   const argv = process.argv.slice(2);
@@ -647,11 +790,15 @@ if (require.main === module) {
   (async () => {
     await initSchema();
     await runMigrations();
-    await buildCatalog({
-      confirm: argv.includes('--confirm'),
-      minStores: Number(arg('--min-stores')) || 1,
-      cache: arg('--cache'),
-    });
+    if (argv.includes('--restructure')) {
+      await restructureCatalog({ confirm: argv.includes('--confirm'), cache: arg('--cache') });
+    } else {
+      await buildCatalog({
+        confirm: argv.includes('--confirm'),
+        minStores: Number(arg('--min-stores')) || 1,
+        cache: arg('--cache'),
+      });
+    }
     process.exit(0);
   })().catch(err => { console.error(err); process.exit(1); });
 }
