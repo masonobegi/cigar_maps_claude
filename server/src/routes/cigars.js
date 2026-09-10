@@ -58,13 +58,17 @@ router.get('/', asyncRoute(async (req, res) => {
     params.push(+min_rating);
   }
 
+  // Most lines have no reviews yet, so every ordering needs a tie-break that
+  // means something: written-up lines before ones learned from shop feeds,
+  // then the lines the most shops carry.
+  const tieBreak = "(c.source = 'curated') DESC, c.seen_at_stores DESC NULLS LAST, c.brand, c.name";
   const sortClause = {
-    popular: 'review_count DESC, avg_rating DESC',
-    rating: 'avg_rating DESC, review_count DESC',
-    price_asc: 'min_price ASC',
-    price_desc: 'min_price DESC',
-    newest: 'c.created_at DESC',
-  }[sort] || 'review_count DESC, avg_rating DESC';
+    popular: `review_count DESC, avg_rating DESC, ${tieBreak}`,
+    rating: `avg_rating DESC, review_count DESC, ${tieBreak}`,
+    price_asc: `min_price ASC NULLS LAST, ${tieBreak}`,
+    price_desc: `min_price DESC NULLS LAST, ${tieBreak}`,
+    newest: `c.created_at DESC, ${tieBreak}`,
+  }[sort] || `review_count DESC, avg_rating DESC, ${tieBreak}`;
 
   const whereStr = where.join(' AND ');
 
