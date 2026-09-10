@@ -31,9 +31,14 @@ const DAY_WORDS = [
   ['friday', 4], ['fridays', 4], ['fri', 4], ['fr', 4],
   ['saturday', 5], ['saturdays', 5], ['sat', 5], ['sa', 5],
   ['sunday', 6], ['sundays', 6], ['sun', 6], ['su', 6],
+  // Misspellings shop sites really print ("Monday–thrusday").
+  ['thrusday', 3], ['thursay', 3], ['thurday', 3], ['tuseday', 1], ['teusday', 1],
+  ['wensday', 2], ['wendsday', 2], ['wednsday', 2], ['wedensday', 2], ['saterday', 5], ['firday', 4],
 ];
 const DAY_INDEX = new Map(DAY_WORDS);
 const DAY_ALT = DAY_WORDS.map(([w]) => w).sort((a, b) => b.length - a.length).join('|');
+// "Monday through Saturday", "Sun to Wed": a range written in words.
+const DAY_WORD_RANGE = new RegExp(`\\b(${DAY_ALT})\\.?\\s+(?:to|thru|through|until|till)\\s+(${DAY_ALT})\\b`, 'g');
 
 // ── Time ───────────────────────────────────────────────────────────────────
 
@@ -53,6 +58,12 @@ function fmt(mins) {
 function sane(open, close) {
   if (!Number.isFinite(open) || !Number.isFinite(close)) return null;
   if (open === close) return open === 0 ? '12am-12am' : null;           // 24 hours
+  // "12 AM – 10 PM": nobody opens at midnight to close at ten at night; it is
+  // noon written the way many people write it.
+  if (open === 0 && close >= 13 * 60) open = 12 * 60;
+  // "11:00 PM – 5:00 PM": an afternoon close after an evening open is the
+  // opening hour flipped. Read it as the morning when that makes a real day.
+  if (close < open && close >= 720 && open >= 720 && close - (open - 720) >= 120) open -= 720;
   let span = close > open ? close - open : close + 1440 - open;
   if (close < open && close > 240) {
     // Past 4am is not a lounge closing late. A morning close is the afternoon
@@ -156,12 +167,27 @@ function normText(s) {
     .toLowerCase()
     .replace(/[–—‒―−]/g, '-')
     .replace(/ /g, ' ')
+    .replace(/(\d)\s*(a|p)\.\s*m\.?/g, '$1$2m')                      // "10a.m" -> "10am"
     .replace(/\b(a|p)\.\s*m\.?/g, '$1m')
-    .replace(/\bnoon\b/g, '12pm')
-    .replace(/\bmidnight\b/g, '12am')
+    .replace(/\b(\d{1,2}):\s+(am|pm)\b/g, '$1$2')                    // "12: pm" → "12pm"
+    .replace(/(\d\s*)(am|pm)m\b/g, '$1$2')                           // "12pmm" → "12pm"
+    .replace(/\b(?:12\s*)?noon\b/g, '12pm')                          // "noon", "12noon"
+    .replace(/\b(?:12\s*)?midnight\b/g, '12am')
     .replace(/\b(\d{1,2})(:\d{2})?\s*(a|p)\b(?!m)/g, '$1$2$3m')      // "12p" → "12pm"
     .replace(/(\d)\s+(am|pm)\b/g, '$1$2')
+    .replace(/(\d)\s*-?ish\b/g, '$1')                                  // "5ish" -> "5"
+    .replace(DAY_WORD_RANGE, '$1-$2')
     .replace(/\s+(to|thru|through|until|till|til)\s+(?=\d|12)/g, ' - ')
+    // "10am/7pm", "10 am ~ 4 pm": other ways of writing a range between times.
+    .replace(/(\d(?:am|pm)?)\s*[/~]\s*(?=\d)/g, '$1 - ')
+    // Single-letter shorthand that is not ambiguous: "M-F", "M-Th", "M-Sat".
+    .replace(/\bm\s*-\s*f\b/g, 'mon-fri')
+    .replace(/\bm\s*-\s*th\b/g, 'mon-thu')
+    .replace(/\bm\s*-\s*w\b/g, 'mon-wed')
+    .replace(/\bf\s*-\s*sa(t)?\b/g, 'fri-sat')
+    .replace(/\bf\s*-\s*su(n)?\b/g, 'fri-sun')
+    .replace(/\bm\s*-\s*sa(t)?\b/g, 'mon-sat')
+    .replace(/\bm\s*-\s*su(n)?\b/g, 'mon-sun')
     .replace(/\b(every\s*day|everyday|7 days a week|seven days a week|7 days|daily)\b/g, ' mon-sun ')
     .replace(/\bweekdays\b/g, ' mon-fri ')
     .replace(/\bweekends?\b/g, ' sat-sun ')
@@ -169,8 +195,12 @@ function normText(s) {
 }
 
 const T = '(\\d{1,2})(?::(\\d{2}))?\\s*(am|pm)?';
-const TIME_RANGE = new RegExp(`${T}\\s*-\\s*${T}`, 'g');
+// A time is a number standing on its own: not the tail of a phone number or a
+// year ("813-621-8702", "10-2026"), and not a price ("$10-20").
+const TIME_RANGE = new RegExp(`(?<![\\d$.,/:])${T}\\s*-\\s*${T}(?![\\d%])`, 'g');
 const DAY_TOKEN = new RegExp(`\\b(${DAY_ALT})\\.?\\b`, 'g');
+const DAY_TOKEN_AT_START = new RegExp(`^(${DAY_ALT})\\.?\\b`);
+const HAS_RANGE = new RegExp(TIME_RANGE.source);
 
 /** Turn "10" "7" with missing am/pm into a believable 10am-7pm. */
 function inferRange(h1, m1, ap1, h2, m2, ap2) {
@@ -180,7 +210,9 @@ function inferRange(h1, m1, ap1, h2, m2, ap2) {
     return hh * 60 + Number(m || 0);
   };
   if (Number(h1) > 12 || Number(h2) > 12) {
-    // A 24-hour clock: take the numbers as written.
+    // A 24-hour clock: take the numbers as written, but only when written as
+    // times ("10:00-20:00"). A bare "10-20" is as likely a date or a count.
+    if (m1 === undefined || m2 === undefined) return null;
     return sane(Number(h1) * 60 + Number(m1 || 0), (Number(h2) % 24) * 60 + Number(m2 || 0));
   }
   if (!ap1 && !ap2) {
@@ -214,6 +246,33 @@ function textDays(fragment) {
 }
 
 /**
+ * A two-column hours table can arrive column by column: every day label, then
+ * every time ("Mon - Sat" / "Sunday" / "10am - 6pm" / "Closed"). A run of
+ * k lines that are only days followed by exactly k lines that are only times
+ * or "closed" is that table; put each label back beside its value.
+ */
+function pairColumns(list) {
+  const dayOnly = l => textDays(l).length > 0 && !HAS_RANGE.test(l) && !/\bclosed\b/.test(l);
+  const valueOnly = l => (HAS_RANGE.test(l) || /^\s*closed\s*$/.test(l)) && textDays(l).length === 0;
+  const out = [];
+  for (let i = 0; i < list.length;) {
+    let k = 0;
+    while (i + k < list.length && dayOnly(list[i + k])) k++;
+    let v = 0;
+    while (k >= 2 && v < k && i + k + v < list.length && valueOnly(list[i + k + v])) v++;
+    const nextIsValue = i + k + v < list.length && valueOnly(list[i + k + v]);
+    if (k >= 2 && v === k && !nextIsValue) {
+      for (let j = 0; j < k; j++) out.push(`${list[i + j]} ${list[i + k + j]}`);
+      i += 2 * k;
+    } else {
+      out.push(list[i]);
+      i++;
+    }
+  }
+  return out;
+}
+
+/**
  * Hours from printed lines. Each time range is paired with the days written
  * just before it (on the same line, or alone on the line above); "closed"
  * after days marks them closed. Returns the hours and how many rules were read,
@@ -222,9 +281,25 @@ function textDays(fragment) {
 function parseTextHours(lines) {
   const out = {};
   let rules = 0;
-  const list = (Array.isArray(lines) ? lines : String(lines || '').split('\n')).map(normText);
+  // Two different answers for one day in one block means two blocks were read
+  // as one (an old hidden block and the current one, a footer and a hours
+  // page). Keep the first but report it, so a caller can refuse to guess.
+  let conflicts = 0;
+  // Not even "Everyday 12pm-2am" then "Fri - Sat 3pm-12am" is read as a
+  // default and its exception: at Shaker's the second line was the kitchen's,
+  // and at Leaf it was a second business at the same address. Both refused.
+  const assign = (d, value) => {
+    const k = DAYS[d];
+    if (!out[k]) out[k] = value;
+    else if (out[k] !== value) conflicts++;
+  };
+  const list = pairColumns((Array.isArray(lines) ? lines : String(lines || '').split('\n')).map(normText));
   let carriedDays = null;
+  // A range with no days of its own, waiting for a days-only next line.
+  let pendingValue = null;
   for (const line of list) {
+    const pendingFromLastLine = pendingValue;
+    pendingValue = null;
     // Split into "days ... time-or-closed" segments by walking the line.
     const events = [];
     for (const m of line.matchAll(TIME_RANGE)) events.push({ kind: 'range', at: m.index, end: m.index + m[0].length, m });
@@ -232,15 +307,54 @@ function parseTextHours(lines) {
     events.sort((a, b) => a.at - b.at);
     let cursor = 0;
     let lineHadDays = false;
-    for (const ev of events) {
+    for (let e = 0; e < events.length; e++) {
+      const ev = events[e];
+      if (ev.at < cursor) continue;                  // consumed as another range's days
       const before = line.slice(cursor, ev.at);
       let days = textDays(before);
       if (days.length) lineHadDays = true;
       if (!days.length && carriedDays) days = carriedDays;
-      if (!days.length) { cursor = ev.end; continue; }
+      // "9AM to 6PM Monday through Friday": the days come after the time.
+      if (!days.length && ev.kind === 'range') {
+        const next = events[e + 1];
+        const after = line.slice(ev.end, next ? next.at : line.length);
+        const trailing = textDays(after);
+        if (trailing.length) {
+          days = trailing;
+          lineHadDays = true;
+          const value = inferRange(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
+          if (value) { for (const d of days) assign(d, value); rules++; }
+          carriedDays = null;
+          // Skip past the days just used so they are not handed on.
+          const lastDay = [...after.matchAll(DAY_TOKEN)].pop();
+          cursor = ev.end + (lastDay ? lastDay.index + lastDay[0].length : 0);
+          continue;
+        }
+      }
+      if (!days.length && ev.kind === 'closed') {
+        // "closed on Sunday", "closed Sundays": the days follow the word.
+        const next = events[e + 1];
+        const after = line.slice(ev.end, next ? next.at : line.length);
+        const lead = after.match(/^\s*(?:on\s+|:\s*|all day\s+)?/)[0].length;
+        const trailing = DAY_TOKEN_AT_START.test(after.slice(lead)) ? textDays(after) : [];
+        if (trailing.length) {
+          for (const d of trailing) assign(d, 'Closed');
+          rules++;
+          carriedDays = null;
+          const lastDay = [...after.matchAll(DAY_TOKEN)].pop();
+          cursor = ev.end + (lastDay ? lastDay.index + lastDay[0].length : 0);
+          continue;
+        }
+      }
+      if (!days.length) {
+        if (ev.kind === 'range') pendingValue = inferRange(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
+        cursor = ev.end;
+        continue;
+      }
+      pendingValue = null;
       const value = ev.kind === 'closed' ? 'Closed' : inferRange(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
       if (value) {
-        for (const d of days) if (!out[DAYS[d]]) out[DAYS[d]] = value;
+        for (const d of days) assign(d, value);
         rules++;
       }
       carriedDays = null;
@@ -248,9 +362,15 @@ function parseTextHours(lines) {
     }
     // A line that is only days ("Monday - Friday") hands them to the next line.
     const tail = textDays(line.slice(cursor));
+    if (!events.length && tail.length && pendingFromLastLine) {
+      for (const d of tail) assign(d, pendingFromLastLine);
+      rules++;
+      carriedDays = null;
+      continue;
+    }
     carriedDays = !events.length && tail.length ? tail : (tail.length && !lineHadDays ? tail : null);
   }
-  return Object.keys(out).length ? { hours: order(out), rules } : null;
+  return Object.keys(out).length ? { hours: order(out), rules, conflicts } : null;
 }
 
 // ── Shared ───────────────────────────────────────────────────────────────────
@@ -311,7 +431,8 @@ if (require.main === module) {
   h = parseOpeningHoursString('Mo-Sa 12:00-08:00, Su 12:00-18:00');
   ok(h && h.Mon === '12pm-8pm', '"12:00-08:00" is 8pm', h);
   h = parseOpeningHoursString('Mo-Th 09:00-21:00, Fr,Sa 09:00-22:00, Su 23:00-18:00');
-  ok(h && h.Mon === '9am-9pm' && !h.Sun, 'an impossible Sunday is dropped, not guessed', h);
+  ok(h && h.Mon === '9am-9pm' && h.Sun === '11am-6pm', '"23:00-18:00" is an opening hour flipped: 11am-6pm', h);
+  ok(sane(23 * 60, 3 * 60) === '11pm-3am', 'a real late night is still a late night');
   h = parseOpeningHoursString(['Mo-We 09:00-19:00', 'Th-Sa 09:00-21:00', 'Su 09:00-19:00']);
   ok(h && Object.keys(h).length === 7 && h.Thu === '9am-9pm', 'schema.org array (Anthony\'s Campbell)', h);
   ok(eq(parseOpeningHoursString('24/7'), { Mon: '12am-12am', Tue: '12am-12am', Wed: '12am-12am', Thu: '12am-12am', Fri: '12am-12am', Sat: '12am-12am', Sun: '12am-12am' }), '24/7');
@@ -365,6 +486,70 @@ if (require.main === module) {
   ok(r && r.hours.Sun === '9am-10pm', '"7 days a week"', r);
   r = parseTextHours(['Call us at (813) 621-8702']);
   ok(r === null, 'a phone number is not hours', r);
+
+  console.log('\nformats the first sweep missed, from real pages:');
+  r = parseTextHours(['9AM to 6PM Monday through Friday']);
+  ok(r && r.hours.Mon === '9am-6pm' && r.hours.Fri === '9am-6pm', 'time before the days', r);
+  r = parseTextHours(['12 P.M. - 6 P.M. Sunday']);
+  ok(r && r.hours.Sun === '12pm-6pm', 'time before a single day', r);
+  r = parseTextHours(['9:00 AM – 10:00 PM MON – SAT']);
+  ok(r && r.hours.Mon === '9am-10pm' && r.hours.Sat === '9am-10pm', 'time before a day range, in capitals', r);
+  r = parseTextHours(['8:00 a.m. - 3:00 p.m. - Monday, Tuesday, Thursday, Friday']);
+  ok(r && r.hours.Tue === '8am-3pm' && !r.hours.Wed, 'time before a day list; the missing day stays unknown', r);
+  r = parseTextHours(['Sunday 12noon - 7pm']);
+  ok(r && r.hours.Sun === '12pm-7pm', '"12noon"', r);
+  r = parseTextHours(['Monday through Friday : 10am/7pm']);
+  ok(r && r.hours.Mon === '10am-7pm', '"10am/7pm"', r);
+  r = parseTextHours(['Friday & Saturday 10 am ~ 4 pm']);
+  ok(r && r.hours.Fri === '10am-4pm', '"~" between times', r);
+  r = parseTextHours(['Fri - Sat 12: PM to 12AM']);
+  ok(r && r.hours.Fri === '12pm-12am', '"12: PM" typo', r);
+  r = parseTextHours(['Friday & Saturday: 12pmm – 12am']);
+  ok(r && r.hours.Sat === '12pm-12am', '"12pmm" typo', r);
+  r = parseTextHours(['Sunday 11:00 PM – 5:00 PM']);
+  ok(r && r.hours.Sun === '11am-5pm', 'a flipped opening hour is read as the morning', r);
+  r = parseTextHours(['Sunday – Thursday: 12 AM – 10 PM']);
+  ok(r && r.hours.Sun === '12pm-10pm', '"12 AM" opening before a 10pm close is noon', r);
+  r = parseTextHours(['Monday - Friday call 813-621-8702']);
+  ok(r === null, 'a phone number beside days is still not hours', r);
+  r = parseTextHours(['Monday–thrusday', '9am–10pm', 'Friday–Saturday', '9am–11pm']);
+  ok(r && r.hours.Tue === '9am-10pm' && r.hours.Thu === '9am-10pm' && r.hours.Sat === '9am-11pm', '"thrusday" is Thursday (Puff Puff Tobacco)', r);
+  r = parseTextHours(['9am to 9pm M-W', '9am to 10pm Th - Fr - Sat', '10am to 7pm Sun']);
+  ok(r && r.hours.Mon === '9am-9pm' && r.hours.Wed === '9am-9pm' && r.hours.Thu === '9am-10pm' && r.hours.Sun === '10am-7pm', '"M-W" is Monday to Wednesday (The Cigar Shop)', r);
+  r = parseTextHours(['Store Hours', 'Monday - Thursday', '10a.m - 8p.m', 'Friday & Saturday', '10a.m - 8p.m', 'Sunday', '12p.m - 6p.m']);
+  ok(r && r.hours.Mon === '10am-8pm' && r.hours.Sat === '10am-8pm' && r.hours.Sun === '12pm-6pm', '"10a.m" is 10am (Heights Cigar Lounge)', r);
+  r = parseTextHours(['Monday Closed, Members access', 'Tuesday Closed, Members access', 'Wednesday 12-8', 'Thursday 12-8', 'Friday 12-8', 'Saturday 12-7', 'Sunday 12-5', 'Members only access 10am-10pm Daily']);
+  ok(r && r.conflicts > 0, 'a per-day table and an every-day line are a conflict (Top Gun)', r);
+  r = parseTextHours(['Open daily 10am-9pm', 'Sunday 12pm-6pm']);
+  ok(r && r.conflicts > 0, '"daily" then another Sunday is refused, not guessed', r);
+  r = parseTextHours(['Hours', 'Everyday: 12:00 PM - 2:00 AM', 'Fri - Sat : 3:00 PM - 12:00 AM']);
+  ok(r && r.conflicts > 0, 'kitchen hours under the bar hours are a conflict (Shakers)', r);
+  r = parseTextHours(['Open Monday through Saturday from 10 a.m. to 6 p.m.; closed on Sunday.', 'Mon - Sat', 'Sunday', '10am - 6pm', 'Closed']);
+  ok(r && !r.conflicts && r.hours.Mon === '10am-6pm' && r.hours.Sat === '10am-6pm' && r.hours.Sun === 'Closed', '"through", "closed on Sunday" and a table read by columns (King Street)', r);
+  r = parseTextHours(['Store hours @ DC Ranch:', 'Open 10am to 10pm Sun to Wed', '10am to 11pm Thur to Sat', 'Store hours @ Terravita:', 'Open daily 10am to 8pm']);
+  ok(r && r.conflicts > 0, 'two stores on one page are a conflict (Cedar Room)', r);
+  r = parseTextHours(['Open 10am to 10pm Sun to Wed', '10am to 11pm Thur to Sat']);
+  ok(r && r.hours.Sun === '10am-10pm' && r.hours.Tue === '10am-10pm' && r.hours.Fri === '10am-11pm', '"Sun to Wed" is a range', r);
+  r = parseTextHours(['Monday', '9am-5pm', 'Tuesday', '9am-5pm', 'Wednesday', '9am-6pm']);
+  ok(r && r.hours.Mon === '9am-5pm' && r.hours.Wed === '9am-6pm' && !r.conflicts, 'a table read row by row is untouched', r);
+  r = parseTextHours(['Mon-Sat 10am-9pm', 'Mon-Fri 10am-8pm']);
+  ok(r && r.conflicts > 0, 'two partial rules that disagree are still a conflict', r);
+  r = parseTextHours(['Store Open 11:30 to 7:00', '(Mon-Sat)', '11:00-5:00 (Sun)']);
+  ok(r && r.hours.Mon === '11:30am-7pm' && r.hours.Sat === '11:30am-7pm' && r.hours.Sun === '11am-5pm', 'days on the line after their time (Sequoia Cigar)', r);
+  r = parseTextHours(['Mon - Sat 10am - 9pm', 'Sun 10am - 5ish']);
+  ok(r && r.hours.Sun === '10am-5pm', '"5ish" is 5pm (Cigar World)', r);
+  r = parseTextHours(['Hours', 'Mon - Fri', '9-5', 'Sat', '10-4']);
+  ok(r && r.hours.Mon === '9am-5pm' && r.hours.Sat === '10am-4pm', 'days above their time still pair downward', r);
+  r = parseTextHours(['M-F 11-6pm, Sat 12-6pm, Sun 12-6pm']);
+  ok(r && r.hours.Mon === '11am-6pm' && r.hours.Fri === '11am-6pm' && r.hours.Sun === '12pm-6pm', '"M-F" is Monday to Friday (Freedom Fine Cigars)', r);
+  r = parseTextHours(['9am-8pm Mon-Sat 10am-7pm Sun']);
+  ok(r && r.hours.Sat === '9am-8pm' && r.hours.Sun === '10am-7pm' && !r.conflicts, 'times before days, two rules (Cigar Empire)', r);
+  r = parseTextHours(['Mon-Wed 3p-10p', 'Mon-Wed 11a-11p']);
+  ok(r && r.conflicts > 0, 'two answers for one day are reported as a conflict (Fuma\'s hidden block)', r);
+  r = parseTextHours(['Friday Nov 10-2026 grand opening']);
+  ok(r === null, 'a date is not hours', r);
+  r = parseTextHours(['Saturday special: cigars $10-20 off']);
+  ok(r === null, 'a price is not hours', r);
   r = parseTextHours(['Established 2008. Over 200 cigars in our walk-in humidor.']);
   ok(r === null, 'prose is not hours', r);
 

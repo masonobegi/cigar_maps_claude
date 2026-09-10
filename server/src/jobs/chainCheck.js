@@ -122,7 +122,8 @@ function addressKey(raw) {
   const txt = String(raw || '')
     .toLowerCase()
     .replace(/[.,]/g, ' ')
-    .replace(/\b(?:ste|suite|unit|apt|bldg|#)\s*[\w-]+/g, ' ')
+    // The unit word must stand alone: "Ste 110" is a suite, "Stephenson" is a street.
+    .replace(/\b(?:ste|suite|unit|apt|bldg)\b\s*[\w-]+|#\s*[\w-]+/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
   if (!txt) return null;

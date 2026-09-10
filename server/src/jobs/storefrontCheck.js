@@ -95,6 +95,12 @@ function verdict(rec, row) {
   // The other trade only disqualifies a listing that never names a cigar
   // premises of its own. "Cigar City Brewing" is a brewery; "Cigar Bar and
   // Brewery" is a cigar bar.
+  //
+  // A cash machine is the one exception to that: "CoinFlip Bitcoin ATM - Choice
+  // Cigars & Tobacco" names a cigar shop, but the listing is the ATM in it.
+  if (/\b(bitcoin|crypto(currency)?)\s+atm\b|\bcoinflip\b|\bbyte federal\b|\bathena bitcoin\b/i.test(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" is a cash machine inside a shop, not the shop` };
+  }
   if (NOT_A_SHOP.test(name) && !namesACigarPremises(name)) {
     return { storefront: 'not_retail', reason: `"${name}" is another kind of business, not a cigar shop` };
   }

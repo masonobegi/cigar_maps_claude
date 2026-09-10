@@ -146,9 +146,49 @@ Old shapes are **retired, never deleted** (`cigars.source = 'retired'`): out of 
 
 **Chain check** (`jobs/chainCheck.js`): where listings share a website, compare them with the locations the chain publishes. The first run flagged 59 "closed branches". A second look found 47 were in towns the chain's site still names: real stores whose addresses the scraper couldn't parse, including 14 Sweet Fire Tobacco stores. Applied only the 7 with corroborating evidence (town and phone absent from the chain's site, or structured data), and cleared 2 wrong links rather than hide shops of uncertain identity. Apply only a reviewed decisions file: `--confirm --from`.
 
+## Opening hours, store cards and thumbnails (2026-09-10, evening)
+
+Mason's report: a card said "Closed today" for a shop whose own site said it was open, and Apple Maps had hours we didn't.
+
+**"Closed today" was a display bug.** Unknown hours were drawn as closed, and open/closed was worked out on the visitor's clock rather than the shop's. Now no hours means no claim at all. Every listing has a time zone (from its state, with split states such as the Florida panhandle, western Kentucky and the Michigan UP decided by longitude), and the server judges open or closed on the shop's own clock.
+
+**Cards** show name, street and town, a thumbnail (logo > cover photo > the shop's own site preview image > monogram), "Open now" in green, "Closed" in grey, "Lounge" in yellow, and today's hours.
+
+**Hours come from each shop's own website** (`jobs/hoursSweep.js`), in stages, so what gets written is exactly what was reviewed:
+1. `collect`: every listed site. Homepage plus up to three hours/contact/location pages; schema.org markup, the visible text around day names, and the preview image.
+2. `chains`: for a website several listings share, the chain's own store pages from its sitemap, or its store-locator feed. WP Store Locator's JSON, used by Wild Bill's, Sweet Fire and JO Cigars, gives every store's street and hours in one answer. A brand that now redirects to its owner (cheaptobaccousa.com → wildbillstobacco.com) is read where it lives.
+3. `hoursRender.js`: a local-only pass in headless Chrome for sites that draw their hours with JavaScript. It needs Chrome and `npm i --no-save puppeteer-core`; the server does not depend on it.
+4. `decide` writes decisions and skip reasons for review. `apply --from <reviewed file> --confirm` writes them, never over a claimed, staff-edited or owner-set listing.
+
+**Result:** public listings with hours went from 305 (4.1%, map data) to 1,311 (17.6%), and listings with a picture from 0 to 1,427. Applied to production 2026-09-10. Where a site's hours differ from the map's (37 listings), the site wins. The importer now keeps hours whose `hours_source` is `website` or `owner`; an owner's edit sets `owner`.
+
+**Accuracy.** Reviewer agents checked 174 decisions against the live sites, in three rounds: 110 from the first read, 40 from the chain and re-read passes, and 24 from the browser pass. Each round's misses became rules. On the rule set that shipped, 146 of the 150 checked decisions it still makes are right (97.3%), and 18 that were wrong are now refused. The four left: a stale footer, a sister branch's hours with the town on another line, two businesses sharing one address's markup, and a Squarespace Sunday that is an hour off. Each thing the reviews caught became a rule and a self-test (`node src/utils/hoursParser.js`, `node src/jobs/hoursSweep.js selftest`):
+- SEO templates (Mo-Su 09:00-17:00 in markup) and the store-locator plugin's default Mon-Fri 9-5;
+- markup describing a web shop's office, a restaurant or a sister branch, which is why markup with no address is used only when it is the site's one statement;
+- stale Squarespace markup contradicted by the visible page, where the visible page wins;
+- happy hour, events, kitchen and phone/online hours;
+- another branch's hours printed beside another town's address;
+- two businesses at one address, and two pages disagreeing (refused, while pages that agree wherever both speak are merged);
+- a blog post with "[your contact number]" in it;
+- a chain's "1060 Main St" in another town, since a street match must also name our town or ZIP;
+- a glass company matched as "Tobacco Den Brainerd" through the town and the letters "den" (town words no longer count, and short words must stand alone);
+- a phone number's tail and "Open 365 days" read as street addresses.
+
+An "open daily, but Sunday 12-6" reading was tried and reverted: it turned Shaker's kitchen hours and Leaf's neighbouring business into store hours.
+
+**Also found on the way:**
+- `addressKey` ate street names starting "Ste", "Unit" or "Apt" ("901 S Stephenson Ave" keyed as "901"). Fixed.
+- 10 Bitcoin ATM listings and an online-only retailer were hidden, and the storefront rules now reject ATMs.
+- **About 380 listings link to a website that never names the shop**: a steakhouse, a truck-bed dealer, a dental office, yahoo.com, a domain-for-sale page. Their hours and pictures are not used. The links themselves are worth clearing in a reviewed pass, but that is not done yet.
+- **23 same-address duplicates** remain, mostly from the later import (#19175/#41895 The Pipe Rack, Akron; #20760/#42064 Cole's Tobacco).
+
+**The rest.** 2,568 listings have no website and 211 link only Facebook, Instagram or a directory. About 1,140 more sites show no hours even in a browser, or could not be reached. Apple Maps and Google get hours from licensed data and from owners. Google's Places API is the practical source for the remainder; it needs an API key with billing, and its terms limit how long fetched details may be stored, so it suits a lookup when a listing is viewed rather than a bulk import.
+
+**Refreshing.** Re-run collect → chains → (render) → decide → review → apply. Collecting takes about 25 minutes; the chain crawl and the browser pass take up to an hour each.
+
 ## Still needs Mason
 
-**Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used.
+**Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used. It was also in `.claude/settings.local.json`, which was tracked in the repository until 2026-09-10 (now untracked and ignored). That file also held login commands using `admin123` and `adminpass123`, so make sure neither is a live password.
 
 **Railway environment variables**, in rough priority order:
 1. `ADMIN_PASSWORD` and `STAFF_PASSWORD` — otherwise the deploy prints one-time random ones in its boot log.

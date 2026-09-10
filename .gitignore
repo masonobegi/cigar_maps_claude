@@ -9,3 +9,7 @@ scraper/node_modules/
 dist/
 .DS_Store
 Thumbs.db
+
+# Claude Code per-machine settings: holds local permission rules, which here
+# included a login command with a password. Never commit it.
+.claude/settings.local.json

@@ -18,8 +18,12 @@
  * Never touches a claimed or staff-edited listing: an owner's hours beat ours.
  *
  * CLI:  node src/jobs/hoursSweep.js collect --out evidence.jsonl [--limit N]
- *       node src/jobs/hoursSweep.js decide  --from evidence.jsonl --out decisions.json   # review this
+ *       node src/jobs/hoursSweep.js chains  --out chains.jsonl     # chain store pages and locators
+ *       node src/jobs/hoursSweep.js decide  --from evidence.jsonl[,rendered.jsonl] --chains chains.jsonl
+ *                                           --out decisions.json --skips skips.json   # review this
+ *       node src/jobs/hoursRender.js --skips skips.json --out rendered.jsonl        # optional, local
  *       node src/jobs/hoursSweep.js apply   --from decisions.json --confirm
+ *       node src/jobs/hoursSweep.js selftest
  */
 'use strict';
 
@@ -65,8 +69,11 @@ function hoursSnippets(text) {
   const keep = new Set();
   lines.forEach((l, i) => {
     const dayAndTime = DAY.test(l) && (TIME.test(l) || /closed|open 24|24 hours/i.test(l));
+    // An hours table puts the day and its times in separate cells, so they
+    // arrive on separate lines: "Monday" / "8:30 AM - 8:00 PM".
+    const dayThenTime = DAY.test(l) && l.length < 30 && i + 1 < lines.length && (TIME.test(lines[i + 1]) || /^closed$/i.test(lines[i + 1].trim()));
     const heading = /\b(hours|store hours|opening hours|business hours|hours of operation|lounge hours)\b/i.test(l) && l.length < 80;
-    if (dayAndTime || heading) for (let j = Math.max(0, i - 1); j <= Math.min(lines.length - 1, i + (heading ? 9 : 1)); j++) keep.add(j);
+    if (dayAndTime || dayThenTime || heading) for (let j = Math.max(0, i - 1); j <= Math.min(lines.length - 1, i + (heading ? 9 : dayThenTime ? 2 : 1)); j++) keep.add(j);
   });
   const out = [...keep].sort((a, b) => a - b).map(i => lines[i].slice(0, 200));
   return out.slice(0, 60);
@@ -206,14 +213,21 @@ const { parseOpeningHoursString, parseSpecification, parseTextHours, fillClosedP
 
 // Hours next to these are the phone line's or the web shop's, not the door's:
 // "Call us … Mon-Fri 9-5", "WhatsApp … Mon-Fri 9AM-5PM Eastern".
-const PHONE_CONTEXT = /\b(call(s|ing)?( us)?|phone|customer (service|care|support)|support|whatsapp|office hours|order(s|ing)?|shipping|ships?|online|live chat|chat with|e-?mail|text us|representatives?|mail order|warehouse|pick-?up)\b/i;
+// Not a bare "Phone:" or "Email:" label, which every store page prints beside
+// its real hours; only words that say the times are the phone's or the web's.
+const PHONE_CONTEXT = /\b(call(s|ing)? us|call (between|during)|phone (hours|orders|support)|by phone|customer (service|care|support)|support (hours|team)|whatsapp|office hours|order(s|ing)? (by|before|placed)|shipping|ships? (same|next)|online (orders?|store|shop)|live chat|chat with|text us|representatives?|mail order|warehouse|pick-?up hours)\b/i;
 const TIME_ZONE = /\b(e[sd]t|c[sd]t|m[sd]t|p[sd]t|eastern|central|pacific|mountain|easter time)\b/i;
 const STORE_CONTEXT = /\b(store|shop|lounge|showroom|walk-?in|retail) hours\b|\bhours of operation\b|\bvisit us\b/i;
-const ADDRESS_IN_LINE = /\b(\d{2,6})\s+((?:[NSEW]\.?\s+)?[A-Za-z0-9'.]+(?:\s+[A-Za-z0-9'.]+){0,4})/;
+// A street number is not the minutes of a time ("8:00 AM") or a year's tail.
+const ADDRESS_IN_LINE = /(?<![:\d.-])\b(\d{2,6})\s+(?!(?:am|pm|a\.m|p\.m)\b)((?:[NSEW]\.?\s+)?[A-Za-z][A-Za-z0-9'.]*(?:\s+[A-Za-z0-9'.]+){0,4})/i;
 
 function lineAddressKey(line) {
   const m = String(line || '').match(ADDRESS_IN_LINE);
-  return m ? addressKey(m[0]) : null;
+  if (!m || /^0+$/.test(m[1])) return null;
+  const key = addressKey(m[0]);
+  // "opened in 1994 and today…", "Open 365 days!" are prose, not a street.
+  if (!key || /\s(and|or|the|of|to|in|at|for|years?|days?|hours?|weeks?|months?|minutes?|locations?|stores?|miles?|cigars?|brands?|people|members?|seats?|percent|off)$/.test(key)) return null;
+  return key;
 }
 
 function looksLikeAddress(line) {
@@ -227,29 +241,54 @@ function parseLd(raw) {
   return null;
 }
 
+/**
+ * Hours an SEO plugin writes when nobody fills the field in. Rank Math and Yoast
+ * Local SEO both default to "Mo-Su 09:00-17:00"; a hijacked domain's markup
+ * says open around the clock. Seven identical days of either is a template,
+ * not a shop — verification caught it on seven real sites, one of which is
+ * actually open until 10pm.
+ */
+function placeholderHours(hours) {
+  const vals = Object.values(hours || {});
+  if (vals.length < 7) return false;
+  return new Set(vals).size === 1 && ['9am-5pm', '12am-12am', '8am-5pm'].includes(vals[0]);
+}
+
+// WP Store Locator fills every new store with Mon-Fri 9-5, weekends closed.
+// Wiregrass Tobacco's locator still carries it; its site gives no hours at all.
+function locatorDefaultHours(hours) {
+  const h = hours || {};
+  return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].every(d => h[d] === '9am-5pm') && h.Sat === 'Closed' && h.Sun === 'Closed';
+}
+
+// A web shop's markup describes its office or support line, not a door.
+const NOT_A_PLACE = /^(OnlineStore|OnlineBusiness|WebSite|WebPage|Organization)$/i;
+
 /** Every opening-hours statement in the site's markup, with the address it belongs to. */
 function structuredCandidates(ev) {
   const out = [];
   const seen = new Set();
-  const push = (hours, street, kind) => {
-    if (!hours || !describe(hours).open) return;
+  const push = (hours, street, kind, name) => {
+    if (!hours || !describe(hours).open || placeholderHours(hours)) return;
     const key = street ? addressKey(street) : null;
     const sig = JSON.stringify(hours) + '|' + key;
     if (seen.has(sig)) return;
     seen.add(sig);
-    out.push({ hours, addressKey: key, street: street || null, kind });
+    out.push({ hours, addressKey: key, street: street || null, kind, name: name || null });
   };
   for (const raw of ev.jsonld || []) {
     const data = parseLd(raw);
     const visit = node => {
       if (!node || typeof node !== 'object') return;
       if (Array.isArray(node)) return node.forEach(visit);
+      const types = [].concat(node['@type'] || []);
+      const placeLess = types.length && types.every(t => NOT_A_PLACE.test(String(t)));
       let hours = null;
-      if (node.openingHoursSpecification) hours = parseSpecification(node.openingHoursSpecification);
-      if (!hours && node.openingHours) hours = fillClosedPerSpec(parseOpeningHoursString(node.openingHours));
+      if (!placeLess && node.openingHoursSpecification) hours = parseSpecification(node.openingHoursSpecification);
+      if (!placeLess && !hours && node.openingHours) hours = fillClosedPerSpec(parseOpeningHoursString(node.openingHours));
       if (hours) {
         const a = node.address;
-        push(hours, a ? (typeof a === 'string' ? a : a.streetAddress) : null, 'markup');
+        push(hours, a ? (typeof a === 'string' ? a : a.streetAddress) : null, 'markup', typeof node.name === 'string' ? node.name : null);
       }
       for (const [k, v] of Object.entries(node)) if (k !== 'openingHoursSpecification' && v && typeof v === 'object') visit(v);
     };
@@ -257,6 +296,49 @@ function structuredCandidates(ev) {
   }
   for (const m of ev.microdata || []) push(fillClosedPerSpec(parseOpeningHoursString(m)), null, 'microdata');
   return out;
+}
+
+// Times on these lines are an event's or a special's, not the door's:
+// "Happy Hour Monday - Friday | 4 pm to 6 pm" is not when a lounge opens.
+const EVENT_LINE = /\b(happy hour|special|specials|deals?|trivia|live music|tasting|events?|class(es)?|league|poker|ladies'? night|karaoke|brunch|kitchen|food|menu|bingo|comedy|open mic|dj|watch party|pairing|seminar|meet(s|ing)?|holiday|christmas|thanksgiving|new year'?s?|easter|memorial day|labor day|july 4|4th of july|game day|games?)\b/i;
+
+// Words in a shop's name that say nothing about which shop it is.
+const GENERIC_NAME = new Set(['cigar', 'cigars', 'tobacco', 'tobacconist', 'shop', 'shoppe', 'store', 'lounge', 'bar',
+  'club', 'co', 'company', 'inc', 'llc', 'the', 'and', 'of', 'smoke', 'smokes', 'premium', 'fine', 'humidor', 'emporium',
+  'house', 'room', 'cafe', 'at', 'by', 'de', 'la', 'el']);
+
+/**
+ * Does this website speak about this shop at all? A listing's "website" is
+ * sometimes someone else's: verification found a tattoo studio, a distillery,
+ * a life-insurance blog and a Bitcoin-ATM locator. If the shop's own name
+ * appears nowhere in the site's address, markup or hours text, neither its
+ * hours nor its picture are this shop's.
+ */
+function mentionsShop(ev, store) {
+  const allWords = String(store.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ')
+    .filter(w => w.length > 2 && !GENERIC_NAME.has(w));
+  if (!allWords.length) return true;             // "Cigar Shop" names nothing to look for
+  // The town in a shop's name says nothing about which shop: "Tobacco Den
+  // Brainerd" matched a glass company at brainerdglass.net.
+  const town = new Set(String(store.city || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' '));
+  const own = allWords.filter(w => !town.has(w));
+  const words = own.length ? own : allWords;
+  // A domain built from the name's initials and a trade word: Tobacco
+  // Republic at trcigar.com.
+  const initials = String(store.name || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/)
+    .filter(w => w && !['the', 'and', 'of', 'at', 'by'].includes(w)).map(w => w[0]).join('');
+  const stem = hostOf(ev.url || '').replace(/\.[a-z.]+$/i, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  if (initials.length >= 2 && stem.startsWith(initials) && /^(cigars?|tobacco|smokes?|lounge|shop|co)?$/.test(stem.slice(initials.length))) return true;
+  const said = [
+    ...(ev.jsonld || []).map(b => (String(b).match(/"name"\s*:\s*"[^"]{1,120}"/g) || []).join(' ')),
+    ...(ev.text || []).flatMap(t => t.lines || []),
+  ].join(' ').toLowerCase();
+  const host = hostOf(ev.url || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const hay = host + said.replace(/[^a-z0-9]+/g, '');
+  const spaced = ` ${said.replace(/[^a-z0-9]+/g, ' ')} `;
+  // A short word ("Den", "Joe") must stand alone in the text, or be in the
+  // domain: inside another word it is only letters ("garden", "golden").
+  return words.some(w => (w.length < 5 ? spaced.includes(` ${w} `) || host.includes(w) : hay.includes(w)));
 }
 
 /** Does the text around these lines say they are phone or web-shop hours? */
@@ -269,9 +351,19 @@ function phoneHours(lines, from, to) {
 /** Hours printed on the site's pages, anchored to this listing where possible. */
 function textCandidates(ev, store) {
   const anchored = [], loose = [];
+  let contradicted = 0;
   const key = addressKey(store.address);
   for (const block of ev.text || []) {
-    const lines = block.lines || [];
+    // Drop event lines, and the day-and-time lines right under an event
+    // heading: "Happy Hour" / "Monday - Friday | 4 pm to 6 pm".
+    const raw = block.lines || [];
+    if (raw.some(l => /\[(your|insert|enter|add)\b|lorem ipsum/i.test(l))) continue;
+    const lines = raw.filter((l, i) => {
+      if (EVENT_LINE.test(l)) return false;
+      const above = raw[i - 1] || '', twoAbove = raw[i - 2] || '';
+      const heading = s => EVENT_LINE.test(s) && s.length < 40 && !/\d/.test(s);
+      return !(heading(above) || (heading(twoAbove) && !/\bhours\b/i.test(above)));
+    });
     // 1. Hours printed after this listing's own street address.
     if (key) {
       const at = lines.findIndex(l => lineAddressKey(l) === key);
@@ -282,7 +374,7 @@ function textCandidates(ev, store) {
           seg.push(lines[i]);
         }
         const r = parseTextHours(seg);
-        if (r && describe(r.hours).days >= 3 && describe(r.hours).open && !phoneHours(lines, at + 1, at + 1 + seg.length)) {
+        if (r && !r.conflicts && describe(r.hours).days >= 3 && describe(r.hours).open && !phoneHours(lines, at + 1, at + 1 + seg.length)) {
           anchored.push({ hours: r.hours, kind: 'text-at-address', url: block.url, lines: [lines[at], ...seg] });
         }
       }
@@ -290,18 +382,59 @@ function textCandidates(ev, store) {
     // 2. A page with one shop's hours on it.
     const addresses = new Set(lines.map(lineAddressKey).filter(Boolean));
     if (addresses.size > 1) continue;              // a locations page: only an anchor can be trusted
-    const hoursLines = lines.map((l, i) => (parseTextHours([l]) ? i : -1)).filter(i => i >= 0);
+    // Hours printed beside an address in another town are that town's: Sabor
+    // Havana's Palm Beach Gardens listing must not take its Miami branch's.
+    // Only another town counts — a street number or suite written differently
+    // from ours is still the same door, and refusing those cost 73 real shops.
+    if (addresses.size === 1 && key && !addresses.has(key)) {
+      const addrLine = lines.find(l => lineAddressKey(l)) || '';
+      const ourCity = String(store.city || '').toLowerCase();
+      const namesACity = /,\s*[A-Za-z .'-]{3,},?\s*[A-Z]{2}\b/.test(addrLine);
+      if (namesACity && ourCity && !addrLine.toLowerCase().includes(ourCity)) continue;
+    }
+    // The span of lines that talk in days and times. Found line by line, not
+    // rule by rule: an hours table puts "Monday" and "8:30 AM - 8:00 PM" on
+    // separate lines, and neither is a rule on its own.
+    const hoursLines = lines.map((l, i) => (DAY.test(l) || TIME.test(l) ? i : -1)).filter(i => i >= 0);
     if (!hoursLines.length) continue;
     const from = hoursLines[0], to = hoursLines[hoursLines.length - 1];
     const r = parseTextHours(lines.slice(Math.max(0, from - 1), to + 1));
-    if (!r || describe(r.hours).days < 3 || !describe(r.hours).open) continue;
+    // One day with two answers means two blocks (an old hidden one and the
+    // current one, a footer and the hours page): refuse to pick.
+    if (r && r.conflicts) contradicted++;
+    if (!r || r.conflicts || describe(r.hours).days < 3 || !describe(r.hours).open) continue;
     if (phoneHours(lines, from, to)) continue;
     loose.push({ hours: r.hours, kind: 'text', url: block.url, lines: lines.slice(Math.max(0, from - 2), to + 2) });
   }
-  return { anchored, loose };
+  return { anchored, loose, contradicted };
 }
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+/**
+ * Several pages of one site that agree on every day they both state are one
+ * statement, cut off in different places: the homepage block stops before
+ * "Sunday: Closed" and the contact page does not. Their union is the answer.
+ * Any day stated two ways is a real disagreement, and nothing is merged.
+ */
+function mergeAgreeing(cands) {
+  if (cands.length < 2) return cands;
+  // A blanket "Open Daily 10-9" footer never fills a day a specific block
+  // leaves out: Cigar World's homepage said "Sun 10am - 5ish".
+  const blanket = c => Object.keys(c.hours).length === 7 && new Set(Object.values(c.hours)).size === 1;
+  if (cands.some(blanket) && cands.some(c => !blanket(c))) return cands;
+  const hours = {};
+  for (const c of cands) {
+    for (const [day, h] of Object.entries(c.hours)) {
+      if (hours[day] && hours[day] !== h) return cands;
+      hours[day] = h;
+    }
+  }
+  const base = cands.slice().sort((a, b) => Object.keys(b.hours).length - Object.keys(a.hours).length)[0];
+  const ordered = {};
+  for (const d of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']) if (hours[d]) ordered[d] = hours[d];
+  return [{ ...base, hours: ordered }];
+}
 
 /**
  * The hours to believe for one listing, or why none are.
@@ -310,33 +443,61 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
  */
 function decide(ev, store, siblings) {
   if (!ev || !ev.ok) return { skip: 'site unreachable' };
+  if (!mentionsShop(ev, store)) return { skip: 'the site never names this shop' };
   const structured = structuredCandidates(ev);
   const key = addressKey(store.address);
+  const { anchored, loose, contradicted } = textCandidates(ev, store);
+  const looseDistinct = mergeAgreeing(loose.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i));
 
+  // 1. Printed hours after this listing's own street address: what a visitor
+  //    to the page reads for this door. Verified 93% correct.
+  if (anchored.length) return { hours: anchored[0].hours, kind: anchored[0].kind, url: anchored[0].url, lines: anchored[0].lines };
+
+  // 2. Markup tied to this address, unless the visible page says otherwise.
+  //    Squarespace and SEO plugins keep old hours in markup long after the
+  //    page changed; where they disagree, the page a customer reads wins.
   const atAddress = structured.filter(c => c.addressKey && key && c.addressKey === key);
-  if (atAddress.length) return { hours: atAddress[0].hours, kind: 'markup-at-address', detail: atAddress[0].street };
-
-  const unaddressed = structured.filter(c => !c.addressKey);
-  const addressedElsewhere = structured.filter(c => c.addressKey && c.addressKey !== key);
-  if (siblings <= 1 && structured.length) {
-    const distinct = structured.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i);
-    if (distinct.length === 1) return { hours: distinct[0].hours, kind: structured[0].kind };
-    if (unaddressed.length === 1 && !addressedElsewhere.length) return { hours: unaddressed[0].hours, kind: unaddressed[0].kind };
+  if (atAddress.length) {
+    if (siblings <= 1 && looseDistinct.length === 1 && !same(looseDistinct[0].hours, atAddress[0].hours)) {
+      return { hours: looseDistinct[0].hours, kind: 'text-over-markup', url: looseDistinct[0].url, lines: looseDistinct[0].lines };
+    }
+    if (siblings <= 1 && looseDistinct.length > 1) return { skip: 'the site prints different hours in different places' };
+    return { hours: atAddress[0].hours, kind: 'markup-at-address', detail: atAddress[0].street };
   }
 
-  const { anchored, loose } = textCandidates(ev, store);
-  if (anchored.length) return { hours: anchored[0].hours, kind: anchored[0].kind, url: anchored[0].url, lines: anchored[0].lines };
+  // Markup with no address is not used at all: verification found it was a
+  // restaurant's, a sister branch's, an online retailer's office or a template
+  // more often than it was the shop's.
+  const addressedElsewhere = structured.filter(c => c.addressKey && c.addressKey !== key);
   if (siblings > 1) return { skip: addressedElsewhere.length ? 'chain site: no hours for this address' : 'chain site: hours not tied to an address' };
-  if (!loose.length) return { skip: structured.length ? 'markup disagrees with itself' : 'no hours found' };
-  const distinct = loose.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i);
-  if (distinct.length > 1) return { skip: 'the site prints different hours in different places' };
-  return { hours: distinct[0].hours, kind: 'text', url: distinct[0].url, lines: distinct[0].lines };
+  if (looseDistinct.length > 1) return { skip: 'the site prints different hours in different places' };
+  // A page that contradicts itself means the site says two things; a lone
+  // "Open Daily 10-9" repeated elsewhere is not the tie-breaker. Cigar World's
+  // homepage has "Sun 10am - 5ish" above that same footer.
+  const blanket = h => Object.keys(h).length === 7 && new Set(Object.values(h)).size === 1;
+  if (looseDistinct.length === 1 && contradicted && blanket(looseDistinct[0].hours)) return { skip: 'the site prints different hours in different places' };
+  if (looseDistinct.length === 1) return { hours: looseDistinct[0].hours, kind: 'text', url: looseDistinct[0].url, lines: looseDistinct[0].lines };
+
+  // 3. Markup with no address, only in the one case verification found it
+  //    reliable: a single-shop site stating one set of hours, with no markup
+  //    for any other address and no printed hours to contradict it. Templates
+  //    and web-shop offices have already been filtered out above.
+  const unaddressed = structured.filter(c => !c.addressKey);
+  const unaddressedDistinct = unaddressed.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i);
+  if (unaddressedDistinct.length === 1 && !addressedElsewhere.length) {
+    return { hours: unaddressedDistinct[0].hours, kind: 'markup' };
+  }
+  return { skip: structured.length ? 'markup that cannot be tied to this shop' : 'no hours found' };
 }
 
 // Not the shop's own site: a profile or listing on someone else's platform.
 // Nothing there is the shop speaking for itself, and most of it sits behind a
 // login or terms that forbid reading it.
-const NOT_THE_SHOPS_SITE = /(^|\.)(facebook\.com|fb\.me|instagram\.com|linktr\.ee|yelp\.[a-z.]+|google\.[a-z.]+|business\.site|tripadvisor\.[a-z.]+|foursquare\.com|mapquest\.com|yellowpages\.com|bbb\.org|twitter\.com|x\.com|tiktok\.com|youtube\.com|eventbrite\.[a-z.]+|nextdoor\.com|findsmokeshop\.com|cigarplaces\.com)$/i;
+const NOT_THE_SHOPS_SITE = /(^|\.)(facebook\.com|fb\.me|instagram\.com|linktr\.ee|yelp\.[a-z.]+|google\.[a-z.]+|business\.site|tripadvisor\.[a-z.]+|foursquare\.com|mapquest\.com|yellowpages\.com|bbb\.org|twitter\.com|x\.com|tiktok\.com|youtube\.com|eventbrite\.[a-z.]+|nextdoor\.com|findsmokeshop\.com|cigarplaces\.com|hub\.biz|hubbiz\.net)$/i;
+
+// Pictures that are nobody's shop: blank and tracking images, a platform's
+// default share card, an avatar service, a map provider's street photo.
+const GENERIC_IMAGE = /\/(blank|spacer|pixel|placeholder|no-?image|default|default-(og|share)|og-default|business_logo)\.(jpe?g|png|gif|webp|svg)(\?|$)|twimg\.com\/.*\/default\/|gravatar\.com|blavatar|streetviewpixels|googleapis\.com|facebook\.com\/tr/i;
 
 /** A website as a place: host and path, so a chain's location page is its own. */
 function pageKey(website) {
@@ -345,34 +506,81 @@ function pageKey(website) {
 }
 
 /** Read saved evidence and write the decisions a person reviews before applying. */
-async function decideAll({ from, out, log = console.log } = {}) {
-  if (!from || !fs.existsSync(from)) throw new Error('decide needs --from evidence.jsonl');
+/** JSON lines from one or more files ("a.jsonl,b.jsonl"), in order. */
+function readJsonl(list) {
+  const out = [];
+  for (const file of String(list || '').split(',').map(f => f.trim()).filter(Boolean)) {
+    if (!fs.existsSync(file)) throw new Error(`no such file: ${file}`);
+    for (const line of fs.readFileSync(file, 'utf8').split(String.fromCharCode(10))) {
+      if (!line.trim()) continue;
+      try { out.push(JSON.parse(line)); } catch {}
+    }
+  }
+  return out;
+}
+
+async function decideAll({ from, out, chains = null, skipsOut = null, log = console.log } = {}) {
+  if (!from) throw new Error('decide needs --from evidence.jsonl[,more.jsonl]');
+  // Store pages read from chain websites (and their store locators), by host.
+  const chainPages = new Map();
+  if (chains) {
+    for (const p of readJsonl(chains)) {
+      if (p.marker || !p.host) continue;
+      if (!chainPages.has(p.host)) chainPages.set(p.host, []);
+      chainPages.get(p.host).push(p);
+    }
+    log(`${[...chainPages.values()].reduce((n, l) => n + l.length, 0)} chain store pages from ${chainPages.size} websites`);
+  }
+  // Several reads of the same sites (a first pass, a re-read, a browser pass):
+  // a later read replaces an earlier one, unless it failed where that worked.
+  const evidence = new Map();
+  for (const ev of readJsonl(from)) {
+    const prev = evidence.get(ev.id);
+    if (!prev || ev.ok || !prev.ok) evidence.set(ev.id, ev);
+  }
   const stores = await db.all(`
-    SELECT id, name, address, city, state, website, claimed, staff_edited, hours, hours_source,
+    SELECT id, name, address, city, state, zip, website, claimed, staff_edited, hours, hours_source,
            logo_url, cover_url, web_image_url
     FROM stores WHERE visible = 1 AND website IS NOT NULL AND website <> ''`);
   const byId = new Map(stores.map(s => [s.id, s]));
   // Listings that point at the very same page share it; a chain listing that
   // links its own location page (".../locations/boca-raton") stands alone.
-  const perPage = new Map();
-  for (const s of stores) { const k = pageKey(s.website); perPage.set(k, (perPage.get(k) || 0) + 1); }
+  // Doors are counted, not listings: one shop listed twice at one street is
+  // still one shop, and its homepage hours are its own.
+  const doorsPerPage = new Map();
+  for (const s of stores) {
+    const k = pageKey(s.website);
+    if (!doorsPerPage.has(k)) doorsPerPage.set(k, new Set());
+    doorsPerPage.get(k).add(addressKey(s.address) || `#${s.id}`);
+  }
+  const perPage = new Map([...doorsPerPage].map(([k, doors]) => [k, doors.size]));
 
   const decisions = [];
+  const skips = [];
   const why = {};
-  for (const line of fs.readFileSync(from, 'utf8').split('\n')) {
-    if (!line.trim()) continue;
-    let ev; try { ev = JSON.parse(line); } catch { continue; }
+  for (const ev of evidence.values()) {
     const s = byId.get(ev.id);
     if (!s) continue;
     if (NOT_THE_SHOPS_SITE.test(hostOf(s.website)) || (ev.url && NOT_THE_SHOPS_SITE.test(hostOf(ev.url)))) {
       why['a social or listing page, not the shop\'s own site'] = (why['a social or listing page, not the shop\'s own site'] || 0) + 1;
       continue;
     }
-    const d = decide(ev, s, perPage.get(pageKey(s.website)) || 1);
+    let d = decide(ev, s, perPage.get(pageKey(s.website)) || 1);
+    // Any listing on a crawled chain's site is matched to its store page by
+    // street address, whatever the first read said: a listing linking its own
+    // store page may have had its hours table missed, and a page carrying this
+    // listing's exact street is proof enough that the site is its own.
+    if (d.skip && chainPages.has(hostOf(s.website))) {
+      const c = decideChainListing(s, chainPages.get(hostOf(s.website)));
+      d = c.hours ? c : { skip: `${d.skip}; ${c.skip}` };
+    }
     const locked = s.claimed || s.staff_edited || s.hours_source === 'owner';
-    const image = ev.image && !s.logo_url && !s.cover_url && !NOT_THE_SHOPS_SITE.test(hostOf(ev.image)) ? ev.image : null;
+    // A picture only from a site that is plainly this shop's: a tattoo
+    // studio's banner must not become a cigar shop's thumbnail.
+    const image = ev.image && !s.logo_url && !s.cover_url && !NOT_THE_SHOPS_SITE.test(hostOf(ev.image)) && !GENERIC_IMAGE.test(ev.image) && mentionsShop(ev, s) ? ev.image : null;
     if (d.skip || locked) {
       why[locked ? 'owner or staff set these hours' : d.skip] = (why[locked ? 'owner or staff set these hours' : d.skip] || 0) + 1;
+      if (!locked) skips.push({ id: s.id, skip: d.skip });
       if (image && !locked) decisions.push({ id: s.id, name: s.name, image });
       continue;
     }
@@ -387,6 +595,9 @@ async function decideAll({ from, out, log = console.log } = {}) {
     why[`hours: ${d.kind}`] = (why[`hours: ${d.kind}`] || 0) + 1;
   }
   fs.writeFileSync(out, JSON.stringify(decisions, null, 1));
+  // Why each listing got none, so a browser pass (hoursRender.js) can retry
+  // the ones whose sites showed nothing to a plain download.
+  if (skipsOut) fs.writeFileSync(skipsOut, JSON.stringify(skips));
   const withHours = decisions.filter(d => d.hours).length;
   log(`${withHours} listings get hours, ${decisions.filter(d => d.image).length} get a picture. Decisions in ${out}`);
   for (const [k, n] of Object.entries(why).sort((a, b) => b[1] - a[1])) log(`  ${String(n).padStart(5)}  ${k}`);
@@ -420,26 +631,333 @@ async function applyDecisions(file, { log = console.log } = {}) {
   return { hours: h.n, images: i.n };
 }
 
+// ── Chains ──────────────────────────────────────────────────────────────────
+//
+// A chain lists every branch under one website, so the homepage cannot say
+// which hours belong to which door. Most chains publish a page per store —
+// Wild Bill's has 239 of them in a sitemap — and each carries that store's
+// address and hours. Read those pages, and give a listing the hours of the
+// page that names its street address.
+
+const LOCATION_PATH = /\/(locations?|stores?|store-locator|shops?|branch(es)?|find-(us|a-store)|our-stores|visit|wpsl_stores)(\/|$)/i;
+const NOT_A_STORE_PAGE = /\/(blog|news|posts?|articles?|events?|press|category|tag)(\/|$)/i;
+
+async function fetchText(url, accept) {
+  try {
+    const res = await fetchUrl(url, { accept });
+    return res && res.status < 400 ? res.body : null;
+  } catch { return null; }
+}
+
+/** Every URL a site's sitemaps list, following one level of sitemap index. */
+async function sitemapUrls(origin) {
+  const seeds = new Set([`${origin}/sitemap.xml`, `${origin}/sitemap_index.xml`, `${origin}/wp-sitemap.xml`]);
+  const robots = await fetchText(`${origin}/robots.txt`, 'text/plain');
+  for (const m of String(robots || '').matchAll(/^sitemap:\s*(\S+)/gim)) seeds.add(m[1].trim());
+  const urls = new Set();
+  const children = [];
+  for (const s of seeds) {
+    const xml = await fetchText(s, 'application/xml,text/xml');
+    if (!xml) continue;
+    for (const m of xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/gi)) {
+      const u = decodeEntities(m[1]);
+      if (/\.xml(\?|$)/i.test(u)) children.push(u); else urls.add(u);
+    }
+    await sleep(PAUSE_MS);
+  }
+  // Store sitemaps first ("wpsl_stores-sitemap.xml", "locations-sitemap.xml").
+  children.sort((a, b) => Number(/wpsl|store|location|shop|branch/i.test(b)) - Number(/wpsl|store|location|shop|branch/i.test(a)));
+  for (const c of children.slice(0, 8)) {
+    const xml = await fetchText(c, 'application/xml,text/xml');
+    for (const m of String(xml || '').matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/gi)) urls.add(decodeEntities(m[1]));
+    await sleep(PAUSE_MS);
+  }
+  return [...urls];
+}
+
+/** What one store page says: its hours evidence and every street address on it. */
+function pageEvidence(url, html) {
+  const text = pageText(html);
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const addressKeys = [...new Set(lines.map(lineAddressKey).filter(Boolean))];
+  const snippets = hoursSnippets(text);
+  return {
+    url, ok: true,
+    jsonld: jsonLdBlocks(html).filter(b => /openingHours|dayOfWeek|streetAddress/i.test(b)).slice(0, 6),
+    microdata: microdataHours(html),
+    text: snippets.length ? [{ url, lines: snippets }] : [],
+    // A store page is one shop's page: keep its words, so a later rule can
+    // read them without crawling the chain again.
+    allLines: lines.slice(0, 400).map(l => l.slice(0, 200)),
+    addressKeys,
+    image: metaImage(html, url),
+  };
+}
+
+/**
+ * Stores from a WP Store Locator site: the JSON its own locator page reads,
+ * with each store's street and an hours table. The plugin answers at most 100
+ * stores within a radius, so ask around each of our listings and pool them.
+ * Returns pages in the same shape as pageEvidence, or [] for other sites.
+ */
+async function wpslPages(origin, points) {
+  const grid = new Map();
+  for (const p of points) if (p.lat && p.lng) grid.set(`${Math.round(p.lat * 2)},${Math.round(p.lng * 2)}`, p);
+  const found = new Map();
+  let first = true;
+  for (const p of [...grid.values()].slice(0, 40)) {
+    const body = await fetchText(`${origin}/wp-admin/admin-ajax.php?action=store_search&lat=${p.lat}&lng=${p.lng}&max_results=100&search_radius=100`, 'application/json');
+    let list = null;
+    try { list = JSON.parse(String(body || '').trim()); } catch {}
+    if (!Array.isArray(list)) { if (first) return []; continue; }
+    first = false;
+    for (const x of list) if (x && x.id && x.address) found.set(x.id, x);
+    await sleep(PAUSE_MS);
+  }
+  return [...found.values()].map(x => {
+    let hoursLines = pageText(String(x.hours || '')).split('\n').map(l => l.trim()).filter(Boolean);
+    const parsed = parseTextHours(hoursLines);
+    if (parsed && locatorDefaultHours(parsed.hours)) hoursLines = [];
+    const place = `${decodeEntities(String(x.city || ''))}, ${x.state || ''} ${x.zip || ''}`.trim();
+    const allLines = [decodeEntities(String(x.store || '')), decodeEntities(String(x.address || '')), decodeEntities(String(x.address2 || '')), place, ...hoursLines].filter(Boolean);
+    const url = x.permalink || x.url || origin;
+    return {
+      url, ok: true, source: 'wpsl', jsonld: [], microdata: [],
+      text: hoursLines.length ? [{ url, lines: ['Hours', ...hoursLines] }] : [],
+      allLines, addressKeys: [addressKey(x.address)].filter(Boolean), image: null,
+    };
+  });
+}
+
+/**
+ * Read the store pages of every website several listings share. One line per
+ * page in a JSONL file; resumes by host.
+ */
+async function collectChains({ out, limitHosts = 0, log = console.log } = {}) {
+  if (!out) throw new Error('chains needs --out <file.jsonl>');
+  const done = new Set();
+  if (fs.existsSync(out)) {
+    for (const line of fs.readFileSync(out, 'utf8').split('\n')) {
+      try { const r = JSON.parse(line); if (r && r.host) done.add(r.host); } catch {}
+    }
+  }
+  const stores = await db.all(`
+    SELECT id, city, website, lat, lng FROM stores
+    WHERE visible = 1 AND website IS NOT NULL AND website <> ''
+      AND COALESCE(website_status, 'ok') IN ('ok', 'blocked')`);
+  const byPage = new Map();
+  for (const s of stores) {
+    const k = pageKey(s.website);
+    if (!byPage.has(k)) byPage.set(k, []);
+    byPage.get(k).push(s);
+  }
+  const chains = new Map();          // host -> listings
+  for (const [, list] of byPage) {
+    if (list.length < 2) continue;
+    const host = hostOf(list[0].website);
+    if (NOT_THE_SHOPS_SITE.test(host)) continue;
+    chains.set(host, (chains.get(host) || []).concat(list));
+  }
+  let hosts = [...chains.entries()].filter(([h]) => !done.has(h)).sort((a, b) => b[1].length - a[1].length);
+  if (limitHosts) hosts = hosts.slice(0, limitHosts);
+  log(`${chains.size} chain websites; reading ${hosts.length} (${done.size} already done)`);
+
+  const stream = fs.createWriteStream(out, { flags: 'a' });
+  let next = 0, pagesRead = 0;
+  async function worker() {
+    while (next < hosts.length) {
+      const [host, listings] = hosts[next++];
+      let origin = `https://${host}`;
+      // A brand that now lives on its owner's site (cheaptobaccousa.com sends
+      // visitors to wildbillstobacco.com) is read where it lives; its pages are
+      // still filed under the host the listings link.
+      try {
+        const res = await fetchUrl(origin, { accept: 'text/html' });
+        if (res && res.url && hostOf(res.url) !== host && !NOT_THE_SHOPS_SITE.test(hostOf(res.url))) origin = new URL(res.url).origin;
+      } catch {}
+      // A store-locator feed is the whole chain in one structured answer.
+      const located = await wpslPages(origin, listings).catch(() => []);
+      if (located.length) {
+        for (const p of located) stream.write(JSON.stringify({ host, ...p }) + '\n');
+        stream.write(JSON.stringify({ host, marker: true, pages: located.length, listings: listings.length, source: 'wpsl' }) + '\n');
+        pagesRead += located.length;
+        log(`  ${host}: ${located.length} stores from its store locator for ${listings.length} listings`);
+        continue;
+      }
+      const citySlugs = [...new Set(listings.map(l => String(l.city || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')).filter(s => s.length > 2))];
+      let urls = [];
+      try { urls = await sitemapUrls(origin); } catch {}
+      let pages = urls.filter(u => {
+        try {
+          const p = new URL(u).pathname.toLowerCase();
+          return !NOT_A_STORE_PAGE.test(p) && (LOCATION_PATH.test(p) || citySlugs.some(c => p.includes(c)));
+        } catch { return false; }
+      });
+      if (!pages.length) {
+        // No sitemap worth the name: follow the homepage's location links.
+        const home = await fetchText(origin, 'text/html');
+        if (home) {
+          const links = [...String(home).matchAll(/<a[^>]+href=["']([^"'#]+)["']/gi)]
+            .map(m => { try { return new URL(decodeEntities(m[1]), origin).toString(); } catch { return null; } })
+            .filter(u => u && hostOf(u) === host && LOCATION_PATH.test(new URL(u).pathname));
+          pages = [...new Set(links)];
+        }
+      }
+      const cap = Math.min(300, Math.max(30, listings.length * 3));
+      if (pages.length > cap) pages = pages.slice(0, cap);
+      let hostPages = 0;
+      for (const u of pages) {
+        const html = await fetchText(u, 'text/html');
+        if (html) {
+          stream.write(JSON.stringify({ host, ...pageEvidence(u, html) }) + '\n');
+          hostPages++;
+        }
+        await sleep(PAUSE_MS);
+      }
+      // A marker so a resumed run skips this host even if it had no pages.
+      stream.write(JSON.stringify({ host, marker: true, pages: hostPages, listings: listings.length }) + '\n');
+      pagesRead += hostPages;
+      log(`  ${host}: ${hostPages} store pages for ${listings.length} listings`);
+    }
+  }
+  await Promise.all(Array.from({ length: 6 }, worker));
+  await new Promise(r => stream.end(r));
+  log(`done: ${pagesRead} store pages from ${hosts.length} chains`);
+  return { pagesRead, chains: hosts.length };
+}
+
+/**
+ * Chain listings' hours from the store pages read above. A page that names
+ * only this listing's street is this listing's page. A page naming many
+ * addresses is an index, where only hours printed after this listing's own
+ * address count.
+ */
+function decideChainListing(store, pages) {
+  const key = addressKey(store.address);
+  if (!key) return { skip: 'listing has no street address to match' };
+  const keysOf = p => (p.allLines ? [...new Set(p.allLines.map(lineAddressKey).filter(Boolean))] : (p.addressKeys || []));
+  // A street key is a number and one word, and a chain can have "1060 Main St"
+  // in two towns: Cheap Tobacco's Ravenna shop is not Wild Bill's of Bowling
+  // Green. The page has to name our town or ZIP as well — anywhere on a
+  // store's own page, and beside the address on a page listing many.
+  const town = String(store.city || '').toLowerCase();
+  const zip = String(store.zip || '').slice(0, 5);
+  const namesPlace = l => { const t = String(l).toLowerCase(); return (town.length > 2 && t.includes(town)) || (/^\d{5}$/.test(zip) && t.includes(zip)); };
+  const inOurTown = p => {
+    const lines = p.allLines;
+    if (!lines) return true;
+    if (keysOf(p).length <= 2) return lines.some(namesPlace);
+    return lines.some((l, i) => lineAddressKey(l) === key && lines.slice(Math.max(0, i - 2), i + 4).some(namesPlace));
+  };
+  let mine = pages.filter(p => (keysOf(p).includes(key)
+    || structuredCandidates(p).some(c => c.addressKey === key)) && inOurTown(p));
+  if (!mine.length) {
+    // "1160 Mount Vernon Ave" is "1160 Mt Vernon Ave" on the chain's page, and
+    // "W Twelve Mile Rd" is "12 Mile Rd". The same house number on the one
+    // page that also names our town is the same door.
+    const num = key.split(' ')[0];
+    const byNumber = pages.filter(p => keysOf(p).length <= 2 && keysOf(p).some(k => k.split(' ')[0] === num)
+      && (p.allLines || []).some(namesPlace));
+    if (byNumber.length === 1) mine = byNumber;
+  }
+  if (!mine.length) return { skip: 'no store page for this address' };
+  for (const p of mine) {
+    try { if (NOT_A_STORE_PAGE.test(new URL(p.url).pathname)) continue; } catch {}
+    const own = keysOf(p).length <= 2;
+    const d = decide(p, store, own ? 1 : 2);
+    if (d.hours) return { ...d, kind: `chain-${d.kind}`, url: p.url };
+  }
+  return { skip: 'store page has no hours we can read' };
+}
+
 module.exports = {
   collect, collectOne, pageText, hoursSnippets, jsonLdBlocks, microdataHours, metaImage, candidateLinks,
   decide, decideAll, applyDecisions, structuredCandidates, textCandidates, phoneHours,
+  collectChains, sitemapUrls, pageEvidence, wpslPages, decideChainListing, pageKey, NOT_THE_SHOPS_SITE,
 };
+
+/** Decision rules on fixed evidence; no network, no database queries. */
+function selfTest() {
+  let pass = 0, fail = 0;
+  const ok = (c, label, got) => { if (c) pass++; else { fail++; console.log('  FAIL ' + label + (got !== undefined ? '  -> ' + JSON.stringify(got) : '')); } };
+  const page = (url, lines) => ({ ok: true, url, jsonld: [], microdata: [], text: [{ url, lines }] });
+  const shop = { id: 1, name: 'Tower Pipes and Cigars', address: '1600 Broadway', city: 'Sacramento', zip: '95818' };
+
+  // Two pages that agree wherever both speak are one statement.
+  let d = decide({ ok: true, url: 'https://www.towercigars.com/', jsonld: [], microdata: [], text: [
+    { url: 'https://www.towercigars.com/', lines: ['Tower Pipes and Cigars', 'Regular Store Hours', 'Monday-Saturday: 9am-6pm', 'Sunday: Closed'] },
+    { url: 'https://www.towercigars.com/contact', lines: ['Store hours', 'Monday - Saturday', '9am-6pm'] },
+  ] }, shop, 1);
+  ok(d.hours && d.hours.Sun === 'Closed' && d.hours.Mon === '9am-6pm', 'pages that agree are merged', d);
+  d = decide({ ok: true, url: 'https://www.towercigars.com/', jsonld: [], microdata: [], text: [
+    { url: 'https://www.towercigars.com/', lines: ['Tower Pipes and Cigars', 'Store Hours', 'Monday-Saturday: 9am-6pm', 'Sunday: Closed'] },
+    { url: 'https://www.towercigars.com/contact', lines: ['Store hours', 'Monday - Saturday', '9am-7pm'] },
+  ] }, shop, 1);
+  ok(d.skip === 'the site prints different hours in different places', 'pages that disagree are not merged', d);
+
+  // A chain's store page: the street and the town must both be ours.
+  const wb = { id: 2, name: "Wild Bill's Tobacco", address: '1060 W Main St', city: 'Ravenna', zip: '44266' };
+  const bowlingGreen = { ...page('https://wildbillstobacco.com/locations/bowling-green/', ['Monday', '9:00 AM - 8:00 PM', 'Tuesday', '9:00 AM - 8:00 PM', 'Wednesday', '9:00 AM - 8:00 PM', 'Sunday', '10:00 AM - 6:00 PM']),
+    allLines: ["Wild Bill's of Bowling Green", '1060 N Main St', 'Bowling Green, Ohio 43402', 'Monday', '9:00 AM - 8:00 PM', 'Tuesday', '9:00 AM - 8:00 PM', 'Wednesday', '9:00 AM - 8:00 PM', 'Sunday', '10:00 AM - 6:00 PM'] };
+  d = decideChainListing(wb, [bowlingGreen]);
+  ok(!d.hours, 'the same street in another town is another shop', d);
+  const ravenna = { ...bowlingGreen, url: 'https://wildbillstobacco.com/locations/ravenna/', allLines: bowlingGreen.allLines.map(l => l.replace('Bowling Green, Ohio 43402', 'Ravenna, Ohio 44266').replace('1060 N Main', '1060 W Main')) };
+  d = decideChainListing(wb, [bowlingGreen, ravenna]);
+  ok(d.hours && d.hours.Sun === '10am-6pm' && d.url.includes('ravenna'), 'the store page in our town is ours', d);
+  // "Mount Vernon" written "Mt Vernon": same number, same town, own page.
+  const marion = { id: 3, name: "Wild Bill's Tobacco", address: '1160 Mount Vernon Ave', city: 'Marion', zip: '43302' };
+  const mt = { ...ravenna, url: 'https://wildbillstobacco.com/locations/marion/', allLines: ["Wild Bill's of Marion", '1160 Mt Vernon Ave', 'Marion, Ohio 43302', 'Monday', '9:00 AM - 9:00 PM', 'Tuesday', '9:00 AM - 9:00 PM', 'Wednesday', '9:00 AM - 9:00 PM'],
+    text: [{ url: 'https://wildbillstobacco.com/locations/marion/', lines: ['Hours', 'Monday', '9:00 AM - 9:00 PM', 'Tuesday', '9:00 AM - 9:00 PM', 'Wednesday', '9:00 AM - 9:00 PM'] }] };
+  d = decideChainListing(marion, [ravenna, mt]);
+  ok(d.hours && d.hours.Mon === '9am-9pm', 'a street written another way matches by number and town', d);
+
+  // A blog post naming the town is not the store's page.
+  const blog = { ...ravenna, url: 'https://wildbillstobacco.com/blog/best-tobacco-in-ravenna/' };
+  d = decideChainListing(wb, [blog]);
+  ok(!d.hours, 'a blog post is not a store page', d);
+  d = decide(page('https://towercigars.com/', ['Tower Pipes and Cigars', 'Location: Main St', 'Hours: Open 7 days a week, 9 AM - 10 PM', 'Contact: Call us at [your contact number]']), shop, 1);
+  ok(!d.hours, 'template text is not hours', d);
+  ok(locatorDefaultHours({ Mon: '9am-5pm', Tue: '9am-5pm', Wed: '9am-5pm', Thu: '9am-5pm', Fri: '9am-5pm', Sat: 'Closed', Sun: 'Closed' }), 'the locator plugin default is recognised');
+
+  // The town in the name is not the shop; a short word must stand alone.
+  const den = { id: 4, name: 'Tobacco Den Brainerd', address: '603 Washington St', city: 'Brainerd' };
+  d = decide(page('https://www.brainerdglass.net/', ['Custom glass shower doors', 'Business Hours', 'Mon - Thu', '7:30 am - 5:00 pm', 'Friday', '8:00 am - 12:00 pm', 'golden service']), den, 1);
+  ok(d.skip === 'the site never names this shop', 'a glass company in the same town is not the shop', d);
+  d = decide(page('https://tobaccoden.com/', ['Hours', 'Mon - Sat 9am - 9pm', 'Sun 10am - 6pm']), den, 1);
+  ok(d.hours && d.hours.Mon === '9am-9pm', 'the shop name in the domain counts', d);
+  // A blanket footer does not fill the specific block's Sunday.
+  const cw = { id: 5, name: 'Cigar World', address: '735 NJ-17', city: 'Ramsey' };
+  d = decide({ ok: true, url: 'https://njcigarworld.com/', jsonld: [], microdata: [], text: [
+    { url: 'https://njcigarworld.com/', lines: ['Cigar World', 'Business Hours', 'Mon - Sat 10am - 9pm', 'Sun 10am - maybe'] },
+    { url: 'https://njcigarworld.com/about/', lines: ['Open Daily', '10:00 am - 09:00 pm'] },
+  ] }, cw, 1);
+  ok(!d.hours || d.hours.Sun !== '10am-9pm', 'an open-daily footer does not fill a gap', d);
+
+  ok(lineAddressKey('Call (201) 934-1142 or email us') === null && lineAddressKey('Open 365 days!') === null, 'a phone tail and a day count are not streets');
+  ok(lineAddressKey('735 Rt 17 S, Ramsey NJ') !== null && lineAddressKey('1600 Broadway, Sacramento') === '1600 broadway', 'real streets still are');
+
+  console.log(`hoursSweep self-test: ${pass} passed, ${fail} failed`);
+  return fail === 0;
+}
 
 if (require.main === module) {
   const argv = process.argv.slice(2);
   const arg = name => { const i = argv.indexOf(name); return i >= 0 && argv[i + 1] ? argv[i + 1] : null; };
+  if (argv[0] === 'selftest') process.exit(selfTest() ? 0 : 1);
   const { initSchema, runMigrations } = require('../database/schema');
   (async () => {
     await initSchema();
     await runMigrations();
     if (argv[0] === 'collect') {
       await collect({ out: arg('--out'), limit: Number(arg('--limit')) || 0 });
+    } else if (argv[0] === 'chains') {
+      await collectChains({ out: arg('--out'), limitHosts: Number(arg('--limit')) || 0 });
     } else if (argv[0] === 'decide') {
-      await decideAll({ from: arg('--from'), out: arg('--out') });
+      await decideAll({ from: arg('--from'), out: arg('--out'), chains: arg('--chains'), skipsOut: arg('--skips') });
     } else if (argv[0] === 'apply' && argv.includes('--confirm')) {
       await applyDecisions(arg('--from'));
     } else {
-      console.error('usage: hoursSweep.js collect --out evidence.jsonl | decide --from evidence.jsonl --out decisions.json | apply --from decisions.json --confirm');
+      console.error('usage: hoursSweep.js collect --out evidence.jsonl | chains --out chains.jsonl | decide --from a.jsonl[,b.jsonl] --out decisions.json [--chains chains.jsonl] [--skips skips.json] | apply --from decisions.json --confirm | selftest');
       process.exit(2);
     }
     process.exit(0);
