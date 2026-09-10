@@ -92,7 +92,18 @@ A follow-up pass matters here: the first run treated an HTTP 403 as dead, but Cl
 
 Committed as `284823f` and pushed to `master`, which triggers the Railway deploy of the "cigar maps" project.
 
-## Next up: closed shops
+## Closed shops (2026-09-10)
+
+Overture carries an `operating_status` column we were not reading: 564 US cigar/tobacco places are marked `permanently_closed`. The extract, the directory build and the importer now carry it, and a source-confirmed closure is hidden on import.
+
+It is necessary but not sufficient. Broadway Cigar Company in Camas WA is shut but Overture still says `open`, so the source lags by months. Three more signals fill the gap:
+- the shop's own website announcing a closure, with guards so "closed Sundays" never counts;
+- nothing left to contact at all (dead website, no phone, no hours) as a weak "likely closed";
+- visitors reporting it, with two independent reports hiding an unclaimed listing automatically.
+
+A claimed listing is never auto-hidden by any of these. An owner who claimed their shop knows better than our data does.
+
+## Superseded plan: closed shops
 
 Broadway Cigar Company in Camas WA (store 10022) is shut down but was still listed. Hidden by hand and marked `storefront='closed'`. The wider problem is that nothing in the pipeline knows a shop has closed: the source data lags by months, and roughly 1,361 listings already have a dead website, which is itself a strong closure signal.
 

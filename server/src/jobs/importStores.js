@@ -63,7 +63,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
   }
   const owned = existing.filter(e => !DIRECTORY_SOURCES.has(e.source) && e.lat && e.lng);
 
-  let inserted = 0, updated = 0, merged = 0, upgraded = 0, skipped = 0;
+  let inserted = 0, updated = 0, merged = 0, upgraded = 0, skipped = 0, closed = 0;
   const t0 = Date.now();
 
   for (const s of data.stores) {
@@ -75,6 +75,11 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
     const { confidence, store_type } = classify(s.name, s.ctags || s.osm_tags || {}, s.website);
     const hours = s.hours ? JSON.stringify(s.hours) : null;
     const tags = JSON.stringify(s.tags || []);
+    // The source says the doors are shut. It lags reality by months and is not
+    // the only closure signal, but when it does say so it is worth believing.
+    const closedAtSource = s.operating_status === 'permanently_closed';
+    if (closedAtSource) closed++;
+    const opStatus = s.operating_status || null;
 
     // An Overture record that absorbed an OSM twin can adopt the row that OSM
     // id already created, instead of adding a second pin on the same shop.
@@ -103,12 +108,15 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
             website = CASE WHEN ? THEN website ELSE COALESCE(?, website) END,
             instagram = COALESCE(?, instagram), lat = ?, lng = ?, hours = COALESCE(?, hours), hours_raw = ?,
             store_type = ?, confidence = ?, visible = ?,
+            operating_status = COALESCE(?, operating_status),
+            closed_reason = CASE WHEN ? THEN COALESCE(closed_reason, 'Marked permanently closed in the source data') ELSE closed_reason END,
             has_lounge = GREATEST(COALESCE(has_lounge, 0), ?), has_walk_in_humidor = GREATEST(COALESCE(has_walk_in_humidor, 0), ?)
           WHERE id = ?
         `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw,
             keepStaff ? found.store_type : store_type,
             confidence,
-            keepStaff ? found.visible : (confidence >= VISIBLE_THRESHOLD ? 1 : 0),
+            keepStaff ? found.visible : (closedAtSource ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
+            opStatus, closedAtSource,
             s.has_lounge || 0, s.has_walk_in_humidor || 0, found.id]);
         updated++;
       }
@@ -129,11 +137,14 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
 
     await db.run(`
       INSERT INTO stores (user_id, name, address, city, state, zip, phone, website, instagram, lat, lng, hours, hours_raw, tags,
-        has_lounge, has_walk_in_humidor, verified, setup_complete, claimed, source, source_id, osm_id, store_type, confidence, visible)
-      VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?)
+        has_lounge, has_walk_in_humidor, verified, setup_complete, claimed, source, source_id, osm_id, store_type, confidence, visible,
+        operating_status, closed_reason)
+      VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [s.name, s.address, s.city, s.state, s.zip, s.phone, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw, tags,
         s.has_lounge || 0, s.has_walk_in_humidor || 0, source, s.source_id, s.osm_id || null,
-        store_type, confidence, confidence >= VISIBLE_THRESHOLD ? 1 : 0]);
+        store_type, confidence,
+        closedAtSource ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0),
+        opStatus, closedAtSource ? 'Marked permanently closed in the source data' : null]);
     inserted++;
   }
 
@@ -142,7 +153,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
   `, [version]);
 
-  const result = { inserted, updated, merged, upgraded, skipped, total: data.stores.length, version, seconds: Math.round((Date.now() - t0) / 1000) };
+  const result = { inserted, updated, merged, upgraded, skipped, closed, total: data.stores.length, version, seconds: Math.round((Date.now() - t0) / 1000) };
   log(`[import] ${JSON.stringify(result)}`);
   return result;
 }

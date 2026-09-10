@@ -116,7 +116,14 @@ async function normalizeOverture(row) {
     // ctags is what classify() understands, kept so the importer can re-score a
     // record when the classifier improves without refetching the source.
     ctags: tags,
-    raw: { category: row.category, alt: row.alt_categories || [], ov_confidence: row.confidence, dataset: row.source_dataset },
+    // 'open' | 'permanently_closed' | null, straight from the source. Lags
+    // reality by months, so it is one signal among several, never the last word.
+    operating_status: row.operating_status || null,
+    raw: {
+      category: row.category, alt: row.alt_categories || [],
+      basic_category: row.basic_category || null, taxonomy: row.taxonomy_primary || null,
+      ov_confidence: row.confidence, dataset: row.source_dataset,
+    },
   };
 }
 
@@ -186,6 +193,7 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
 
   const stores = [...overtureClean, ...osmOnly];
   const visible = stores.filter(s => s.confidence >= 0.5).length;
+  const closed = stores.filter(s => s.operating_status === 'permanently_closed').length;
   const byType = {};
   for (const s of stores) if (s.confidence >= 0.5) byType[s.store_type] = (byType[s.store_type] || 0) + 1;
   const out = {
@@ -201,6 +209,7 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
   const kb = Math.round(fs.statSync(OUT_PATH).size / 1024);
   console.log(`directory: ${stores.length} stores (${visible} public), ${merged} OSM records merged into Overture twins, ${osmOnly.length} OSM-only`);
   console.log(`public by type: ${JSON.stringify(byType)}`);
+  console.log(`marked permanently closed at source: ${closed}`);
   console.log(`wrote ${OUT_PATH} (${kb} KB) in ${Math.round((Date.now() - t0) / 1000)}s`);
   return out;
 }

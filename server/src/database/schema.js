@@ -454,6 +454,13 @@ const MIGRATIONS = [
   { name: '077_stores_storefront_reason', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS storefront_reason TEXT' },
   { name: '078_stores_storefront_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS storefront_checked_at TIMESTAMP' },
   { name: '079_stores_storefront_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_storefront ON stores(storefront, visible)' },
+  // ── Is the shop still trading? Source data lags reality by months, so this
+  //    records what each signal said and when.
+  { name: '080_stores_operating_status', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS operating_status TEXT' },
+  { name: '081_stores_closed_reason', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS closed_reason TEXT' },
+  { name: '082_stores_closed_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP' },
+  { name: '083_stores_closure_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS closure_checked_at TIMESTAMP' },
+  { name: '084_stores_closed_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_operating ON stores(operating_status, visible)' },
 ];
 
 async function runMigrations() {
