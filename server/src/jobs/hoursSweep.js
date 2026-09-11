@@ -493,7 +493,7 @@ function decide(ev, store, siblings) {
 // Not the shop's own site: a profile or listing on someone else's platform.
 // Nothing there is the shop speaking for itself, and most of it sits behind a
 // login or terms that forbid reading it.
-const NOT_THE_SHOPS_SITE = /(^|\.)(facebook\.com|fb\.me|instagram\.com|linktr\.ee|yelp\.[a-z.]+|google\.[a-z.]+|business\.site|tripadvisor\.[a-z.]+|foursquare\.com|mapquest\.com|yellowpages\.com|bbb\.org|twitter\.com|x\.com|tiktok\.com|youtube\.com|eventbrite\.[a-z.]+|nextdoor\.com|findsmokeshop\.com|cigarplaces\.com|hub\.biz|hubbiz\.net)$/i;
+const NOT_THE_SHOPS_SITE = /(^|\.)(facebook\.com|fb\.me|instagram\.com|linktr\.ee|yelp\.[a-z.]+|google\.[a-z.]+|business\.site|tripadvisor\.[a-z.]+|foursquare\.com|mapquest\.com|yellowpages\.com|bbb\.org|twitter\.com|x\.com|tiktok\.com|youtube\.com|eventbrite\.[a-z.]+|nextdoor\.com|findsmokeshop\.com|cigarplaces\.com|hub\.biz|hubbiz\.net|yahoo\.com|exxonmobilfuels\.com|[a-z0-9-]+\.gov)$/i;
 
 // Pictures that are nobody's shop: blank and tracking images, a platform's
 // default share card, an avatar service, a map provider's street photo.
