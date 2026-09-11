@@ -186,6 +186,70 @@ An "open daily, but Sunday 12-6" reading was tried and reverted: it turned Shake
 
 **Refreshing.** Re-run collect → chains → (render) → decide → review → apply. Collecting takes about 25 minutes; the chain crawl and the browser pass take up to an hour each.
 
+## Store data audit: the next sweeps, ranked (2026-09-10, night)
+
+Sixteen read-only auditor agents measured every kind of store data on a production snapshot and spot-checked live sources. A critic challenged inflated numbers and added three areas nobody had covered: claims, how search assembles results, and licence registries.
+
+**Already solid:**
+- pins: median 56 m from the shop's own address;
+- time zones: 99.6% right;
+- cigar-named listings: about 95% genuine;
+- chain hours: 221 of 222 match the chains' feeds;
+- website hours: 146 of 150 right on review;
+- dead-link hiding.
+
+Treating a dead website as a closure was dropped: 11 of 11 sampled dead-site shops were open.
+
+**Fixed straight away:** five of today's website hours came from someone else's page (Grout Masters, kingcounty.gov, an ExxonMobil station, two Yahoo Local listings). They were cleared, and those hosts are now blocked.
+
+**Ranked sweeps.** Numbers are the auditors' own: measured where stated, otherwise estimates.
+1. **Make fixes stick.** The importer rewrites name and pin on every unclaimed row, even staff-edited ones. It lets the source's "open" overwrite our closures, and only storefront verdicts keep a row hidden. Redland Cigar Co (#2585, closed per its own site) would come back as open at the next directory refresh. Fix with a per-field provenance model, an edit log and a re-import test. This must come before the sweeps below.
+2. **Time zones from county lines.** The longitude rules put 26-31 listings on the wrong clock, including all 12 around Chattanooga on Central.
+3. **Map-only hours.** 234 listings show OpenStreetMap hours, and about half are wrong. Drop the Open/Closed badge on them (decision needed), stop inventing Closed days, and re-read the 32 whose sites publish hours.
+4. **Moved shops and closed branches.** 92 phone-and-name pairs (173 listings); about 18 confirmed stale.
+5. **Cigar search counts hidden stores.** 238 lines show only hidden stock; 254 unpriced lines.
+6. **Re-audit the 1,077 website hours.** Wrong site, sister branch, host venue, office line, lapsed season: about 30-50 wrong. Tighten mentionsShop: whole words only, never a substring of a domain.
+7. **Taken-over, parked and redirected links.** 318 shown links land on another domain; 14 thumbnails come from gambling or for-sale sites.
+8. **Purge non-shops.** About 150-250: manufacturers, landmarks, head shops, plumbers named "Pipe…", event services. Scope decision needed.
+9. **Pins and states.** 153 pins lie more than 1 km from the Census geocode of their address (estimate: 100-130 real errors), plus 17 wrong-state or foreign rows.
+10. **Likely-closed flag.** Clean its inputs, extend it to stale OSM-only pins, and warn shoppers (decision needed).
+11. **State licence registries.** Free for 38% of listings (FL, CA, TX, PA, NY, WA, Chicago). They caught closures, renames and moves the other checks missed. They flag only, never hide.
+12. **Search completeness.** The default cap is 300 rows, so 131 listings can't be found from their own door at 50 miles. Search distance first with a hard radius.
+13. **Claim safety gate, before SMTP goes live.** About 480 listings have a dead domain that can be bought today and would pass the instant-claim check.
+14. **Menu scanner.** 36 of 43 shelves get no re-read in 30 days. Expire stale stock, and attach shared feeds to the right branch.
+15. **Search for what people type.** Apostrophes (926 names); city chips that mix in other states.
+16. **Same-door duplicates.** About 72 extra rows.
+17. **Stale former names and rebrands.** 55-75.
+18. **Chain reconcile from the chains' locators.** 48 branches missing (26 Wild Bill's, 22 Sweet Fire), 14 old names, 17 missing lounge badges.
+19. **Wrong-business website links.** About 210-330.
+20. **Phones.** Placeholders, foreign numbers, 50 shared-number groups; 30-60 real errors.
+21. **Owner and staff edits.** Log them, re-check them, never invent hours.
+22. **Profile honesty quick fixes.** A dead button on every profile, the wrong data credit on 6,887.
+23. **Server-side map clustering.** The national view shows 1,000 of 7,417 listings.
+24. **A neutral order when no location is known.** 96% of listings never appear without a search.
+25. **Recover real cigar shops hidden or missing.** At least 75; size it with a random sample first.
+26. **Hours from evidence already on disk.** 60-150 listings.
+27. **Full-page website read.** Lounge badges (150+ wrong, 155 missing), walk-in humidor, members-only, brands carried, logos.
+28. **Scope decision, then a precision review** of the 3,001 tobacco-or-pipe-only listings (about 15% are not cigar places).
+29. **Text cleanup.** Names, cities, ZIPs and addresses: a few hundred cosmetic fixes.
+30. **Thumbnail vetting and re-hosting.** At least 126 of 1,427 are wrong or unusable.
+31. **Widen the stock readers** (WooCommerce matching is 61% vs Shopify's 92%) and clean the shelves.
+32. **Visitor feedback prompts** for hours, closed and lounge.
+33. **Monthly Overture refresh** with a change diff; ids dropped from two releases go to review.
+34. **Paid lookup (Google Places)** for what free sources can't settle. Needs a key, a budget and current pricing.
+35. **More licence jurisdictions,** including public-records requests.
+
+**Decisions only Mason can make:**
+- the badge on unverified map hours;
+- whether head, vape, hookah and pipe-only shops are in scope;
+- whether members-only lounges are badged or hidden;
+- the chain display name;
+- a moved shop with no new address yet: edit the old row, or create a new one;
+- a shop and its in-house lounge: one listing or two;
+- a public likely-closed caveat;
+- whether staff may publish listings backed only by a licence;
+- a Google key and budget.
+
 ## Still needs Mason
 
 **Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used. It was also in `.claude/settings.local.json`, which was tracked in the repository until 2026-09-10 (now untracked and ignored). That file also held login commands using `admin123` and `adminpass123`, so make sure neither is a live password.
