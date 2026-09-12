@@ -12,9 +12,10 @@ tasks waiting to be run; they are done, and what running them changed is
 recorded in `SWEEPS.md` under "The session of 2026-09-12 (evening)".
 
 **Production, 2026-09-12 evening: 4,363 public listings.** 930 with hours (783
-from the shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404
+from the shop's own site), 806 with a thumbnail, 1,854 with a lounge badge, 367
 with a walk-in humidor, 230 stamped by a current tobacco licence, and no public
-listing linking to a gambling or parking page.
+listing linking to a gambling or parking page. Every badge on the map now rests
+on a sentence from the shop's own site or on the shop's own name.
 
 ---
 
@@ -69,7 +70,7 @@ all lists somebody has to read.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| 1 | [The 963 category-only badges](#1-the-963-category-only-badges) | The largest remaining claim on the map that rests on nothing a person has checked |
+| 1 | [Traffic and shops, not data](#1-traffic-and-shops-not-data) | 0 claimed shops and 0 indexable pages. The directory is no longer the constraint |
 | 2 | [The pins nobody could settle](#2-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
 | 3 | [Licence moves](#3-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
 | 4 | [The four manual registries](#4-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
@@ -78,28 +79,26 @@ all lists somebody has to read.
 
 ---
 
-## 1. The 963 category-only badges
+## 1. Traffic and shops, not data
 
-**What they are.** 963 public listings carry a lounge or walk-in-humidor badge
-that came from a map category — Overture's `cigar_bar`, mostly — and nothing
-else. The amenity crawl read 2,408 shop websites and could put a sentence behind
-344 lounges and 331 humidors; these are the ones it could not.
+The directory is in better shape than the business around it. Measured on
+2026-09-12: **0 shops have claimed a listing, 3 users, 0 reviews**, and **no page
+can be indexed** — all 4,363 shop pages serve one `<title>`, one description and
+a canonical tag pointing at the homepage, which tells Google every URL is a copy
+of the root. There is no sitemap, no robots.txt (the catch-all answers both with
+HTML), no structured data, and no analytics. **SMTP is unset in production**, so
+the claim flow cannot send its verification code and no shop can claim anything.
 
-They are listed under `categoryOnly` in
-`sweeps/decisions/site-facts/decisions.json`, with what the map said and what
-the site did say.
+The plan of record, with the numbers behind it:
+<https://claude.ai/code/artifact/0a2e8a69-b35b-4e97-a855-e845a314c83d>
 
-**The decision to make.** A badge with no sentence behind it is a claim we
-cannot support. Three honest options, in the order they cost:
+In short: set SMTP, a real domain and analytics this week; then per-page
+metadata, LocalBusiness JSON-LD, a real sitemap and city landing pages; then fix
+the 68 Tampa listings by hand and walk into ten of them. Do not sell the $49 and
+$149 placements until a city page brings real traffic.
 
-1. Clear them. A shop with a lounge loses its badge until its site says so.
-2. Keep them, and mark them in the UI as coming from map data, the way
-   unconfirmed hours already are.
-3. Read them — 963 rows is perhaps four hours of work with the crawl's text in
-   front of you.
-
-**This is Mason's call**, and it is in `SWEEPS.md` under "Decisions Mason still
-owes". Do not clear 963 badges on your own initiative.
+**More data sweeps are not the constraint.** What remains below is honest
+tidying, and none of it changes the business.
 
 ## 2. The pins nobody could settle
 
@@ -224,9 +223,9 @@ Production today:
 - 930 hold hours; 783 of those were read from the shop's own website. The rest
   show map hours labelled "not confirmed", or nothing.
 - 806 have a thumbnail, after 159 were taken down as too small, banner-shaped,
-  blank, dead or somebody else's. 2,149 carry a Lounge badge and 404 a walk-in
-  humidor — 675 of those now rest on a sentence from the shop's own site, and
-  963 still rest on a map category alone (task 1 above).
+  blank, dead or somebody else's. 1,854 carry a Lounge badge and 367 a walk-in
+  humidor: 675 rest on a sentence from the shop's own site and the rest on the
+  shop's own name, after 332 resting on a map category alone were cleared.
 - 230 are stamped by a current tobacco licence at the door.
 - Verdicts the importer honours, so a data refresh cannot undo them:
   `not_retail`, `online_only`, `closed`, `duplicate`, `moved`, `unproven`, and

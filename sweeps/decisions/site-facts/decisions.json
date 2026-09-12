@@ -184,6 +184,12 @@
    "evidence": "\\n The subscriptions provide additional perks like exclusive access to special events and member-only discounts."
   },
   {
+   "id": 4481,
+   "name": "Hiland's Cigars",
+   "city": "Scottsdale",
+   "evidence": "Exclusive offers, early access, and members-only perks."
+  },
+  {
    "id": 10789,
    "name": "The Capital Club Cigar Lounge",
    "city": "Helena",
@@ -314,12 +320,6 @@
    "name": "Drobe Stogies",
    "city": "Inglewood",
    "evidence": "A members-only sanctuary where the timeless tradition of the cigar meets modern luxury."
-  },
-  {
-   "id": 4481,
-   "name": "Hiland's Cigars",
-   "city": "Scottsdale",
-   "evidence": "Exclusive offers, early access, and members-only perks."
   },
   {
    "id": 4700,
@@ -2316,17 +2316,6 @@
    "from_category": "store_type is cigar_lounge"
   },
   {
-   "id": 4445,
-   "name": "Fox Cigar Bar",
-   "city": "Scottsdale",
-   "state": "AZ",
-   "field": "has_lounge",
-   "website": "foxcigarbar.com",
-   "website_status": "blocked",
-   "why": "its website could not be read",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
    "id": 6621,
    "name": "Cigars of Tally Lounge and Bar",
    "city": "Tallahassee",
@@ -2346,6 +2335,17 @@
    "website": "housontcigarssl.com",
    "website_status": "dns_fail",
    "why": "its website has not been read yet",
+   "from_category": "store_type is cigar_lounge"
+  },
+  {
+   "id": 4445,
+   "name": "Fox Cigar Bar",
+   "city": "Scottsdale",
+   "state": "AZ",
+   "field": "has_lounge",
+   "website": "foxcigarbar.com",
+   "website_status": "blocked",
+   "why": "its website could not be read",
    "from_category": "store_type is cigar_lounge"
   },
   {
@@ -2734,17 +2734,6 @@
    "from_category": "store_type is cigar_lounge"
   },
   {
-   "id": 42345,
-   "name": "ZODI'X Cigar Lounge",
-   "city": "Georgetown",
-   "state": "TX",
-   "field": "has_lounge",
-   "website": "zodixcigarlounge.com",
-   "website_status": "ok",
-   "why": "its website has not been read yet",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
    "id": 19541,
    "name": "Joey D's Cigar Bar",
    "city": "Latrobe",
@@ -2752,17 +2741,6 @@
    "field": "has_lounge",
    "website": "disalvosrestaurant.com/joey-ds-cigar-bar",
    "website_status": "not_found",
-   "why": "its website has not been read yet",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
-   "id": 4442,
-   "name": "Puro Cigar Bar",
-   "city": "Chandler",
-   "state": "AZ",
-   "field": "has_lounge",
-   "website": "eventbrite.com/cc/social-sip-4827321?utm-campaign=social&utm-content=creatorshare&utm-medium=discovery&utm-term=odclsxcollection&utm-source=cp&aff=escb",
-   "website_status": "ok",
    "why": "its website has not been read yet",
    "from_category": "store_type is cigar_lounge"
   },
@@ -2784,6 +2762,17 @@
    "state": "CT",
    "field": "has_lounge",
    "website": "facebook.com/share/1Fjs5imQJX/?mibextid=wwXIfr",
+   "website_status": "ok",
+   "why": "its website has not been read yet",
+   "from_category": "store_type is cigar_lounge"
+  },
+  {
+   "id": 4442,
+   "name": "Puro Cigar Bar",
+   "city": "Chandler",
+   "state": "AZ",
+   "field": "has_lounge",
+   "website": "eventbrite.com/cc/social-sip-4827321?utm-campaign=social&utm-content=creatorshare&utm-medium=discovery&utm-term=odclsxcollection&utm-source=cp&aff=escb",
    "website_status": "ok",
    "why": "its website has not been read yet",
    "from_category": "store_type is cigar_lounge"
@@ -2939,6 +2928,39 @@
    "field": "has_lounge",
    "website": null,
    "website_status": null,
+   "why": "its website has not been read yet",
+   "from_category": "store_type is cigar_lounge"
+  },
+  {
+   "id": 42359,
+   "name": "3Rs Cigars Lounge",
+   "city": "Duncanville",
+   "state": "TX",
+   "field": "has_lounge",
+   "website": null,
+   "website_status": null,
+   "why": "its website has not been read yet",
+   "from_category": "store_type is cigar_lounge"
+  },
+  {
+   "id": 37744,
+   "name": "Emperor Cigar Lounge",
+   "city": "Nyack",
+   "state": "NY",
+   "field": "has_lounge",
+   "website": null,
+   "website_status": null,
+   "why": "its website has not been read yet",
+   "from_category": "store_type is cigar_lounge"
+  },
+  {
+   "id": 22142,
+   "name": "Smoke and Mirrors Cigar Lounge",
+   "city": "Mamaroneck",
+   "state": "NY",
+   "field": "has_lounge",
+   "website": "smoke-mirrors-cigar-lounge.business.site",
+   "website_status": "not_found",
    "why": "its website has not been read yet",
    "from_category": "store_type is cigar_lounge"
   },
@@ -10181,17 +10203,6 @@
    "from_category": "store_type is cigar_lounge"
   },
   {
-   "id": 42359,
-   "name": "3Rs Cigars Lounge",
-   "city": "Duncanville",
-   "state": "TX",
-   "field": "has_lounge",
-   "website": null,
-   "website_status": null,
-   "why": "its website has not been read yet",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
    "id": 3152,
    "name": "Cu'Noma Cigar Lounge",
    "city": "Cedar Hill",
@@ -10995,17 +11006,6 @@
    "from_category": "store_type is cigar_lounge"
   },
   {
-   "id": 37744,
-   "name": "Emperor Cigar Lounge",
-   "city": "Nyack",
-   "state": "NY",
-   "field": "has_lounge",
-   "website": null,
-   "website_status": null,
-   "why": "its website has not been read yet",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
    "id": 42281,
    "name": "Cigar Lounge",
    "city": "North Myrtle Beach",
@@ -11299,17 +11299,6 @@
    "field": "has_lounge",
    "website": "sycigars.com",
    "website_status": "dns_fail",
-   "why": "its website has not been read yet",
-   "from_category": "store_type is cigar_lounge"
-  },
-  {
-   "id": 22142,
-   "name": "Smoke and Mirrors Cigar Lounge",
-   "city": "Mamaroneck",
-   "state": "NY",
-   "field": "has_lounge",
-   "website": "smoke-mirrors-cigar-lounge.business.site",
-   "website_status": "not_found",
    "why": "its website has not been read yet",
    "from_category": "store_type is cigar_lounge"
   },

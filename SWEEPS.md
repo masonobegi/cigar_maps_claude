@@ -64,7 +64,8 @@ a file by hand.
 
 **Production now: 4,363 public listings.** 930 with hours (783 read from the
 shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404 with a
-walk-in humidor, 230 stamped by a current tobacco licence.
+walk-in humidor (1,854 and 367 after the category-only badges were read), 230
+stamped by a current tobacco licence.
 
 **What reading the output changed.** Seven rules were wrong, or were not running
 at all, and every one of them was found by reading rows rather than by a test:
@@ -178,9 +179,22 @@ you love a fine cigar but have never visited a cigar lounge?", "THREE THINGS TO
 NEVER DO IN A CIGAR LOUNGE"), and "private club" or "lockers" only count in the
 shop's own voice, since a shop's history of the trade mentions both.
 
-**963 badges still rest on a map category**, listed under `categoryOnly` in
-`decisions/site-facts/decisions.json` for a person to accept or clear. That is
-the part of this task still open.
+**The 962 badges resting on a map category were then read too**, and they split
+cleanly. **630 are claimed by the shop's own name** — "Dads cigar shop, lounge",
+"Mister Z's Bourbon & Cigar Bar", "FUMA Cigar & Hookah Lounge". A business name
+is the shop's own claim, printed over its door, and it is better evidence than
+Overture's `cigar_lounge` category, which is also what put a brewery and a
+plumber in this directory. Those keep the badge. **332 had nothing behind them at
+all** — no site, no sentence, no name — and the badge came off.
+
+The walk-in humidor test is stricter: "The Humidor" in a name is not a walk-in
+humidor, so only "walk-in" in the name counts. That clears nearly all of them,
+which is right, since that badge was invented from names in the first place.
+
+**Lounge badges: 2,149 → 1,854. Walk-in humidors: 404 → 367.** Every badge on the
+public map now rests on a sentence from the shop's own website or on the shop's
+own name. `sweeps/scripts/settle_category_badges.js` holds the reasoning and
+every clear is in the edit log.
 
 ### 6. Licence registries — four of the eight
 
@@ -233,7 +247,6 @@ auto tier only; review-tier clusters still wait for a person.
 
 ### Still open
 
-- **963 category-only amenity badges**, for a person to accept or clear.
 - **25 pin rows** where a geocoder answered with a different address, in
   `sweeps/decisions/pins/pins_left.json`.
 - **132 licence moves**: a shop whose licence is at another address. Each needs
