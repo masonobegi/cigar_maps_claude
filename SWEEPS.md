@@ -5,7 +5,10 @@ ranked"); numbers below are its ranks. Every sweep is built, dry-run, reviewed b
 hand, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
-**Updated 2026-09-11, 20:30. Public listings: 4,377** (from 7,431 at the start).
+**Updated 2026-09-12. Public listings: 4,377** (from 7,431 at the start).
+**Nothing changed in production on 2026-09-12** — see "The session of 2026-09-12"
+below, which built and tested the nine remaining sweeps but could reach neither
+Railway nor the open web.
 
 **Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
 are fine; a vape, glass, hookah or kava shop that happens to sell cigars is not in
@@ -51,10 +54,47 @@ thumbnails for 1,427 listings, Bitcoin ATM listings hidden, and five wrong-site
 hours cleared (a grout company, a county government, a petrol station, two
 Yahoo pages).
 
+## The session of 2026-09-12: nine sweeps built, none applied
+
+A cloud session worked through every task in `HANDOFF.md` section 5. It had no
+Railway credentials and no outbound network beyond the package registries, so
+**no listing in production was changed, and no crawl was run.** What it produced
+is code, tests and decision files. `PROGRESS.md` is its full log.
+
+| Task | What exists now | What it still needs |
+|------|-----------------|---------------------|
+| Search completeness | `utils/storeSearch.js`, `utils/storeList.js`, a rewritten list route, `jobs/recallMonitor.js`. Recall **89.96% to 100.00%** over 1,984 cases, measured on the bundled directory (7,904 public) | a deploy, and the metro skim read by a person |
+| Pins and foreign rows | `jobs/geocodePins.js`, 47 + 9 assertions | the Census and Nominatim crawl |
+| Hijacked links | four new linkCheck verdicts, `jobs/thumbCheck.js`, 33 + 27 assertions | `linkCheck --all` and the thumbnail read |
+| Amenity crawl | the 1,343 saved sites re-read at the sentence: **653 sound, 7 false positives, 65 cut short by a bug in `quote()`** | the remaining 1,095 sites |
+| Hours re-audit | six parser fixes, four refusals, a stricter name test. Accuracy **96.5% to 97.9%** | the decision files applied |
+| Menu scanner | back-off, staleness ordering, stock expiry, shared-feed ownership. A 30-day replay reaches every shop; the old order left 3,940 of 4,000 untouched | a deploy |
+| Closures and licences | five closureCheck changes, `jobs/licenceSync.js`, 16 + 31 assertions | the registry downloads |
+| Claim safety gate | `utils/claimProof.js`, all 25 of the audit's live examples as tests | SMTP, then a deploy |
+| Recovering hidden shops | `jobs/recoverHidden.js`. Re-reading the saved evidence recovers nobody, which is arithmetic: the same function on the same evidence | new evidence — see below |
+
+**Decision files waiting to be applied**, all read row by row:
+
+- `sweeps/decisions/hours/` — 42 schedules to clear, 8 to replace, 16 held
+  (their sites did not answer, so the hours we hold still stand), 8 chain rows
+  that must be re-run against the real stores table first, and 292 recoverable
+  candidates of which only 56 are real.
+- `sweeps/decisions/site-facts/sentence_review.json` — the seven amenity
+  verdicts that are wrong, and the 65 whose evidence was cut short.
+- `sweeps/decisions/recover/` — the 2,480 hidden listings, split by what kind of
+  new evidence could bring each one back: 1,933 need a licence match or
+  web-shop stock, 84 need a re-crawl, 463 are correctly hidden.
+
+**Self-tests across the server: 502 assertions in 16 suites, all passing**, plus
+the re-import guard. Every job in `server/src/jobs/` answers to `selftest`.
+
 ## Running right now
 
-**Six sweeps building in parallel**, each on its own git branch in this repo,
-each producing code, tests and decision files. None of them writes to production.
+**Nothing is building in parallel any more.** The six branches below were local
+to the desktop machine and did not reach the remote; the session of 2026-09-12
+rebuilt all of that work from the handoff and the saved evidence, on the single
+branch `claude/handoff-tasks-completion-m1aqvb`. The table is kept for the
+record of what each stream was for.
 
 | Branch | Sweeps | What it produces |
 |--------|--------|------------------|
@@ -65,9 +105,9 @@ each producing code, tests and decision files. None of them writes to production
 | `sweep/claims` | 13 | The claim safety gate, needed before claim emails are switched on |
 | `sweep/closures` | 10, 11 | Likely-closed rules, and the free state licence registries |
 
-**Plus one crawl running here:** `siteFacts.js` is reading 2,438 shop websites
-for the Lounge badge, a walk-in humidor, members-only and drive-thru, keeping
-the sentence each verdict rests on. Output: `decisions/site-facts/facts.jsonl`.
+**The amenity crawl stopped at 1,343 of 2,438 sites.** Its output,
+`decisions/site-facts/facts.jsonl`, came with the handoff and has since been
+re-read sentence by sentence (see the 2026-09-12 section above).
 
 ### To finish any of them
 
@@ -94,6 +134,16 @@ reading the output is the work, not an optional extra.
 - A Google Places key and budget, for the closures and hours no free source settles.
 - Whether any outlet chain should come back (Wild Bill's, Sweet Fire, Cheap
   Tobacco, The Tobacco Shoppe): one command each.
+- **What a visitor with no location should see.** The search sweep deliberately
+  left the no-location order exactly as it was, because changing it is its own
+  sweep in `plan.json` and needs a decision: a prompt with city chips, a
+  rotating national sample, or IP geolocation. Until then the home page, the
+  navbar autocomplete and the review picker keep showing the same alphabetical
+  slice.
+- **Whether about two-thirds of claims may need a person.** The claim safety
+  gate keeps the self-serve shortcut for roughly 1,537 of 4,533 eligible
+  listings; the rest wait for staff. It never rejects a claim, and it tells the
+  claimant why.
 
 ## Working rules
 
