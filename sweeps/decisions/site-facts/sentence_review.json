@@ -1,0 +1,381 @@
+{
+ "generated_at": "2026-09-12T04:20:52.138Z",
+ "what": "A second reading of the 1,343 sites already crawled, at the sentence each verdict rests on. This half needs no database. The add/remove lists in siteFacts decide still do.",
+ "sites_read": 1343,
+ "sites_readable": 1122,
+ "kept": {
+  "walk_in": 133,
+  "members": 91,
+  "lounge": 424,
+  "drive_thru": 5
+ },
+ "refused": [
+  {
+   "id": 186,
+   "field": "lounge",
+   "quote": "Padre Island Cigar Company does not have a lounge. We do have an outdoor patio available. We recommend Prohibition Private Cigar Lounge. Memberships, Day and Weekend passes available."
+  },
+  {
+   "id": 206,
+   "field": "lounge",
+   "quote": "In 2010 Rich became a partner, found the location, and was instrumental in the opening of ‘Burn by Rocky Patel’ a new evolution of the luxury cigar lounge and nightclub in Naples, Florida."
+  },
+  {
+   "id": 267,
+   "field": "lounge",
+   "quote": "occasional cigar smoker, took a retail job in a cigar lounge,"
+  },
+  {
+   "id": 364,
+   "field": "lounge",
+   "quote": "occasional cigar smoker, took a retail job in a cigar lounge,"
+  },
+  {
+   "id": 378,
+   "field": "lounge",
+   "quote": "occasional cigar smoker, took a retail job in a cigar lounge,"
+  },
+  {
+   "id": 630,
+   "field": "lounge",
+   "quote": "In 2010 Rich became a partner, found the location, and was instrumental in the opening of ‘Burn by Rocky Patel’ a new evolution of the luxury cigar lounge and nightclub in Naples, Florida."
+  },
+  {
+   "id": 1416,
+   "field": "lounge",
+   "quote": "In 2010 Rich became a partner, found the location, and was instrumental in the opening of ‘Burn by Rocky Patel’ a new evolution of the luxury cigar lounge and nightclub in Naples, Florida."
+  }
+ ],
+ "reread": [
+  {
+   "id": 290,
+   "field": "walk_in",
+   "quote": "St. Petersburg’s finest cigar shop managed and operated by Javier Plasencia, member of one of the most recognized families in the industry for more than 5 generations. Located just a few short miles f"
+  },
+  {
+   "id": 465,
+   "field": "lounge",
+   "quote": "Discover nearly 2,000 square feet of comfortable, versatile living space in this spacious 3-bedroom, 2.5-bath home. The main level features an inviting living area with a cozy fireplace and a large, o"
+  },
+  {
+   "id": 709,
+   "field": "walk_in",
+   "quote": "Long Ash Cigars specializes in premium handmade cigars aimed at appealing to a variety of tastes. Our cigars are locally handmade, and each one is a work of art in and of itself. Long Ash Cigars welco"
+  },
+  {
+   "id": 968,
+   "field": "walk_in",
+   "quote": "With a selection of over 1000 premium cigars, we are Lakeland’s premiere cigar destination. We take great pride in our beautifully appointed lounge and hope you’ll join us for a cigar, a craft beer or"
+  },
+  {
+   "id": 970,
+   "field": "walk_in",
+   "quote": "Looking for a cigar lounge near Miami where you can relax, light up, and stay a while? Puro Cigars Lounge is a South Florida favorite, located in Florida City just before the gateway to the Keys — an "
+  },
+  {
+   "id": 916,
+   "field": "members",
+   "quote": "Cigar Cellar of Miami is excited to announce our new membership club lounge. Looking to take your experience to the next level? Look no further than our exclusive membership experience, Cellar Dweller"
+  },
+  {
+   "id": 1075,
+   "field": "lounge",
+   "quote": "Neptune Cigars (FL). Smoke on the Waters (FL). Gables Cigar Shop (FL).Royal Cigars (FL). District Cigars (FL). Cigar State Miami (FL). Come Smoke With Us (FL). Empire Social Lounge (FL). Churchill’s T"
+  },
+  {
+   "id": 1129,
+   "field": "walk_in",
+   "quote": "Get ready to indulge in a luxurious experience with our top-quality cigars. Our lounge is the perfect place to unwind and socialize with friends. We hold over 50 different brands in our walk-in humido"
+  },
+  {
+   "id": 1292,
+   "field": "walk_in",
+   "quote": "Get ready to indulge in a luxurious experience with our top-quality cigars. Our lounge is the perfect place to unwind and socialize with friends. We hold over 50 different brands in our walk-in humido"
+  },
+  {
+   "id": 1695,
+   "field": "members",
+   "quote": "A 3,500 Sq. Ft. cigar and wine bar with an Espinosa lounge that features an impressive 100% cedar walk-in humidor, and a private corporate lounge for social functions and business meetings that is ful"
+  },
+  {
+   "id": 1692,
+   "field": "walk_in",
+   "quote": "Our mission is to establish a wide variety of Cigars, Beer & Wine Quarters business that will make available a wide range of alcoholic and non – alcoholic wines, and beers from top brands at affordabl"
+  },
+  {
+   "id": 1751,
+   "field": "lounge",
+   "quote": "Spanning over 4,000 square feet, our lounge is designed with your comfort and enjoyment in mind. We offer a variety of seating arrangements, from cozy corners perfect for a quiet smoke to larger areas"
+  },
+  {
+   "id": 1992,
+   "field": "lounge",
+   "quote": "Cigars of Wellington opened up in 2011 by the Weiss family. We are a true Mom & Pop hometown cigar retailer started with Michael & his dad (Pops). The store has now went into its 3rd generation adding"
+  },
+  {
+   "id": 1992,
+   "field": "walk_in",
+   "quote": "Cigars of Wellington opened up in 2011 by the Weiss family. We are a true Mom & Pop hometown cigar retailer started with Michael & his dad (Pops). The store has now went into its 3rd generation adding"
+  },
+  {
+   "id": 2039,
+   "field": "drive_thru",
+   "quote": "Since 1994, Tobacco Barn has been an individual tribal member owned business. Fitzpatrick Ignacio, with the help of his children, continues to offer affordable prices to Tucson and surrounding areas. "
+  },
+  {
+   "id": 1942,
+   "field": "walk_in",
+   "quote": "The economics reinforce it. A lounge makes its money on tobacco and, in some cases, on memberships, lockers, and beverages. Everything else in the room, the ventilation system that actually works, the"
+  },
+  {
+   "id": 2272,
+   "field": "walk_in",
+   "quote": "In the Excalibur Cigar Lounge you’ll find everything you want to enhance your cigar smoking experience. Whether you’re a cigar novice or a discerning aficionado, you’ll find it here. Our huge walk-in "
+  },
+  {
+   "id": 2355,
+   "field": "walk_in",
+   "quote": "In the Excalibur Cigar Lounge you’ll find everything you want to enhance your cigar smoking experience. Whether you’re a cigar novice or a discerning aficionado, you’ll find it here. Our huge walk-in "
+  },
+  {
+   "id": 2801,
+   "field": "walk_in",
+   "quote": "Since 1997, The Leaf has served Abilene, Texas, and the Big Country as the go-to destination for fine tobacco products and a cigar-loving community. Within a block of our original location, our new sh"
+  },
+  {
+   "id": 2801,
+   "field": "members",
+   "quote": "Since 1997, The Leaf has served Abilene, Texas, and the Big Country as the go-to destination for fine tobacco products and a cigar-loving community. Within a block of our original location, our new sh"
+  },
+  {
+   "id": 3047,
+   "field": "walk_in",
+   "quote": "In 2010 we opened Taboo Cigar Bar & Lounge so our customers could enjoy those cigars the right way. Today our North Richland Hills location (just 10–12 minutes from DFW Airport and downtown Fort Worth"
+  },
+  {
+   "id": 3925,
+   "field": "lounge",
+   "quote": "After being uprooted from Afghanistan during the Soviet war in 1984, the Ahmadi family arrived in Los Angeles with a goal and commitment to keep tradition alive. After establishing their first busines"
+  },
+  {
+   "id": 4330,
+   "field": "lounge",
+   "quote": "Our lounge and patio are excellent places to enjoy your time with us. Our comfortable indoors lounge features plenty of seating for you and your friends to enjoy your favorite cigars. Our fully stocke"
+  },
+  {
+   "id": 4330,
+   "field": "walk_in",
+   "quote": "Located in the heart of the Westgate Entertainment District in Glendale, the Fine Ash Cigars Bar & Lounge is your premier cigar-friendly destination in the West Valley.  We stock an amazing collection"
+  },
+  {
+   "id": 4701,
+   "field": "lounge",
+   "quote": "We take great pride in providing a cathartic, get away for people to come in & forget about the hustle & bustle of life for a bit. We could never have imagined what a staple this place would develop i"
+  },
+  {
+   "id": 4825,
+   "field": "lounge",
+   "quote": "Havana is your home away from home. Here it is all about comfort and pleasure. Step into a spacious, yet intimate setting with large, tinted windows that offer a breathtaking view of the sunsets. Hava"
+  },
+  {
+   "id": 4890,
+   "field": "lounge",
+   "quote": "{\"siteFeaturesConfigs\":{\"accessibilityBrowserZoom\":{\"isBuilder\":false,\"isStudio\":false},\"appMonitoring\":{\"appsWithMonitoring\":[{\"appId\":\"14bcded7-0066-7c35-14d7-466cb3f09103\",\"isWixTPA\":true,\"monitori"
+  },
+  {
+   "id": 5052,
+   "field": "walk_in",
+   "quote": "Our story starts with the owner of Scottsdale Cigars who envisioned a humidor so large he could provide any brand of cigar to his fellow connoisseurs. Today, he has made his dream a reality with the c"
+  },
+  {
+   "id": 5035,
+   "field": "walk_in",
+   "quote": "ticks Golf & Cigar Lounge is a unique social and entertainment experience. We offer one of the largest selections of premium cigars in Arizona in a country club environment with year-round indoor golf"
+  },
+  {
+   "id": 5186,
+   "field": "walk_in",
+   "quote": "Our commitment to quality and customer service is unwavering. We aim to provide an inclusive, welcoming atmosphere for every visitor. Whether you’re a seasoned enthusiast or new to the world of cigars"
+  },
+  {
+   "id": 5324,
+   "field": "lounge",
+   "quote": "Joseph’s Cigars was opened with one simple, clear objective: To become a full service Cigar Shop that provides a space and atmosphere that allows our customers to enjoy a fantastic smoking experience."
+  },
+  {
+   "id": 5990,
+   "field": "lounge",
+   "quote": "Five hundred years later, Habana Port Cigar Merchants is proud to continue the tradition of providing the golden leaf to the rest of the world. So stop by our cigar shops and browse through Louisiana’"
+  },
+  {
+   "id": 5990,
+   "field": "walk_in",
+   "quote": "COVID allowed us to rethink our merchandising strategy and return to the days of the cigar shop before the 80s in which cigars are humidified in their own cases and cabinets. This goes against the mod"
+  },
+  {
+   "id": 6220,
+   "field": "lounge",
+   "quote": "Five hundred years later, Habana Port Cigar Merchants is proud to continue the tradition of providing the golden leaf to the rest of the world. So stop by our cigar shops and browse through Louisiana’"
+  },
+  {
+   "id": 6220,
+   "field": "walk_in",
+   "quote": "COVID allowed us to rethink our merchandising strategy and return to the days of the cigar shop before the 80s in which cigars are humidified in their own cases and cabinets. This goes against the mod"
+  },
+  {
+   "id": 6500,
+   "field": "lounge",
+   "quote": "Five hundred years later, Habana Port Cigar Merchants is proud to continue the tradition of providing the golden leaf to the rest of the world. So stop by our cigar shops and browse through Louisiana’"
+  },
+  {
+   "id": 6500,
+   "field": "walk_in",
+   "quote": "COVID allowed us to rethink our merchandising strategy and return to the days of the cigar shop before the 80s in which cigars are humidified in their own cases and cabinets. This goes against the mod"
+  },
+  {
+   "id": 6489,
+   "field": "lounge",
+   "quote": "The original Dapper D's experience.  River City is where regulars become family and every visit feels like coming home.  Featuring an expansive walk-in humidor stocked with the world's finest cigars, "
+  },
+  {
+   "id": 6941,
+   "field": "lounge",
+   "quote": "The vision for Ash Street Cigar Parlor started in 2022 as we looked at opportunities to bring new and exciting experiences to the amazing Historic downtown community. We felt the marriage of fine ciga"
+  },
+  {
+   "id": 6884,
+   "field": "lounge",
+   "quote": "The original Dapper D's experience.  River City is where regulars become family and every visit feels like coming home.  Featuring an expansive walk-in humidor stocked with the world's finest cigars, "
+  },
+  {
+   "id": 7121,
+   "field": "lounge",
+   "quote": "We take great pride in providing a cathartic, get away for people to come in & forget about the hustle & bustle of life for a bit. We could never have imagined what a staple this place would develop i"
+  },
+  {
+   "id": 7134,
+   "field": "lounge",
+   "quote": "We take great pride in providing a cathartic, get away for people to come in & forget about the hustle & bustle of life for a bit. We could never have imagined what a staple this place would develop i"
+  },
+  {
+   "id": 7239,
+   "field": "lounge",
+   "quote": "We take great pride in providing a cathartic, get away for people to come in & forget about the hustle & bustle of life for a bit. We could never have imagined what a staple this place would develop i"
+  },
+  {
+   "id": 7300,
+   "field": "lounge",
+   "quote": "We take great pride in providing a cathartic, get away for people to come in & forget about the hustle & bustle of life for a bit. We could never have imagined what a staple this place would develop i"
+  },
+  {
+   "id": 7384,
+   "field": "members",
+   "quote": "Looking for an exclusive space to relax and enjoy a premium smoke? We offer two private cigar lounges exclusively for our Locker Members. Designed for ultimate comfort and entertainment, our members-o"
+  },
+  {
+   "id": 7988,
+   "field": "lounge",
+   "quote": "At Top Shelf Cigar and Tobacco Shoppe, you’ll find an array of more than 400 cigars to choose from, along with cigar and pipe accessories, pipes and pipe tobacco, lighters, cutters, cigar humidors, an"
+  },
+  {
+   "id": 7988,
+   "field": "walk_in",
+   "quote": "At Top Shelf Cigar and Tobacco Shoppe, you’ll find an array of more than 400 cigars to choose from, along with cigar and pipe accessories, pipes and pipe tobacco, lighters, cutters, cigar humidors, an"
+  },
+  {
+   "id": 8006,
+   "field": "lounge",
+   "quote": "Tobacco Road is Hilton Head Island's oldest smoke shop, catering to locals and tourists alike since 2000. Offering a complete selection of fine cigars, domestic and imported cigarettes and a comfortab"
+  },
+  {
+   "id": 8175,
+   "field": "lounge",
+   "quote": "Whether you're exploring new blends, shopping for tobacco and accessories, enjoying a beverage with friends, or simply relaxing after a long day, Cigar Studio 57 delivers an elevated experience center"
+  },
+  {
+   "id": 8154,
+   "field": "walk_in",
+   "quote": "King’s Leaf Goose Creek is a neighborhood cigar lounge built for regulars, game days and relaxed evenings. Our lounge is dedicated to the culture and craft of fine cigars, bringing the premier King’s "
+  },
+  {
+   "id": 8215,
+   "field": "lounge",
+   "quote": "And if you’re looking to pair that perfect cigar with the perfect drink, we present you with a full bar with all of your favorites. We put a lot of thought into our lounge, to surround our customers w"
+  },
+  {
+   "id": 9329,
+   "field": "lounge",
+   "quote": "We are located at 230 West Pine Street in beautiful downtown Lodi, California, across from the scenic Veteran's Plaza, Carnegie Forum and historic Lodi City Hall. One of the last bastions of American "
+  },
+  {
+   "id": 9329,
+   "field": "walk_in",
+   "quote": "We are located at 230 West Pine Street in beautiful downtown Lodi, California, across from the scenic Veteran's Plaza, Carnegie Forum and historic Lodi City Hall. One of the last bastions of American "
+  },
+  {
+   "id": 9449,
+   "field": "members",
+   "quote": "Inside, you’ll find a walk-in humidor stocked and ready. Take your time. Choose something worthy. Order a beverage. Settle into a comfy chair and let the smoke curl slow and easy. No membership requir"
+  },
+  {
+   "id": 9558,
+   "field": "lounge",
+   "quote": "The premier cigar retailer in California.  We offer an unforgettable luxury experience.  Our selection of premium and ultra premium cigar will amaze you.  Enjoy your cigars and relax in our comfortabl"
+  },
+  {
+   "id": 10527,
+   "field": "lounge",
+   "quote": "Immerse yourself in a truly one-of-a-kind experience at our speak easy-like Cigar and Whiskey Lounge, cleverly nestled within five granary silos. Whether you choose to unwind in our refined lounge are"
+  },
+  {
+   "id": 10844,
+   "field": "walk_in",
+   "quote": "Inspired by the charm of classic explorers' clubs and speakeasies, our lounge blends luxurious comfort with Southwestern warmth. Step inside to discover plush leather seating, a state-of-the-art venti"
+  },
+  {
+   "id": 11269,
+   "field": "walk_in",
+   "quote": "Our shop also carries a full range of cigar accessories, including cutters, punches, lighters, humidors, and ashtrays. As home to Colorado’s largest selection of fine pipes and the largest walk-in hum"
+  },
+  {
+   "id": 11264,
+   "field": "members",
+   "quote": "Come explore hand-selected tequilas paired with premium cigars and discover how the flavor of each bring out the best in one another. Light bites provide by Masa Tulsa. Tickets $50 per person with the"
+  },
+  {
+   "id": 11869,
+   "field": "members",
+   "quote": "Bobby and Johnna Duncan have experienced first hand Bentonville’s rapid growth and expansion for nearly two decades. Based on their long-term commitment to the community, they wanted to contribute som"
+  },
+  {
+   "id": 11974,
+   "field": "lounge",
+   "quote": "Proudly owned by Lyn and Linda Beyer, Cigar and Tabac ltd. is serving the Kansas city area with the largest selection of premium cigars, tobaccos, pipes, and smoking accessories. Cigar and Tabac ltd. "
+  },
+  {
+   "id": 12200,
+   "field": "walk_in",
+   "quote": "Welcome to Bootleggers Cigars & Apothecary, the premier cigar shop and apothecary in Washington, MO. We pride ourselves on providing a unique and relaxed atmosphere for all our patrons. Our diverse se"
+  },
+  {
+   "id": 12686,
+   "field": "walk_in",
+   "quote": "We source the majority of our Cigar Leaf from the Dominican Republic. Regular travel to the D.R. ensures we stay on top of our commitment to build a premium Cigar. By hand-picking and personally sampl"
+  },
+  {
+   "id": 12749,
+   "field": "members",
+   "quote": "In Hastings, the historic Clarke-Buchanan Building is an ideal place to unwind with a fine whiskey, classic cocktail and premium cigar. Norfolk added rooftop seating and “The Congressional Club,” a pr"
+  },
+  {
+   "id": 13667,
+   "field": "lounge",
+   "quote": "Cigars are a celebrated, storied luxury. Finding a decent cigar is easy. But, because of the city's no-smoking laws, finding a place to enjoy a cigar isn't. Stix N Smoke Cigars seeks to remedy that wi"
+  }
+ ],
+ "totals": {
+  "kept": 653,
+  "refused": 7,
+  "reread": 65
+ }
+}
