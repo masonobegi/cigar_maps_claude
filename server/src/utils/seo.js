@@ -243,13 +243,20 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
   let cache = { at: 0, base: null, index: null, pages: new Map() };
   const buildSitemaps = async base => {
     if (cache.base === base && Date.now() - cache.at < SITEMAP_TTL_MS) return cache;
-    const rows = await db.all(
-      'SELECT id, updated_at FROM stores WHERE visible = 1 ORDER BY id').catch(() => []);
+    // No catch here on purpose. The first version of this asked for an
+    // updated_at column the stores table does not have, swallowed the error,
+    // and served a sitemap listing zero shops — which tells a crawler the site
+    // has no pages. An empty sitemap is worse than none, so a failure here must
+    // reach the caller and be answered with a 500.
+    const rows = await db.all(`SELECT id,
+        COALESCE(hours_checked_at, storefront_checked_at, created_at) AS touched
+      FROM stores WHERE visible = 1 ORDER BY id`);
+    if (!rows.length) throw new Error('no visible listings: refusing to serve an empty sitemap');
     const pages = new Map();
     for (let i = 0; i < Math.max(1, Math.ceil(rows.length / PAGE_SIZE)); i++) {
       const slice = rows.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE);
       pages.set(i + 1, sitemapXml(slice.map(r => urlEntry(`${base}/stores/${r.id}`,
-        r.updated_at ? new Date(r.updated_at).toISOString().slice(0, 10) : null, '0.8'))));
+        r.touched ? new Date(r.touched).toISOString().slice(0, 10) : null, '0.8'))));
     }
     const index = sitemapIndexXml([`${base}/sitemap-main.xml`, ...[...pages.keys()].map(p => `${base}/sitemap-stores-${p}.xml`)]);
     cache = { at: Date.now(), base, index, pages };
@@ -258,8 +265,12 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
   };
 
   app.get('/sitemap.xml', async (req, res) => {
-    const base = baseOf(req);
-    res.type('application/xml').send((await buildSitemaps(base)).index);
+    try {
+      res.type('application/xml').send((await buildSitemaps(baseOf(req))).index);
+    } catch (err) {
+      log(`[seo] sitemap failed: ${err.message}`);
+      res.status(500).type('text/plain').send('sitemap unavailable');
+    }
   });
   app.get('/sitemap-main.xml', (req, res) => {
     const base = baseOf(req);
@@ -270,11 +281,15 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
     ]));
   });
   app.get('/sitemap-stores-:page.xml', async (req, res) => {
-    const base = baseOf(req);
-    const built = await buildSitemaps(base);
-    const body = built.pages.get(Number(req.params.page));
-    if (!body) return res.status(404).type('text/plain').send('no such sitemap page');
-    res.type('application/xml').send(body);
+    try {
+      const built = await buildSitemaps(baseOf(req));
+      const body = built.pages.get(Number(req.params.page));
+      if (!body) return res.status(404).type('text/plain').send('no such sitemap page');
+      res.type('application/xml').send(body);
+    } catch (err) {
+      log(`[seo] sitemap failed: ${err.message}`);
+      res.status(500).type('text/plain').send('sitemap unavailable');
+    }
   });
 
   app.get('*', async (req, res) => {
