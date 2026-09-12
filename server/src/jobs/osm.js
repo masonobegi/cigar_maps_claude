@@ -312,12 +312,97 @@ function haversineMeters(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function nameKey(name) {
-  return (name || '').toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/\b(the|inc|llc|co|company|shop|store|of)\b/g, '')
+/**
+ * The comparable form of a shop's name.
+ *
+ * Two rows are the same shop far more often than their names are the same
+ * string. The measured misses this handles, each one a real pair in the
+ * directory standing as two pins on one door:
+ *
+ *   Cole's Tobacco / Coles Tobacco   an apostrophe used to split "cole" from
+ *                                    a stray "s", so the two never matched
+ *   E & E Cigars / E&E Cigars        "&" became the word "and" in one and part
+ *                                    of a token in the other
+ *   Smoke Stack / Smokestack         a space nobody agrees about
+ *   Stogies / Stogie's               a plural
+ *   JR Cigars - Clayton / JR Cigars  the only distinguishing token is two
+ *                                    letters long, and short tokens were
+ *                                    thrown away
+ *
+ * @param {string} name
+ * @param {object} [opts]
+ * @param {string} [opts.town] - The town this record sits in. Dropped from the
+ *   name, because a town name is the one word two unrelated shops on the same
+ *   street are most likely to share: "Bellevue Cigar" at 565 Lincoln Ave and
+ *   "Tobacco Bellevue" at 553 are 42 m apart and are two different businesses
+ *   with two different phone numbers. Without this they merge.
+ */
+function nameKey(name, { town } = {}) {
+  let out = String(name || '')
+    // Accents folded, so a name typed with them matches one typed without.
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    // Apostrophes of every shape vanish rather than becoming a break: this is
+    // the difference between "coles" and "cole s".
+    .replace(/['\u2019\u2018\u02bb\u02bc\u0060\u00b4]/g, '')
+    // "&" goes entirely. Joining the initials it sat between is done below,
+    // once the name is in tokens.
+    .replace(/&/g, ' ')
+    .replace(/\b(the|inc|llc|ltd|co|company|corp|shop|store|of)\b/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+
+  let words = out.split(' ').filter(Boolean);
+
+  // A run of single letters is one initialism: "e e" is "ee", which is what
+  // "E&E" and "E & E" both have to come to.
+  const joined = [];
+  for (const w of words) {
+    if (w.length === 1 && joined.length && joined[joined.length - 1].isInitial) {
+      joined[joined.length - 1].text += w;
+    } else {
+      joined.push({ text: w, isInitial: w.length === 1 });
+    }
+  }
+  words = joined.map(j => j.text);
+
+  // A plural is not a different shop. Only "-s", and only on a word long
+  // enough that dropping a letter still leaves a word: "gas" must not become
+  // "ga", and "cigars" and "cigar" must come to the same thing.
+  words = words.map(w => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
+
+  if (town) {
+    const townWords = new Set(nameKey(town).split(' ').filter(Boolean));
+    // Only when something is left. A shop actually called "Bellevue" in
+    // Bellevue would otherwise lose its whole name.
+    const kept = words.filter(w => !townWords.has(w));
+    if (kept.length) words = kept;
+  }
+
+  return words.join(' ');
+}
+
+/**
+ * A two-letter token that is really an initialism, not a small word.
+ *
+ * "JR Cigars" and "JR Cigars - Clayton" are one shop and "JR" is the only
+ * thing naming it, so short tokens cannot simply be discarded. But treating
+ * every two-letter token as distinctive merges "Mr Tobacco" with "Mr Cigars",
+ * which are two shops. The signal is the capitals in the name we were given:
+ * an initialism is written JR, DL, EZ, 3D, while a small word is written Mr,
+ * St, El, La. A name that is entirely in capitals carries no such signal, so
+ * for those the question is left unanswered.
+ */
+function looksLikeInitials(original, token) {
+  const name = String(original || '');
+  if (/\d/.test(token)) return true;
+  if (name === name.toUpperCase()) return false;
+  // Compared against the name with its separators removed, because the token
+  // may have been assembled from letters that were apart: "jj" comes from
+  // "J&J", and "ee" from "E & E". Looking for "JJ" in "J&J Cigar Co." finds
+  // nothing, while looking for it in "JJCigarCo" finds it.
+  const letters = name.replace(/[^A-Za-z]/g, '');
+  return letters.includes(token.toUpperCase());
 }
 
 // Words that say what the business sells, not which business it is. Two shops
@@ -326,20 +411,49 @@ const GENERIC_TOKENS = new Set(['cigar', 'cigars', 'cigarette', 'cigarettes', 't
   'smokes', 'smoking', 'shop', 'store', 'outlet', 'house', 'lounge', 'bar', 'club', 'city', 'land', 'plus',
   'discount', 'express', 'mart', 'market', 'center', 'centre', 'depot', 'world', 'zone', 'stop', 'place', 'humidor']);
 
-function namesMatch(a, b) {
-  const ka = nameKey(a), kb = nameKey(b);
+function namesMatch(a, b, { town } = {}) {
+  const ka = nameKey(a, { town }), kb = nameKey(b, { town });
   if (!ka || !kb) return false;
   if (ka === kb) return true;
+  // The same words with the spaces in different places: "Smoke Stack" and
+  // "Smokestack", "Cigar Box" and "Cigarbox".
+  if (ka.replace(/ /g, '') === kb.replace(/ /g, '')) return true;
+
   const wa = new Set(ka.split(' ')), wb = new Set(kb.split(' '));
-  const shared = [...wa].filter(w => wb.has(w) && w.length > 2);
+  // A token counts if it is long enough to mean something, or is an
+  // initialism, which is often the only thing naming the shop.
+  const counts = w => w.length > 2 || looksLikeInitials(a, w) || looksLikeInitials(b, w);
+  const shared = [...wa].filter(w => wb.has(w) && counts(w));
   const distinctive = shared.filter(w => !GENERIC_TOKENS.has(w));
-  // Two shared words is a match. One shared word only counts when it actually
-  // names the business ("Padron" yes, "Tobacco" no) and everything the two
-  // names do not share is just trade vocabulary ("Padron Cigars" / "Padron
-  // Cigar Shop"), never a second business name.
-  if (shared.length >= 2) return true;
+
+  // Nothing matches on trade vocabulary alone. Two shared words used to be
+  // enough on their own, which is how "Cigar City Brewing" matched "Cigar City
+  // Cigars": both words are generic, and a brewery was merged into the cigar
+  // directory. At least one of the shared words has to actually name the
+  // business.
   if (!distinctive.length) return false;
-  const restGeneric = set => [...set].every(w => w.length <= 2 || wa.has(w) && wb.has(w) || GENERIC_TOKENS.has(w));
+
+  // Two shared words, one of which names the business: "Carmel Cigar Vault"
+  // and "The Carmel Cigar Vault", "Tobacco Junction" and "Tobacco Junction Of
+  // Marshall".
+  if (shared.length >= 2) return true;
+
+  // One name is the other with words added, and they share a word that names
+  // the business: "The Tobacconist" inside "The Tobacconist of Greenwich",
+  // "The Pipe" inside "The Pipe Rack", "Holt's" inside "Holt's Cigar Company".
+  //
+  // Safe only because of where this function is called from. Every caller has
+  // already established that the two rows stand at the same door — within
+  // 120 m in the directory build, 150 m in the importer, the same street
+  // number in dedupeListings. Two branches of one chain would match this rule
+  // on their names, and never reach it, because they are in different towns.
+  const subset = [...wa].every(w => wb.has(w)) || [...wb].every(w => wa.has(w));
+  if (subset) return true;
+
+  // Otherwise: one shared business-naming word, and everything the two names
+  // do not share is trade vocabulary ("Padron Cigars" / "Padron Cigar Shop"),
+  // never a second business name.
+  const restGeneric = set => [...set].every(w => !counts(w) || (wa.has(w) && wb.has(w)) || GENERIC_TOKENS.has(w));
   return restGeneric(wa) && restGeneric(wb);
 }
 
@@ -350,7 +464,8 @@ function dedupe(records) {
   for (const r of sorted) {
     const dup = kept.find(k =>
       Math.abs(k.lat - r.lat) < 0.01 && Math.abs(k.lng - r.lng) < 0.01 &&
-      haversineMeters(k.lat, k.lng, r.lat, r.lng) < 120 && namesMatch(k.name, r.name));
+      haversineMeters(k.lat, k.lng, r.lat, r.lng) < 120
+      && namesMatch(k.name, r.name, { town: r.city || k.city }));
     if (dup) {
       for (const f of ['address', 'city', 'zip', 'phone', 'website', 'hours', 'hours_raw']) if (!dup[f] && r[f]) dup[f] = r[f];
       dup.confidence = Math.max(dup.confidence, r.confidence);
@@ -367,7 +482,108 @@ function tagRichness(r) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+// ── Self-test ───────────────────────────────────────────────────────────────
+
+/**
+ * The name matcher, against the pairs the duplicates audit measured.
+ *
+ * This function decides whether two rows are one shop, in three places: the
+ * directory build's dedupe(), the importer's twin matching, and
+ * dedupeListings. Getting it wrong in either direction is expensive — too
+ * loose merges two businesses into one listing and hides a real shop, too
+ * tight leaves two pins on one door disagreeing with each other about the
+ * hours. So both directions are checked, and the negatives are as important
+ * as the positives.
+ */
+function selfTest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, msg, got) => {
+    if (cond) { pass++; console.log('  ok   ' + msg); }
+    else { fail++; console.log('  FAIL ' + msg + (got !== undefined ? '  -> ' + JSON.stringify(got) : '')); }
+  };
+  const same = (a, b, msg, opts) => ok(namesMatch(a, b, opts), msg, [nameKey(a, opts), nameKey(b, opts)]);
+  const diff = (a, b, msg, opts) => ok(!namesMatch(a, b, opts), msg, [nameKey(a, opts), nameKey(b, opts)]);
+
+  // ── nameKey, on its own ──────────────────────────────────────────────────
+  ok(nameKey("Cole's Tobacco") === 'cole tobacco', 'an apostrophe closes up rather than splitting the word', nameKey("Cole's Tobacco"));
+  ok(nameKey('Coles Tobacco') === nameKey("Cole's Tobacco"), 'so the two spellings agree');
+  ok(nameKey('E & E Cigars') === nameKey('E&E Cigars'), 'initials either side of an ampersand join up', [nameKey('E & E Cigars'), nameKey('E&E Cigars')]);
+  ok(nameKey('J & J Cigars') === 'jj cigar', 'and come to one token', nameKey('J & J Cigars'));
+  ok(nameKey('Stogies') === nameKey("Stogie's"), 'a plural and a possessive are the same shop');
+  ok(nameKey('Cigars') === nameKey('Cigar'), 'and so is a plural on its own');
+  ok(nameKey('Gas Depot') === 'gas depot', 'a three-letter word ending in s is not a plural', nameKey('Gas Depot'));
+  ok(nameKey('Class Act') === 'class act', 'nor is a double s', nameKey('Class Act'));
+  ok(nameKey('The Tobacconist of Greenwich, LLC') === 'tobacconist greenwich',
+    'legal and filler words are dropped', nameKey('The Tobacconist of Greenwich, LLC'));
+  ok(nameKey('Vel\u00e1zquez Cigars') === nameKey('Velazquez Cigars'), 'accents fold');
+  ok(nameKey('Bellevue Cigar', { town: 'Bellevue' }) === 'cigar',
+    'the town name is dropped', nameKey('Bellevue Cigar', { town: 'Bellevue' }));
+  ok(nameKey('Bellevue', { town: 'Bellevue' }) === 'bellevue',
+    'unless it is the whole name, which would leave nothing to compare');
+  ok(nameKey('') === '' && nameKey(null) === '' && nameKey(undefined) === '', 'an absent name is empty, not a crash');
+
+  // ── looksLikeInitials ────────────────────────────────────────────────────
+  ok(looksLikeInitials('JR Cigars', 'jr'), 'JR in a mixed-case name is an initialism');
+  ok(looksLikeInitials('3D Smoke Shop', '3d'), 'so is anything with a digit');
+  ok(!looksLikeInitials('Mr Tobacco', 'mr'), 'Mr is a small word, not an initialism');
+  ok(!looksLikeInitials('St James Cigars', 'st'), 'and so is St');
+  ok(!looksLikeInitials('JR CIGARS', 'jr'),
+    'a name entirely in capitals carries no signal either way, so it claims none');
+  ok(looksLikeInitials('J&J Cigar Co.', 'jj'), 'initials read across the separator that was between them');
+  ok(looksLikeInitials('E & E Cigars', 'ee'), 'and across spaces too');
+  ok(!looksLikeInitials('Ye Ole Tobacco Shop', 'ye'), 'a capitalised small word is still a small word');
+  ok(!looksLikeInitials('La Casa del Habano', 'la'), 'and so is an article');
+
+  // ── The pairs the audit measured as one shop ─────────────────────────────
+  same("Cole's Tobacco", 'Coles Tobacco', "#20760/#42064 Cole's Tobacco");
+  same('E & E Cigars', 'E&E Cigars', '#4314/#40001 E & E Cigars');
+  same('JR Cigars - Clayton', 'JR Cigars', '#12541/#41319 JR Cigars');
+  same('The Tobacconist of Greenwich', 'The Tobacconist', '#22099/#40490 The Tobacconist',
+    { town: 'Greenwich' });
+  // Not without the town. "The Tobacconist" inside "The Tobacconist of
+  // Greenwich" is the same shape as "Tobacco" inside "Tobacco Town", which is
+  // two shops, and the only shared word in both cases is trade vocabulary.
+  // The audit did not settle this pair on its names either — it dropped the
+  // town, and then confirmed the pair by its shared phone and website. So the
+  // matcher says it cannot tell, which is the true answer.
+  diff('The Tobacconist of Greenwich', 'The Tobacconist',
+    'but not when nothing says Greenwich is the town: the names alone cannot tell');
+  same('Stogies', "Stogie's", '#13015/#41331 Stogies');
+  same('Smoke Stack', 'Smokestack', 'a space nobody agrees about');
+  same('The Pipe Rack', 'The Pipe', '#19175/#41895 The Pipe Rack');
+  same('Carmel Cigar Vault', 'The Carmel Cigar Vault', '#22080/#22082 Carmel Cigar Vault');
+  same('Tobacco Junction Of Marshall', 'Tobacco Junction', '#2979/#7224 Tobacco Junction');
+  same("Roz's Cigar Emporium", 'Roz Cigar Emporium', '#6081/#6082 Roz\u2019s Cigar Emporium');
+  same("Wild Bill's Tobacco", 'Wild Bills Tobacco', 'Wild Bill\u2019s, with and without the apostrophe');
+  same('Padron Cigars', 'Padron Cigar Shop', 'a trade word added to a shop name');
+  same('J & J Cigars', 'J&J Cigar Co.', 'initials, an ampersand and a legal suffix at once');
+
+  // ── And the pairs that must stay apart ───────────────────────────────────
+  diff('Tobacco Town', 'Tobacco Row', 'two shops that share only a trade word');
+  diff('Taylor Tobacco', 'River Tobacco', 'and two more');
+  diff('Bellevue Cigar', 'Tobacco Bellevue', 'a shared town name is not a shared shop name',
+    { town: 'Bellevue' });
+  diff("Holt's", 'Ashton', 'a shop and a brand it stocks');
+  diff('Mr Tobacco', 'Mr Cigars', 'two small words that happen to match');
+  diff('Cigar City Brewing', 'Cigar City Cigars', 'a brewery and a cigar shop');
+  diff('Smoke Shop', 'Tobacco Outlet', 'two names made entirely of trade words');
+  diff('El Rey Cigars', 'El Toro Cigars', 'a shared article is not a shared name');
+  diff('Tobacco Outlet', 'Tobacco Barn', 'the pair named in the code comment above');
+  diff('Cigar City Cigars', 'Cigar City Brewing', 'and the other way round, since order must not matter');
+  diff('Smoke Shop', 'Smoke Shop Plus', 'a subset made only of trade words still decides nothing');
+  diff('Tobacco', 'Tobacco Town', 'nor does a generic word inside a longer name');
+  diff('', 'Anything', 'an empty name matches nothing');
+
+  console.log(`\nosm self-test: ${pass} passed, ${fail} failed`);
+  return fail > 0;
+}
+
+if (require.main === module && process.argv[2] === 'selftest') {
+  process.exit(selfTest() ? 1 : 0);
+}
+
 module.exports = {
   US_STATES, fetchBbox, buildBboxQuery, normalizeElement, classify, convertOpeningHours,
-  normalizePhone, normalizeWebsite, dedupe, haversineMeters, namesMatch, nameKey, sleep,
+  normalizePhone, normalizeWebsite, dedupe, haversineMeters, namesMatch, nameKey,
+  looksLikeInitials, GENERIC_TOKENS, selfTest, sleep,
 };

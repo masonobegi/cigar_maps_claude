@@ -597,6 +597,7 @@ function runStartupMenuScan({ log = console.log } = {}) {
   setTimeout(() => {
     const pass = (limit) => scanStale({ limit, log })
       .then(() => expireStaleStock({ log }))
+      .then(() => expireHiddenStock({ log }))
       .catch(err => log('[menu] scan error: ' + err.message));
     pass(40);
     setInterval(() => pass(60), 6 * 60 * 60 * 1000);
@@ -624,10 +625,40 @@ async function expireStaleStock({ days = STOCK_EXPIRY_DAYS, log = console.log } 
   return { expired: r.changes };
 }
 
+/**
+ * Stock on a listing we have taken off the map stops being called in stock.
+ *
+ * A hidden listing is one we cannot show is a cigar shop, open, at the address
+ * we hold — shut, a duplicate, not a retailer. Its shelf should not be
+ * answering "who has this cigar near me". The public queries already join
+ * stores and require visible = 1, so this is the second line rather than the
+ * first: it means a query written later that forgets the join still cannot
+ * publish a hidden shop's stock, and the counts in the database match what the
+ * site says.
+ *
+ * Reconciled here rather than at each hide. Nine different places take a
+ * listing off the map — six sweeps, a visitor report, a staff action, a
+ * closure route — and a rule that has to be remembered in nine places is a
+ * rule that will be missed in the tenth.
+ *
+ * Only web-read rows. A shop owner's own entry is theirs, stays as they left
+ * it, and comes back untouched if the listing is restored. Nothing is deleted:
+ * an unhide plus the next read of the shop's site puts the stock back.
+ */
+async function expireHiddenStock({ log = console.log } = {}) {
+  const reason = 'the listing is not on the public map';
+  const r = await db.run(`
+    UPDATE inventory SET in_stock = 0, stale_reason = ?, updated_at = NOW()
+    WHERE source = 'web' AND in_stock = 1
+      AND store_id IN (SELECT id FROM stores WHERE visible = 0)`, [reason]);
+  if (r.changes) log(`[menu] ${r.changes} stock rows taken out of public counts: ${reason}`);
+  return { expired: r.changes };
+}
+
 module.exports = {
   detectPlatform, fetchProducts, isCigarProduct, syncStoreMenu, scanStale,
   runStartupMenuScan, loadIndex, fetchUrl, safeUrl,
-  recordAttempt, nextCheckAfter, expireStaleStock, feedOwner, feedHost,
+  recordAttempt, nextCheckAfter, expireStaleStock, expireHiddenStock, feedOwner, feedHost,
   BACKOFF_DAYS, STOCK_EXPIRY_DAYS, DEAD_WEBSITE_STATUSES, replayThirtyDays, selftest,
 };
 

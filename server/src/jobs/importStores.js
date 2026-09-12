@@ -242,7 +242,8 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
     // id is attached so later refreshes recognise it.
     const twin = owned.find(o =>
       Math.abs(o.lat - s.lat) < 0.005 && Math.abs(o.lng - s.lng) < 0.005 &&
-      haversineMeters(o.lat, o.lng, s.lat, s.lng) < 150 && namesMatch(o.name, s.name));
+      haversineMeters(o.lat, o.lng, s.lat, s.lng) < 150
+      && namesMatch(o.name, s.name, { town: s.city || o.city }));
     if (twin) {
       await db.run('UPDATE stores SET osm_id = ? WHERE id = ?', [s.source_id, twin.id]);
       byKey.set(`${source}:${s.source_id}`, twin);

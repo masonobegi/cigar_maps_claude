@@ -14,9 +14,22 @@ const OPEN = { backgroundColor: '#0B3320', color: '#4ADE80', border: '1px solid 
 const CLOSED = { backgroundColor: '#2A2520', color: '#A8998A', border: `1px solid ${BORDER}` };
 const LOUNGE = { backgroundColor: '#3A2E0A', color: '#F5C542', border: '1px solid #6B5314' };
 
-/** A shop has a lounge if it says so, or if it is a lounge. */
+/**
+ * A shop has a lounge if the column says so. Nothing else.
+ *
+ * This used to read `has_lounge === 1 || store_type === 'cigar_lounge'`, which
+ * made the badge impossible to take off: a sweep that read a shop's own site,
+ * found it describes no lounge and cleared has_lounge was overruled at render
+ * time by the classifier's guess at the shop's type. The two are separate
+ * facts — what kind of shop this is, and whether you can sit down and smoke in
+ * it — and a type fix should not silently restore a badge a person removed.
+ *
+ * The import still sets has_lounge from a `cigar_lounge` type on a listing
+ * nobody has corrected, so no badge disappears from this change; what changes
+ * is that removing one now works.
+ */
 export function hasLounge(store) {
-  return store.has_lounge === 1 || store.store_type === 'cigar_lounge';
+  return store.has_lounge === 1;
 }
 
 /**

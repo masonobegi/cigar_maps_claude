@@ -33,7 +33,7 @@
 
 const fs = require('fs');
 const db = require('../database/db');
-const { haversineMeters } = require('./osm');
+const { haversineMeters, looksLikeInitials } = require('./osm');
 const { writeFields } = require('../utils/storeEdits');
 
 const SAME_PIN_M = 60;
@@ -42,7 +42,12 @@ const SAME_PIN_M = 60;
 const TRADE_WORDS = new Set(['cigar', 'cigars', 'cigarette', 'cigarettes', 'tobacco', 'tobacconist', 'smoke', 'smokes',
   'smoking', 'shop', 'shoppe', 'store', 'stores', 'lounge', 'bar', 'co', 'company', 'inc', 'llc', 'ltd', 'the', 'and',
   'of', 'house', 'humidor', 'humidors', 'emporium', 'outlet', 'vape', 'vapes', 'vapor', 'pipe', 'pipes', 'club',
-  'room', 'shop', 'discount', 'premium', 'fine', 'quality']);
+  'room', 'shop', 'discount', 'premium', 'fine', 'quality',
+  // Words that describe where a shop is or how it styles itself, not which
+  // shop it is. 'city' is here because without it "Cigar City Brewing" and
+  // "Cigar City Cigars" shared a distinctive word and the sweep proposed
+  // merging a brewery into a cigar shop.
+  'city', 'town', 'village', 'plaza', 'mall', 'center', 'centre', 'depot', 'world', 'zone']);
 
 const NUMBER_WORDS = {
   one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9', ten: '10',
@@ -71,17 +76,59 @@ function normalizeAddress(a) {
     .trim();
 }
 
-/** Punctuation people leave out, left out on both sides. */
+/**
+ * Punctuation people leave out, left out on both sides.
+ *
+ * A run of single letters joins into one token, because "E & E Cigars" and
+ * "E&E Cigars" are one shop and "J & J Cigars" and "J&J Cigar Co." are
+ * another. Without it the ampersand became a free-standing word and the
+ * initials stayed apart, so neither pair matched.
+ */
 function foldName(n) {
-  return String(n || '').toLowerCase().replace(/['’]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+  const words = String(n || '').toLowerCase()
+    .replace(/['’‘]/g, '')
+    // "&" reads as the word, so "H&M Tobacco" and "H and M Tobacco Shop" start
+    // from the same tokens. The run of single letters is then joined below,
+    // which is what brings them together with "H & M".
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(' ')
+    .filter(Boolean);
+
+  // A run of single letters is one initialism, and an "and" between two of
+  // them is part of it: e / e -> "ee", h / and / m -> "hm", j / and / j ->
+  // "jj". An "and" between real words is left alone ("Smith and Sons").
+  const out = [];
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+    const prev = out[out.length - 1];
+    const joinable = prev && prev.single;
+    if (w.length === 1 && joinable) { prev.text += w; continue; }
+    if (w === 'and' && joinable && words[i + 1] && words[i + 1].length === 1) continue;
+    out.push({ text: w, single: w.length === 1 });
+  }
+  return out.map(o => o.text).join(' ');
 }
 
-/** The words that say which shop this is: not the trade, not the town. */
+/** The same name with the spaces taken out: "Smoke Stack" is "Smokestack". */
+const squashed = n => foldName(n).replace(/ /g, '');
+
+/**
+ * The words that say which shop this is: not the trade, not the town.
+ *
+ * Short tokens are dropped, except an initialism — "JR", "J&J", "DL", "3D" is
+ * often the only thing naming the shop, and dropping it left "J & J Cigars"
+ * and "J&J Cigar Co." with nothing to compare. looksLikeInitials tells an
+ * initialism from a small word by the capitals in the name as given, so "Mr"
+ * in "Mr Tobacco" is still dropped and does not merge it with "Mr Cigars".
+ */
 function distinctiveWords(store) {
   const town = new Set(foldName(store.city).split(' '));
   return foldName(store.name).split(' ')
     .map(w => w.replace(/s$/, ''))
-    .filter(w => w.length > 2 && !TRADE_WORDS.has(w) && !TRADE_WORDS.has(`${w}s`) && !town.has(w) && !town.has(`${w}s`));
+    .filter(w => (w.length > 2 || looksLikeInitials(store.name, w))
+      && !TRADE_WORDS.has(w) && !TRADE_WORDS.has(`${w}s`) && !town.has(w) && !town.has(`${w}s`));
 }
 
 function houseNumber(address) {
@@ -117,15 +164,32 @@ function sameDoor(a, b) {
 function sameShop(a, b) {
   const fa = foldName(a.name), fb = foldName(b.name);
   if (fa && fa === fb) return 'name';
+  // The same words with the spaces somewhere else.
+  if (fa && squashed(a.name) === squashed(b.name)) return 'name';
   const da = distinctiveWords(a), dbw = distinctiveWords(b);
   if (!da.length || !dbw.length) {
     // "The Pipe" says nothing on its own, but at this door it is "The Pipe Rack".
     const wa = fa.split(' '), wb = fb.split(' ');
     return wa.every(w => wb.includes(w)) || wb.every(w => wa.includes(w)) ? 'contained' : null;
   }
+  // Every business-naming word on the shorter side is shared. This is
+  // deliberately generous: it decides what goes in front of a person, not
+  // what gets merged. Requiring the two sides to agree completely was tried
+  // and cost nine real duplicates — "Omerta Cigar Co." beside "Omerta Cigar
+  // Co. South Tulsa", "Casa De Montecristo Cigar Lounge - West Loop" beside
+  // "Casa de Montecristo Cigar Bar" at one address — to catch four bad pairs
+  // that automatic() already refuses. Full agreement is required there
+  // instead, where a merge happens with nobody watching.
   const shared = da.filter(w => dbw.includes(w));
   if (shared.length && shared.length >= Math.min(da.length, dbw.length)) return 'distinctive';
   return null;
+}
+
+/** Do the two names name the same business, with nothing left over either side? */
+function namesAgreeFully(a, b) {
+  const da = distinctiveWords(a), dbw = distinctiveWords(b);
+  if (!da.length || !dbw.length) return foldName(a.name) === foldName(b.name);
+  return da.length === dbw.length && da.every(w => dbw.includes(w));
 }
 
 const digits = p => String(p || '').replace(/\D/g, '').slice(-10);
@@ -155,6 +219,12 @@ function automatic(cluster) {
   if (why === 'distinctive') {
     const shared = distinctiveWords(a).filter(w => distinctiveWords(b).includes(w));
     if (shared.length < 2) return false;
+    // And nothing left over on either side. One name carrying a word the
+    // other does not is how a brewery and a cigar shop that share "Cigar
+    // City", or a shop and a separate lounge at one address, would be merged
+    // without anyone looking at them. Those pairs still reach the review
+    // file; they just do not get applied on their own.
+    if (!namesAgreeFully(a, b)) return false;
   }
   if (LOUNGE_NAME.test(a.name || '') !== LOUNGE_NAME.test(b.name || '')) return false;
   if (phoneA && phoneA === phoneB) return true;
@@ -266,6 +336,42 @@ function selfTest() {
   const ok = (c, l, got) => { if (c) pass++; else { fail++; console.log(`  FAIL ${l}${got !== undefined ? `  -> ${JSON.stringify(got)}` : ''}`); } };
   const row = (id, name, address, city, extra = {}) => ({ id, name, address, city, state: 'MI', lat: 42, lng: -83, ...extra });
 
+  // ── The name pairs the duplicates audit measured ───────────────────────
+  //
+  // Each positive is a real pair in the directory standing as two pins on one
+  // door; each negative is a pair that must never be merged, because merging
+  // them hides a real shop. Towns are the shops' real towns, since dropping
+  // the town is part of the method: "JR Cigars - Clayton" is in Clayton and
+  // "Tobacco Junction Of Marshall" in Marshall.
+  const shop = (name, city = 'Anytown') => ({ name, city });
+  const isSame = (a, b, city, label) => ok(!!sameShop(shop(a, city), shop(b, city)), `same shop: ${label}`,
+    [foldName(a), foldName(b)]);
+  const notSame = (a, b, city, label) => ok(!sameShop(shop(a, city), shop(b, city)), `not the same shop: ${label}`,
+    sameShop(shop(a, city), shop(b, city)));
+
+  isSame("Cole's Tobacco", 'Coles Tobacco', 'Pottstown', "#20760/#42064 Cole's Tobacco");
+  isSame('E & E Cigars', 'E&E Cigars', 'Anytown', '#4314/#40001 E & E Cigars');
+  isSame('J & J Cigars', 'J&J Cigar Co.', 'Anytown', 'initials, an ampersand and a legal suffix');
+  isSame('JR Cigars - Clayton', 'JR Cigars', 'Clayton', '#12541/#41319 JR Cigars');
+  isSame('The Tobacconist of Greenwich', 'The Tobacconist', 'Greenwich', '#22099/#40490 The Tobacconist');
+  isSame('Stogies', "Stogie's", 'Anytown', '#13015/#41331 Stogies');
+  isSame('Smoke Stack', 'Smokestack', 'Anytown', 'a space nobody agrees about');
+  isSame('The Pipe Rack', 'The Pipe', 'Akron', '#19175/#41895 The Pipe Rack');
+  isSame('Carmel Cigar Vault', 'The Carmel Cigar Vault', 'Carmel', '#22080/#22082 Carmel Cigar Vault');
+  isSame('Tobacco Junction Of Marshall', 'Tobacco Junction', 'Marshall', '#2979/#7224 Tobacco Junction');
+  isSame("Roz's Cigar Emporium", 'Roz Cigar Emporium', 'Ocala', "#6081/#6082 Roz's Cigar Emporium");
+  isSame("Wild Bill's Tobacco", 'Wild Bills Tobacco', 'Berkley', "Wild Bill's, with and without the apostrophe");
+  isSame('Padron Cigars', 'Padron Cigar Shop', 'Anytown', 'a trade word added to a shop name');
+
+  notSame('Tobacco Town', 'Tobacco Row', 'Anytown', 'two shops sharing only a trade word');
+  notSame('Taylor Tobacco', 'River Tobacco', 'Anytown', 'and two more');
+  notSame('Bellevue Cigar', 'Tobacco Bellevue', 'Bellevue', '#19038/#42177, 42 m apart and two businesses');
+  notSame("Holt's", 'Ashton', 'Anytown', 'a shop and a brand it stocks');
+  notSame('Cigar City Brewing', 'Cigar City Cigars', 'Tampa', 'a brewery and a cigar shop');
+  notSame('Cigar City Cigars', 'Cigar City Brewing', 'Tampa', 'and the same pair the other way round');
+  notSame('Mr Tobacco', 'Mr Cigars', 'Anytown', 'two small words that happen to match');
+  notSame('Smoke Shop', 'Tobacco Outlet', 'Anytown', 'two names made entirely of trade words');
+
   ok(normalizeAddress('2530 W Twelve Mile Rd') === normalizeAddress('2530 W 12 Mile Rd'), '"Twelve Mile" is 12 Mile');
   ok(normalizeAddress('3970 Old US Hwy 131 C') === normalizeAddress('3970 Old hwy 131 C'), 'US 131 is hwy 131');
   ok(sameDoor(row(1, 'a', '2200 Manchester Rd', 'Akron'), row(2, 'b', '2200 Manchester Road', 'Akron')) === 'address', 'one house number, one street');
@@ -286,7 +392,7 @@ function selfTest() {
   return fail === 0;
 }
 
-module.exports = { plan, apply, normalizeAddress, sameDoor, sameShop, foldName, distinctiveWords };
+module.exports = { plan, apply, normalizeAddress, sameDoor, sameShop, namesAgreeFully, foldName, squashed, distinctiveWords, TRADE_WORDS };
 
 if (require.main === module) {
   const argv = process.argv.slice(2);

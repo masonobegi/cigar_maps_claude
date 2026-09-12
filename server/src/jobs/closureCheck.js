@@ -671,7 +671,7 @@ async function mergeDuplicatesIn(items) {
       keeper = rows.find(o => o.id < r.id && !folded.has(o.id)
         && o.lat !== null && r.lat !== null
         && haversineMeters(Number(o.lat), Number(o.lng), Number(r.lat), Number(r.lng)) <= 60
-        && namesMatch(o.name, r.name));
+        && namesMatch(o.name, r.name, { town: r.city || o.city }));
     }
     if (keeper && keeper.id !== r.id) { folded.add(r.id); continue; }
     if (doorKey) byDoor.set(doorKey, r);

@@ -176,7 +176,12 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
     const rec = { ...o, confidence, store_type, ctags: o.osm_tags || {}, raw: o.osm_tags || {} };
     delete rec.osm_tags; delete rec._fetched_state;
     const twin = index.near(rec.lat, rec.lng).find(t =>
-      !t.osm_id && haversineMeters(t.lat, t.lng, rec.lat, rec.lng) < 150 && namesMatch(t.name, rec.name));
+      // The town is passed so that a name which is only the town's name
+      // cannot stand as the thing the two records have in common: "Bellevue
+      // Cigar" and "Tobacco Bellevue" are 42 m apart on Lincoln Ave and are
+      // two different businesses.
+      !t.osm_id && haversineMeters(t.lat, t.lng, rec.lat, rec.lng) < 150
+      && namesMatch(t.name, rec.name, { town: rec.city || t.city }));
     if (twin) {
       twin.osm_id = rec.source_id;
       fillMissing(twin, rec, ['address', 'city', 'zip', 'phone', 'website', 'instagram', 'hours', 'hours_raw']);
