@@ -76,7 +76,7 @@ async function renderOne(browser, store) {
   return ev;
 }
 
-async function renderAll({ skips, out, tabs = 8, log = console.log } = {}) {
+async function renderAll({ skips, out, tabs = 8, includeHidden = false, log = console.log } = {}) {
   if (!skips || !out) throw new Error('usage: --skips skips.json --out rendered.jsonl');
   let puppeteer;
   try { puppeteer = require('puppeteer-core'); } catch {
@@ -88,7 +88,12 @@ async function renderAll({ skips, out, tabs = 8, log = console.log } = {}) {
   if (fs.existsSync(out)) {
     for (const line of fs.readFileSync(out, 'utf8').split('\n')) { try { done.add(JSON.parse(line).id); } catch {} }
   }
-  const stores = (await db.all(`SELECT id, website FROM stores WHERE visible = 1 AND website IS NOT NULL AND website <> ''`))
+  // A listing held back for want of hours is exactly the one worth opening in a
+  // browser: its site is alive, its address is backed, and the only thing
+  // missing is a page the plain reader could not see.
+  const stores = (await db.all(`SELECT id, website FROM stores
+    WHERE (visible = 1${includeHidden ? " OR storefront = 'unverified'" : ''})
+      AND website IS NOT NULL AND website <> ''`))
     .filter(s => wanted.has(s.id) && !done.has(s.id));
   log(`${done.size} already rendered; opening ${stores.length} sites in ${tabs} tabs`);
 
@@ -121,7 +126,8 @@ module.exports = { renderAll, renderOne };
 if (require.main === module) {
   const argv = process.argv.slice(2);
   const arg = name => { const i = argv.indexOf(name); return i >= 0 && argv[i + 1] ? argv[i + 1] : null; };
-  renderAll({ skips: arg('--skips'), out: arg('--out'), tabs: Number(arg('--tabs')) || 8 })
+  renderAll({ skips: arg('--skips'), out: arg('--out'), tabs: Number(arg('--tabs')) || 8,
+    includeHidden: argv.includes('--include-hidden') })
     .then(() => process.exit(0))
     .catch(err => { console.error(err.message || err); process.exit(1); });
 }

@@ -722,7 +722,7 @@ function readJsonl(list) {
   return out;
 }
 
-async function decideAll({ from, out, chains = null, skipsOut = null, log = console.log } = {}) {
+async function decideAll({ from, out, chains = null, skipsOut = null, includeHeld = false, log = console.log } = {}) {
   if (!from) throw new Error('decide needs --from evidence.jsonl[,more.jsonl]');
   // Store pages read from chain websites (and their store locators), by host.
   const chainPages = new Map();
@@ -744,7 +744,8 @@ async function decideAll({ from, out, chains = null, skipsOut = null, log = cons
   const stores = await db.all(`
     SELECT id, name, address, city, state, zip, website, claimed, staff_edited, hours, hours_source,
            logo_url, cover_url, web_image_url
-    FROM stores WHERE visible = 1 AND website IS NOT NULL AND website <> ''`);
+    FROM stores WHERE (visible = 1${includeHeld ? " OR storefront = 'unverified'" : ''})
+      AND website IS NOT NULL AND website <> ''`);
   const byId = new Map(stores.map(s => [s.id, s]));
   // Listings that point at the very same page share it; a chain listing that
   // links its own location page (".../locations/boca-raton") stands alone.
@@ -1233,7 +1234,7 @@ if (require.main === module) {
     } else if (argv[0] === 'chains') {
       await collectChains({ out: arg('--out'), limitHosts: Number(arg('--limit')) || 0 });
     } else if (argv[0] === 'decide') {
-      await decideAll({ from: arg('--from'), out: arg('--out'), chains: arg('--chains'), skipsOut: arg('--skips') });
+      await decideAll({ from: arg('--from'), out: arg('--out'), chains: arg('--chains'), skipsOut: arg('--skips'), includeHeld: argv.includes('--include-held') });
     } else if (argv[0] === 'apply' && argv.includes('--confirm')) {
       await applyDecisions(arg('--from'));
     } else {
