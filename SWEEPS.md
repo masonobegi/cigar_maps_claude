@@ -64,7 +64,7 @@ a file by hand.
 
 **Production now: 4,363 public listings.** 930 with hours (783 read from the
 shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404 with a
-walk-in humidor, 216 stamped by a current tobacco licence.
+walk-in humidor, 230 stamped by a current tobacco licence.
 
 **What reading the output changed.** Seven rules were wrong, or were not running
 at all, and every one of them was found by reading rows rather than by a test:
@@ -153,9 +153,17 @@ contradict themselves — Sam Hills (a Prescott address, a Gallup filing, and a
 domain now serving a Vietnamese casino), Smoky J's, Black Jack's, Mort's, an
 Alaskan ZIP on a Florida row, and a Windsor, Ontario shop filed in Michigan.
 
-**59 rows are left for a person** in `sweeps/decisions/pins/pins_review.json`.
-Sixteen of them say "Nominatim agrees with the pin we already have", which means
-no move at all: there, the Census was the one that was wrong.
+**All 59 held rows were then read.** Sixteen say "Nominatim agrees with the pin
+we already have" — no move, the Census was the one that was wrong. **Eighteen
+more were moved**: six where Nominatim found the house (one of them printing
+"FatAsh Cigar Lounge" by name), twelve where the Census matched the address
+exactly in the listing’s own ZIP. **Twenty-five are left** in
+`pins_left.json`, each a geocoder that answered with a different address.
+
+One was caught by reading: Cigar N Vape is listed at 452 5th Ave in **11215**,
+which is Park Slope, and both geocoders answered with 452 5th Avenue in
+**Manhattan**, nine kilometres away. A destination in another postcode is
+another door, and the rule now says so.
 
 The three public time-zone rows are settled. Cigar Mafia's state went NY → TX
 (its address, ZIP 77002, its 281 phone and its pin are all Houston); the other
@@ -180,10 +188,26 @@ NYC 6,699, New York State 22,091, Texas 59,603, Chicago 59,414. Florida,
 California, Pennsylvania and Washington publish a file by hand; `licenceSync
 fetch` prints the URL for each.
 
-Of 732 listings in registry states: **216 verified** by a current licence at the
-door, 57 trading under another name, 146 licensed at another address, and 202
+Of 732 listings in registry states: **230 verified** by a current licence at the
+door, 57 trading under another name, 132 licensed at another address, and 202
 with no current licence — of which 54 were noted for staff and **none hidden**,
 per the rule that a lapse is a coin flip.
+
+Fourteen of those "verified" only appeared after reading the moved list, where
+three spellings of one address read as three different places: Texas writes
+"5832 Highway Six" where its own registry writes "5832 HIGHWAY 6", "10 N Plaza"
+is "10 NORTH PLZ", and "170B Gardiners Ave" is the unit letter on 170. Each had
+taken a licence away from a shop standing on it.
+
+**The 57 renames were then read and split three ways**: 7 are the same name
+formalised ("E&A Cigars" → "E & A CIGARS LLC"), 15 are a licence holder rather
+than a name over the door ("THE 3 OWNERS CORP."), and **29 are another trading
+name worth holding** — written into `name_aliases`, so search finds the shop
+either way. Five doors now hold a licence for another trade entirely (a liquor
+store, a feed company, a wholesaler); those are **staff flags, not hides**,
+because a licence at the same street number can be the unit next door. Stogies
+World Class Cigars is exempt by name: it stands beside the Texas Card House, not
+in its place.
 
 The downloads are gitignored: 27 MB of public data that `fetch` re-creates in a
 minute. The matched result, `decisions/licences.json`, is committed.
@@ -210,8 +234,10 @@ auto tier only; review-tier clusters still wait for a person.
 ### Still open
 
 - **963 category-only amenity badges**, for a person to accept or clear.
-- **59 pin rows** for review, plus 57 licence renames and 146 licence moves as
-  lists.
+- **25 pin rows** where a geocoder answered with a different address, in
+  `sweeps/decisions/pins/pins_left.json`.
+- **132 licence moves**: a shop whose licence is at another address. Each needs
+  reading against the pin list before anything is believed.
 - **The Overture-dependent dedupe change**, still blocked: `overture_raw.json`
   is not in the repository, and a rebuild without it produces an OSM-only file.
 - **Four registries** that publish a file by hand rather than an API.

@@ -1,0 +1,1630 @@
+[
+ {
+  "id": 1105,
+  "name": "Absolute Cigar Shop",
+  "address": "22 SW 8th St",
+  "city": "Miami",
+  "state": "FL",
+  "zip": "33130",
+  "phone": "(305) 374-9999",
+  "website": "absolutecigarmiami.com",
+  "from": {
+   "lat": 25.766129,
+   "lng": -80.193787
+  },
+  "to": {
+   "lat": 25.773478407304,
+   "lng": -80.207753850503
+  },
+  "move_km": 1.62,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "22 SW 8TH AVE, MIAMI, FL, 33130",
+   "zip": "33130"
+  },
+  "nominatim": {
+   "lat": 25.7660742,
+   "lng": -80.1938,
+   "level": "house",
+   "display": "22, Southwest 8th Street, Torch of Friendship, Miami, Miami-Dade County, Florida, 33130, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"22 SW 8TH AVE, MIAMI, FL, 33130\")",
+   "the two geocoders are 1.62 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 1981,
+  "name": "Mister Z's Bourbon & Cigar Bar",
+  "address": "110 S Ocean Dr",
+  "city": "Fort Pierce",
+  "state": "FL",
+  "zip": "34949",
+  "phone": "(772) 204-6130",
+  "website": "sunrisesandsbeachresort.com",
+  "from": {
+   "lat": 27.469131,
+   "lng": -80.291168
+  },
+  "to": {
+   "lat": 27.551102568057,
+   "lng": -80.323461411979
+  },
+  "move_km": 9.66,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "110 OCEAN ESTATES DR, FORT PIERCE, FL, 34949",
+   "zip": "34949"
+  },
+  "nominatim": {
+   "lat": 27.4692191,
+   "lng": -80.2920223,
+   "level": "house",
+   "display": "110, South Ocean Drive, Fort Pierce, Saint Lucie County, Florida, 34949, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"110 OCEAN ESTATES DR, FORT PIERCE, FL, 34949\")",
+   "the two geocoders are 9.62 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 3032,
+  "name": "Bright fire cigars",
+  "address": "2015 Main St",
+  "city": "Liberty Hill",
+  "state": "TX",
+  "zip": "78642",
+  "phone": "(512) 548-5388",
+  "website": "brightfirecigars.com",
+  "from": {
+   "lat": 30.674273,
+   "lng": -97.9328
+  },
+  "to": {
+   "lat": 30.071562985883,
+   "lng": -94.787451261924
+  },
+  "move_km": 309.09,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "2015 N MAIN ST, LIBERTY, TX, 77575",
+   "zip": "77575"
+  },
+  "nominatim": {
+   "lat": 30.6741884,
+   "lng": -97.9325056,
+   "level": "house",
+   "display": "2015, Main Street, Liberty Hill, Williamson County, Texas, 78642, United States"
+  },
+  "backed_by": "its own website",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"2015 N MAIN ST, LIBERTY, TX, 77575\")",
+   "the two geocoders are 309.06 km apart",
+   "Nominatim agrees with the pin we already have",
+   "the move is 309 km, past the 50 km limit — a record that wrong is wrong about more than its pin"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 8142,
+  "name": "Kasi Cigar Bar",
+  "address": "2000 Powers Ferry Rd SE",
+  "city": "Marietta",
+  "state": "GA",
+  "zip": "30067",
+  "phone": "(770) 612-8337",
+  "website": "kasicigarlounge.com",
+  "from": {
+   "lat": 33.906685,
+   "lng": -84.465439
+  },
+  "to": {
+   "lat": 33.931901203787,
+   "lng": -84.479061560593
+  },
+  "move_km": 3.07,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "2000 POWERS FERRY TRCE SE, MARIETTA, GA, 30067",
+   "zip": "30067"
+  },
+  "nominatim": {
+   "lat": 33.9062826,
+   "lng": -84.465287,
+   "level": "house",
+   "display": "2000, Powers Ferry Road Southeast, Cumberland, Marietta, Cobb County, Georgia, 30067, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"2000 POWERS FERRY TRCE SE, MARIETTA, GA, 30067\")",
+   "the two geocoders are 3.12 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 16426,
+  "name": "Slow Burn Cigar & Whiskey Lounge",
+  "address": "830 S Main St",
+  "city": "Middlebury",
+  "state": "IN",
+  "zip": "46540",
+  "phone": "(574) 350-6194",
+  "website": "slowburnmiddlebury.com",
+  "from": {
+   "lat": 41.655106,
+   "lng": -85.704674
+  },
+  "to": {
+   "lat": 41.666230805579,
+   "lng": -85.705788503829
+  },
+  "move_km": 1.24,
+  "census": {
+   "type": "Exact",
+   "matched": "830 S MAIN ST, MIDDLEBURY, IN, 46540",
+   "zip": "46540"
+  },
+  "nominatim": {
+   "lat": 41.6551505,
+   "lng": -85.7047388,
+   "level": "house",
+   "display": "Edward Jones, 830, South Main Street, Middlebury, Elkhart County, Indiana, 46540, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/Indiana/Indianapolis"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the two geocoders are 1.24 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 17378,
+  "name": "Tobacco Plus Cigars SC",
+  "address": "1921 SC-101",
+  "city": "Greer",
+  "state": "SC",
+  "zip": "29651",
+  "phone": "(864) 968-1133",
+  "website": "tobacco-plus.com",
+  "from": {
+   "lat": 34.886871,
+   "lng": -82.153252
+  },
+  "to": {
+   "lat": 34.964423363023,
+   "lng": -82.267947928645
+  },
+  "move_km": 13.55,
+  "census": {
+   "type": "Exact",
+   "matched": "1921 STATE HWY 101, GREER, SC, 29651",
+   "zip": "29651"
+  },
+  "nominatim": {
+   "lat": 34.886927,
+   "lng": -82.1533704,
+   "level": "house",
+   "display": "1921, Highway 101, Greer, Spartanburg County, South Carolina, 29651, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "\"1921 SC-101\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the two geocoders are 13.54 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 18415,
+  "name": "Cigar Realm",
+  "address": "11657 Lakeridge Pkwy",
+  "city": "Ashland",
+  "state": "VA",
+  "zip": "23005",
+  "phone": "(804) 496-6767",
+  "website": "cigarrealm.com",
+  "from": {
+   "lat": 37.718212,
+   "lng": -77.452797
+  },
+  "to": {
+   "lat": 37.727679479296,
+   "lng": -77.46049896185
+  },
+  "move_km": 1.25,
+  "census": {
+   "type": "Exact",
+   "matched": "11657 LAKERIDGE PKWY, ASHLAND, VA, 23005",
+   "zip": "23005"
+  },
+  "nominatim": {
+   "lat": 37.7182781,
+   "lng": -77.4530629,
+   "level": "house",
+   "display": "Verizon, 11657, Lakeridge Parkway, Lewistown, Ashland, Hanover County, Virginia, 23005, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the two geocoders are 1.23 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 20309,
+  "name": "Maduros Cigar Lounge",
+  "address": "1810 Wilmington Pike Ste 15",
+  "city": "Chadds Ford Twp",
+  "state": "PA",
+  "zip": "19342",
+  "phone": "(855) 924-4277",
+  "website": "maduroscigarshop.com",
+  "from": {
+   "lat": 39.868298,
+   "lng": -75.545441
+  },
+  "to": {
+   "lat": 39.857190166716,
+   "lng": -75.541279661413
+  },
+  "move_km": 1.29,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "1810 WILMINGTON PIKE, GLEN MILLS, PA, 19342",
+   "zip": "19342"
+  },
+  "nominatim": {
+   "lat": 39.868794,
+   "lng": -75.5451871,
+   "level": "house",
+   "display": "Masamoto, 1810, Wilmington West Chester Pike, Brandywine Summit, Chadds Ford Township, Delaware County, Pennsylvania, 19342, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"1810 WILMINGTON PIKE, GLEN MILLS, PA, 19342\")",
+   "the two geocoders are 1.33 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 21333,
+  "name": "Davidoff of Geneva Brooklyn",
+  "address": "156 Broadway",
+  "city": "New York",
+  "state": "NY",
+  "zip": "11211",
+  "phone": "(347) 599-0565",
+  "website": "davidoffbrooklyn.com",
+  "from": {
+   "lat": 40.710064,
+   "lng": -73.963127
+  },
+  "to": {
+   "lat": 40.709449406386,
+   "lng": -74.010199597135
+  },
+  "move_km": 3.97,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "156 BROADWAY, NEW YORK, NY, 10038",
+   "zip": "10038"
+  },
+  "nominatim": {
+   "lat": 40.7099422,
+   "lng": -73.9631536,
+   "level": "house",
+   "display": "156, Broadway, Williamsburg, New York, 11211, United States"
+  },
+  "backed_by": null,
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"156 BROADWAY, NEW YORK, NY, 10038\")",
+   "the two geocoders are 3.97 km apart",
+   "Nominatim agrees with the pin we already have",
+   "nothing outside the directory backs the address: the geocoder returned a different ZIP and no site or chain feed prints this door"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 21915,
+  "name": "Middletown Cigar Lounge",
+  "address": "265 Rte 211 E",
+  "city": "Middletown",
+  "state": "NY",
+  "zip": "10940",
+  "phone": "(845) 381-1011",
+  "website": "middletowncigarlounge.com",
+  "from": {
+   "lat": 41.454517,
+   "lng": -74.40097
+  },
+  "to": {
+   "lat": 41.459991774948,
+   "lng": -74.441552939077
+  },
+  "move_km": 3.44,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "265 STATE RTE 211, MIDDLETOWN, NY, 10940",
+   "zip": "10940"
+  },
+  "nominatim": {
+   "lat": 41.4546046,
+   "lng": -74.4008878,
+   "level": "house",
+   "display": "265, Route 211 East, City of Middletown, Town of Wallkill, Orange County, New York, 10940, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "\"265 Rte 211 E\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"265 STATE RTE 211, MIDDLETOWN, NY, 10940\")",
+   "the two geocoders are 3.44 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 21916,
+  "name": "Carlito's Cigars",
+  "address": "265 Rte 211 E Ste 106",
+  "city": "Middletown",
+  "state": "NY",
+  "zip": "10940",
+  "phone": "(845) 381-1011",
+  "website": "carlitoscigars.com",
+  "from": {
+   "lat": 41.454571,
+   "lng": -74.400948
+  },
+  "to": {
+   "lat": 41.459991774948,
+   "lng": -74.441552939077
+  },
+  "move_km": 3.44,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "265 STATE RTE 211, MIDDLETOWN, NY, 10940",
+   "zip": "10940"
+  },
+  "nominatim": {
+   "lat": 41.4546046,
+   "lng": -74.4008878,
+   "level": "house",
+   "display": "265, Route 211 East, City of Middletown, Town of Wallkill, Orange County, New York, 10940, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "\"265 Rte 211 E Ste 106\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"265 STATE RTE 211, MIDDLETOWN, NY, 10940\")",
+   "the two geocoders are 3.44 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 22541,
+  "name": "Blue Collar Cigar and Pipe Co",
+  "address": "35 Prospect St",
+  "city": "East Longmeadow",
+  "state": "MA",
+  "zip": "01028",
+  "phone": "(413) 525-8522",
+  "website": "tortugacigars.com",
+  "from": {
+   "lat": 42.063938,
+   "lng": -72.512962
+  },
+  "to": {
+   "lat": 42.046518158479,
+   "lng": -72.501873615493
+  },
+  "move_km": 2.14,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "35 PROSPECT HILLS DR, EAST LONGMEADOW, MA, 01028",
+   "zip": "01028"
+  },
+  "nominatim": {
+   "lat": 42.0639113,
+   "lng": -72.5130478,
+   "level": "house",
+   "display": "33;35, Prospect Street, East Longmeadow, Hampden County, Massachusetts, 01028, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"35 PROSPECT HILLS DR, EAST LONGMEADOW, MA, 01028\")",
+   "the two geocoders are 2.14 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 28973,
+  "name": "Ave K Cigar & Smoke Shop",
+  "address": "2046 W Avenue K-10",
+  "city": "Lancaster",
+  "state": "CA",
+  "zip": "93536",
+  "phone": "(661) 206-9848",
+  "website": null,
+  "from": {
+   "lat": 34.665318,
+   "lng": -118.166634
+  },
+  "to": {
+   "lat": 34.674834304185,
+   "lng": -118.167022475425
+  },
+  "move_km": 1.06,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "2046 W AVE K, LANCASTER, CA, 93536",
+   "zip": "93536"
+  },
+  "nominatim": {
+   "lat": 34.6653764,
+   "lng": -118.1666516,
+   "level": "house",
+   "display": "2046, West Avenue K 10, Lancaster, Los Angeles County, California, 93536, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Los_Angeles",
+   "to": "America/Los_Angeles"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"2046 W AVE K, LANCASTER, CA, 93536\")",
+   "the two geocoders are 1.05 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 32571,
+  "name": "RAZZ Tobacco & Cigar",
+  "address": "539 Main St NW",
+  "city": "Bourbonnais",
+  "state": "IL",
+  "zip": "60914",
+  "phone": "(779) 701-5084",
+  "website": null,
+  "from": {
+   "lat": 41.160145,
+   "lng": -87.885414
+  },
+  "to": {
+   "lat": 41.150268608053,
+   "lng": -87.875745357682
+  },
+  "move_km": 1.36,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "539 S MAIN ST, BOURBONNAIS, IL, 60914",
+   "zip": "60914"
+  },
+  "nominatim": {
+   "lat": 41.1594271,
+   "lng": -87.8869211,
+   "level": "house",
+   "display": "539, Main Street Northwest, Bourbonnais, Kankakee County, Illinois, 60914, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"539 S MAIN ST, BOURBONNAIS, IL, 60914\")",
+   "the two geocoders are 1.38 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 36525,
+  "name": "Top's Cigars",
+  "address": "314 W Main St",
+  "city": "Havelock",
+  "state": "NC",
+  "zip": "28532",
+  "phone": "(252) 444-4477",
+  "website": null,
+  "from": {
+   "lat": 34.887688,
+   "lng": -76.917274
+  },
+  "to": {
+   "lat": 34.874400810087,
+   "lng": -76.903069028603
+  },
+  "move_km": 1.97,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "314 E MAIN ST, HAVELOCK, NC, 28532",
+   "zip": "28532"
+  },
+  "nominatim": {
+   "lat": 34.8868839,
+   "lng": -76.9168398,
+   "level": "house",
+   "display": "314, West Main Street, Sherwood Forest, Havelock, Craven County, North Carolina, 28532, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"314 E MAIN ST, HAVELOCK, NC, 28532\")",
+   "the two geocoders are 1.87 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 38344,
+  "name": "Royal Cigar",
+  "address": "13 Taunton St",
+  "city": "Plainville",
+  "state": "MA",
+  "zip": "02762",
+  "phone": "(508) 316-1705",
+  "website": null,
+  "from": {
+   "lat": 42.011761,
+   "lng": -71.305298
+  },
+  "to": {
+   "lat": 42.035087714947,
+   "lng": -71.314944654224
+  },
+  "move_km": 2.71,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "13 OLD TAUNTON ST, PLAINVILLE, MA, 02762",
+   "zip": "02762"
+  },
+  "nominatim": {
+   "lat": 42.0119399,
+   "lng": -71.3052037,
+   "level": "house",
+   "display": "13, Taunton Street, Shepardville, Plainville, Norfolk County, Massachusetts, 02762, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "Nominatim backs the pin we already have: the Census was the one that was wrong",
+  "holds": [
+   "the Census match is Non_Exact (\"13 OLD TAUNTON ST, PLAINVILLE, MA, 02762\")",
+   "the two geocoders are 2.70 km apart",
+   "Nominatim agrees with the pin we already have"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 997,
+  "name": "Islamorada Cigar Company",
+  "address": "82775 Overseas Highway",
+  "city": "Key Largo",
+  "state": "FL",
+  "zip": "33036",
+  "phone": "(714) 222-8890",
+  "website": "islamoradacigars.com",
+  "from": {
+   "lat": 25.043301,
+   "lng": -80.488586
+  },
+  "to": {
+   "lat": 24.928100086219,
+   "lng": -80.623704980734
+  },
+  "move_km": 18.7,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "82775 OVERSEAS HWY, ISLAMORADA, FL, 33036",
+   "zip": "33036"
+  },
+  "nominatim": {
+   "lat": 25.0286835,
+   "lng": -80.5058595,
+   "level": "road",
+   "display": "Overseas Highway, Thompson, Key Largo, Monroe County, Florida, 33037, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"82775 OVERSEAS HWY, ISLAMORADA, FL, 33036\")",
+  "holds": [
+   "\"82775 Overseas Highway\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"82775 OVERSEAS HWY, ISLAMORADA, FL, 33036\")",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 1420,
+  "name": "Republica Cigar Lounge",
+  "address": "801 N Federal Hwy  Ste 101",
+  "city": "Hallandale Beach",
+  "state": "FL",
+  "zip": "33009",
+  "phone": "(954) 367-7428",
+  "website": "republicaofcigars.com",
+  "from": {
+   "lat": 25.994049,
+   "lng": -80.143181
+  },
+  "to": {
+   "lat": 25.975548535549,
+   "lng": -80.141920645756
+  },
+  "move_km": 2.06,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "801 S FEDERAL HWY, HALLANDALE BEACH, FL, 33009",
+   "zip": "33009"
+  },
+  "nominatim": {
+   "lat": 25.9940918,
+   "lng": -80.1426914,
+   "level": "road",
+   "display": "Federal Highway, Hallandale Beach, Broward County, Florida, 33009, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"801 S FEDERAL HWY, HALLANDALE BEACH, FL, 33009\")",
+  "holds": [
+   "\"801 N Federal Hwy  Ste 101\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"801 S FEDERAL HWY, HALLANDALE BEACH, FL, 33009\")",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 1839,
+  "name": "Leyenda Cubana Cigar Shop And Lounge",
+  "address": "7000 S Dixie Hwy  # 6",
+  "city": "West Palm Beach",
+  "state": "FL",
+  "zip": "33405",
+  "phone": "(561) 598-8002",
+  "website": "leyendacubana.com",
+  "from": {
+   "lat": 26.669603,
+   "lng": -80.054909
+  },
+  "to": {
+   "lat": 26.653489833868,
+   "lng": -80.055992997471
+  },
+  "move_km": 1.79,
+  "census": {
+   "type": "Exact",
+   "matched": "7000 S DIXIE HWY, WEST PALM BEACH, FL, 33405",
+   "zip": "33405"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "held: \"7000 S Dixie Hwy  # 6\" is a highway address, where the geocoder is wrong about as often as the pin | Nominatim found no second opinion",
+  "holds": [
+   "\"7000 S Dixie Hwy  # 6\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 2691,
+  "name": "Tobacco Haus Cigar Lounge",
+  "address": "651 N Business Ih 35 Ste 525",
+  "city": "New Braunfels",
+  "state": "TX",
+  "zip": "78130",
+  "phone": "(830) 620-7473",
+  "website": "tobaccohaus.com",
+  "from": {
+   "lat": 29.698429,
+   "lng": -98.101501
+  },
+  "to": {
+   "lat": 29.693010313471,
+   "lng": -98.116719126772
+  },
+  "move_km": 1.59,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "651 I- 35 BUS, NEW BRAUNFELS, TX, 78130",
+   "zip": "78130"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"651 I- 35 BUS, NEW BRAUNFELS, TX, 78130\")",
+  "holds": [
+   "\"651 N Business Ih 35 Ste 525\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"651 I- 35 BUS, NEW BRAUNFELS, TX, 78130\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 2979,
+  "name": "Tobacco Junction Of Marshall",
+  "address": "1303 E Grand Ave",
+  "city": "Marshall",
+  "state": "TX",
+  "zip": "75670",
+  "phone": "(903) 935-1030",
+  "website": "tobaccojunction.net",
+  "from": {
+   "lat": 31.898838,
+   "lng": -98.587921
+  },
+  "to": {
+   "lat": 32.548524500571,
+   "lng": -94.355100744377
+  },
+  "move_km": 404.64,
+  "census": {
+   "type": "Exact",
+   "matched": "1303 E GRAND AVE, MARSHALL, TX, 75670",
+   "zip": "75670"
+  },
+  "nominatim": {
+   "lat": 32.5484646,
+   "lng": -94.3652652,
+   "level": "road",
+   "display": "East Grand Avenue, Marshall, Harrison County, Texas, 75671, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "held: Nominatim answered at road level, not a house number | the move is 405 km, past the 50 km limit — a record that wrong is wrong about more than its pin",
+  "holds": [
+   "Nominatim answered at road level, not a house number",
+   "the move is 405 km, past the 50 km limit — a record that wrong is wrong about more than its pin"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 3019,
+  "name": "Pendulum Cigar Lounge",
+  "address": "4750 Bryant Irvin Rd Ste. 822",
+  "city": "Fort Worth",
+  "state": "TX",
+  "zip": "76132",
+  "phone": "(817) 229-7520",
+  "website": "pendulumcigarloungefw.com",
+  "from": {
+   "lat": 32.679298,
+   "lng": -97.41613
+  },
+  "to": {
+   "lat": 32.715777376044,
+   "lng": -97.412074740797
+  },
+  "move_km": 4.07,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "4750 BRYANT IRVIN RD N, FORT WORTH, TX, 76107",
+   "zip": "76107"
+  },
+  "nominatim": null,
+  "backed_by": null,
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"4750 BRYANT IRVIN RD N, FORT WORTH, TX, 76107\")",
+  "holds": [
+   "the Census match is Non_Exact (\"4750 BRYANT IRVIN RD N, FORT WORTH, TX, 76107\")",
+   "Nominatim found no second opinion",
+   "nothing outside the directory backs the address: the geocoder returned a different ZIP and no site or chain feed prints this door"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 6967,
+  "name": "Cigar Lounge",
+  "address": "8608 Preston Rd Suite#106",
+  "city": "Plano",
+  "state": "TX",
+  "zip": "75024",
+  "phone": "(972) 668-5500",
+  "website": "cigarplaces.com",
+  "from": {
+   "lat": 33.095428,
+   "lng": -96.803383
+  },
+  "to": {
+   "lat": 33.095469436616,
+   "lng": -96.77968491063
+  },
+  "move_km": 2.21,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "8608 PRESTON MEADOW DR, PLANO, TX, 75024",
+   "zip": "75024"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"8608 PRESTON MEADOW DR, PLANO, TX, 75024\")",
+  "holds": [
+   "the Census match is Non_Exact (\"8608 PRESTON MEADOW DR, PLANO, TX, 75024\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 7081,
+  "name": "D&B Cigar Corner",
+  "address": "1925 Towne Centre Dr #108",
+  "city": "Mesquite",
+  "state": "TX",
+  "zip": "75150",
+  "phone": "(972) 681-3400",
+  "website": "dandbcigarcorner.wixsite.com/dandbcigarcorner",
+  "from": {
+   "lat": 32.799267,
+   "lng": -96.63295
+  },
+  "to": {
+   "lat": 32.808836964579,
+   "lng": -96.626478445548
+  },
+  "move_km": 1.22,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "1925 TOWN EAST MALL, MESQUITE, TX, 75150",
+   "zip": "75150"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"1925 TOWN EAST MALL, MESQUITE, TX, 75150\")",
+  "holds": [
+   "the Census match is Non_Exact (\"1925 TOWN EAST MALL, MESQUITE, TX, 75150\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 13391,
+  "name": "Savage Tobacco",
+  "address": "14101 Highway 13 W",
+  "city": "Savage",
+  "state": "MN",
+  "zip": "55378",
+  "phone": "(952) 226-2800",
+  "website": "savagetobacco.com",
+  "from": {
+   "lat": 44.778984,
+   "lng": -93.342194
+  },
+  "to": {
+   "lat": 44.747967083877,
+   "lng": -93.379592450991
+  },
+  "move_km": 4.54,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "14101 STATE HWY 13, SAVAGE, MN, 55378",
+   "zip": "55378"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"14101 STATE HWY 13, SAVAGE, MN, 55378\")",
+  "holds": [
+   "\"14101 Highway 13 W\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"14101 STATE HWY 13, SAVAGE, MN, 55378\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 14339,
+  "name": "Bazaar Tobacco",
+  "address": "20833 N Lagrange Rd",
+  "city": "Frankfort",
+  "state": "IL",
+  "zip": "60423",
+  "phone": "(815) 464-0000",
+  "website": "bazaartobacco1.com",
+  "from": {
+   "lat": 41.510666,
+   "lng": -87.847542
+  },
+  "to": {
+   "lat": 41.528366083266,
+   "lng": -87.850054666567
+  },
+  "move_km": 1.98,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "20833 S LA GRANGE RD, FRANKFORT, IL, 60423",
+   "zip": "60423"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"20833 S LA GRANGE RD, FRANKFORT, IL, 60423\")",
+  "holds": [
+   "the Census match is Non_Exact (\"20833 S LA GRANGE RD, FRANKFORT, IL, 60423\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 14966,
+  "name": "Duke’s Tobacco",
+  "address": "624 Westgate Rd",
+  "city": "Somerset",
+  "state": "KY",
+  "zip": "42503",
+  "phone": "(606) 679-7176",
+  "website": "dukestobacco.com",
+  "from": {
+   "lat": 37.054306,
+   "lng": -84.629631
+  },
+  "to": {
+   "lat": 37.086001140006,
+   "lng": -84.657980140882
+  },
+  "move_km": 4.33,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "624 WESTGATE DR, SOMERSET, KY, 42503",
+   "zip": "42503"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"624 WESTGATE DR, SOMERSET, KY, 42503\")",
+  "holds": [
+   "the Census match is Non_Exact (\"624 WESTGATE DR, SOMERSET, KY, 42503\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 17607,
+  "name": "Stogie's Barboursville Location",
+  "address": "3633 US Route 60",
+  "city": "Huntington",
+  "state": "WV",
+  "zip": "25705",
+  "phone": "(304) 736-8858",
+  "website": "Stogieswv.com",
+  "from": {
+   "lat": 38.41103,
+   "lng": -82.371765
+  },
+  "to": {
+   "lat": 38.410083977161,
+   "lng": -82.332856983174
+  },
+  "move_km": 3.39,
+  "census": {
+   "type": "Exact",
+   "matched": "3633 US HWY 60, HUNTINGTON, WV, 25705",
+   "zip": "25705"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "held: \"3633 US Route 60\" is a highway address, where the geocoder is wrong about as often as the pin | Nominatim found no second opinion",
+  "holds": [
+   "\"3633 US Route 60\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 17836,
+  "name": "The Squire Tobacconist",
+  "address": "104 Hills Plz",
+  "city": "Charleston",
+  "state": "WV",
+  "zip": "25387",
+  "phone": "(304) 358-0221",
+  "website": "thesquirewv.com",
+  "from": {
+   "lat": 38.367764,
+   "lng": -81.669006
+  },
+  "to": {
+   "lat": 38.330388225775,
+   "lng": -81.579260252538
+  },
+  "move_km": 8.86,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "104 HILL DR, CHARLESTON, WV, 25311",
+   "zip": "25311"
+  },
+  "nominatim": null,
+  "backed_by": null,
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"104 HILL DR, CHARLESTON, WV, 25311\")",
+  "holds": [
+   "the Census match is Non_Exact (\"104 HILL DR, CHARLESTON, WV, 25311\")",
+   "Nominatim found no second opinion",
+   "nothing outside the directory backs the address: the geocoder returned a different ZIP and no site or chain feed prints this door"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 18018,
+  "name": "Anstead's Tobacco Co",
+  "address": "334 Cross Creek Mall",
+  "city": "Fayetteville",
+  "state": "NC",
+  "zip": "28303",
+  "phone": "(910) 864-5705",
+  "website": "ansteads.com",
+  "from": {
+   "lat": 35.072449,
+   "lng": -78.960831
+  },
+  "to": {
+   "lat": 35.046707347593,
+   "lng": -78.878167032782
+  },
+  "move_km": 8.05,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "334 CROSS CREEK ST, FAYETTEVILLE, NC, 28301",
+   "zip": "28301"
+  },
+  "nominatim": {
+   "lat": 35.072557,
+   "lng": -78.9639283,
+   "level": "road",
+   "display": "Cross Creek Mall, The Oaks, Fayetteville, Cumberland County, North Carolina, 28303, United States"
+  },
+  "backed_by": null,
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"334 CROSS CREEK ST, FAYETTEVILLE, NC, 28301\")",
+  "holds": [
+   "the Census match is Non_Exact (\"334 CROSS CREEK ST, FAYETTEVILLE, NC, 28301\")",
+   "Nominatim answered at road level, not a house number",
+   "nothing outside the directory backs the address: the geocoder returned a different ZIP and no site or chain feed prints this door"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 20425,
+  "name": "Freedom Cigars and Tobacco",
+  "address": "130 Newberry Commons",
+  "city": "Etters",
+  "state": "PA",
+  "zip": "17319",
+  "phone": "(717) 938-8860",
+  "website": "freedomcigars.com",
+  "from": {
+   "lat": 40.157669,
+   "lng": -76.820122
+  },
+  "to": {
+   "lat": 40.147828025904,
+   "lng": -76.813365917866
+  },
+  "move_km": 1.24,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "130 NEWBERRY PKWY, ETTERS, PA, 17319",
+   "zip": "17319"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"130 NEWBERRY PKWY, ETTERS, PA, 17319\")",
+  "holds": [
+   "the Census match is Non_Exact (\"130 NEWBERRY PKWY, ETTERS, PA, 17319\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 20502,
+  "name": "Valley Cigars",
+  "address": "1146 PA-72",
+  "city": "North Lebanon Twp",
+  "state": "PA",
+  "zip": "17046",
+  "phone": "(717) 270-1941",
+  "website": "local.yahoo.com/info-11991350-valley-cigars-lebanon",
+  "from": {
+   "lat": 40.351948,
+   "lng": -76.451134
+  },
+  "to": {
+   "lat": 40.349916448786,
+   "lng": -76.431545548849
+  },
+  "move_km": 1.68,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "1146 STATE RTE 72, LEBANON, PA, 17046",
+   "zip": "17046"
+  },
+  "nominatim": {
+   "lat": 40.3570931,
+   "lng": -76.4569821,
+   "level": "road",
+   "display": "Ebenezer Road, Ebenezer, North Lebanon Township, Lebanon County, Pennsylvania, 17046, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"1146 STATE RTE 72, LEBANON, PA, 17046\")",
+  "holds": [
+   "\"1146 PA-72\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"1146 STATE RTE 72, LEBANON, PA, 17046\")",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 21284,
+  "name": "Cigar N Vape",
+  "address": "452 5th Ave",
+  "city": "New York",
+  "state": "NY",
+  "zip": "11215",
+  "phone": "(929) 436-8803",
+  "website": "cigarvapenyc.com",
+  "from": {
+   "lat": 40.66898,
+   "lng": -73.986572
+  },
+  "to": {
+   "lat": 40.751818371031,
+   "lng": -73.982185919466
+  },
+  "move_km": 9.22,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "452 5TH AVE, NEW YORK, NY, 10018",
+   "zip": "10018"
+  },
+  "nominatim": {
+   "lat": 40.7520531,
+   "lng": -73.9825029,
+   "level": "house",
+   "display": "HSBC Tower, 452, 5th Avenue, Midtown South, Manhattan Community Board 5, Manhattan, New York County, New York, 10018, United States"
+  },
+  "backed_by": null,
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"452 5TH AVE, NEW YORK, NY, 10018\")",
+  "holds": [
+   "the Census match is Non_Exact (\"452 5TH AVE, NEW YORK, NY, 10018\")",
+   "nothing outside the directory backs the address: the geocoder returned a different ZIP and no site or chain feed prints this door"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 21871,
+  "name": "Parodi and Avanti Cigar Company",
+  "address": "200 Keystone Industrial Park Rd",
+  "city": "Dunmore",
+  "state": "PA",
+  "zip": "18512",
+  "phone": "(570) 344-8566",
+  "website": "avanticigar.com",
+  "from": {
+   "lat": 41.432915,
+   "lng": -75.6035
+  },
+  "to": {
+   "lat": 41.418811233913,
+   "lng": -75.598753401146
+  },
+  "move_km": 1.62,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "200 KEYSTONE INDUSTRIAL PARK, DUNMORE, PA, 18512",
+   "zip": "18512"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"200 KEYSTONE INDUSTRIAL PARK, DUNMORE, PA, 18512\")",
+  "holds": [
+   "the Census match is Non_Exact (\"200 KEYSTONE INDUSTRIAL PARK, DUNMORE, PA, 18512\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 24907,
+  "name": "Hillside Cigar lounge",
+  "address": "1409 N Cockrell Hill Rd Ste 200",
+  "city": "Desoto",
+  "state": "TX",
+  "zip": "75115",
+  "phone": "(469) 372-7040",
+  "website": null,
+  "from": {
+   "lat": 32.617817,
+   "lng": -96.891586
+  },
+  "to": {
+   "lat": 32.573191153362,
+   "lng": -96.891133551024
+  },
+  "move_km": 4.96,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "1409 COCKRELL HILL RD, DESOTO, TX, 75115",
+   "zip": "75115"
+  },
+  "nominatim": {
+   "lat": 32.5983733,
+   "lng": -96.8914252,
+   "level": "road",
+   "display": "North Cockrell Hill Road, Shamrock, DeSoto, Dallas County, Texas, 75137, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"1409 COCKRELL HILL RD, DESOTO, TX, 75115\")",
+  "holds": [
+   "the Census match is Non_Exact (\"1409 COCKRELL HILL RD, DESOTO, TX, 75115\")",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 26867,
+  "name": "Don't Judge Cigar Bar and Lounge",
+  "address": "703 S State St",
+  "city": "Bunnell",
+  "state": "FL",
+  "zip": "32110",
+  "phone": "(386) 372-8544",
+  "website": null,
+  "from": {
+   "lat": 29.460905,
+   "lng": -81.252914
+  },
+  "to": {
+   "lat": 29.469421906175,
+   "lng": -81.263251667214
+  },
+  "move_km": 1.38,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "703 N STATE ST, BUNNELL, FL, 32110",
+   "zip": "32110"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"703 N STATE ST, BUNNELL, FL, 32110\")",
+  "holds": [
+   "the Census match is Non_Exact (\"703 N STATE ST, BUNNELL, FL, 32110\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 28195,
+  "name": "Phoenix Cigars",
+  "address": "895 GA-138",
+  "city": "Stockbridge",
+  "state": "GA",
+  "zip": "30281",
+  "phone": "(678) 545-1545",
+  "website": null,
+  "from": {
+   "lat": 33.541828,
+   "lng": -84.283539
+  },
+  "to": {
+   "lat": 33.549101958555,
+   "lng": -84.181924421559
+  },
+  "move_km": 9.45,
+  "census": {
+   "type": "Exact",
+   "matched": "895 STATE RTE 138, STOCKBRIDGE, GA, 30281",
+   "zip": "30281"
+  },
+  "nominatim": {
+   "lat": 33.5495613,
+   "lng": -84.2543869,
+   "level": "road",
+   "display": "North Henry Boulevard, Fairlane, Stockbridge, Henry County, Georgia, 30281, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "held: \"895 GA-138\" is a highway address, where the geocoder is wrong about as often as the pin | Nominatim answered at road level, not a house number",
+  "holds": [
+   "\"895 GA-138\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 28196,
+  "name": "Smokeone Cigar Lounge",
+  "address": "895 GA-138 Ste 11",
+  "city": "Stockbridge",
+  "state": "GA",
+  "zip": "30281",
+  "phone": "(678) 545-1545",
+  "website": null,
+  "from": {
+   "lat": 33.541763,
+   "lng": -84.283485
+  },
+  "to": {
+   "lat": 33.549101958555,
+   "lng": -84.181924421559
+  },
+  "move_km": 9.45,
+  "census": {
+   "type": "Exact",
+   "matched": "895 STATE RTE 138, STOCKBRIDGE, GA, 30281",
+   "zip": "30281"
+  },
+  "nominatim": {
+   "lat": 33.5495613,
+   "lng": -84.2543869,
+   "level": "road",
+   "display": "North Henry Boulevard, Fairlane, Stockbridge, Henry County, Georgia, 30281, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "held: \"895 GA-138 Ste 11\" is a highway address, where the geocoder is wrong about as often as the pin | Nominatim answered at road level, not a house number",
+  "holds": [
+   "\"895 GA-138 Ste 11\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 28459,
+  "name": "Pandora Cigar And Wine",
+  "address": "120 Sparkleberry Crossing Rd  Ste 10",
+  "city": "Columbia",
+  "state": "SC",
+  "zip": "29229",
+  "phone": "(803) 401-5226",
+  "website": null,
+  "from": {
+   "lat": 34.100346,
+   "lng": -80.855354
+  },
+  "to": {
+   "lat": 34.112582698304,
+   "lng": -80.881967279132
+  },
+  "move_km": 2.8,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "120 SPARKLEBERRY LN, COLUMBIA, SC, 29229",
+   "zip": "29229"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the Census matched a different address (\"120 SPARKLEBERRY LN, COLUMBIA, SC, 29229\")",
+  "holds": [
+   "the Census match is Non_Exact (\"120 SPARKLEBERRY LN, COLUMBIA, SC, 29229\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 39115,
+  "name": "Casual Beer and Cigar Lounge",
+  "address": "6645 SE State Route O",
+  "city": "Agency",
+  "state": "MO",
+  "zip": "64507",
+  "phone": null,
+  "website": null,
+  "from": {
+   "lat": 39.682747,
+   "lng": -94.765823
+  },
+  "to": {
+   "lat": 39.705999851985,
+   "lng": -94.796101152021
+  },
+  "move_km": 3.66,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "6645 SE STATE RTE A, SAINT JOSEPH, MO, 64507",
+   "zip": "64507"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"6645 SE STATE RTE A, SAINT JOSEPH, MO, 64507\")",
+  "holds": [
+   "\"6645 SE State Route O\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"6645 SE STATE RTE A, SAINT JOSEPH, MO, 64507\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ },
+ {
+  "id": 42345,
+  "name": "ZODI'X Cigar Lounge",
+  "address": "101 Limmer Loop",
+  "city": "Georgetown",
+  "state": "TX",
+  "zip": "78665",
+  "phone": "(512) 688-5287",
+  "website": "zodixcigarlounge.com",
+  "from": {
+   "lat": 30.647176,
+   "lng": -97.679782
+  },
+  "to": {
+   "lat": 30.562185952763,
+   "lng": -97.602474393776
+  },
+  "move_km": 12,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "101 LIMMER LOOP, ROUND ROCK, TX, 78665",
+   "zip": "78665"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the Census matched a different address (\"101 LIMMER LOOP, ROUND ROCK, TX, 78665\")",
+  "holds": [
+   "the Census match is Non_Exact (\"101 LIMMER LOOP, ROUND ROCK, TX, 78665\")",
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "leave"
+ }
+]

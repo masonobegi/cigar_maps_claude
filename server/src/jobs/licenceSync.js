@@ -180,6 +180,25 @@ const TYPE_ALIAS = {
   court: 'ct', ct: 'ct', place: 'pl', pl: 'pl', parkway: 'pkwy', pkwy: 'pkwy',
   highway: 'hwy', hwy: 'hwy', way: 'way', terrace: 'ter', ter: 'ter',
   circle: 'cir', cir: 'cir', square: 'sq', sq: 'sq',
+  // Found in the first real run, where each of these read as a different
+  // street from the same one: "10 N Plaza" against "10 NORTH PLZ".
+  plaza: 'plz', plz: 'plz', trail: 'trl', trl: 'trl', loop: 'loop',
+  turnpike: 'tpke', tpke: 'tpke', expressway: 'expy', expy: 'expy',
+  freeway: 'fwy', fwy: 'fwy', route: 'rte', rte: 'rte', crossing: 'xing', xing: 'xing',
+};
+
+/**
+ * A street named with a number, spelled either way. Texas writes "5832 Highway
+ * Six" where its own registry writes "5832 HIGHWAY 6", and that read as a move
+ * to another address — so the shop lost a licence that was sitting at its own
+ * door.
+ */
+const NUMBER_WORDS = {
+  one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8',
+  nine: '9', ten: '10', eleven: '11', twelve: '12', thirteen: '13', fourteen: '14',
+  fifteen: '15', sixteen: '16', seventeen: '17', eighteen: '18', nineteen: '19', twenty: '20',
+  first: '1', second: '2', third: '3', fourth: '4', fifth: '5', sixth: '6', seventh: '7',
+  eighth: '8', ninth: '9', tenth: '10',
 };
 
 /** { number, words, type } from a street address, or null. */
@@ -188,9 +207,13 @@ function street(address) {
     .replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
   const m = /^(\d+[a-z]?)\s+(.+)$/.exec(a);
   if (!m) return null;
-  const parts = m[2].split(' ');
+  // Both spellings of every word, so "Plaza" and "PLZ" compare equal whether the
+  // word turns out to be the street's type or its name.
+  const parts = m[2].split(' ').map(w => NUMBER_WORDS[w] || TYPE_ALIAS[w] || w);
   const type = parts.map(w => TYPE_ALIAS[w]).filter(Boolean).pop() || null;
-  const words = parts.filter(w => w.length > 1 && !STREET_TYPE.has(w));
+  // A single digit is kept: "Highway 6" and "Route 9" are named by that number
+  // and nothing else, and dropping it left those streets with no words at all.
+  const words = parts.filter(w => (w.length > 1 || /^[0-9]$/.test(w)) && !STREET_TYPE.has(w));
   return { number: m[1], words, type };
 }
 
@@ -206,7 +229,11 @@ function street(address) {
 function sameDoor(ours, theirs) {
   const a = street(ours.address), b = street(theirs.address);
   if (!a || !b) return false;
-  if (a.number !== b.number) return false;
+  // "170 Gardiners Ave" and "170B Gardiners Ave" are one building; the letter is
+  // the unit. A licence is issued to a business at a building, and reading the
+  // letter as part of the number said the shop had moved to its own address.
+  const door = n => String(n).replace(/[a-z]$/, '');
+  if (door(a.number) !== door(b.number)) return false;
   const zipA = String(ours.zip || '').slice(0, 5), zipB = String(theirs.zip || '').slice(0, 5);
   if (!zipA || !zipB || zipA !== zipB) return false;
   // "1 Main St" and "1 Main Ave" are two different streets that happen to share
@@ -544,6 +571,18 @@ function selftest() {
 
   v = verdictFor({ ...shop, phone: null }, [{ ...live, address: '900 Oak Ave' }], now);
   ok(v.verdict === 'moved' && v.to.address === '900 Oak Ave', 'the same name at another address is a move', v);
+
+  // The same door, spelled two ways. Each of these read as a move in the
+  // first real run, which took a licence off a shop that was standing on it.
+  const door = (a, b) => sameDoor({ address: a, zip: '77084' }, { address: b, zip: '77084' });
+  ok(door('5832 Highway Six', '5832 HIGHWAY 6'), 'a street named by a number, spelled either way');
+  ok(door('12425 Hwy 6 #2', '12425 HIGHWAY 6 STE 2'), 'and with a suite on one side only');
+  ok(door('10 N Plaza', '10 NORTH PLZ'), 'and a plaza written short');
+  ok(!door('1 Main St', '1 Main Ave'), 'but Main St is still not Main Ave');
+  ok(!door('100 Oak St', '100 Elm St'), 'nor Oak Elm');
+  ok(!door('2200 W Nolana Ave #2212', '2200 N 10TH ST STE C'), 'nor two different streets at one house number');
+  ok(door('170 Gardiners Ave', '170B GARDINERS AVE'), 'a unit letter on the house number is still the same building');
+  ok(!door('170 Gardiners Ave', '171 GARDINERS AVE'), 'but the house next door is not');
 
   // Several licences at one address and nothing to tell them apart.
   const mall = [{ ...live, name: 'Kiosk One' }, { ...live, name: 'Kiosk Two' }];

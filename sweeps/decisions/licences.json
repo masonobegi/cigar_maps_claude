@@ -1,6 +1,6 @@
 {
  "note": "A lapsed licence is NOT evidence of closure — the audit measured it at roughly a coin flip. The lapsed list is a staff queue and nothing in it may be hidden on this signal alone.",
- "generated_at": "2026-09-12T19:07:18.265Z",
+ "generated_at": "2026-09-12T19:28:46.960Z",
  "verified": [
   {
    "id": 126,
@@ -1389,6 +1389,60 @@
    "moved_to": null
   },
   {
+   "id": 5029,
+   "name": "Cigar4u",
+   "address": "4645 Highway 6  Ste E",
+   "city": "Sugar Land",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR4U",
+    "address": "4645 HIGHWAY 6 STE E",
+    "city": "SUGAR LAND",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5031,
+   "name": "Alpha Cigar Bar",
+   "address": "4403 Highway Six",
+   "city": "Sugar Land",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "ALPHA CIGAR AND WHISKEY BAR",
+    "address": "4403 HIGHWAY 6",
+    "city": "SUGAR LAND",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5081,
+   "name": "Cigar Time",
+   "address": "5832 Highway Six",
+   "city": "Missouri City",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "CIGAR TIME",
+    "address": "5832 HIGHWAY 6",
+    "city": "MISSOURI CITY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
    "id": 5084,
    "name": "Legacy Cigars and Lounge",
    "address": "3130 S Main St",
@@ -1425,6 +1479,24 @@
    "moved_to": null
   },
   {
+   "id": 5163,
+   "name": "Imperial Cigar",
+   "address": "403 Hwy 6 Ste f",
+   "city": "Sugar Land",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "IMPERIAL CRL LLC",
+    "address": "403 HIGHWAY 6 STE F",
+    "city": "SUGAR LAND",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
    "id": 5206,
    "name": "Casa De Montecristo Cigar Lounge - West Loop",
    "address": "2901 West Loop S",
@@ -1455,6 +1527,24 @@
     "name": "CIGARS INTERNATIONAL",
     "address": "25407 BELL PATNA DR UNIT 3355",
     "city": "KATY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5261,
+   "name": "Tobacco Habana",
+   "address": "6513 Westheimer Rd",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TOBACCO HABANA",
+    "address": "6513B WESTHEIMER RD",
+    "city": "HOUSTON",
     "status": "ACTIVE",
     "registry": "tx"
    },
@@ -1587,6 +1677,24 @@
    "moved_to": null
   },
   {
+   "id": 5473,
+   "name": "The Smoke Ring Cigars",
+   "address": "17066 State Hwy 3",
+   "city": "Webster",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE SMOKE RING",
+    "address": "17066 HIGHWAY 3",
+    "city": "WEBSTER",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
    "id": 5484,
    "name": "Havana Harbor Cigars",
    "address": "111 23rd St Ste A",
@@ -1599,6 +1707,24 @@
     "name": "HAVANA HARBOR CIGARS LLC",
     "address": "111 23RD ST STE A",
     "city": "GALVESTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5500,
+   "name": "The Bunker Cigar Lounge",
+   "address": "12425 Hwy 6 #2",
+   "city": "Santa Fe",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE BUNKER CIGAR LOUNGE",
+    "address": "12425 HIGHWAY 6 STE 2",
+    "city": "SANTA FE",
     "status": "ACTIVE",
     "registry": "tx"
    },
@@ -2127,6 +2253,24 @@
    "moved_to": null
   },
   {
+   "id": 7039,
+   "name": "The IronHorse Bar - Cigars and Spirits at the Beckham",
+   "address": "115E Commerce St",
+   "city": "Mineola",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "IRONHORSE PRIVATE CLUB",
+    "address": "115 E COMMERCE ST",
+    "city": "MINEOLA",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
    "id": 7054,
    "name": "Elite Cigars and Accessories",
    "address": "5021 Alma Dr",
@@ -2301,6 +2445,24 @@
     "name": "VISO CIGAR LOUNGE LLC",
     "address": "1521 N CUSTER RD STE 2850",
     "city": "MCKINNEY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7378,
+   "name": "Rigby’s Cigars & Lounge",
+   "address": "10 N Plaza",
+   "city": "Paris",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "RIGBY'S CIGARS",
+    "address": "10 NORTH PLZ",
+    "city": "PARIS",
     "status": "ACTIVE",
     "registry": "tx"
    },
@@ -2685,6 +2847,25 @@
    "moved_to": null
   },
   {
+   "id": 21313,
+   "name": "Habana Hut Station Cigar Lounge",
+   "address": "45C Atlantic Ave",
+   "city": "Lynbrook",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "THE RED HUT",
+    "address": "45B ATLANTIC AVE",
+    "city": "LYNBROOK",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
    "id": 21333,
    "name": "Davidoff of Geneva Brooklyn",
    "address": "156 Broadway",
@@ -2780,6 +2961,25 @@
    "moved_to": null
   },
   {
+   "id": 21489,
+   "name": "The Cigar Hut",
+   "address": "170 Gardiners Ave",
+   "city": "Levittown",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE CIGAR HUT",
+    "address": "170B GARDINERS AVE",
+    "city": "LEVITTOWN",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
    "id": 21530,
    "name": "South Shore Cigar Club",
    "address": "344 N Windsor Ave",
@@ -2852,6 +3052,25 @@
     "status": "Active",
     "expires": "2027-12-31T00:00:00.000",
     "registry": "nyc"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21747,
+   "name": "Ortiz Cigars",
+   "address": "2 West St Suite 2",
+   "city": "Haverstraw",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "ORTIZ CIGARS, INC.",
+    "address": "2 WEST ST APT 2",
+    "city": "HAVERSTRAW",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
    },
    "moved_to": null
   },
@@ -3293,6 +3512,25 @@
    "moved_to": null
   },
   {
+   "id": 22337,
+   "name": "Queensbury Cigar & Pipe",
+   "address": "1036 US-9",
+   "city": "Queensbury",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "QUEENSBURY CIGAR & PIPE",
+    "address": "1036 STATE ROUTE 9",
+    "city": "QUEENSBURY",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
    "id": 22355,
    "name": "Park-Lane Tobacconist",
    "address": "15 Park Ave",
@@ -3346,6 +3584,24 @@
     "status": "ACTIVE",
     "expires": null,
     "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 24335,
+   "name": "The Humidor Of West Texas",
+   "address": "5100 E University Blvd",
+   "city": "Odessa",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "HUMIDOR OF WEST TEXAS",
+    "address": "5100A E UNIVERSITY BLVD",
+    "city": "ODESSA",
+    "status": "ACTIVE",
+    "registry": "tx"
    },
    "moved_to": null
   },
@@ -4537,25 +4793,6 @@
    "moved_to": null
   },
   {
-   "id": 21313,
-   "name": "Habana Hut Station Cigar Lounge",
-   "address": "45C Atlantic Ave",
-   "city": "Lynbrook",
-   "state": "NY",
-   "verdict": "renamed",
-   "why": "the current licence at this door is \"HR CIGAR INC\"",
-   "how": "the same house number, ZIP and street",
-   "licence": {
-    "name": "HR CIGAR INC",
-    "address": "45C ATLANTIC AVE",
-    "city": "LYNBROOK",
-    "status": "ACTIVE",
-    "expires": null,
-    "registry": "ny_state"
-   },
-   "moved_to": null
-  },
-  {
    "id": 21317,
    "name": "SoHo Cigar Bar",
    "address": "32 Watts St",
@@ -4720,6 +4957,25 @@
     "name": "MIDDLETOWN CIGAR LOUNGE, INC.",
     "address": "265 ROUTE 211 E STE 106",
     "city": "MIDDLETOWN",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21933,
+   "name": "R&R Cigars Private Lounge",
+   "address": "3467 US-9",
+   "city": "Cold Spring",
+   "state": "NY",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"R & R CIGARS LLC\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "R & R CIGARS LLC",
+    "address": "3467 ROUTE 9",
+    "city": "COLD SPRING",
     "status": "ACTIVE",
     "expires": null,
     "registry": "ny_state"
@@ -5467,111 +5723,6 @@
    }
   },
   {
-   "id": 5029,
-   "name": "Cigar4u",
-   "address": "4645 Highway 6  Ste E",
-   "city": "Sugar Land",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 4645 HIGHWAY 6 STE E, SUGAR LAND",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "CIGAR4U",
-    "address": "4645 HIGHWAY 6 STE E",
-    "city": "SUGAR LAND",
-    "state": "TX",
-    "zip": "77478",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5031,
-   "name": "Alpha Cigar Bar",
-   "address": "4403 Highway Six",
-   "city": "Sugar Land",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 4403 HIGHWAY 6, SUGAR LAND",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "ALPHA CIGAR AND WHISKEY BAR",
-    "address": "4403 HIGHWAY 6",
-    "city": "SUGAR LAND",
-    "state": "TX",
-    "zip": "77478",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5081,
-   "name": "Cigar Time",
-   "address": "5832 Highway Six",
-   "city": "Missouri City",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 5832 HIGHWAY 6, MISSOURI CITY",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "CIGAR TIME",
-    "address": "5832 HIGHWAY 6",
-    "city": "MISSOURI CITY",
-    "state": "TX",
-    "zip": "77459",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5163,
-   "name": "Imperial Cigar",
-   "address": "403 Hwy 6 Ste f",
-   "city": "Sugar Land",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 403 HIGHWAY 6 STE F, SUGAR LAND",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "IMPERIAL CRL LLC",
-    "address": "403 HIGHWAY 6 STE F",
-    "city": "SUGAR LAND",
-    "state": "TX",
-    "zip": "77478",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5261,
-   "name": "Tobacco Habana",
-   "address": "6513 Westheimer Rd",
-   "city": "Houston",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 6513B WESTHEIMER RD, HOUSTON",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "TOBACCO HABANA",
-    "address": "6513B WESTHEIMER RD",
-    "city": "HOUSTON",
-    "state": "TX",
-    "zip": "77057",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
    "id": 5322,
    "name": "Friendly Fire Cigars",
    "address": "1905 S Dairy Ashford St",
@@ -5734,48 +5885,6 @@
     "city": "HOUSTON",
     "state": "TX",
     "zip": "77029",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5473,
-   "name": "The Smoke Ring Cigars",
-   "address": "17066 State Hwy 3",
-   "city": "Webster",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 17066 HIGHWAY 3, WEBSTER",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "THE SMOKE RING",
-    "address": "17066 HIGHWAY 3",
-    "city": "WEBSTER",
-    "state": "TX",
-    "zip": "77598",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 5500,
-   "name": "The Bunker Cigar Lounge",
-   "address": "12425 Hwy 6 #2",
-   "city": "Santa Fe",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 12425 HIGHWAY 6 STE 2, SANTA FE",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "THE BUNKER CIGAR LOUNGE",
-    "address": "12425 HIGHWAY 6 STE 2",
-    "city": "SANTA FE",
-    "state": "TX",
-    "zip": "77510",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -5965,27 +6074,6 @@
     "city": "TYLER",
     "state": "TX",
     "zip": "75703",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 7039,
-   "name": "The IronHorse Bar - Cigars and Spirits at the Beckham",
-   "address": "115E Commerce St",
-   "city": "Mineola",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 115 E COMMERCE ST, MINEOLA",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "IRONHORSE PRIVATE CLUB",
-    "address": "115 E COMMERCE ST",
-    "city": "MINEOLA",
-    "state": "TX",
-    "zip": "75773",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -6208,15 +6296,15 @@
    "city": "Longview",
    "state": "TX",
    "verdict": "moved",
-   "why": "its licence is at 1201A E MARSHALL AVE, LONGVIEW",
+   "why": "its licence is at 522 E LOOP 281 STE C, LONGVIEW",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "TOBACCO JUNCTION #9",
-    "address": "1201A E MARSHALL AVE",
+    "name": "TOBACCO JUNCTION #11",
+    "address": "522 E LOOP 281 STE C",
     "city": "LONGVIEW",
     "state": "TX",
-    "zip": "75601",
+    "zip": "75605",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -6259,27 +6347,6 @@
     "city": "SHERMAN",
     "state": "TX",
     "zip": "75090",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 7378,
-   "name": "Rigby’s Cigars & Lounge",
-   "address": "10 N Plaza",
-   "city": "Paris",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 10 NORTH PLZ, PARIS",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "RIGBY'S CIGARS",
-    "address": "10 NORTH PLZ",
-    "city": "PARIS",
-    "state": "TX",
-    "zip": "75460",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -6877,28 +6944,6 @@
    }
   },
   {
-   "id": 21489,
-   "name": "The Cigar Hut",
-   "address": "170 Gardiners Ave",
-   "city": "Levittown",
-   "state": "NY",
-   "verdict": "moved",
-   "why": "its licence is at 170B GARDINERS AVE, LEVITTOWN",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "THE CIGAR HUT",
-    "address": "170B GARDINERS AVE",
-    "city": "LEVITTOWN",
-    "state": "NY",
-    "zip": "11756",
-    "phone": null,
-    "status": "ACTIVE",
-    "expires": null,
-    "registry": "ny_state"
-   }
-  },
-  {
    "id": 21716,
    "name": "Davidoff Geneva",
    "address": "1390 Avenue of the Americas",
@@ -6940,28 +6985,6 @@
     "status": "Active",
     "expires": "2027-12-31T00:00:00.000",
     "registry": "nyc"
-   }
-  },
-  {
-   "id": 21747,
-   "name": "Ortiz Cigars",
-   "address": "2 West St Suite 2",
-   "city": "Haverstraw",
-   "state": "NY",
-   "verdict": "moved",
-   "why": "its licence is at 2 WEST ST APT 2, HAVERSTRAW",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "ORTIZ CIGARS, INC.",
-    "address": "2 WEST ST APT 2",
-    "city": "HAVERSTRAW",
-    "state": "NY",
-    "zip": "10927",
-    "phone": null,
-    "status": "ACTIVE",
-    "expires": null,
-    "registry": "ny_state"
    }
   },
   {
@@ -7163,50 +7186,6 @@
    }
   },
   {
-   "id": 22097,
-   "name": "Cigar Emporium and 777 Cigar Lounge",
-   "address": "777 Central Park Ave B",
-   "city": "Yonkers",
-   "state": "NY",
-   "verdict": "moved",
-   "why": "its licence is at 777B CENTRAL PARK AVE, YONKERS",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "CIGAR EMPORIUM, INC.",
-    "address": "777B CENTRAL PARK AVE",
-    "city": "YONKERS",
-    "state": "NY",
-    "zip": "10704",
-    "phone": null,
-    "status": "ACTIVE",
-    "expires": null,
-    "registry": "ny_state"
-   }
-  },
-  {
-   "id": 22337,
-   "name": "Queensbury Cigar & Pipe",
-   "address": "1036 US-9",
-   "city": "Queensbury",
-   "state": "NY",
-   "verdict": "moved",
-   "why": "its licence is at 1036 STATE ROUTE 9, QUEENSBURY",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "QUEENSBURY CIGAR & PIPE",
-    "address": "1036 STATE ROUTE 9",
-    "city": "QUEENSBURY",
-    "state": "NY",
-    "zip": "12804",
-    "phone": null,
-    "status": "ACTIVE",
-    "expires": null,
-    "registry": "ny_state"
-   }
-  },
-  {
    "id": 23321,
    "name": "Smokers World Cigars and Accessories",
    "address": "4039 Ayers St",
@@ -7243,27 +7222,6 @@
     "city": "EL PASO",
     "state": "TX",
     "zip": "79924",
-    "phone": null,
-    "status": "ACTIVE",
-    "registry": "tx"
-   }
-  },
-  {
-   "id": 24335,
-   "name": "The Humidor Of West Texas",
-   "address": "5100 E University Blvd",
-   "city": "Odessa",
-   "state": "TX",
-   "verdict": "moved",
-   "why": "its licence is at 5100A E UNIVERSITY BLVD, ODESSA",
-   "how": null,
-   "licence": null,
-   "moved_to": {
-    "name": "HUMIDOR OF WEST TEXAS",
-    "address": "5100A E UNIVERSITY BLVD",
-    "city": "ODESSA",
-    "state": "TX",
-    "zip": "79762",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -9388,18 +9346,6 @@
    "moved_to": null
   },
   {
-   "id": 21933,
-   "name": "R&R Cigars Private Lounge",
-   "address": "3467 US-9",
-   "city": "Cold Spring",
-   "state": "NY",
-   "verdict": "lapsed",
-   "why": "no current licence at this address in the registry",
-   "how": null,
-   "licence": null,
-   "moved_to": null
-  },
-  {
    "id": 21989,
    "name": "Havana On Hudson",
    "address": "1006 Brown St Ste 210",
@@ -9464,6 +9410,18 @@
    "name": "La Sirena Cigars",
    "address": "37 Bluebird Dr",
    "city": "Roslyn Heights",
+   "state": "NY",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 22097,
+   "name": "Cigar Emporium and 777 Cigar Lounge",
+   "address": "777 Central Park Ave B",
+   "city": "Yonkers",
    "state": "NY",
    "verdict": "lapsed",
    "why": "no current licence at this address in the registry",

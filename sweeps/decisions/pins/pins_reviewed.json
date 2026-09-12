@@ -1,42 +1,688 @@
 [
  {
-  "id": 2979,
-  "name": "Tobacco Junction Of Marshall",
-  "address": "1303 E Grand Ave",
-  "city": "Marshall",
-  "state": "TX",
-  "zip": "75670",
-  "phone": "(903) 935-1030",
-  "website": "tobaccojunction.net",
+  "id": 8003,
+  "name": "Nick's Cigar World",
+  "address": "2705 Highway 17 S",
+  "city": "North Myrtle Beach",
+  "state": "SC",
+  "zip": "29582",
+  "phone": "(843) 361-8266",
+  "website": "nickscigarworld.com",
   "from": {
-   "lat": 31.898838,
-   "lng": -98.587921
+   "lat": 33.780632,
+   "lng": -78.78994
   },
   "to": {
-   "lat": 32.548524500571,
-   "lng": -94.355100744377
+   "lat": 33.8074005,
+   "lng": -78.7155544
   },
-  "move_km": 404.64,
+  "move_km": 17.28,
   "census": {
-   "type": "Exact",
-   "matched": "1303 E GRAND AVE, MARSHALL, TX, 75670",
-   "zip": "75670"
+   "type": "Non_Exact",
+   "matched": "2705 US HWY 17, MYRTLE BEACH, SC, 29577",
+   "zip": "29577"
   },
   "nominatim": {
-   "lat": 32.5484646,
-   "lng": -94.3652652,
-   "level": "road",
-   "display": "East Grand Avenue, Marshall, Harrison County, Texas, 75671, United States"
+   "lat": 33.8074005,
+   "lng": -78.7155544,
+   "level": "house",
+   "display": "2705, US Highway 17 South, North Myrtle Beach, Horry County, South Carolina, 29582, United States"
+  },
+  "backed_by": "its own website",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: Nominatim puts this door at house level as \"2705, US Highway 17 South, North Myrtle Beach, Horry County, South Carolina, 29582, United\", 7.5 km from the pin we held. Held only because the address is a highway, where the two geocoders usually disagree — here they do not.",
+  "holds": [
+   "\"2705 Highway 17 S\" is a highway address, where the geocoder is wrong about as often as the pin",
+   "the Census match is Non_Exact (\"2705 US HWY 17, MYRTLE BEACH, SC, 29577\")",
+   "the two geocoders are 24.68 km apart"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 12307,
+  "name": "Southern Cross Cigars",
+  "address": "330 US-54",
+  "city": "Camdenton",
+  "state": "MO",
+  "zip": "65020",
+  "phone": "(573) 836-0562",
+  "website": "tiktok.com/@linxxz999",
+  "from": {
+   "lat": 38.011917,
+   "lng": -92.740501
+  },
+  "to": {
+   "lat": 38.005105813471,
+   "lng": -92.748447475983
+  },
+  "move_km": 1.03,
+  "census": {
+   "type": "Exact",
+   "matched": "330 US HWY 54, CAMDENTON, MO, 65020",
+   "zip": "65020"
+  },
+  "nominatim": {
+   "lat": 38.0050004,
+   "lng": -92.7486801,
+   "level": "house",
+   "display": "330, US 54, Camdenton, Camden County, Missouri, 65020, United States"
   },
   "backed_by": "the geocoder's ZIP",
   "timezone": {
    "from": "America/Chicago",
    "to": "America/Chicago"
   },
-  "reason": "read on 2026-09-12: the Census matches 1303 E Grand Ave, Marshall TX 75670 exactly, Nominatim puts East Grand Avenue in Marshall 900 m away, the 903 phone is East Texas and the ZIP agrees. The pin stood 405 km west near Comanche \u2014 past the automatic limit, which is why it waited for a person",
+  "reason": "read on 2026-09-12: both geocoders put this door within 24 m of each other (\"330, US 54, Camdenton, Camden County, Missouri, 65020, United States\"), 1.03 km from the pin we held. Held only because the address is a highway, where the two usually disagree.",
   "holds": [
-   "Nominatim answered at road level, not a house number",
-   "the move is 405 km, past the 50 km limit \u2014 a record that wrong is wrong about more than its pin"
+   "\"330 US-54\" is a highway address, where the geocoder is wrong about as often as the pin"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 17581,
+  "name": "Fat  Ash Cigar Lounge",
+  "address": "8110 US Route 60",
+  "city": "Ashland",
+  "state": "KY",
+  "zip": "41102",
+  "phone": "(606) 254-0484",
+  "website": "fatashcigarlounge.com",
+  "from": {
+   "lat": 38.437561,
+   "lng": -82.684547
+  },
+  "to": {
+   "lat": 38.417010934409,
+   "lng": -82.705268714367
+  },
+  "move_km": 2.91,
+  "census": {
+   "type": "Exact",
+   "matched": "8110 US HWY 60, ASHLAND, KY, 41102",
+   "zip": "41102"
+  },
+  "nominatim": {
+   "lat": 38.4175103,
+   "lng": -82.7043163,
+   "level": "house",
+   "display": "FatAsh Cigar Lounge, 8110, US Route 60, Ashland, Boyd County, Kentucky, 41102, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: both geocoders put this door within 100 m of each other (\"FatAsh Cigar Lounge, 8110, US Route 60, Ashland, Boyd County, Kentucky\"), 2.91 km from the pin we held. Held only because the address is a highway, where the two usually disagree.",
+  "holds": [
+   "\"8110 US Route 60\" is a highway address, where the geocoder is wrong about as often as the pin"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 17905,
+  "name": "The Cigar Box",
+  "address": "306 Fields Dr",
+  "city": "Aberdeen",
+  "state": "NC",
+  "zip": "28315",
+  "phone": "(888) 959-8854",
+  "website": "thecigarboxnc.com",
+  "from": {
+   "lat": 35.213577,
+   "lng": -79.508972
+  },
+  "to": {
+   "lat": 35.1448563,
+   "lng": -79.4507264
+  },
+  "move_km": 9.55,
+  "census": {
+   "type": "Exact",
+   "matched": "306 FIELDS DR, ABERDEEN, NC, 28315",
+   "zip": "28315"
+  },
+  "nominatim": {
+   "lat": 35.1448563,
+   "lng": -79.4507264,
+   "level": "house",
+   "display": "306, Fields Drive, Aberdeen, Moore County, North Carolina, 28315, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: Nominatim puts this door at house level as \"306, Fields Drive, Aberdeen, Moore County, North Carolina, 28315, United States\", 9.3 km from the pin we held. ",
+  "holds": [
+   "the two geocoders are 0.28 km apart"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 23217,
+  "name": "Puro Cigars",
+  "address": "1410 Phoenix St",
+  "city": "Edinburg",
+  "state": "TX",
+  "zip": "78541",
+  "phone": "(956) 359-1596",
+  "website": null,
+  "from": {
+   "lat": 26.23525,
+   "lng": -98.226006
+  },
+  "to": {
+   "lat": 26.320641775442,
+   "lng": -98.191084630116
+  },
+  "move_km": 10.11,
+  "census": {
+   "type": "Non_Exact",
+   "matched": "1410 N PHOENIX ST, EDINBURG, TX, 78541",
+   "zip": "78541"
+  },
+  "nominatim": {
+   "lat": 26.3207023,
+   "lng": -98.191046,
+   "level": "house",
+   "display": "1410, North Phoenix Street, Summerwinds Apartment Homes, Edinburg, Hidalgo County, Texas, 78541, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: both geocoders put this door within 8 m of each other (\"1410, North Phoenix Street, Summerwinds Apartment Homes, Edinburg, Hid\"), 10.11 km from the pin we held. Held only because the address is a highway, where the two usually disagree.",
+  "holds": [
+   "the Census match is Non_Exact (\"1410 N PHOENIX ST, EDINBURG, TX, 78541\")"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 28307,
+  "name": "Cigar South",
+  "address": "9765 N Kings Hwy",
+  "city": "Myrtle Beach",
+  "state": "SC",
+  "zip": "29572",
+  "phone": "(843) 663-0203",
+  "website": null,
+  "from": {
+   "lat": 33.780296,
+   "lng": -78.790924
+  },
+  "to": {
+   "lat": 33.773223020631,
+   "lng": -78.799557480861
+  },
+  "move_km": 1.12,
+  "census": {
+   "type": "Exact",
+   "matched": "9765 N KINGS HWY, MYRTLE BEACH, SC, 29572",
+   "zip": "29572"
+  },
+  "nominatim": {
+   "lat": 33.7732402,
+   "lng": -78.7995792,
+   "level": "house",
+   "display": "9765, North Kings Highway, Dunes Cove, Myrtle Beach, Horry County, South Carolina, 29572, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: both geocoders put this door within 3 m of each other (\"9765, North Kings Highway, Dunes Cove, Myrtle Beach, Horry County, Sou\"), 1.12 km from the pin we held. Held only because the address is a highway, where the two usually disagree.",
+  "holds": [
+   "\"9765 N Kings Hwy\" is a highway address, where the geocoder is wrong about as often as the pin"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 331,
+  "name": "The cigars master",
+  "address": "5308 Reflections Club Dr",
+  "city": "Tampa",
+  "state": "FL",
+  "zip": "33634",
+  "phone": "(813) 362-5682",
+  "website": "donkikecigar.com",
+  "from": {
+   "lat": 28.004869,
+   "lng": -82.560852
+  },
+  "to": {
+   "lat": 27.993582523849,
+   "lng": -82.561003485046
+  },
+  "move_km": 1.26,
+  "census": {
+   "type": "Exact",
+   "matched": "5308 REFLECTIONS CLUB DR, TAMPA, FL, 33634",
+   "zip": "33634"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"5308 REFLECTIONS CLUB DR, TAMPA, FL, 33634\" exactly, in this listing's own ZIP, 1.26 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 947,
+  "name": "Chapel Cigars",
+  "address": "26246 Wesley Chapel Blvd",
+  "city": "Lutz",
+  "state": "FL",
+  "zip": "33559",
+  "phone": "(813) 973-1166",
+  "website": "chapelcigars.com",
+  "from": {
+   "lat": 28.223297,
+   "lng": -82.381813
+  },
+  "to": {
+   "lat": 28.194556258042,
+   "lng": -82.399123066183
+  },
+  "move_km": 3.62,
+  "census": {
+   "type": "Exact",
+   "matched": "26246 WESLEY CHAPEL BLVD, LUTZ, FL, 33559",
+   "zip": "33559"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"26246 WESLEY CHAPEL BLVD, LUTZ, FL, 33559\" exactly, in this listing's own ZIP, 3.62 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 971,
+  "name": "Cigar Bundles of Miami and Lounge",
+  "address": "405 SE 1st Ave",
+  "city": "Florida City",
+  "state": "FL",
+  "zip": "33034",
+  "phone": "(786) 601-7168",
+  "website": "cigarbundlesofmiami.com",
+  "from": {
+   "lat": 25.443344,
+   "lng": -80.474495
+  },
+  "to": {
+   "lat": 25.466468010466,
+   "lng": -80.47685281329
+  },
+  "move_km": 2.58,
+  "census": {
+   "type": "Exact",
+   "matched": "405 SE 1ST AVE, FLORIDA CITY, FL, 33034",
+   "zip": "33034"
+  },
+  "nominatim": {
+   "lat": 25.443224,
+   "lng": -80.4740713,
+   "level": "road",
+   "display": "Southeast 1st Avenue, Florida City, Miami-Dade County, Florida, 33034, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"405 SE 1ST AVE, FLORIDA CITY, FL, 33034\" exactly, in this listing's own ZIP, 2.58 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 5534,
+  "name": "Caveman Cigar Company",
+  "address": "383 Old Phillipsburg Rd",
+  "city": "Brenham",
+  "state": "TX",
+  "zip": "77833",
+  "phone": "(979) 530-8496",
+  "website": "cavemancigars.biz",
+  "from": {
+   "lat": 30.140411,
+   "lng": -96.397141
+  },
+  "to": {
+   "lat": 30.0944045995,
+   "lng": -96.359160307312
+  },
+  "move_km": 6.29,
+  "census": {
+   "type": "Exact",
+   "matched": "383 OLD PHILLIPSBURG RD, BRENHAM, TX, 77833",
+   "zip": "77833"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"383 OLD PHILLIPSBURG RD, BRENHAM, TX, 77833\" exactly, in this listing's own ZIP, 6.29 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 8400,
+  "name": "Caldwell Cigar Co.",
+  "address": "3750 Ralph Ellis Blvd",
+  "city": "Loris",
+  "state": "SC",
+  "zip": "29569",
+  "phone": "(843) 491-4150",
+  "website": "caldwellcigars.com",
+  "from": {
+   "lat": 33.924023,
+   "lng": -78.726768
+  },
+  "to": {
+   "lat": 34.07163620232,
+   "lng": -78.888826080804
+  },
+  "move_km": 22.19,
+  "census": {
+   "type": "Exact",
+   "matched": "3750 RALPH ELLIS BLVD, LORIS, SC, 29569",
+   "zip": "29569"
+  },
+  "nominatim": {
+   "lat": 34.0693613,
+   "lng": -78.8819009,
+   "level": "road",
+   "display": "Ralph Ellis Boulevard, Loris, Horry County, South Carolina, 29569, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"3750 RALPH ELLIS BLVD, LORIS, SC, 29569\" exactly, in this listing's own ZIP, 22.19 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 11127,
+  "name": "The Tobacco Pouch",
+  "address": "3332 E 51st St",
+  "city": "Tulsa",
+  "state": "OK",
+  "zip": "74135",
+  "phone": "(918) 742-1660",
+  "website": "thetobaccopouch.com",
+  "from": {
+   "lat": 36.088909,
+   "lng": -95.982368
+  },
+  "to": {
+   "lat": 36.089746383791,
+   "lng": -95.935463704343
+  },
+  "move_km": 4.22,
+  "census": {
+   "type": "Exact",
+   "matched": "3332 E 51ST ST, TULSA, OK, 74135",
+   "zip": "74135"
+  },
+  "nominatim": {
+   "lat": 36.0899458,
+   "lng": -95.8163984,
+   "level": "road",
+   "display": "West Omaha Street, Broken Arrow, Tulsa, Oklahoma, 74102, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"3332 E 51ST ST, TULSA, OK, 74135\" exactly, in this listing's own ZIP, 4.22 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 11135,
+  "name": "Omerta Cigar Co. South Tulsa",
+  "address": "6929 E 71st St",
+  "city": "Tulsa",
+  "state": "OK",
+  "zip": "74133",
+  "phone": "(539) 525-0909",
+  "website": "omertacigar.com",
+  "from": {
+   "lat": 36.060612,
+   "lng": -95.961708
+  },
+  "to": {
+   "lat": 36.060947609644,
+   "lng": -95.8997980405
+  },
+  "move_km": 5.57,
+  "census": {
+   "type": "Exact",
+   "matched": "6929 E 71ST ST, TULSA, OK, 74133",
+   "zip": "74133"
+  },
+  "nominatim": {
+   "lat": 36.0609851,
+   "lng": -95.8688212,
+   "level": "road",
+   "display": "East 71st Street South, Tulsa, Oklahoma, 74133, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"6929 E 71ST ST, TULSA, OK, 74133\" exactly, in this listing's own ZIP, 5.57 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 12370,
+  "name": "Santino's Cigars & Cocktails",
+  "address": "1508 Professional Dr",
+  "city": "Imperial",
+  "state": "MO",
+  "zip": "63052",
+  "phone": "(636) 223-2293",
+  "website": "santinoscigarcocktails.com",
+  "from": {
+   "lat": 38.414501,
+   "lng": -90.395851
+  },
+  "to": {
+   "lat": 38.363481733847,
+   "lng": -90.388463039209
+  },
+  "move_km": 5.71,
+  "census": {
+   "type": "Exact",
+   "matched": "1508 PROFESSIONAL DR, IMPERIAL, MO, 63052",
+   "zip": "63052"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"1508 PROFESSIONAL DR, IMPERIAL, MO, 63052\" exactly, in this listing's own ZIP, 5.71 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 17015,
+  "name": "Puff Puff Tobacco",
+  "address": "4072 E Grand River Ave",
+  "city": "Howell",
+  "state": "MI",
+  "zip": "48843",
+  "phone": "(517) 225-5971",
+  "website": "Puffpufftobacco.com",
+  "from": {
+   "lat": 42.585209,
+   "lng": -83.872375
+  },
+  "to": {
+   "lat": 42.632833554236,
+   "lng": -83.995043343475
+  },
+  "move_km": 11.35,
+  "census": {
+   "type": "Exact",
+   "matched": "4072 E GRAND RIVER AVE, HOWELL, MI, 48843",
+   "zip": "48843"
+  },
+  "nominatim": {
+   "lat": 42.602722,
+   "lng": -83.9175266,
+   "level": "road",
+   "display": "East Grand River Avenue, Howell, Livingston County, Michigan, 48843, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/Detroit"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"4072 E GRAND RIVER AVE, HOWELL, MI, 48843\" exactly, in this listing's own ZIP, 11.35 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim answered at road level, not a house number"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 20840,
+  "name": "Flatbed Cigar Company",
+  "address": "668 Stony Hill Rd",
+  "city": "Morrisville",
+  "state": "PA",
+  "zip": "19067",
+  "phone": "(267) 251-1019",
+  "website": "flatbedcigarcompany.com",
+  "from": {
+   "lat": 40.22142,
+   "lng": -74.874702
+  },
+  "to": {
+   "lat": 40.21745915721,
+   "lng": -74.86312590434
+  },
+  "move_km": 1.08,
+  "census": {
+   "type": "Exact",
+   "matched": "668 STONY HILL RD, MORRISVILLE, PA, 19067",
+   "zip": "19067"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"668 STONY HILL RD, MORRISVILLE, PA, 19067\" exactly, in this listing's own ZIP, 1.08 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 20841,
+  "name": "Cigar Barn & Lounge",
+  "address": "724 Stony Hill Rd",
+  "city": "Morrisville",
+  "state": "PA",
+  "zip": "19067",
+  "phone": "(267) 364-5394",
+  "website": "cigarsocialnetwork.com/pages/cigarbarn",
+  "from": {
+   "lat": 40.222366,
+   "lng": -74.876366
+  },
+  "to": {
+   "lat": 40.217805078772,
+   "lng": -74.8637212043
+  },
+  "move_km": 1.19,
+  "census": {
+   "type": "Exact",
+   "matched": "724 STONY HILL RD, MORRISVILLE, PA, 19067",
+   "zip": "19067"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"724 STONY HILL RD, MORRISVILLE, PA, 19067\" exactly, in this listing's own ZIP, 1.19 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
+  ],
+  "verdict": "move"
+ },
+ {
+  "id": 21506,
+  "name": "Best Cigar Prices",
+  "address": "1 Hillside Dr",
+  "city": "Drums",
+  "state": "PA",
+  "zip": "18222",
+  "phone": "(888) 412-4427",
+  "website": "bestcigarprices.com",
+  "from": {
+   "lat": 41.022526,
+   "lng": -75.997925
+  },
+  "to": {
+   "lat": 41.044085643871,
+   "lng": -75.966561751119
+  },
+  "move_km": 3.56,
+  "census": {
+   "type": "Exact",
+   "matched": "1 HILLSIDE DR, DRUMS, PA, 18222",
+   "zip": "18222"
+  },
+  "nominatim": null,
+  "backed_by": "the geocoder's ZIP and its own website",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "read on 2026-09-12: the Census matched \"1 HILLSIDE DR, DRUMS, PA, 18222\" exactly, in this listing's own ZIP, 3.56 km from the pin we held. Nominatim had nothing to add, and one geocoder that found the door beats a pin kilometres away from it.",
+  "holds": [
+   "Nominatim found no second opinion"
   ],
   "verdict": "move"
  }

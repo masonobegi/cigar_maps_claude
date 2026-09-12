@@ -13,7 +13,7 @@ recorded in `SWEEPS.md` under "The session of 2026-09-12 (evening)".
 
 **Production, 2026-09-12 evening: 4,363 public listings.** 930 with hours (783
 from the shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404
-with a walk-in humidor, 216 stamped by a current tobacco licence, and no public
+with a walk-in humidor, 230 stamped by a current tobacco licence, and no public
 listing linking to a gambling or parking page.
 
 ---
@@ -43,7 +43,7 @@ Check what you have before you plan anything:
 ```bash
 railway whoami                 # or: echo "$RAILWAY_TOKEN"
 curl -sS -o /dev/null -w '%{http_code}\n' https://geocoding.geo.census.gov/
-node sweeps/scripts/selftest_all.js          # expect 880 assertions, 0 failed
+node sweeps/scripts/selftest_all.js          # expect 888 assertions, 0 failed
 ```
 
 **Running a job against production.** `sweeps/scripts/prod.js` requires its
@@ -70,8 +70,8 @@ all lists somebody has to read.
 | Order | Task | Why it is next |
 |-------|------|----------------|
 | 1 | [The 963 category-only badges](#1-the-963-category-only-badges) | The largest remaining claim on the map that rests on nothing a person has checked |
-| 2 | [The pin review list](#2-the-pin-review-list) | 59 rows, and 16 of them need no move at all |
-| 3 | [Licence renames and moves](#3-licence-renames-and-moves) | 57 shops trading under another name, 146 licensed at another address |
+| 2 | [The pins nobody could settle](#2-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
+| 3 | [Licence moves](#3-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
 | 4 | [The four manual registries](#4-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
 | 5 | [The Overture dedupe change](#5-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
 | 6 | [Watch the menu scanner](#6-watch-the-menu-scanner) | It has never had a real 24 hours |
@@ -101,12 +101,20 @@ cannot support. Three honest options, in the order they cost:
 **This is Mason's call**, and it is in `SWEEPS.md` under "Decisions Mason still
 owes". Do not clear 963 badges on your own initiative.
 
-## 2. The pin review list
+## 2. The pins nobody could settle
 
-59 rows in `sweeps/decisions/pins/pins_review.json`, each with the reasons it
-was held. **Sixteen say "Nominatim agrees with the pin we already have"** — for
-those the Census was wrong and there is nothing to do but mark them settled.
-The rest are a geocoder disagreement, a highway address, or a non-exact match.
+All 59 held rows were read on 2026-09-12: 16 needed no move (Nominatim backs the
+pin we already hold), 18 were moved, and **25 are left** in
+`sweeps/decisions/pins/pins_left.json`. In every one of those the geocoder
+answered with a *different address* — "8608 Preston Rd" matched "8608 PRESTON
+MEADOW DR", "104 Hills Plz" matched "104 HILL DR" — or the address is a highway
+with no second opinion. Each needs a map and a person, not another rule.
+
+The classifier that settled the other 34 is `sweeps/scripts/settle_pin_review.js`,
+and its four groups are written out at the top of that file. One rule came out
+of reading them: **a destination in another postcode is another door.** Cigar N
+Vape is listed at 452 5th Ave in 11215, which is Park Slope; both geocoders
+answered with 452 5th Avenue in Manhattan, nine kilometres away.
 
 To apply any you decide to move, write `"verdict": "move"` on the row and:
 
@@ -123,14 +131,19 @@ Pennsylvania is not foreign** whatever its name or its Israeli mobile suggests.
 `sweeps/decisions/licences.json` holds two lists the apply step deliberately
 does not touch:
 
-- **renamed (57)** — the current licence at this door is under another trading
-  name. Some are only the legal entity ("E&A Cigars" → "E & A CIGARS LLC") and
-  mean nothing; others are a real rebrand ("TJ's Cigar Lounge" → "TOBACCO
-  JUNCTION"). `stores.name_aliases` exists to hold the old name, and search
-  already reads it.
-- **moved (146)** — the licence for this business is at a different address.
-  Cross-check against `sweeps/decisions/pins/pins_review.json` before believing
-  either one.
+- **renamed (57) — done.** Read and split by
+  `sweeps/scripts/apply_licence_renames.js`: 7 are the same name formalised, 15
+  are a licence holder rather than a name over the door, 29 went into
+  `name_aliases` so search finds the shop either way, and 5 doors that now hold
+  a licence for another trade are staff flags. Re-run that script if the
+  registries are refreshed.
+- **moved (132) — still open.** The licence for this business is at a different
+  address, which means either our address is stale or the match is a namesake.
+  Cross-check against `sweeps/decisions/pins/pins_left.json` before believing
+  either one. Three spellings of one address have already been taken out of this
+  list ("5832 Highway Six" is "5832 HIGHWAY 6", "10 N Plaza" is "10 NORTH PLZ",
+  "170B" is the unit letter on 170), so what is left is genuinely two different
+  addresses.
 
 **A lapse is never a hide.** 202 listings have no current licence; 54 were noted
 for staff and none were hidden. A self-test asserts there is no verdict in that
@@ -214,7 +227,7 @@ Production today:
   blank, dead or somebody else's. 2,149 carry a Lounge badge and 404 a walk-in
   humidor — 675 of those now rest on a sentence from the shop's own site, and
   963 still rest on a map category alone (task 1 above).
-- 216 are stamped by a current tobacco licence at the door.
+- 230 are stamped by a current tobacco licence at the door.
 - Verdicts the importer honours, so a data refresh cannot undo them:
   `not_retail`, `online_only`, `closed`, `duplicate`, `moved`, `unproven`, and
   any `operating_status = 'permanently_closed'`.
