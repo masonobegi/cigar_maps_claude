@@ -1,0 +1,130 @@
+[
+ {
+  "id": 10839,
+  "name": "Sam Hills Cigars & Lounge",
+  "address": "202 S Montezuma St",
+  "city": "Gallup",
+  "state": "NM",
+  "zip": "86303",
+  "phone": "(928) 778-7600",
+  "website": "samhillcigars.com",
+  "lat": 35.527813,
+  "lng": -108.74218,
+  "kind": "contradicts_itself",
+  "signals": [
+   "its ZIP is AZ but it is filed in NM",
+   "its area code is AZ but it is filed in NM",
+   "its pin is in NM and its ZIP is in AZ",
+   "its pin is 357 km from the address it gives"
+  ],
+  "reason": "the record contradicts itself: its ZIP is AZ but it is filed in NM; its area code is AZ but it is filed in NM; its pin is in NM and its ZIP is in AZ; its pin is 357 km from the address it gives",
+  "verdict": "hide",
+  "reviewed": "read on 2026-09-12: the address, ZIP and phone are all Prescott, Arizona, the row is filed in Gallup, New Mexico, and samhillcigars.com now serves a Vietnamese gambling site. Nothing left to trust"
+ },
+ {
+  "id": 12264,
+  "name": "Smoky J's Humidor LLC",
+  "address": "Lower Skyline Dr",
+  "city": "High Ridge",
+  "state": "MO",
+  "zip": "63049",
+  "phone": "(618) 530-0128",
+  "website": "smoky-js-humidor-llc.creator-spring.com",
+  "lat": 38.468719,
+  "lng": -90.534622,
+  "kind": "contradicts_itself",
+  "signals": [
+   "its area code is IL but it is filed in MO",
+   "its ZIP says MO and its phone says IL",
+   "\"Lower Skyline Dr\" is not a street address"
+  ],
+  "reason": "the record contradicts itself: its area code is IL but it is filed in MO; its ZIP says MO and its phone says IL; \"Lower Skyline Dr\" is not a street address",
+  "verdict": "hide",
+  "reviewed": "no street address, and the state its ZIP gives and the state its phone gives disagree"
+ },
+ {
+  "id": 22498,
+  "name": "Black Jacks Cigar Lounge",
+  "address": " 10 Henry Trost Ct",
+  "city": "New London",
+  "state": "CT",
+  "zip": "79901",
+  "phone": "(915) 534-3000",
+  "website": "hotelpdn.com",
+  "lat": 41.336464,
+  "lng": -72.107033,
+  "kind": "contradicts_itself",
+  "signals": [
+   "its ZIP is TX but it is filed in CT",
+   "its area code is TX but it is filed in CT",
+   "its pin is in CT and its ZIP is in TX"
+  ],
+  "reason": "the record contradicts itself: its ZIP is TX but it is filed in CT; its area code is TX but it is filed in CT; its pin is in CT and its ZIP is in TX",
+  "verdict": "hide",
+  "reviewed": "the El Paso shop filed and pinned in New London, Connecticut, named in the job's own notes"
+ },
+ {
+  "id": 24935,
+  "name": "Mort's Cigar Bar",
+  "address": "4910 Memory Lane",
+  "city": "Irving",
+  "state": "TX",
+  "zip": "60901",
+  "phone": "(815) 939-1946",
+  "website": null,
+  "lat": 32.904816,
+  "lng": -96.99527,
+  "kind": "contradicts_itself",
+  "signals": [
+   "its ZIP is IL but it is filed in TX",
+   "its area code is IL but it is filed in TX",
+   "its pin is in TX and its ZIP is in IL"
+  ],
+  "reason": "the record contradicts itself: its ZIP is IL but it is filed in TX; its area code is IL but it is filed in TX; its pin is in TX and its ZIP is in IL",
+  "verdict": "hide",
+  "reviewed": "an Irving, Texas address with an Illinois ZIP and an Illinois phone"
+ },
+ {
+  "id": 38662,
+  "name": "Cigars",
+  "address": null,
+  "city": "Fort Myers Beach",
+  "state": "FL",
+  "zip": "99931",
+  "phone": "(239) 745-2710",
+  "website": null,
+  "lat": 26.490885,
+  "lng": -81.942924,
+  "kind": "contradicts_itself",
+  "signals": [
+   "its ZIP is AK but it is filed in FL",
+   "its ZIP says AK and its phone says FL",
+   "its pin is in FL and its ZIP is in AK",
+   "\"no address\" is not a street address"
+  ],
+  "reason": "the record contradicts itself: its ZIP is AK but it is filed in FL; its ZIP says AK and its phone says FL; its pin is in FL and its ZIP is in AK; \"no address\" is not a street address",
+  "verdict": "hide",
+  "reviewed": "no address, an Alaskan ZIP on a Florida listing, and no website to settle it"
+ },
+ {
+  "id": 41124,
+  "name": "La Casa Del Habano",
+  "address": "358 Ouellette Avenue",
+  "city": "Windsor",
+  "state": "MI",
+  "zip": "N9A",
+  "phone": "(519) 254-0017",
+  "website": null,
+  "lat": 42.316847,
+  "lng": -83.038392,
+  "kind": "foreign",
+  "signals": [
+   "\"N9A\" is a Canadian postcode, not a ZIP",
+   "519 is a Canadian area code",
+   "its pin stands in America/Toronto"
+  ],
+  "reason": "this listing is not in the United States: \"N9A\" is a Canadian postcode, not a ZIP; 519 is a Canadian area code; its pin stands in America/Toronto",
+  "verdict": "hide",
+  "reviewed": "Windsor, Ontario: a Canadian postcode, a Canadian area code, and a pin in America/Toronto"
+ }
+]

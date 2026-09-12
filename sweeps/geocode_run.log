@@ -1,0 +1,5 @@
+4377 listings, 4194 with a street address, 0 already geocoded, 4194 to send
+  batch 1 of 2 (2500 addresses)... 2316 matched
+  batch 2 of 2 (1694 addresses)... 1550 matched
+3864 addresses matched; 78 pins more than 1 km from their own address, 27 more than 5 km
+written to ../sweeps/decisions/pins/pins_census.jsonl

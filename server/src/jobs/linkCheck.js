@@ -620,6 +620,33 @@ function destinationKind(url) {
 }
 
 /**
+ * Whose page is this? The pure half of the check, so it can be tested without
+ * a network: given the body we ended on, return the verdict that takes the
+ * link away ('hijacked', 'parked', 'elsewhere') or null to keep it.
+ *
+ * It exists as its own function because the first version of this audit built
+ * looksHijacked, namesShop and pageIdentity, tested all three, and then never
+ * called them from the checker — so every gambling takeover stayed 'ok' in
+ * production while the self-test passed.
+ */
+function judgePage(store, listedWebsite, finalUrl, body) {
+  if (!body) return null;
+  const id = pageIdentity(body);
+  const hijacked = looksHijacked(store, id);
+  if (hijacked) return { status: 'hijacked', why: hijacked.join(', ') };
+  if (looksParked(finalUrl, body)) return { status: 'parked' };
+  if (!store) return null;
+  const landed = registrableDomain(finalUrl);
+  const listed = registrableDomain(store.website || listedWebsite);
+  // Same domain: the shop still holds its address, whatever the page says.
+  if (!landed || !listed || landed === listed) return null;
+  // A social or ordering page is judged elsewhere in the UI, not here.
+  if (destinationKind(finalUrl) !== 'site') return null;
+  if (namesShop(store, id, finalUrl)) return null;
+  return { status: 'elsewhere' };
+}
+
+/**
  * Decide whether a stored website actually serves a page.
  * Returns { status, code, final_url } and never throws.
  *
@@ -689,15 +716,37 @@ async function checkWebsite(website, store = null) {
         body = g.body || '';
       } catch { /* the HEAD already proved it answers; parking sniff is best effort */ }
     }
-    if (looksParked(finalUrl, body)) return { status: 'parked', code, final_url: finalUrl };
+    // Who does the page belong to? A 200 is not proof the shop still holds the
+    // address: puffnstuffcigars.com answers 200 as a Vietnamese casino.
+    const verdict = judgePage(store, website, finalUrl || `https://${host}${path}`, body);
+    if (verdict) return { ...verdict, code, final_url: finalUrl };
     return { status: 'ok', code, final_url: finalUrl };
   }
 
   if (code >= 300 && code < 400) {
     // A 3xx we could not follow to a body still lands somewhere real when it
     // named a destination; one with no Location is broken.
-    return { status: finalUrl && finalUrl !== ('https://' + host + path) ? 'ok' : 'error', code, final_url: finalUrl };
+    if (!finalUrl || finalUrl === ('https://' + host + path)) return { status: 'error', code, final_url: finalUrl };
+    // Unless it landed on somebody else's domain. havanaonhudson.com answers
+    // 302 straight to a betting site and stops there, so the check that reads
+    // the page never ran and the link stayed 'ok'. Read the destination.
+    const landed = registrableDomain(finalUrl);
+    const listed = registrableDomain((store && store.website) || website);
+    if (landed && listed && landed !== listed && Date.now() < deadline - 500) {
+      let body = '';
+      try {
+        const g = await once(finalUrl, 'GET', { wantBody: true, timeout: Math.min(TIMEOUT_MS, deadline - Date.now()) });
+        body = g.body || '';
+      } catch { /* best effort: an unreadable destination stays the 'ok' below */ }
+      const verdict = judgePage(store, website, finalUrl, body);
+      if (verdict) return { ...verdict, code, final_url: finalUrl };
+    }
+    return { status: 'ok', code, final_url: finalUrl };
   }
+
+  // Shopify answers 402 when a shop stops paying: the address resolves, the
+  // page exists, and it sells nothing. That is not a link worth showing.
+  if (code === 402) return { status: 'store_unavailable', code, final_url: finalUrl };
 
   // 401/403/429: the server is up and answering, it just will not serve a
   // robot. Treated as working, because a person with a browser gets in.
@@ -734,7 +783,7 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
       : '';
 
     const rows = await db.all(`
-      SELECT id, name, website, claimed, confidence
+      SELECT id, name, website, city, phone, address, claimed, confidence
       FROM stores
       WHERE website IS NOT NULL AND website <> '' AND visible = 1
       ${staleClause}
@@ -784,7 +833,7 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
         inFlight.add(host);
         let result;
         try {
-          result = await checkWebsite(row.website);
+          result = await checkWebsite(row.website, row);
         } catch (err) {
           result = { status: 'error', code: null, final_url: null };   // belt and braces: checkWebsite should not throw
         } finally {
@@ -815,10 +864,10 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
 
 /** Check one listing by id and record the verdict. */
 async function checkStore(id, { log = console.log } = {}) {
-  const store = await db.get('SELECT id, name, website FROM stores WHERE id = ?', [id]);
+  const store = await db.get('SELECT id, name, website, city, phone, address FROM stores WHERE id = ?', [id]);
   if (!store) return { error: 'store not found' };
   if (!store.website) return { error: 'store has no website' };
-  const result = await checkWebsite(store.website);
+  const result = await checkWebsite(store.website, store);
   await db.run(
     'UPDATE stores SET website_status = ?, website_checked_at = NOW(), website_final_url = ? WHERE id = ?',
     [result.status, result.final_url || null, store.id]);
@@ -928,6 +977,32 @@ function selftest() {
     'ok and blocked are the only statuses a customer may be shown');
   ok(!BLOCKED_CODES.has(402), '402 is no longer treated as a working link behind a firewall');
 
+  // judgePage is the half of the check that decides whose page it is. These
+  // assertions exist because the first version of this audit wrote
+  // looksHijacked, namesShop and pageIdentity, tested them, and never called
+  // them: every gambling takeover on the map stayed 'ok' and nothing failed.
+  const casino = '<html><title>188BET - Nha Cai Ca Cuoc</title><body>casino sportsbook baccarat roulette jackpot</body></html>';
+  const samhill = { name: 'Sam Hill Cigars', city: 'Prescott', phone: '(928) 778-7600', address: '202 S Montezuma St', website: 'samhillcigars.com' };
+  ok(judgePage(samhill, samhill.website, 'https://samhillcigars.com/', casino).status === 'hijacked',
+    'a lapsed shop domain now serving a casino is hijacked, and the checker asks');
+  ok(judgePage(samhill, samhill.website, 'https://official-tomatbet.com/', casino).status === 'hijacked',
+    'and so is one reached by a redirect off the shop’s own domain');
+  const ownPage = '<html><title>Sam Hill Cigars</title><body>202 S Montezuma St, Prescott. Premium cigars.</body></html>';
+  ok(judgePage(samhill, samhill.website, 'https://samhillcigars.com/', ownPage) === null,
+    'the shop’s own page keeps its link');
+  const rebrand = '<html><title>Sam Hill Cigars &amp; Lounge</title><body>Now at samhilllounge.com</body></html>';
+  ok(judgePage(samhill, samhill.website, 'https://samhilllounge.com/', rebrand) === null,
+    'a rebrand onto a new domain that still names the shop keeps its link');
+  const stranger = '<html><title>Prescott Plumbing Supply</title><body>Fittings and valves since 1974.</body></html>';
+  ok(judgePage(samhill, samhill.website, 'https://prescottplumbing.com/', stranger).status === 'elsewhere',
+    'a redirect to a stranger’s site is elsewhere');
+  ok(judgePage(samhill, samhill.website, 'https://facebook.com/samhillcigars', stranger) === null,
+    'but a social page is judged in the UI, not taken away here');
+  ok(judgePage(null, 'x.com', 'https://x.com/', ownPage) === null,
+    'with no store context the check says nothing rather than guessing');
+  ok(judgePage(samhill, samhill.website, 'https://samhillcigars.com/', '') === null,
+    'and an unreadable body is never a verdict');
+
   // A shop whose only web presence is a Facebook page keeps its link, but the
   // destination is the platform's, so it is never the shop's own site.
   ok(destinationKind('https://www.facebook.com/someshop') === 'social', 'a Facebook page is a platform, not a site');
@@ -942,7 +1017,7 @@ function selftest() {
 
 module.exports = {
   checkWebsite, checkStores, checkStore, runStartupLinkCheck,
-  parseWebsite, looksParked, looksHijacked, namesShop, pageIdentity, visibleText,
+  parseWebsite, looksParked, looksHijacked, namesShop, pageIdentity, visibleText, judgePage,
   registrableDomain, destinationKind, socialNetwork,
   STATUSES, DEAD_STATUSES, TAKEN_OVER_STATUSES, PENDING_STATUS, GAMBLING_TERMS, selftest,
 };

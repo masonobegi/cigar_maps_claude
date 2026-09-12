@@ -1,0 +1,650 @@
+[
+ {
+  "id": 1815,
+  "name": "Puros Cigar",
+  "address": "777 E Atlantic Ave",
+  "city": "Delray Beach",
+  "state": "FL",
+  "zip": "33483",
+  "phone": "(561) 278-6118",
+  "website": "puroscigar.com",
+  "from": {
+   "lat": 26.458839,
+   "lng": -80.121231
+  },
+  "to": {
+   "lat": 26.461723982343,
+   "lng": -80.06548365613
+  },
+  "move_km": 5.56,
+  "census": {
+   "type": "Exact",
+   "matched": "777 E ATLANTIC AVE, DELRAY BEACH, FL, 33483",
+   "zip": "33483"
+  },
+  "nominatim": {
+   "lat": 26.4617486,
+   "lng": -80.0655247,
+   "level": "house",
+   "display": "777, East Atlantic Avenue, Delray Beach, Palm Beach County, Florida, 33483, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 5.56 km from 777 E Atlantic Ave, Delray Beach FL"
+ },
+ {
+  "id": 5206,
+  "name": "Casa De Montecristo Cigar Lounge - West Loop",
+  "address": "2901 West Loop S",
+  "city": "Houston",
+  "state": "TX",
+  "zip": "77027",
+  "phone": "(713) 850-8091",
+  "website": "casademontecristo.com",
+  "from": {
+   "lat": 29.676767,
+   "lng": -95.422569
+  },
+  "to": {
+   "lat": 29.734968155148,
+   "lng": -95.458943737738
+  },
+  "move_km": 7.36,
+  "census": {
+   "type": "Exact",
+   "matched": "2901 WEST LOOP S, HOUSTON, TX, 77027",
+   "zip": "77027"
+  },
+  "nominatim": {
+   "lat": 29.7364851,
+   "lng": -95.4583008,
+   "level": "house",
+   "display": "Casa de Montecristo Cigar Bar, 2901, West Loop South, Houston, Harris County, Texas, 77027, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the pin is 7.36 km from 2901 West Loop S, Houston TX"
+ },
+ {
+  "id": 6843,
+  "name": "Sag Harbor Cigars",
+  "address": "12793 Josslyn Ln",
+  "city": "Jacksonville",
+  "state": "FL",
+  "zip": "32246",
+  "phone": "(904) 955-5465",
+  "website": "sagharborcigars.com",
+  "from": {
+   "lat": 30.328497,
+   "lng": -81.657013
+  },
+  "to": {
+   "lat": 30.292226948431,
+   "lng": -81.485222465958
+  },
+  "move_km": 16.98,
+  "census": {
+   "type": "Exact",
+   "matched": "12793 JOSSLYN LN, JACKSONVILLE, FL, 32246",
+   "zip": "32246"
+  },
+  "nominatim": {
+   "lat": 30.2920196,
+   "lng": -81.4850617,
+   "level": "house",
+   "display": "12793, Josslyn Lane, Jacksonville, Duval County, Florida, 32246, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 16.98 km from 12793 Josslyn Ln, Jacksonville FL"
+ },
+ {
+  "id": 8461,
+  "name": "Patriot Cigars",
+  "address": "10152 Beach Dr SW",
+  "city": "Calabash",
+  "state": "NC",
+  "zip": "28467",
+  "phone": "(910) 443-9034",
+  "website": "patriotcigarscalabash.com",
+  "from": {
+   "lat": 33.876698,
+   "lng": -78.541122
+  },
+  "to": {
+   "lat": 33.89086462752,
+   "lng": -78.57526206661
+  },
+  "move_km": 3.52,
+  "census": {
+   "type": "Exact",
+   "matched": "10152 BEACH DR SW, CALABASH, NC, 28467",
+   "zip": "28467"
+  },
+  "nominatim": {
+   "lat": 33.8907847,
+   "lng": -78.5770096,
+   "level": "house",
+   "display": "10152, Beach Drive Southwest, Calabash, Brunswick County, North Carolina, 28467, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 3.52 km from 10152 Beach Dr SW, Calabash NC"
+ },
+ {
+  "id": 8700,
+  "name": "The Piedmont Tobacconist",
+  "address": "17 Glen Ave",
+  "city": "Oakland",
+  "state": "CA",
+  "zip": "94611",
+  "phone": "(510) 652-7473",
+  "website": "thepiedmonttobacconist.com",
+  "from": {
+   "lat": 37.82209,
+   "lng": -122.2201
+  },
+  "to": {
+   "lat": 37.825680525012,
+   "lng": -122.252643875084
+  },
+  "move_km": 2.89,
+  "census": {
+   "type": "Exact",
+   "matched": "17 GLEN AVE, OAKLAND, CA, 94611",
+   "zip": "94611"
+  },
+  "nominatim": {
+   "lat": 37.8256859,
+   "lng": -122.252687,
+   "level": "house",
+   "display": "Piedmont Tobacconist, 17, Glen Avenue, Piedmont Avenue, North Oakland, Oakland, Alameda County, California, 94610, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Los_Angeles",
+   "to": "America/Los_Angeles"
+  },
+  "reason": "the pin is 2.89 km from 17 Glen Ave, Oakland CA"
+ },
+ {
+  "id": 12028,
+  "name": "JW'S Cigar Lounge",
+  "address": "3006 S Caraway Rd",
+  "city": "Jonesboro",
+  "state": "AR",
+  "zip": "72401",
+  "phone": "(870) 604-4855",
+  "website": "jwsbarandgrill.com",
+  "from": {
+   "lat": 35.819096,
+   "lng": -90.678253
+  },
+  "to": {
+   "lat": 35.8094722621,
+   "lng": -90.678094860926
+  },
+  "move_km": 1.07,
+  "census": {
+   "type": "Exact",
+   "matched": "3006 S CARAWAY RD, JONESBORO, AR, 72401",
+   "zip": "72401"
+  },
+  "nominatim": {
+   "lat": 35.8094104,
+   "lng": -90.6780678,
+   "level": "house",
+   "display": "3006, South Caraway Road, Jonesboro, Craighead County, Arkansas, 72401, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the pin is 1.07 km from 3006 S Caraway Rd, Jonesboro AR"
+ },
+ {
+  "id": 14605,
+  "name": "Holy Smoke Cigars Shop | Chattanooga's Newest",
+  "address": "1459 N Mack Smith Rd",
+  "city": "East Ridge",
+  "state": "TN",
+  "zip": "37412",
+  "phone": "(423) 710-2436",
+  "website": "holysmokecigarsshop.com",
+  "from": {
+   "lat": 34.990868,
+   "lng": -85.20903
+  },
+  "to": {
+   "lat": 34.999398707836,
+   "lng": -85.217849463181
+  },
+  "move_km": 1.24,
+  "census": {
+   "type": "Exact",
+   "matched": "1459 N MACK SMITH RD, EAST RIDGE, TN, 37412",
+   "zip": "37412"
+  },
+  "nominatim": {
+   "lat": 34.9994214,
+   "lng": -85.2178616,
+   "level": "house",
+   "display": "1459, North Mack Smith Road, Lansdell Park, East Ridge, Hamilton County, East Tennessee, Tennessee, 37412, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 1.24 km from 1459 N Mack Smith Rd, East Ridge TN"
+ },
+ {
+  "id": 15379,
+  "name": "Copper Canyon Tobacconist & Cigar Bar",
+  "address": "3261 Saint Joe Center Rd",
+  "city": "Fort-wayne",
+  "state": "IN",
+  "zip": "46835",
+  "phone": "(260) 209-1610",
+  "website": "coppercanyontobacconist.com",
+  "from": {
+   "lat": 41.137051,
+   "lng": -85.068542
+  },
+  "to": {
+   "lat": 41.13388010524,
+   "lng": -85.097762788752
+  },
+  "move_km": 2.47,
+  "census": {
+   "type": "Exact",
+   "matched": "3261 SAINT JOE CENTER RD, FORT WAYNE, IN, 46835",
+   "zip": "46835"
+  },
+  "nominatim": {
+   "lat": 41.1348205,
+   "lng": -85.0993532,
+   "level": "house",
+   "display": "Copper Canyon Tobacconist, 3261, Saint Joe Center Road, Fort Wayne, Allen County, Indiana, 46835, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/Indiana/Indianapolis"
+  },
+  "reason": "the pin is 2.47 km from 3261 Saint Joe Center Rd, Fort-wayne IN"
+ },
+ {
+  "id": 16733,
+  "name": "Tuttle's Select Cigars & Tobaccos",
+  "address": "3835 28th St SE",
+  "city": "Grand Rapids",
+  "state": "MI",
+  "zip": "49512",
+  "phone": "(616) 942-6990",
+  "website": "tuttlescigars.com",
+  "from": {
+   "lat": 42.898689,
+   "lng": -85.571861
+  },
+  "to": {
+   "lat": 42.91258725047,
+   "lng": -85.572721406652
+  },
+  "move_km": 1.55,
+  "census": {
+   "type": "Exact",
+   "matched": "3835 28TH ST SE, GRAND RAPIDS, MI, 49512",
+   "zip": "49512"
+  },
+  "nominatim": {
+   "lat": 42.9126119,
+   "lng": -85.573554,
+   "level": "house",
+   "display": "3835, 28th Street Southeast, Third Ward, Grand Rapids, Kent County, Michigan, 49512, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/Detroit"
+  },
+  "reason": "the pin is 1.55 km from 3835 28th St SE, Grand Rapids MI"
+ },
+ {
+  "id": 21566,
+  "name": "Cigar Box Premium Tobacconist",
+  "address": "218 Laurel Mall",
+  "city": "Hazle Township",
+  "state": "PA",
+  "zip": "18202",
+  "phone": "(570) 459-3099",
+  "website": "cigarboxpa.com",
+  "from": {
+   "lat": 40.949219,
+   "lng": -75.978241
+  },
+  "to": {
+   "lat": 40.981168609561,
+   "lng": -76.019308120922
+  },
+  "move_km": 4.95,
+  "census": {
+   "type": "Exact",
+   "matched": "218 LAUREL MALL, HAZLE TOWNSHIP, PA, 18202",
+   "zip": "18202"
+  },
+  "nominatim": {
+   "lat": 40.9812032,
+   "lng": -76.0194868,
+   "level": "house",
+   "display": "218, Laurel Mall Road, Hazle Township, Luzerne County, Pennsylvania, 18201, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 4.95 km from 218 Laurel Mall, Hazle Township PA"
+ },
+ {
+  "id": 22082,
+  "name": "The Carmel Cigar Vault",
+  "address": "71 Gleneida Ave",
+  "city": "Carmel",
+  "state": "NY",
+  "zip": "10512",
+  "phone": "(929) 614-6561",
+  "website": "thecarmelcigarvault.com",
+  "from": {
+   "lat": 41.362492,
+   "lng": -73.750206
+  },
+  "to": {
+   "lat": 41.428335042358,
+   "lng": -73.679342272835
+  },
+  "move_km": 9.41,
+  "census": {
+   "type": "Exact",
+   "matched": "71 GLENEIDA AVE, CARMEL, NY, 10512",
+   "zip": "10512"
+  },
+  "nominatim": {
+   "lat": 41.4278183,
+   "lng": -73.6793278,
+   "level": "house",
+   "display": "71, Gleneida Avenue, Town of Carmel, Putnam County, New York, 10512, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 9.41 km from 71 Gleneida Ave, Carmel NY"
+ },
+ {
+  "id": 22964,
+  "name": "Plaistow Cigar Company",
+  "address": "11 Plaistow Rd",
+  "city": "Plaistow",
+  "state": "NH",
+  "zip": "03865",
+  "phone": "(603) 382-3636",
+  "website": "plaistowcigar.com",
+  "from": {
+   "lat": 42.832825,
+   "lng": -71.109512
+  },
+  "to": {
+   "lat": 42.81715274173,
+   "lng": -71.103149253229
+  },
+  "move_km": 1.82,
+  "census": {
+   "type": "Exact",
+   "matched": "11 PLAISTOW RD, PLAISTOW, NH, 03865",
+   "zip": "03865"
+  },
+  "nominatim": {
+   "lat": 42.8175002,
+   "lng": -71.1022178,
+   "level": "house",
+   "display": "PetSmart, 11, Plaistow Road, Plaistow, Rockingham County, New Hampshire, 03865, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 1.82 km from 11 Plaistow Rd, Plaistow NH"
+ },
+ {
+  "id": 23705,
+  "name": "Cuban Cigars Wines and Music lounge",
+  "address": "3475 SW 8th St",
+  "city": "Miami",
+  "state": "FL",
+  "zip": "33135",
+  "phone": "(786) 216-8633",
+  "website": null,
+  "from": {
+   "lat": 25.763054,
+   "lng": -80.316841
+  },
+  "to": {
+   "lat": 25.764832094135,
+   "lng": -80.251796280127
+  },
+  "move_km": 6.52,
+  "census": {
+   "type": "Exact",
+   "matched": "3475 SW 8TH ST, MIAMI, FL, 33135",
+   "zip": "33135"
+  },
+  "nominatim": {
+   "lat": 25.7648557,
+   "lng": -80.2517572,
+   "level": "house",
+   "display": "3475, Southwest 8th Street, Silver Court Trailer Park, Miami, Miami-Dade County, Florida, 33135, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 6.52 km from 3475 SW 8th St, Miami FL"
+ },
+ {
+  "id": 28366,
+  "name": "Silver Ash Cigar Lounge",
+  "address": "516 Silver Bluff Rd",
+  "city": "Aiken",
+  "state": "SC",
+  "zip": "29803",
+  "phone": "(803) 226-0139",
+  "website": null,
+  "from": {
+   "lat": 33.518829,
+   "lng": -81.727913
+  },
+  "to": {
+   "lat": 33.510545864291,
+   "lng": -81.738549899297
+  },
+  "move_km": 1.35,
+  "census": {
+   "type": "Exact",
+   "matched": "516 SILVER BLUFF RD, AIKEN, SC, 29803",
+   "zip": "29803"
+  },
+  "nominatim": {
+   "lat": 33.5105407,
+   "lng": -81.7386146,
+   "level": "house",
+   "display": "516, Silver Bluff Road, Gem Lake Estates, Aiken, Aiken County, South Carolina, 29803, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/New_York",
+   "to": "America/New_York"
+  },
+  "reason": "the pin is 1.35 km from 516 Silver Bluff Rd, Aiken SC"
+ },
+ {
+  "id": 29200,
+  "name": "Par's Private Reserve Cigars",
+  "address": "5875 S Rainbow Blvd",
+  "city": "Las Vegas",
+  "state": "NV",
+  "zip": "89118",
+  "phone": "(408) 931-1116",
+  "website": null,
+  "from": {
+   "lat": 36.08313,
+   "lng": -115.208458
+  },
+  "to": {
+   "lat": 36.081969491382,
+   "lng": -115.242785224676
+  },
+  "move_km": 3.09,
+  "census": {
+   "type": "Exact",
+   "matched": "5875 S RAINBOW BLVD, LAS VEGAS, NV, 89118",
+   "zip": "89118"
+  },
+  "nominatim": {
+   "lat": 36.0820418,
+   "lng": -115.2433306,
+   "level": "house",
+   "display": "Latin Blendz Dance Academy, 5875, South Rainbow Boulevard, Las Vegas, Clark County, Nevada, 89118, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Los_Angeles",
+   "to": "America/Los_Angeles"
+  },
+  "reason": "the pin is 3.09 km from 5875 S Rainbow Blvd, Las Vegas NV"
+ },
+ {
+  "id": 32256,
+  "name": "Greystone Cigars",
+  "address": "156 E Eastland St",
+  "city": "Gallatin",
+  "state": "TN",
+  "zip": "37066",
+  "phone": "(615) 708-6673",
+  "website": null,
+  "from": {
+   "lat": 36.490887,
+   "lng": -86.881615
+  },
+  "to": {
+   "lat": 36.391907890461,
+   "lng": -86.446016548344
+  },
+  "move_km": 40.49,
+  "census": {
+   "type": "Exact",
+   "matched": "156 E EASTLAND ST, GALLATIN, TN, 37066",
+   "zip": "37066"
+  },
+  "nominatim": {
+   "lat": 36.3919296,
+   "lng": -86.4460391,
+   "level": "house",
+   "display": "156, East Eastland Street, Gallatin, Sumner County, Middle Tennessee, Tennessee, 37066, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the pin is 40.49 km from 156 E Eastland St, Gallatin TN"
+ },
+ {
+  "id": 38864,
+  "name": "Flagon Bayou Bistro and Cigar Lounge",
+  "address": "5550 Donahue Ferry Rd",
+  "city": "Pineville",
+  "state": "LA",
+  "zip": "71360",
+  "phone": null,
+  "website": null,
+  "from": {
+   "lat": 31.380178,
+   "lng": -92.361343
+  },
+  "to": {
+   "lat": 31.372646859659,
+   "lng": -92.373925106666
+  },
+  "move_km": 1.46,
+  "census": {
+   "type": "Exact",
+   "matched": "5550 DONAHUE FERRY RD, PINEVILLE, LA, 71360",
+   "zip": "71360"
+  },
+  "nominatim": {
+   "lat": 31.3725289,
+   "lng": -92.3738823,
+   "level": "house",
+   "display": "5550, Donahue Ferry Road, Pineville, Rapides Parish, Louisiana, 71360, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the pin is 1.46 km from 5550 Donahue Ferry Rd, Pineville LA"
+ },
+ {
+  "id": 39108,
+  "name": "Blake's Cigar Patio",
+  "address": "2100 Cedar Way Ct",
+  "city": "Memphis",
+  "state": "TN",
+  "zip": "38116",
+  "phone": null,
+  "website": null,
+  "from": {
+   "lat": 35.099388,
+   "lng": -90.072243
+  },
+  "to": {
+   "lat": 35.019700778266,
+   "lng": -89.99429459538
+  },
+  "move_km": 11.35,
+  "census": {
+   "type": "Exact",
+   "matched": "2100 CEDAR WAY CT, MEMPHIS, TN, 38116",
+   "zip": "38116"
+  },
+  "nominatim": {
+   "lat": 35.0195596,
+   "lng": -89.9942999,
+   "level": "house",
+   "display": "2100, Cedar Way Court, Memphis, Shelby County, West Tennessee, Tennessee, 38116, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "the pin is 11.35 km from 2100 Cedar Way Ct, Memphis TN"
+ }
+]

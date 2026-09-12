@@ -358,6 +358,12 @@ async function runStartupImport({ log = console.log } = {}) {
   const result = await importStoresFromFile(null, { log });
   await fillTimezones({ log }).catch(err => log('[import] time zone fill error: ' + err.message));
 
+  // Every import re-creates the twins the two sources spell differently, under
+  // new ids, so the merge has to run after it rather than once by hand. Only
+  // the plain cases; anything a person should see stays for a person.
+  const { mergeAutomatic } = require('./dedupeListings');
+  await mergeAutomatic({ log }).catch(err => log('[import] duplicate merge error: ' + err.message));
+
   if (process.env.DISABLE_CITY_FILL !== '1') {
     fillMissingCities({ max: 150, log }).catch(err => log('[import] city fill error: ' + err.message));
     setInterval(() => fillMissingCities({ max: 100, log }).catch(() => {}), 60 * 60 * 1000);

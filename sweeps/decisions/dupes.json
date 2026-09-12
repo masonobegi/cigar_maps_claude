@@ -1,0 +1,142 @@
+[
+ {
+  "tier": "reviewed",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 4316,
+   "name": "Maduro's Social - Cigar Club & Lounge",
+   "address": "4991 S Alma School Rd",
+   "city": "Chandler",
+   "state": "AZ",
+   "phone": "(480) 883-8888",
+   "website": "madurostix.com"
+  },
+  "drop": [
+   {
+    "id": 39945,
+    "name": "Maduro's Fine Cigars",
+    "address": "4991 South Alma School Road",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {},
+  "reviewed": "read on 2026-09-12: one door, and the second row carries no phone and no website of its own"
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 5593,
+   "name": "BlackHouse Cigars",
+   "address": "318 Gentry St",
+   "city": "Spring",
+   "state": "TX",
+   "phone": "(713) 999-9193",
+   "website": "BLACKHOUSECIGARS.COM"
+  },
+  "drop": [
+   {
+    "id": 42372,
+    "name": "Black House Cigars",
+    "address": "318 Gentry Street",
+    "phone": "(713) 999-9193",
+    "website": "blackhousecigars.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 10358,
+   "name": "Smokencigar",
+   "address": "3333 184th St Sw Ste A1",
+   "city": "Lynnwood",
+   "state": "WA",
+   "phone": "(425) 673-1390",
+   "website": "smokencigar.com"
+  },
+  "drop": [
+   {
+    "id": 42765,
+    "name": "Smoke N\u2019 Cigar",
+    "address": "3333 184th Street Southwest",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "reviewed",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 17326,
+   "name": "O Cigar Bar",
+   "address": "34 S Broadway St",
+   "city": "Lake Orion",
+   "state": "MI",
+   "phone": "(248) 690-7040",
+   "website": "ocigarbar.com"
+  },
+  "drop": [
+   {
+    "id": 17325,
+    "name": "O Cigar Company",
+    "address": "34 S Broadway St",
+    "phone": "(248) 836-7868",
+    "website": "ocigarcompany.com"
+   }
+  ],
+  "fill": {},
+  "reviewed": "read on 2026-09-12: ocigarcompany.com says \"Lake Orion's premier cigar bar is bringing its humidor online\" \u2014 the same business's web shop, not a second shop"
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 17581,
+   "name": "Fat  Ash Cigar Lounge",
+   "address": "8110 US Route 60",
+   "city": "Ashland",
+   "state": "KY",
+   "phone": "(606) 254-0484",
+   "website": "fatashcigarlounge.com"
+  },
+  "drop": [
+   {
+    "id": 17560,
+    "name": "FatAsh Cigar Lounge",
+    "address": "8110 US-60",
+    "phone": "(606) 254-0484",
+    "website": "fatash.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 22630,
+   "name": "Smoke Stack Cigar Shop",
+   "address": "2003 Smith St",
+   "city": "North Providence",
+   "state": "RI",
+   "phone": "(401) 349-0512",
+   "website": "smokestackcigarlounge.com"
+  },
+  "drop": [
+   {
+    "id": 42239,
+    "name": "Smokestack Cigar Shop",
+    "address": "2003 Smith Street",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ }
+]

@@ -307,7 +307,31 @@ async function plan({ out, log = console.log } = {}) {
 }
 
 async function apply(file, { log = console.log } = {}) {
-  const decisions = JSON.parse(fs.readFileSync(file, 'utf8'));
+  return applyDecisions(JSON.parse(fs.readFileSync(file, 'utf8')), { log });
+}
+
+/**
+ * Merge the plain cases after an import, and leave the rest for a person.
+ *
+ * Every import re-creates the same twins: a shop the two sources spell
+ * differently is imported twice, and the copy that was hidden last time comes
+ * back under a new id. Only the auto tier runs here — two rows, one door, and
+ * either a shared phone or website, or a row that carries nothing of its own.
+ * Three rows, or two phones, still wait for somebody to look.
+ *
+ * The first auto tier to run against production was read first: four clusters,
+ * all four the same shop twice (BlackHouse Cigars, Smokencigar, FatAsh, Smoke
+ * Stack), and the two it held back for review were real duplicates as well. It
+ * errs towards leaving work for a person, which is the right direction for a
+ * job that hides listings unattended.
+ */
+async function mergeAutomatic({ log = console.log } = {}) {
+  const auto = (await plan({ log: () => {} })).filter(d => d.tier === 'auto');
+  if (!auto.length) { log('[dedupe] no plain duplicates to merge'); return { hidden: 0, filled: 0 }; }
+  return applyDecisions(auto, { log });
+}
+
+async function applyDecisions(decisions, { log = console.log } = {}) {
   let hidden = 0, filled = 0;
   for (const d of decisions) {
     for (const [field, value] of Object.entries(d.fill || {})) {
@@ -392,7 +416,7 @@ function selfTest() {
   return fail === 0;
 }
 
-module.exports = { plan, apply, normalizeAddress, sameDoor, sameShop, namesAgreeFully, foldName, squashed, distinctiveWords, TRADE_WORDS };
+module.exports = { plan, apply, mergeAutomatic, normalizeAddress, sameDoor, sameShop, namesAgreeFully, foldName, squashed, distinctiveWords, TRADE_WORDS };
 
 if (require.main === module) {
   const argv = process.argv.slice(2);
