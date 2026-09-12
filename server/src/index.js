@@ -59,14 +59,12 @@ const clientDist = path.join(__dirname, '../../client/dist');
 console.log(`[static] clientDist path: ${clientDist}`);
 console.log(`[static] clientDist exists: ${fs.existsSync(clientDist)}`);
 app.use(express.static(clientDist));
-app.get('*', (req, res) => {
-  const indexPath = path.join(clientDist, 'index.html');
-  if (!fs.existsSync(indexPath)) {
-    console.error(`[static] index.html not found at: ${indexPath}`);
-    return res.status(404).send(`index.html not found. clientDist resolved to: ${clientDist}`);
-  }
-  res.sendFile(indexPath);
-});
+
+// robots.txt, the sitemaps, and an index.html whose head is true for the URL
+// that asked for it. This replaces the catch-all that used to send one file for
+// every route — which meant every shop page carried a canonical tag pointing at
+// the homepage, telling crawlers not to index any of them. See utils/seo.js.
+require('./utils/seo').mount(app, { clientDist, db: require('./database/db') });
 
 // Global async error handler (catches errors thrown from asyncRoute-wrapped handlers)
 app.use((err, req, res, next) => {
