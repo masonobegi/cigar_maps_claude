@@ -5,7 +5,7 @@ ranked"); numbers below are its ranks. Every sweep is built, dry-run, reviewed b
 hand, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
-**Updated 2026-09-12 (evening). Public listings: 4,363** (from 7,431 at the
+**Updated 2026-09-12 (evening). Public listings: 655** (from 7,431 at the
 start). **Every sweep the cloud session built has now been run against
 production**, and what reading the output changed is the table at the top of
 "The session of 2026-09-12 (evening)" below. What is still open is the list at
@@ -279,6 +279,49 @@ pages. The same silent-cap shape as the licence fetch stopping at 50,000 rows.
 **360 of the 656 publish one**. It queues a city, sends at a capped pace, nudges
 once after seven days, and records what came of it. Every message carries a
 signed one-click unsubscribe. The reply is not automated and should not be.
+
+### How sure are we, actually
+
+Asked on 2026-09-12, after the directory was cut to 656: is that set really all
+cigar shops, or should it be narrower still? The first attempt to answer it was
+wrong in a way worth keeping.
+
+Scoring every public listing against the page text already in hand suggested
+only **41% were proven by their own site** and 53% "said little either way" —
+Tampa Sweethearts among them, at one cigar word. That reading was an artifact:
+the stored text is what the **hours** crawl kept, which is the lines around each
+"Hours" heading rather than the page. Tampa Sweethearts' actual front page says
+**cigar 72 against other 1**. Central Cigars 56, Sterling 33, Corona 173.
+
+So forty of the "thin" ones were fetched and scored live. Of the 32 that
+answered: **28 (88%) are proven by their own front page, none said more about
+another trade**, and the four that did not clear are JavaScript-rendered or
+one-page sites — Griffin Cigar, Senor Cigar's — rather than doubtful shops.
+
+**Across all 656, exactly one listing failed on evidence:** Cigar and Smoke Shop
+in Hanover, Maryland, whose own page is titled "Premium Cigars, Vapes & Hookah"
+and says 36 vape and hookah words against 18 cigar ones. Hidden as
+`not_retail`. **655 public.**
+
+The answer to the question is therefore no: the set does not want narrowing.
+One in 656 is not a purity problem, and coverage is the binding constraint —
+Tampa holds 6 shops, Miami 7. The useful direction is the other one.
+
+### The browser pass, and what it is for
+
+**1,231 listings are one readable page from being public**: held back only for
+want of hours, with a live website of their own and an address something
+outside the directory agrees with. The likeliest reason the plain reader found
+no hours on those pages is that they are drawn with JavaScript.
+
+`hoursRender.js` opens them in real Chrome. It and `hoursSweep decide` both
+only looked at visible listings, so neither could see the listings the pass
+exists to help; they now take `--include-hidden` and `--include-held`, off by
+default in both.
+
+Anything that comes back still goes through the same discipline: the hours are
+reviewed before they are applied, and `verifiedSet` then promotes the listing on
+the same four gates as everything else.
 
 ### Still open
 
