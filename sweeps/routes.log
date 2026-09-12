@@ -1,0 +1,8 @@
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+reading 294 shop websites for a way to reach them
+  50/294 — 7 addresses, 33 other ways in
+  100/294 — 16 addresses, 66 other ways in
+  150/294 — 26 addresses, 96 other ways in
+  200/294 — 30 addresses, 135 other ways in
+  250/294 — 44 addresses, 165 other ways in
+done: 56 addresses found, 193 more shops reachable some other way
