@@ -127,6 +127,12 @@ function classify(name, tags, website) {
   if (LOUNGE_RE.test(n) && cigarName) score += 0.05;
   if (TOBACCO_RE.test(n)) score += 0.1;
   if (website && /cigar|humidor|tobacconist|stogie|habano|lounge/i.test(website)) score += 0.25;
+  // A vape, glass, hookah or kava shop is another trade, however many cigars it
+  // keeps by the till: this directory is for cigar and pipe shops. When that
+  // trade leads the name, no category or website rescues it.
+  const otherTrade = n.search(/\b(vape|vapes|vapor|e-?cigs?|e-?liquid|hookah|shisha|kava|kratom|cbd|delta[- ]?8|dispensary|weed|420|710|dab|bong|glass|head\s?shop|hydro)\b/i);
+  const cigarWord = n.search(/\b(cigars?|tobacconist|humidor|stogies?|habanos?|pipe\s+tobacco)\b/i);
+  if (otherTrade >= 0 && (cigarWord < 0 || otherTrade < cigarWord)) return { confidence: 0, store_type: 'smoke_shop' };
   if (SMOKE_RE.test(n)) score -= 0.15;
   if (NEG_MILD.test(n)) score -= 0.2;
   if (NEG_STRONG.test(n)) score -= 0.45;

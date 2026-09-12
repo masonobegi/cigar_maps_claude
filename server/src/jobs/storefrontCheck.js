@@ -35,6 +35,7 @@
  */
 'use strict';
 
+const fs = require('fs');
 const db = require('../database/db');
 const { loadDirectory } = require('./buildDirectory');
 
@@ -61,6 +62,58 @@ const ONLINE = /\b(online|web\s*store|webstore|e-?commerce|mail\s*order)\b|\.(co
 const SHOP_WORD = /\b(shop|store|lounge|bar|humidor|tobacconist|cigars?|smoke|tobacco|pipe)\b/i;
 const LEGAL_ONLY = /\b(llc|l\.l\.c\.?|inc\.?|incorporated|corp\.?|corporation|ltd\.?)\b/i;
 
+// The tobacco trade's own side of the business: makers, leaf dealers and head
+// offices. R.J. Reynolds' five Winston-Salem sites, Lorillard, Liggett and
+// Myers and Universal Leaf were all on the public map as tobacco shops.
+// "Leaf tobacco" alone is a shop name — Green Leaf, Golden Leaf, Burning Leaf
+// Tobacco Shoppe — so only a leaf company counts.
+const MAKER = /\b(r\.?\s?j\.?\s+reynolds|reynolds\s+american|lorillard|liggett|philip\s+morris|altria|universal\s+leaf\s+tobacco|swedish\s+match|alliance\s+one|pyxus|santa\s+fe\s+natural\s+tobacco|leaf\s+tobacco\s+(co|company|corp|inc)|tobacco\s+(growers|processing|redrying|curing)|cigar\s+(factory|manufactur\w+))\b/i;
+
+// Campaigns against smoking, health departments and quit lines: the opposite
+// of a shop, and they carry the word "tobacco" in their name.
+const CIVIC = /\b(tobacco[- ]free|tobacco\s*21|quit\s?line|health\s+(department|district|coalition)|department\s+of\s+health|prevention\s+(program|coalition)|cessation|american\s+lung|truth\s+initiative|smoke[- ]free)\b/i;
+
+// A pin on something that is not a business at all.
+// Marina is a district in Long Beach and San Francisco before it is a dock,
+// so it is not here.
+const NOT_A_PLACE = /\b(trail\s?head|trail\s+parking|boat\s+ramp|rv\s+(park|lot|resort)|campground|union\s+hall|city\s+hall|court\s?house|post\s+office|a\.?t\.?f\.?\s+(office|bureau)|bureau\s+of|state\s+office|county\s+office|fire\s+(station|department)|police\s+(station|department)|public\s+library|cemetery|park\s+(and|&)\s+ride|rest\s+area)\b/i;
+
+// Cigars brought to a wedding, not a door to walk through. A lounge on wheels
+// is always this, whatever else its name says; a shop that also rolls at
+// events keeps its listing, so the rest is judged on the name before a dash.
+const MOBILE_VENUE = /\b(mobile|pop[- ]?up)\s+(cigar|lounge|humidor|bar)\b|\bcigar\s+(truck|trailer|cart)\b/i;
+const EVENT_SERVICE = /\bcigar\s+(roller|rolling|catering|caterer|bar\s+(hire|rental|service))\b|\bevent\s+(planning|services?|rentals?)\b/i;
+
+// A back garden with a name. Some are jokes; none is open to customers.
+// A man cave is not one of them: "Mancave Cigars" in Miami and "The Mancave
+// Cigar Lounge and Barbershop" in Tampa are both shops.
+const PRIVATE_PLACE = /\b(backyard|back\s+porch|garage\s+lounge|basement\s+lounge|monica\s+lewinsky)\b/i;
+
+// Names that say "we ship humidors", with nowhere to walk in.
+// "Cigarettes & Cigars For Less" is a corner shop in Orange, so only the
+// catalogue names themselves count.
+const WEB_CATALOGUE = /\b(humidors?\s+(direct|outlet|depot|discount|online|superstore|warehouse)|luxury\s+cigar\s+humidors|grand\s+humidors|cigars?\s+direct\s*$)/i;
+
+// Another trade wearing a tobacco name. This directory is for cigar and pipe
+// shops: cigarettes on the side are fine, but a glass and weed shop that keeps
+// a few cigars by the till is not a cigar shop, whatever it sells. Mary Jane's
+// House of Glass is the type.
+const OTHER_TRADE = /\b(vape|vapes|vaping|vapor|vapour|e-?cigs?|e-?cigarettes?|e-?liquid|e-?juice|hookah|shisha|kava|kratom|cbd|hemp|delta[- ]?8|thc|marijuana|cannabis|dispensary|weed|420|710|dab|dabs|bong|bongs|glass|head\s?shop|hydro|smoke\s?&\s?glass|novelty|adult\s+(store|shop)|porn)\b/i;
+
+// A shop whose main trade is cigarettes: "Cigarettes 4 Less", "Discount
+// Cigarettes". The word alone is not enough — "Cigaret Shopper" in Maine sells
+// cigars — so it has to read as the whole business.
+const CIGARETTE_FIRST = /\b(cigarettes?|ciggies)\s*(4|for)?\s*(less|cheap|outlet|depot|city|discount|warehouse|express|plus)\b|\b(discount|cheap|wholesale)\s+cigarettes?\b/i;
+
+/** Where a trade word sits in the name: first word wins the shop's identity. */
+function tradeComesFirst(name) {
+  const other = String(name).search(OTHER_TRADE);
+  const cigar = String(name).search(/\b(cigars?|tobacconist|humidor|stogies?|habanos?|puros?|pipe\s+tobacco)\b/i);
+  if (other < 0) return false;
+  if (cigar < 0) return true;
+  return other < cigar;
+}
+
 // The trade the business is in, and the kind of premises it is. Both halves
 // have to be present: "Cigar City Brewing" names a city, not a cigar shop.
 const TRADE_WORD = /\b(cigars?|tobacco|tobacconist|humidor|stogies?)\b/i;
@@ -77,6 +130,13 @@ const CIGAR_PREMISES = /\bcigars?\s*(?:&|and)?\s*(?:lounge|bar|shop|shoppe|store
 
 function namesACigarPremises(name) {
   return CIGAR_PREMISES.test(name);
+}
+
+/** The cigar word carries the name: at the head of it, or at its tail. */
+function namesACigarBusiness(name) {
+  const n = String(name).trim();
+  return /^(the\s+)?(cigars?|tobacconist|humidor)\b/i.test(n)
+    || /\b(cigars?|cigar\s+(bar|lounge|shop|room|club)|tobacconist|humidors?)\s*$/i.test(n);
 }
 
 /**
@@ -100,6 +160,43 @@ function verdict(rec, row) {
   // Cigars & Tobacco" names a cigar shop, but the listing is the ATM in it.
   if (/\b(bitcoin|crypto(currency)?)\s+atm\b|\bcoinflip\b|\bbyte federal\b|\bathena bitcoin\b/i.test(name)) {
     return { storefront: 'not_retail', reason: `"${name}" is a cash machine inside a shop, not the shop` };
+  }
+  if (MAKER.test(name)) return { storefront: 'not_retail', reason: `"${name}" makes or handles tobacco, and does not sell it over a counter` };
+  if (CIVIC.test(name)) return { storefront: 'not_retail', reason: `"${name}" is a health or anti-smoking body, not a shop` };
+  // "City Hall Cigar Bar" and "Courthouse Cigar" are named after the building
+  // across the street; they are still cigar bars.
+  // "Courthouse Cigar" and "Cigar Bar at Sawmill Resort Campground" are named
+  // after what they stand near; the cigar word at the head or the tail of the
+  // name is the business. "Bureau Of Alcohol Tobacco" and "Port Tobacco RV
+  // Resort" only carry the word in passing.
+  if (NOT_A_PLACE.test(name) && !namesACigarBusiness(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" is not a business you can buy cigars in` };
+  }
+  if (MOBILE_VENUE.test(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" is a lounge on wheels, with no door of its own` };
+  }
+  // A shop that also rolls at weddings keeps its listing: only the service
+  // itself goes. The name before a dash or slash is the business.
+  if (EVENT_SERVICE.test(name) && !namesACigarPremises(name.split(/[-–/,]/)[0])) {
+    return { storefront: 'not_retail', reason: `"${name}" brings cigars to events; it has no door of its own` };
+  }
+  // "Backyard Cigars" is a shop; a back garden with no phone and no website is not.
+  if (PRIVATE_PLACE.test(name) && !hasPhone && !hasSite) {
+    return { storefront: 'not_retail', reason: `"${name}" is somebody's own place, not a shop` };
+  }
+  // Another trade wearing a tobacco name, and cigarette outlets: this directory
+  // is for shops whose trade is cigars and pipe tobacco.
+  if (tradeComesFirst(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" is a vape, glass or smoke shop, not a cigar shop` };
+  }
+  if (CIGARETTE_FIRST.test(name) && !namesACigarPremises(name)) {
+    return { storefront: 'not_retail', reason: `"${name}" sells cigarettes as its trade, not cigars` };
+  }
+  if (WEB_CATALOGUE.test(name)) return { storefront: 'online_only', reason: `"${name}" sells humidors and cigars by post` };
+  // A plumber called Pipe Dreams is a plumber. The name alone is not enough:
+  // its own website has to be a plumbing company's.
+  if (/\bpipe/i.test(name) && /plumb/i.test(`${name} ${row?.website || ''}`)) {
+    return { storefront: 'not_retail', reason: `"${name}" is a plumbing company` };
   }
   if (NOT_A_SHOP.test(name) && !namesACigarPremises(name)) {
     return { storefront: 'not_retail', reason: `"${name}" is another kind of business, not a cigar shop` };
@@ -132,7 +229,22 @@ function verdict(rec, row) {
 
 // ── Sweep ───────────────────────────────────────────────────────────────────
 
-async function sweep({ confirm = false, sample = 0, log = console.log } = {}) {
+/** Write the reviewed hides, and nothing else. */
+async function applyDecisions(file, { log = console.log } = {}) {
+  const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+  let hidden = 0;
+  for (const r of rows) {
+    const res = await db.run(`UPDATE stores SET storefront = ?, storefront_reason = ?, storefront_checked_at = NOW(), visible = 0
+      WHERE id = ? AND COALESCE(claimed, 0) = 0 AND COALESCE(staff_edited, 0) = 0`,
+      [r.storefront, String(r.reason).slice(0, 300), r.id]);
+    hidden += res.changes;
+  }
+  const left = await db.get('SELECT COUNT(*)::int AS n FROM stores WHERE visible = 1');
+  log(`hid ${hidden} of ${rows.length} reviewed listings. ${left.n} listings remain public.`);
+  return { hidden, remaining: left.n };
+}
+
+async function sweep({ confirm = false, sample = 0, out = null, applyFrom = null, log = console.log } = {}) {
   const dir = loadDirectory();
   if (!dir) { log('no built directory file; run npm run build:directory first'); return { skipped: true }; }
   const bySourceId = new Map(dir.stores.map(s => [`${s.source}:${s.source_id}`, s]));
@@ -187,6 +299,17 @@ async function sweep({ confirm = false, sample = 0, log = console.log } = {}) {
     }
   }
 
+  // The hides go to a file to be read through before anything is applied: a
+  // rule written off a name is exactly the kind that catches a real shop.
+  if (out) {
+    fs.writeFileSync(out, JSON.stringify(removals.map(r => ({
+      id: r.row.id, name: r.row.name, city: r.row.city, state: r.row.state,
+      phone: r.row.phone, website: r.row.website, store_type: r.row.store_type,
+      storefront: r.storefront, reason: r.reason,
+    })), null, 1));
+    log(`\n${removals.length} hides written to ${out}`);
+  }
+
   if (!confirm) {
     log('\nDry run. Nothing changed. Re-run with --confirm to apply.');
     return { dryRun: true, tally, would_hide: removals.length };
@@ -209,9 +332,13 @@ async function sweep({ confirm = false, sample = 0, log = console.log } = {}) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   const i = args.indexOf('--sample');
-  sweep({ confirm: args.includes('--confirm'), sample: i >= 0 ? parseInt(args[i + 1]) || 30 : 0 })
+  const arg = name => { const j = args.indexOf(name); return j >= 0 && args[j + 1] ? args[j + 1] : null; };
+  const run = arg('--from') && args.includes('--confirm')
+    ? applyDecisions(arg('--from'))
+    : sweep({ confirm: args.includes('--confirm') && !arg('--from'), sample: i >= 0 ? parseInt(args[i + 1]) || 30 : 0, out: arg('--out') });
+  run
     .then(() => process.exit(0))
     .catch(err => { console.error(err); process.exit(1); });
 }
 
-module.exports = { sweep, verdict, RETAIL_CATEGORIES };
+module.exports = { sweep, applyDecisions, verdict, RETAIL_CATEGORIES };
