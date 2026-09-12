@@ -307,38 +307,91 @@ const GENERIC_NAME = new Set(['cigar', 'cigars', 'tobacco', 'tobacconist', 'shop
   'club', 'co', 'company', 'inc', 'llc', 'the', 'and', 'of', 'smoke', 'smokes', 'premium', 'fine', 'humidor', 'emporium',
   'house', 'room', 'cafe', 'at', 'by', 'de', 'la', 'el']);
 
+/** Words a cigar shop's domain shares with every other cigar shop's domain. */
+const TRADE_WORD = ['cigar', 'cigars', 'tobacco', 'tobacconist', 'smoke', 'smokes', 'humidor',
+  'lounge', 'pipe', 'pipes', 'stogie', 'stogies', 'shop', 'shoppe', 'store', 'cellar', 'emporium'];
+
 /**
  * Does this website speak about this shop at all? A listing's "website" is
  * sometimes someone else's: verification found a tattoo studio, a distillery,
  * a life-insurance blog and a Bitcoin-ATM locator. If the shop's own name
  * appears nowhere in the site's address, markup or hours text, neither its
  * hours nor its picture are this shop's.
+ *
+ * Three things changed after the re-audit read the failures:
+ *
+ *  - The page text is matched on whole words. It used to be matched against the
+ *    text with every space stripped out, so "Ash" found "cash", "Den" found
+ *    "garden" and any three-letter name matched almost any page.
+ *  - A domain has no spaces, so it cannot be matched on whole words — and a
+ *    single short word inside a domain is close to no evidence at all. It now
+ *    has to carry two of the name's own words, or one of them beside a trade
+ *    word: "donestebancigars.com" passes, "denver.net" does not.
+ *  - The town-only fallback is gone. A shop named after its town ("Brainerd
+ *    Cigars") used to be confirmed by any page that said the town, which is
+ *    every business in it — that is how Tobacco Den Brainerd took its hours
+ *    from brainerdglass.net. Where the name says nothing but the town, only a
+ *    domain carrying the town AND a trade word counts.
  */
 function mentionsShop(ev, store) {
   const allWords = String(store.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ')
     .filter(w => w.length > 2 && !GENERIC_NAME.has(w));
   if (!allWords.length) return true;             // "Cigar Shop" names nothing to look for
-  // The town in a shop's name says nothing about which shop: "Tobacco Den
-  // Brainerd" matched a glass company at brainerdglass.net.
   const town = new Set(String(store.city || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' '));
   const own = allWords.filter(w => !town.has(w));
-  const words = own.length ? own : allWords;
+
+  const stem = hostOf(ev.url || '').replace(/\.[a-z.]+$/i, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
   // A domain built from the name's initials and a trade word: Tobacco
   // Republic at trcigar.com.
   const initials = String(store.name || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/)
     .filter(w => w && !['the', 'and', 'of', 'at', 'by'].includes(w)).map(w => w[0]).join('');
-  const stem = hostOf(ev.url || '').replace(/\.[a-z.]+$/i, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
   if (initials.length >= 2 && stem.startsWith(initials) && /^(cigars?|tobacco|smokes?|lounge|shop|co)?$/.test(stem.slice(initials.length))) return true;
+
   const said = [
     ...(ev.jsonld || []).map(b => (String(b).match(/"name"\s*:\s*"[^"]{1,120}"/g) || []).join(' ')),
     ...(ev.text || []).flatMap(t => t.lines || []),
   ].join(' ').toLowerCase();
-  const host = hostOf(ev.url || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
-  const hay = host + said.replace(/[^a-z0-9]+/g, '');
   const spaced = ` ${said.replace(/[^a-z0-9]+/g, ' ')} `;
-  // A short word ("Den", "Joe") must stand alone in the text, or be in the
-  // domain: inside another word it is only letters ("garden", "golden").
-  return words.some(w => (w.length < 5 ? spaced.includes(` ${w} `) || host.includes(w) : hay.includes(w)));
+  const inText = w => spaced.includes(` ${w} `);
+  const inDomain = w => stem.includes(w);
+  const domainHasTrade = TRADE_WORD.some(t => stem.includes(t));
+
+  // The evidence only carries the lines around the hours, not the whole page, so
+  // a shop's own name often never appears in it. The domain does most of the
+  // work here, and has to be read carefully rather than strictly: reading the
+  // first run of refusals by hand found eleven of fourteen were real shops on
+  // their own domains — Tampa Sweethearts at tampasweethearts.com, GarVino's at
+  // garvinos.com, The Cigar Shop at thecigarshop.com.
+  const townWords = allWords.filter(w => town.has(w));
+  const townInDomain = townWords.some(inDomain);
+  // The domain IS the shop's name, run together: "thecigarshop.com" for The
+  // Cigar Shop - Indian Trail, "tobaccoshop.com" for The Tobacco Shop of
+  // Ridgewood. Every word of those names is a trade word, so nothing else can
+  // confirm them.
+  const domainIsTheName = (() => {
+    if (stem.length < 6) return false;
+    const tokens = String(store.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ').filter(Boolean);
+    const variants = [tokens, tokens.filter(w => w !== 'the'), tokens.filter(w => !town.has(w)),
+      tokens.filter(w => w !== 'the' && !town.has(w))];
+    return variants.some(v => v.join('').startsWith(stem));
+  })();
+
+  if (own.length) {
+    if (own.some(inText)) return true;
+    // Two of the name's own words in the domain, the town counting as one of
+    // them: "tampasweethearts.com" holds both halves of Tampa Sweethearts.
+    if (allWords.filter(inDomain).length >= 2) return true;
+    const hits = own.filter(inDomain);
+    // One distinctive word, beside something that ties the domain to this shop
+    // rather than to any shop: a trade word, the town, or the fact that the
+    // domain opens with that word.
+    if (hits.length >= 1 && (domainHasTrade || townInDomain || hits.some(w => stem.startsWith(w)))) return true;
+    return domainIsTheName;
+  }
+  // Every distinctive word in the name is the town's. The page text cannot help
+  // — every business in the town says the town — so the domain has to. This is
+  // what stopped Tobacco Den Brainerd taking its hours from brainerdglass.net.
+  return (townInDomain && domainHasTrade) || domainIsTheName;
 }
 
 /** Does the text around these lines say they are phone or web-shop hours? */
@@ -346,6 +399,128 @@ function phoneHours(lines, from, to) {
   const window = lines.slice(Math.max(0, from - 2), Math.min(lines.length, to + 2)).join(' ');
   if (STORE_CONTEXT.test(window)) return false;
   return PHONE_CONTEXT.test(window) || TIME_ZONE.test(window);
+}
+
+// ── the four refusals the hours re-audit added ──────────────────────────────
+
+/** A desk, not a shop floor. */
+const DESK_CONTEXT = /\b(working hours|office|support|customer (service|care)|fax|orders?|order desk|corporate|headquarters|head office|administration|admin|billing|accounts|reception|by appointment only|wholesale)\b/i;
+
+/**
+ * A Monday-to-Friday nine-to-five is what a desk keeps, not a cigar shop: a
+ * shop that shuts at five and never opens at the weekend is rare enough that,
+ * next to the word "office" or "support", the block is almost always the
+ * company's phone line. One of these published a Hong Kong support team's
+ * hours as a San Francisco shop's.
+ */
+function isDeskWeek(hours) {
+  const weekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  const days = Object.keys(hours || {});
+  // Monday to Friday only, or Monday to Friday with the weekend marked shut.
+  const open = days.filter(d => hours[d] !== 'Closed');
+  if (open.length !== 5 || !weekday.every(d => hours[d] && hours[d] !== 'Closed')) return false;
+  return weekday.every(d => /^(8|9)am-5pm$/.test(hours[d]));
+}
+
+function officeHours(hours, lines, from, to) {
+  if (!isDeskWeek(hours)) return false;
+  const window = lines.slice(Math.max(0, from - 3), Math.min(lines.length, to + 3)).join(' ');
+  if (STORE_CONTEXT.test(window)) return false;
+  return DESK_CONTEXT.test(window);
+}
+
+/**
+ * The same question for markup, which has no lines around it to read. A
+ * LocalBusiness block stating a desk's week, on a page that talks about a desk
+ * and never about a shop floor, is the company's phone line — one of these was
+ * a Hong Kong support team published as a San Francisco shop's hours.
+ */
+function officeHoursInMarkup(hours, ev) {
+  if (!isDeskWeek(hours)) return false;
+  const page = (ev.text || []).flatMap(t => t.lines || []).join(' ');
+  if (STORE_CONTEXT.test(page)) return false;
+  return DESK_CONTEXT.test(page);
+}
+
+/**
+ * The hours of the building, not of the shop inside it. A tobacconist in a
+ * casino or a shopping centre picks up its host's block, which is usually much
+ * longer than the shop's own day.
+ */
+const HOST_VENUE = /\b(casino|convenience store|gas station|travel (plaza|center|centre)|truck stop|mall hours|the mall|shopping (mall|cent(er|re))|food court|airport|terminal|hotel (lobby|front desk)|grocery|supermarket)\b/i;
+
+function hostVenueHours(lines, from, to) {
+  const window = lines.slice(Math.max(0, from - 3), Math.min(lines.length, to + 3)).join(' ');
+  // "Our shop is in the Grand Casino" is an address, not a schedule heading.
+  // A heading is what sits directly above the times.
+  const heading = lines.slice(Math.max(0, from - 3), from + 1).join(' ');
+  if (STORE_CONTEXT.test(heading)) return false;
+  return HOST_VENUE.test(heading) && /\bhours?\b/i.test(window);
+}
+
+const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
+  'august', 'september', 'october', 'november', 'december'];
+
+/**
+ * A schedule labelled with a season that today is not in. "Summer Hours:
+ * Memorial Day through Labor Day" is last year's block still on the page, and
+ * publishing it in December sends people to a shut door.
+ *
+ * Only a named season with a stated span counts. A bare "Summer Hours" with no
+ * dates is left alone: plenty of shops never take the heading down and the
+ * hours under it are still current.
+ */
+function seasonExcludesToday(lines, from, to, now = new Date()) {
+  const window = lines.slice(Math.max(0, from - 3), Math.min(lines.length, to + 2)).join(' ');
+  if (!/\b(summer|winter|spring|fall|autumn|holiday|seasonal)\s+(hours|schedule)\b/i.test(window)) return false;
+  const month = now.getMonth();          // 0-11
+  const day = now.getDate();
+  const at = m => MONTHS.indexOf(m.toLowerCase());
+
+  // An explicit span: "May 1 - September 30", "November - March".
+  const span = /\b(january|february|march|april|may|june|july|august|september|october|november|december)\s*(\d{1,2})?\s*(?:-|to|through|thru|until)\s*(january|february|march|april|may|june|july|august|september|october|november|december)\s*(\d{1,2})?/i.exec(window);
+  if (span) {
+    const a = at(span[1]), b = at(span[3]);
+    const aDay = span[2] ? Number(span[2]) : 1;
+    const bDay = span[4] ? Number(span[4]) : 31;
+    const after = month > a || (month === a && day >= aDay);
+    const before = month < b || (month === b && day <= bDay);
+    // A span that wraps the new year ("November - March") is inside when it is
+    // after the start OR before the end.
+    const inside = a <= b ? (after && before) : (after || before);
+    return !inside;
+  }
+  // The American summer season, named by its holidays.
+  if (/memorial day\s*(?:-|to|through|thru|until)\s*labor day/i.test(window)) {
+    return !(month > 4 || (month === 4 && day >= 25)) || month > 8;
+  }
+  return false;
+}
+
+/**
+ * A town name in a heading between this listing's address and its hours. On a
+ * chain's page the blocks run "Miami / 123 Main St / Hours ... / Palm Beach
+ * Gardens / 456 PGA Blvd / Hours ...", and a heading naming another town
+ * between our door and the times means the times belong to that town.
+ */
+const TOWN_HEADING = /^\s*([A-Za-z][A-Za-z .'-]{2,30})(?:,\s*([A-Z]{2}))?\s*$/;
+
+function otherTownHeading(seg, store) {
+  const ourCity = String(store.city || '').toLowerCase().trim();
+  if (!ourCity) return false;
+  for (const line of seg) {
+    const raw = String(line || '').trim();
+    if (raw.length > 34 || /\d/.test(raw)) continue;             // not a bare heading
+    const m = TOWN_HEADING.exec(raw);
+    if (!m) continue;
+    const town = m[1].toLowerCase().trim();
+    if (town === ourCity) return false;                          // our own heading: stop looking
+    // Only a word that is plausibly a place, not "Hours" or "Contact Us".
+    if (/^(hours?|open|closed|contact|about|visit|location|address|phone|store hours|our hours|directions|menu|home|shop|events?)$/i.test(town)) continue;
+    // A two-letter state after it makes it certainly a place.
+    if (m[2]) return true;
+  }
+  return false;
 }
 
 /** Hours printed on the site's pages, anchored to this listing where possible. */
@@ -374,7 +549,16 @@ function textCandidates(ev, store) {
           seg.push(lines[i]);
         }
         const r = parseTextHours(seg);
-        if (r && !r.conflicts && describe(r.hours).days >= 3 && describe(r.hours).open && !phoneHours(lines, at + 1, at + 1 + seg.length)) {
+        const end = at + 1 + seg.length;
+        if (r && !r.conflicts && describe(r.hours).days >= 3 && describe(r.hours).open
+          && !phoneHours(lines, at + 1, end)
+          // Another town's heading between our door and the times means the
+          // times are that town's: on a chain page the blocks run address,
+          // hours, next town, next address, next hours.
+          && !otherTownHeading(seg, store)
+          && !officeHours(r.hours, lines, at + 1, end)
+          && !hostVenueHours(lines, at + 1, end)
+          && !seasonExcludesToday(lines, at + 1, end)) {
           anchored.push({ hours: r.hours, kind: 'text-at-address', url: block.url, lines: [lines[at], ...seg] });
         }
       }
@@ -404,6 +588,10 @@ function textCandidates(ev, store) {
     if (r && r.conflicts) contradicted++;
     if (!r || r.conflicts || describe(r.hours).days < 3 || !describe(r.hours).open) continue;
     if (phoneHours(lines, from, to)) continue;
+    // A desk's week, a host building's day, or last season's block.
+    if (officeHours(r.hours, lines, from, to)) continue;
+    if (hostVenueHours(lines, from, to)) continue;
+    if (seasonExcludesToday(lines, from, to)) continue;
     loose.push({ hours: r.hours, kind: 'text', url: block.url, lines: lines.slice(Math.max(0, from - 2), to + 2) });
   }
   return { anchored, loose, contradicted };
@@ -458,6 +646,18 @@ function decide(ev, store, siblings) {
   //    page changed; where they disagree, the page a customer reads wins.
   const atAddress = structured.filter(c => c.addressKey && key && c.addressKey === key);
   if (atAddress.length) {
+    // Two markup blocks on one street number that state different hours are two
+    // businesses in two suites — Don Juan Cigar Company in Ste 170 and Don Juan
+    // Cigar Bar in Ste 160 — and addressKey cannot tell them apart. Picking the
+    // first gave the shop the lounge's two-in-the-afternoon-to-midnight day.
+    const distinctAtAddress = atAddress.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i);
+    if (distinctAtAddress.length > 1) {
+      // There is no tie-breaker here. The visible text is as likely to be the
+      // other business's as ours — at 7539 Corporate Blvd it was the lounge's,
+      // and preferring it published the shop as opening at two in the
+      // afternoon. When two businesses share a street number, we do not know.
+      return { skip: 'two businesses at this street number state different hours' };
+    }
     if (siblings <= 1 && looseDistinct.length === 1 && !same(looseDistinct[0].hours, atAddress[0].hours)) {
       return { hours: looseDistinct[0].hours, kind: 'text-over-markup', url: looseDistinct[0].url, lines: looseDistinct[0].lines };
     }
@@ -485,6 +685,9 @@ function decide(ev, store, siblings) {
   const unaddressed = structured.filter(c => !c.addressKey);
   const unaddressedDistinct = unaddressed.filter((c, i, a) => a.findIndex(x => same(x.hours, c.hours)) === i);
   if (unaddressedDistinct.length === 1 && !addressedElsewhere.length) {
+    if (officeHoursInMarkup(unaddressedDistinct[0].hours, ev)) {
+      return { skip: 'markup stating a desk\'s week on a page that only talks about a desk' };
+    }
     return { hours: unaddressedDistinct[0].hours, kind: 'markup' };
   }
   return { skip: structured.length ? 'markup that cannot be tied to this shop' : 'no hours found' };
@@ -873,6 +1076,7 @@ function decideChainListing(store, pages) {
 module.exports = {
   collect, collectOne, pageText, hoursSnippets, jsonLdBlocks, microdataHours, metaImage, candidateLinks,
   decide, decideAll, applyDecisions, structuredCandidates, textCandidates, phoneHours,
+  mentionsShop, officeHours, officeHoursInMarkup, isDeskWeek, hostVenueHours, seasonExcludesToday, otherTownHeading,
   collectChains, sitemapUrls, pageEvidence, wpslPages, decideChainListing, pageKey, NOT_THE_SHOPS_SITE,
 };
 
@@ -935,6 +1139,82 @@ function selfTest() {
 
   ok(lineAddressKey('Call (201) 934-1142 or email us') === null && lineAddressKey('Open 365 days!') === null, 'a phone tail and a day count are not streets');
   ok(lineAddressKey('735 Rt 17 S, Ramsey NJ') !== null && lineAddressKey('1600 Broadway, Sacramento') === '1600 broadway', 'real streets still are');
+
+  // ── does the site speak about this shop? ───────────────────────────────────
+  const site = (url, lines) => ({ ok: true, url, jsonld: [], microdata: [], text: [{ url, lines }] });
+
+  // The failure this rule exists for: a shop named after its town taking its
+  // hours from a glass company in the same town.
+  ok(!mentionsShop(site('https://brainerdglass.net/', ['Brainerd, MN', 'Mon-Fri 8-5']),
+    { name: 'Tobacco Den Brainerd', city: 'Brainerd' }),
+    'a glass company in the same town is not the shop');
+  ok(!mentionsShop(site('https://groutmasters.com/', ['Livonia MI', 'Mon-Fri 9-5']),
+    { name: 'Tobacco Master', city: 'Livonia' }),
+    'and a grout company is not Tobacco Master');
+  ok(!mentionsShop(site('https://oceandrivecigars.com/contact/', ['Miami Beach', 'Mon-Sun 10-10']),
+    { name: 'Casillas Cigars', city: 'Miami Beach' }),
+    "and another shop's site is not this shop's, however much cigar is in the domain");
+
+  // Whole words: this is what "Ash" matching "cash" used to do.
+  ok(!mentionsShop(site('https://example.com/', ['We take cash only', 'Mon-Fri 10-6']),
+    { name: 'Ash Cigar Lounge', city: 'Dayton' }),
+    '"Ash" does not match "cash"');
+  ok(mentionsShop(site('https://example.com/', ['Welcome to Ash Cigar Lounge', 'Mon-Fri 10-6']),
+    { name: 'Ash Cigar Lounge', city: 'Dayton' }),
+    'but it does match "Ash"');
+
+  // The eleven real shops the first, stricter version refused. Every one of
+  // these is a shop on its own domain.
+  for (const [name, city, url] of [
+    ['Tampa Sweethearts Cigar Co', 'Tampa', 'https://www.tampasweethearts.com/location.aspx'],
+    ['Prohibition - Private Cigar Lounge', 'Corpus Christi', 'https://prohibitioncorpus.com/'],
+    ["GarVino's Cigars", 'The Villages', 'http://www.garvinos.com/'],
+    ['The Cigar Room Guntersville', 'Guntersville', 'https://www.cigarroom.net/'],
+    ['The Cigar Shop - Indian Trail', 'Indian Trail', 'https://www.thecigarshop.com/locations/x'],
+    ['The Tobacco Shop of Ridgewood', 'Ridgewood', 'https://www.tobaccoshop.com/'],
+    ['AP Cigar Co. Alton', 'Alton', 'https://www.apcigar.co/a/locations/hours'],
+    ["Lefty's Tobacco East Hamilton #3", 'Hamilton', 'https://www.leftysplus.com/'],
+    ['1865 Steak Seafood & Cigars', 'Washington', 'https://1865ssc.com/'],
+  ]) {
+    ok(mentionsShop(site(url, ['Hours', 'Mon-Fri 10-6']), { name, city }),
+      `${name} is confirmed by its own domain`);
+  }
+
+  // ── a desk's week is not a shop's ─────────────────────────────────────────
+  const deskWeek = { Mon: '8am-5pm', Tue: '8am-5pm', Wed: '8am-5pm', Thu: '8am-5pm', Fri: '8am-5pm' };
+  const deskLines = ['+852 2652 4585', 'Our Working Hours:', 'Monday to Friday', '8:00 am - 17:00 pm (UTC -6)'];
+  ok(officeHours(deskWeek, deskLines, 1, 3), 'a support desk\'s Monday-to-Friday eight-to-five is refused');
+  ok(!officeHours(deskWeek, ['Store Hours', 'Monday to Friday', '8:00 am - 5:00 pm'], 0, 2),
+    'but the same block under "Store Hours" is the shop\'s');
+  ok(!officeHours({ ...deskWeek, Sat: '10am-4pm' }, deskLines, 1, 3),
+    'and a block that includes Saturday is not a desk\'s week');
+  ok(!officeHours({ Mon: '10am-7pm', Tue: '10am-7pm', Wed: '10am-7pm', Thu: '10am-7pm', Fri: '10am-7pm' }, deskLines, 1, 3),
+    'nor is a ten-to-seven weekday shop');
+  ok(officeHoursInMarkup(deskWeek, { text: [{ lines: deskLines }] }), 'markup stating a desk\'s week on a desk\'s page is refused too');
+  ok(!officeHoursInMarkup(deskWeek, { text: [{ lines: ['Store Hours', 'Come and visit us'] }] }), 'and is not when the page talks about a shop');
+
+  // ── the host building's hours ─────────────────────────────────────────────
+  ok(hostVenueHours(['Grand Casino Hours', 'Open 24 hours', 'Mon-Sun 12am-12am'], 2, 2),
+    "a casino's block is the building's hours, not the shop's");
+  ok(!hostVenueHours(['We are inside the Grand Casino', 'Store Hours', 'Mon-Sat 10am-8pm'], 2, 2),
+    'but a shop that says it is in a casino still has its own hours');
+
+  // ── last season's block ───────────────────────────────────────────────────
+  const july = new Date('2026-07-15T12:00:00Z'), december = new Date('2026-12-15T12:00:00Z');
+  const summer = ['Summer Hours: May 1 - September 30', 'Mon-Sun 10am-9pm'];
+  ok(seasonExcludesToday(summer, 1, 1, december), 'a summer schedule is refused in December');
+  ok(!seasonExcludesToday(summer, 1, 1, july), 'and kept in July');
+  const winter = ['Winter Hours: November - March', 'Mon-Sun 11am-6pm'];
+  ok(!seasonExcludesToday(winter, 1, 1, december), 'a season that wraps the new year is inside it in December');
+  ok(seasonExcludesToday(winter, 1, 1, july), 'and outside it in July');
+  ok(!seasonExcludesToday(['Summer Hours', 'Mon-Sun 10am-9pm'], 1, 1, december),
+    'but a season heading with no dates is left alone — plenty of shops never take it down');
+
+  // ── another town's heading between the door and the times ─────────────────
+  ok(otherTownHeading(['Palm Beach Gardens, FL', 'Hours', 'Mon-Fri 10am-9pm'], { city: 'Miami' }),
+    "a sibling town's heading means the times are that town's");
+  ok(!otherTownHeading(['Hours', 'Mon-Fri 10am-9pm'], { city: 'Miami' }), 'and a plain Hours heading means nothing of the kind');
+  ok(!otherTownHeading(['Miami, FL', 'Hours', 'Mon-Fri 10am-9pm'], { city: 'Miami' }), 'nor does our own town');
 
   console.log(`hoursSweep self-test: ${pass} passed, ${fail} failed`);
   return fail === 0;

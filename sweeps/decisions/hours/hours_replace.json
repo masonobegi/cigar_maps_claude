@@ -1,0 +1,331 @@
+{
+ "note": "Schedules the tightened rules read differently from the same saved evidence. was_lines and now_lines are what each reading rests on.",
+ "generated_at": "2026-09-12T04:32:53.277Z",
+ "count": 8,
+ "rows": [
+  {
+   "id": 3032,
+   "name": "Bright fire cigars",
+   "city": "Liberty Hill",
+   "state": "TX",
+   "website": "https://brightfirecigars.com/",
+   "was": {
+    "Mon": "Closed",
+    "Tue": "11am-7:30pm",
+    "Wed": "11am-7:30pm",
+    "Thu": "11am-7:30pm",
+    "Fri": "11am-7:30pm",
+    "Sat": "11am-7:30pm",
+    "Sun": "Closed"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "now": {
+    "Mon": "Closed",
+    "Tue": "11am-7:30pm",
+    "Wed": "11am-7:30pm",
+    "Thu": "11am-7:30pm"
+   },
+   "now_kind": "text-over-markup",
+   "now_lines": [
+    "(512) 548-5388",
+    "Hours",
+    "Mon",
+    "Closed",
+    "Tue",
+    "11:00 am – 07:30 pm",
+    "Wed",
+    "11:00 am – 07:30 pm",
+    "Thu",
+    "11:00 am – 07:30 pm",
+    "Fri"
+   ]
+  },
+  {
+   "id": 6839,
+   "name": "Billows Cigar Haven",
+   "city": "Albany",
+   "state": "GA",
+   "website": "https://www.billowscigarhaven.com/",
+   "was": {
+    "Mon": "4pm-10pm",
+    "Tue": "4pm-10pm",
+    "Wed": "4pm-10pm",
+    "Thu": "4pm-11pm",
+    "Fri": "4pm-12am",
+    "Sat": "4am-12am"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "hours of operation:",
+    "​",
+    "Monday 4PM - 10PM",
+    "Tuesday 4PM - 10PM",
+    "Wednesday 4PM - 10PM",
+    "Thursday 4PM - 11PM",
+    "Friday 4PM - 12AM",
+    "Saturday 4AM - 12AM",
+    "FOLLOW US"
+   ],
+   "now": {
+    "Mon": "4pm-10pm",
+    "Tue": "4pm-10pm",
+    "Wed": "4pm-10pm",
+    "Thu": "4pm-11pm",
+    "Fri": "4pm-12am"
+   },
+   "now_kind": "text",
+   "now_lines": [
+    "hours of operation:",
+    "​",
+    "Monday 4PM - 10PM",
+    "Tuesday 4PM - 10PM",
+    "Wednesday 4PM - 10PM",
+    "Thursday 4PM - 11PM",
+    "Friday 4PM - 12AM",
+    "Saturday 4AM - 12AM",
+    "FOLLOW US"
+   ]
+  },
+  {
+   "id": 9363,
+   "name": "En Fuego Cigars & Lounge",
+   "city": "Las Vegas",
+   "state": "NV",
+   "website": "https://www.enfuegolasvegas.com/",
+   "was": {
+    "Mon": "9am-10pm",
+    "Tue": "9am-10pm",
+    "Wed": "9am-10pm",
+    "Thu": "9am-10pm",
+    "Fri": "9am-12am",
+    "Sat": "10am-12am",
+    "Sun": "10am-9pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "now": {
+    "Mon": "9am-10pm",
+    "Tue": "9am-10pm",
+    "Wed": "9am-10pm",
+    "Thu": "9am-10pm",
+    "Fri": "9am-12am",
+    "Sat": "9am-12am",
+    "Sun": "9am-9pm"
+   },
+   "now_kind": "text-over-markup",
+   "now_lines": [
+    "Google Maps (click here)",
+    "Hours",
+    "Monday:   9:00 am – 10:00 pm",
+    "Tuesday:   9:00 am – 10:00 pm",
+    "Wednesday:   9:00 am – 10:00 pm",
+    "Thursday: 9:00 am – 10:00 pm",
+    "Friday: 9:00 am – Midnight",
+    "Saturday: 9:00 am – Midnight",
+    "Sunday: 9:00 am – 9:00 pm",
+    "BUY CIGARS"
+   ]
+  },
+  {
+   "id": 9843,
+   "name": "Skookum Creek Cigar Lounge",
+   "city": "Shelton",
+   "state": "WA",
+   "website": "https://littlecreek.com/",
+   "was": {
+    "Mon": "8am-3am",
+    "Tue": "8am-3am",
+    "Wed": "8am-3am",
+    "Thu": "8am-3am",
+    "Fri": "8am-4am",
+    "Sat": "8am-4am",
+    "Sun": "8am-3am"
+   },
+   "was_kind": "text-over-markup",
+   "was_lines": [
+    "Toll Free: 1-800-667-7711",
+    "Casino Hours",
+    "8am - 3am | SUNDAY - THURSDAY",
+    "8AM - 4AM | FRIDAY - saturday",
+    "Follow"
+   ],
+   "now": {
+    "Mon": "9am-6pm",
+    "Tue": "9am-6pm",
+    "Wed": "9am-6pm",
+    "Thu": "9am-6pm",
+    "Fri": "9am-6pm"
+   },
+   "now_kind": "markup-at-address",
+   "now_lines": null
+  },
+  {
+   "id": 9541,
+   "name": "Maine Street Cigar Company",
+   "city": "Fallon",
+   "state": "NV",
+   "website": "https://mainestreetcigar.com/cigar-shop-fallon-contact/",
+   "was": {
+    "Mon": "12pm-6pm",
+    "Tue": "12pm-6pm",
+    "Wed": "12pm-6pm",
+    "Thu": "12pm-6pm",
+    "Fri": "12pm-6pm",
+    "Sat": "12pm-5pm",
+    "Sun": "Closed"
+   },
+   "was_kind": "text-at-address",
+   "was_lines": [
+    "Located at 83 South Maine Street in downtown Fallon",
+    "Summer/Fall Hours",
+    "Monday-Thursday 12pm-6pm",
+    "Friday 12pm-6pm & 7pm-10pm",
+    "Saturday 12pm-5pm",
+    "Closed Sunday",
+    "Call anytime at 775-302-8773 or email: sales@mainestreetcigar.com",
+    "Hours"
+   ],
+   "now": {
+    "Mon": "12pm-6pm",
+    "Tue": "12pm-6pm",
+    "Wed": "12pm-6pm",
+    "Thu": "12pm-6pm",
+    "Fri": "12pm-10pm",
+    "Sat": "12pm-5pm",
+    "Sun": "Closed"
+   },
+   "now_kind": "text-at-address",
+   "now_lines": [
+    "Located at 83 South Maine Street in downtown Fallon",
+    "Summer/Fall Hours",
+    "Monday-Thursday 12pm-6pm",
+    "Friday 12pm-6pm & 7pm-10pm",
+    "Saturday 12pm-5pm",
+    "Closed Sunday",
+    "Call anytime at 775-302-8773 or email: sales@mainestreetcigar.com",
+    "Hours"
+   ]
+  },
+  {
+   "id": 20766,
+   "name": "Kay's Cigar Sensations",
+   "city": "Glenside",
+   "state": "PA",
+   "website": "https://www.kcigarsensations.com/",
+   "was": {
+    "Mon": "4am-12pm",
+    "Tue": "4pm-9pm",
+    "Wed": "4pm-9pm",
+    "Sun": "12pm-10pm"
+   },
+   "was_kind": "text-at-address",
+   "was_lines": [
+    "280 N. Keswick Ave, Glenside PA. 19038",
+    "Phone: 267-287-8161",
+    "Kcigarsensationsllc@gmail.com",
+    "September - April",
+    "May- August",
+    "Sunday 12 pm-10 pm 12 pm - 9 pm",
+    "Monday 4 pm - 12 pm 4 pm - 9 pm",
+    "Tuesday 4 pm - 9 pm 4 pm - 9 pm Wednesday 4 pm - 9 pm 4 pm - 9 pm"
+   ],
+   "now": {
+    "Mon": "4pm-9pm",
+    "Tue": "4pm-9pm",
+    "Wed": "4pm-9pm",
+    "Sun": "12pm-9pm"
+   },
+   "now_kind": "text-at-address",
+   "now_lines": [
+    "280 N. Keswick Ave, Glenside PA. 19038",
+    "Phone: 267-287-8161",
+    "Kcigarsensationsllc@gmail.com",
+    "September - April",
+    "May- August",
+    "Sunday 12 pm-10 pm 12 pm - 9 pm",
+    "Monday 4 pm - 12 pm 4 pm - 9 pm",
+    "Tuesday 4 pm - 9 pm 4 pm - 9 pm Wednesday 4 pm - 9 pm 4 pm - 9 pm"
+   ]
+  },
+  {
+   "id": 21667,
+   "name": "The Tobacco Shop of Ridgewood",
+   "city": "Ridgewood",
+   "state": "NJ",
+   "website": "https://www.tobaccoshop.com/",
+   "was": {
+    "Mon": "11am-7pm",
+    "Tue": "11am-7pm",
+    "Wed": "11am-7pm",
+    "Thu": "11am-7pm",
+    "Fri": "11am-7pm",
+    "Sat": "11am-7pm",
+    "Sun": "Closed"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "now": {
+    "Mon": "11am-7pm",
+    "Tue": "11am-7pm",
+    "Wed": "11am-7pm",
+    "Thu": "11am-7pm",
+    "Fri": "11am-7pm",
+    "Sat": "11am-7pm"
+   },
+   "now_kind": "text-over-markup",
+   "now_lines": [
+    "Contact Us",
+    "Hours:",
+    "Monday - Saturday",
+    "11:00 am - 7:00 pm",
+    "Address :"
+   ]
+  },
+  {
+   "id": 40524,
+   "name": "1865 Steak Seafood & Cigars",
+   "city": "Washington",
+   "state": "DC",
+   "website": "https://1865ssc.com/",
+   "was": {
+    "Mon": "Closed",
+    "Tue": "Closed",
+    "Wed": "3pm-12am",
+    "Thu": "3pm-12am",
+    "Fri": "11am-2am",
+    "Sat": "11am-2am",
+    "Sun": "11am-12pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "Hours",
+    "Summer Schedule---",
+    "Monday & Tuesday: CLOSED",
+    "Wednesday & Thursday: 3:00 pm - 12:00 am",
+    "Friday - Saturday: 11:00 am - 2:00 am",
+    "Sunday: 11:00 am - 12: 00 am",
+    "Find us on..."
+   ],
+   "now": {
+    "Mon": "Closed",
+    "Tue": "Closed",
+    "Wed": "3pm-12am",
+    "Thu": "3pm-12am",
+    "Fri": "11am-2am",
+    "Sat": "11am-2am",
+    "Sun": "11am-12am"
+   },
+   "now_kind": "text",
+   "now_lines": [
+    "Hours",
+    "Summer Schedule---",
+    "Monday & Tuesday: CLOSED",
+    "Wednesday & Thursday: 3:00 pm - 12:00 am",
+    "Friday - Saturday: 11:00 am - 2:00 am",
+    "Sunday: 11:00 am - 12: 00 am",
+    "Find us on..."
+   ]
+  }
+ ]
+}

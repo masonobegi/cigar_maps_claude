@@ -1,0 +1,364 @@
+{
+ "note": "Listings whose site did not answer when the crawl ran. Nothing to do: the hours we already hold still stand. Here so that nobody mistakes them for refusals.",
+ "generated_at": "2026-09-12T04:32:53.277Z",
+ "count": 16,
+ "rows": [
+  {
+   "id": 5709,
+   "name": "The Craft Cigar Company",
+   "city": "Cypress",
+   "state": "TX",
+   "website": "https://www.cigarshopcypress.com/",
+   "was": {
+    "Mon": "11am-8pm",
+    "Tue": "11am-8pm",
+    "Wed": "11am-8pm",
+    "Thu": "11am-8pm",
+    "Fri": "11am-9pm",
+    "Sat": "11am-9pm",
+    "Sun": "12pm-6pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 6002,
+   "name": "Cigar Merchant LLC",
+   "city": "Lafayette",
+   "state": "LA",
+   "website": "https://www.cigarmerchantlafayette.com/",
+   "was": {
+    "Mon": "9:30am-6pm",
+    "Tue": "9:30am-6pm",
+    "Wed": "9:30am-6pm",
+    "Thu": "9:30am-6pm",
+    "Fri": "9:30am-6pm",
+    "Sat": "10am-4pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 6081,
+   "name": "Roz's Cigar Emporium",
+   "city": "Ocala",
+   "state": "FL",
+   "website": "https://www.rozcigars.com/",
+   "was": {
+    "Mon": "10am-7pm",
+    "Tue": "10am-7pm",
+    "Wed": "10am-7pm",
+    "Thu": "10am-7pm",
+    "Fri": "10am-7pm",
+    "Sat": "10am-7pm",
+    "Sun": "12pm-4pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 6082,
+   "name": "Roz's Cigar Emporium",
+   "city": "Ocala",
+   "state": "FL",
+   "website": "https://www.rozcigars.com/",
+   "was": {
+    "Mon": "10am-7pm",
+    "Tue": "10am-7pm",
+    "Wed": "10am-7pm",
+    "Thu": "10am-7pm",
+    "Fri": "10am-7pm",
+    "Sat": "10am-7pm",
+    "Sun": "12pm-4pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 6788,
+   "name": "Gulf Wind Cigars",
+   "city": "Santa Rosa Beach",
+   "state": "FL",
+   "website": "https://www.gulfwindcigars.com/",
+   "was": {
+    "Mon": "10am-9pm",
+    "Tue": "10am-9pm",
+    "Wed": "10am-9pm",
+    "Thu": "10am-9pm",
+    "Fri": "10am-9pm",
+    "Sat": "10am-9pm",
+    "Sun": "11:30am-7pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 8218,
+   "name": "The Chateau Cigar Lounge",
+   "city": "Johns Creek",
+   "state": "GA",
+   "website": "https://thechateaucigarlounge.com/",
+   "was": {
+    "Mon": "11am-10pm",
+    "Tue": "11am-10pm",
+    "Wed": "11am-10pm",
+    "Thu": "11am-11pm",
+    "Fri": "11am-11pm",
+    "Sat": "11am-11pm",
+    "Sun": "12pm-8pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "Johns Creek, GA",
+    "Hours",
+    "Monday – Wednesday: 11 a.m. to 10 p.m",
+    "Thursday – Saturday: 11 a.m. to 11 p.m",
+    "Sunday: 12 p.m. – 8 p.m.",
+    "9700 Medlock Bridge Road, Suite 114, Johns Creek, GA"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 9857,
+   "name": "Cigars On 7th",
+   "city": "Eugene",
+   "state": "OR",
+   "website": "https://www.cigarson7th.com/",
+   "was": {
+    "Mon": "10am-7pm",
+    "Tue": "10am-7pm",
+    "Wed": "10am-7pm",
+    "Thu": "10am-7pm",
+    "Fri": "10am-7pm",
+    "Sat": "10am-7pm",
+    "Sun": "10am-3pm"
+   },
+   "was_kind": "text-at-address",
+   "was_lines": [
+    "679 Lincoln street",
+    "Eugene Or 97401",
+    "Hours",
+    "Mon–Sat 10am – 7pm",
+    "Sun 10am – 3pm",
+    "Email",
+    "First Name",
+    "Last name"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 11876,
+   "name": "White River Tobacco Co.",
+   "city": "Eureka Springs",
+   "state": "AR",
+   "website": "https://www.whiterivertobaccoco.com/",
+   "was": {
+    "Mon": "10am-5pm",
+    "Tue": "10am-5pm",
+    "Wed": "10am-5pm",
+    "Thu": "10am-5pm",
+    "Fri": "10am-5pm",
+    "Sat": "10am-5pm",
+    "Sun": "10am-3pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "Proper storage is essential for preserving the integrity and flavor of your collection. We always advise maintaining a consistent environment with controlled humidity and temperature. Without these co",
+    "What are your operating hours on the weekend?",
+    "We know weekends are when most guests finally get a chance to slow down, and we’re here for it. Whether you’re stopping in to browse something new or picking up a favorite, we’ve made sure our schedul",
+    "We’re open Monday through Saturday from 10:00 AM to 5:00 PM, and Sunday from 10:00 AM to 3:00 PM. These hours are designed to give you consistent access throughout the week, with extended weekend avai",
+    "Our space is set up for a relaxed experience, giving you time to explore our selection at your own pace and enjoy a comfortable, welcoming atmosphere every time you stop by."
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 13310,
+   "name": "The Cigar Social USA",
+   "city": "Davenport",
+   "state": "IA",
+   "website": "https://www.thecigarsocialusa.com/",
+   "was": {
+    "Tue": "12pm-9pm",
+    "Wed": "12pm-9pm",
+    "Thu": "12pm-9pm",
+    "Fri": "11am-10pm",
+    "Sat": "11am-10pm",
+    "Sun": "12pm-9pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 14120,
+   "name": "The Cigar Club",
+   "city": "Madison",
+   "state": "TN",
+   "website": "https://www.cigarsnashville.com/",
+   "was": {
+    "Mon": "9am-7pm",
+    "Tue": "9am-7pm",
+    "Wed": "9am-7pm",
+    "Thu": "9am-7pm",
+    "Fri": "9am-7pm",
+    "Sat": "9am-7pm",
+    "Sun": "12pm-6pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 15726,
+   "name": "Old Havana Cigar Shop",
+   "city": "Elmhurst",
+   "state": "IL",
+   "website": "https://www.oldhavanacigarshop.com/",
+   "was": {
+    "Mon": "9am-7pm",
+    "Tue": "9am-7pm",
+    "Wed": "9am-7pm",
+    "Thu": "9am-7pm",
+    "Fri": "9am-7pm",
+    "Sat": "9am-7pm",
+    "Sun": "10am-6pm"
+   },
+   "was_kind": "text-at-address",
+   "was_lines": [
+    "189 E. Butterfield Road, Elmhurst, IL 60126",
+    "Mon-Sat 9am - 7pm, Sun 10am - 6pm",
+    "(331) 225-3579"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 16074,
+   "name": "Appleton Cigar Company",
+   "city": "Appleton",
+   "state": "WI",
+   "website": "https://www.appletoncigar.com/contact-us",
+   "was": {
+    "Mon": "11:30am-10:30pm",
+    "Tue": "11:30am-10:30pm",
+    "Wed": "11:30am-10:30pm",
+    "Thu": "11:30am-10:30pm",
+    "Fri": "11:30am-10:30pm",
+    "Sat": "7am-10:30pm",
+    "Sun": "Closed"
+   },
+   "was_kind": "text-at-address",
+   "was_lines": [
+    "415 W College Ave, Appleton, WI 54911",
+    "Hours",
+    "Monday - Friday 11:30AM to 10:30PM",
+    "Saturday 7:00AM to 10:30PM",
+    "Sunday - Closed",
+    "Address"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 19302,
+   "name": "Butler Cigars & Smoking Lounge",
+   "city": "Butler",
+   "state": "PA",
+   "website": "https://www.butlercigars.com/",
+   "was": {
+    "Mon": "Closed",
+    "Tue": "11am-7pm",
+    "Wed": "11am-7pm",
+    "Thu": "11am-7pm",
+    "Fri": "11am-9pm",
+    "Sat": "11am-7pm",
+    "Sun": "10am-5pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "Map / Driving Directions",
+    "Hours",
+    "Sunday: 10 AM–5 PM",
+    "Monday: Closed",
+    "Tuesday: 11 AM–7 PM",
+    "Wednesday: 11 AM–7 PM",
+    "Thursday: 11 AM–7 PM",
+    "Friday: 11 AM–9 PM",
+    "Saturday: 11 AM–7 PM",
+    "Location"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 19315,
+   "name": "JoVann's Tobacco Shop",
+   "city": "Cleveland",
+   "state": "OH",
+   "website": "https://www.clevelandcigar.net/",
+   "was": {
+    "Mon": "9:30am-7pm",
+    "Tue": "9:30am-7pm",
+    "Wed": "9:30am-7pm",
+    "Thu": "9:30am-7pm",
+    "Fri": "9:30am-7pm",
+    "Sat": "11am-7pm",
+    "Sun": "12pm-4pm"
+   },
+   "was_kind": "markup-at-address",
+   "was_lines": null,
+   "why": "site unreachable"
+  },
+  {
+   "id": 21184,
+   "name": "Joe's Cigars & Social Club",
+   "city": "Spring Lake Heights",
+   "state": "NJ",
+   "website": "https://www.joescigars.com/",
+   "was": {
+    "Mon": "10am-10pm",
+    "Tue": "10am-10pm",
+    "Wed": "10am-10pm",
+    "Thu": "10am-10pm",
+    "Fri": "10am-10pm",
+    "Sat": "10am-9pm",
+    "Sun": "10am-8pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "joescigarsllc@gmail.com",
+    "Business Hours",
+    "Mon - Fri: 10:00 AM - 10:00 PM",
+    "Sat: 10:00 AM - 9:00 PM",
+    "Sun: 10:00 AM - 8:00 PM",
+    "© 2026"
+   ],
+   "why": "site unreachable"
+  },
+  {
+   "id": 21506,
+   "name": "Best Cigar Prices",
+   "city": "Drums",
+   "state": "PA",
+   "website": "https://www.bestcigarprices.com/",
+   "was": {
+    "Mon": "8am-8pm",
+    "Tue": "8am-8pm",
+    "Wed": "8am-8pm",
+    "Thu": "8am-8pm",
+    "Fri": "8am-8pm",
+    "Sat": "9am-5pm",
+    "Sun": "9am-5pm"
+   },
+   "was_kind": "text",
+   "was_lines": [
+    "That’s what we’re here for.",
+    "MON-FRI 8AM-8PM, SAT-SUN 9AM-5PM ET",
+    "Call: 1-888-412-4427, or"
+   ],
+   "why": "site unreachable"
+  }
+ ]
+}

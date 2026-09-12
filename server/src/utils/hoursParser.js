@@ -61,6 +61,12 @@ function sane(open, close) {
   // "12 AM – 10 PM": nobody opens at midnight to close at ten at night; it is
   // noon written the way many people write it.
   if (open === 0 && close >= 13 * 60) open = 12 * 60;
+  // "4 pm - 12 pm": a shop that opens in the afternoon does not close at noon.
+  // The 12 is midnight, written the way a great many people write it. This has
+  // to come before the flip below, which would otherwise read the OPENING as
+  // the mistake and publish "4am-12pm" — a shop open all morning and shut all
+  // evening, which is the opposite of the truth.
+  if (close === 720 && open > 720) close = 1440;
   // "11:00 PM – 5:00 PM": an afternoon close after an evening open is the
   // opening hour flipped. Read it as the morning when that makes a real day.
   if (close < open && close >= 720 && open >= 720 && close - (open - 720) >= 120) open -= 720;
@@ -78,13 +84,21 @@ function sane(open, close) {
   return `${fmt(open)}-${fmt(close)}`;
 }
 
-/** "10:00", "10:00:00", "10:00:00-05:00", "24:00" → minutes. */
+/**
+ * "10:00", "10:00:00", "10:00:00-05:00", "24:00" → minutes.
+ *
+ * Hours past 24 are the extended clock OpenStreetMap uses for a night that runs
+ * into the next day: "Sa 25:00-28:00" is one in the morning to four, and
+ * "Fr 17:00-26:00" is five in the evening to two. These used to come back NaN,
+ * so the whole rule was dropped and a late-opening lounge published nothing.
+ */
 function isoMinutes(s) {
   const m = String(s || '').trim().match(/^(\d{1,2}):(\d{2})/);
   if (!m) return NaN;
   const h = Number(m[1]), mm = Number(m[2]);
-  if (h > 24 || mm > 59) return NaN;
-  return h === 24 ? 0 : h * 60 + mm;
+  if (h > 47 || mm > 59) return NaN;
+  if (h === 24) return 0;
+  return (h >= 24 ? h - 24 : h) * 60 + mm;
 }
 
 // ── OpenStreetMap / schema.org opening_hours strings ─────────────────────────
@@ -110,7 +124,14 @@ function osmDays(spec) {
 /** Times in a rule; split shifts ("10:00-14:00,16:00-20:00") span first open to last close. */
 function osmRange(times) {
   if (/^(off|closed)$/i.test(times.trim())) return 'Closed';
-  const pairs = times.split(',').map(p => p.split('-').map(isoMinutes));
+  let pairs = times.split(',').map(p => p.split('-').map(isoMinutes));
+  // A rule that starts at midnight and ends by 4am, with more to follow, is the
+  // tail of the night before: "Fr 00:00-04:00,17:00-02:00" is a shop open from
+  // five on Friday evening, not one that opens at midnight and shuts at two.
+  // Taking the first open and the last close there gives "12am-2am" — a
+  // twenty-six hour day, published as two hours.
+  if (pairs.length > 1 && pairs[0][0] === 0 && pairs[0][1] > 0 && pairs[0][1] <= 240) pairs = pairs.slice(1);
+  if (!pairs.length) return null;
   const open = pairs[0][0], close = pairs[pairs.length - 1][1];
   return sane(open, close);
 }
@@ -169,6 +190,7 @@ function normText(s) {
     .replace(/ /g, ' ')
     .replace(/(\d)\s*(a|p)\.\s*m\.?/g, '$1$2m')                      // "10a.m" -> "10am"
     .replace(/\b(a|p)\.\s*m\.?/g, '$1m')
+    .replace(/\b(\d{1,2}):\s+(\d{2})\b/g, '$1:$2')                     // "12: 00" → "12:00"
     .replace(/\b(\d{1,2}):\s+(am|pm)\b/g, '$1$2')                    // "12: pm" → "12pm"
     .replace(/(\d\s*)(am|pm)m\b/g, '$1$2')                           // "12pmm" → "12pm"
     .replace(/\b(?:12\s*)?noon\b/g, '12pm')                          // "noon", "12noon"
@@ -202,8 +224,22 @@ const DAY_TOKEN = new RegExp(`\\b(${DAY_ALT})\\.?\\b`, 'g');
 const DAY_TOKEN_AT_START = new RegExp(`^(${DAY_ALT})\\.?\\b`);
 const HAS_RANGE = new RegExp(TIME_RANGE.source);
 
-/** Turn "10" "7" with missing am/pm into a believable 10am-7pm. */
-function inferRange(h1, m1, ap1, h2, m2, ap2) {
+/**
+ * What may sit between two ranges that belong to the same day: a comma, a
+ * slash, an ampersand, "and", "&". Anything with a word in it is a new thought
+ * — "11am-2pm lunch, dinner from 5pm-10pm" is still one day, but
+ * "11am-2pm phone orders 5pm-10pm" is not, and the safe reading of a phrase we
+ * do not recognise is to leave the second range where it was: dropped.
+ */
+const SHIFT_SEPARATOR = /^[\s,;&/·|]*(?:and|&|then|\u2022)?[\s,;&/·|]*$/;
+
+/**
+ * The two endpoints of a written range, in minutes, before sane() judges them.
+ * Kept separate from inferRange so that a day written as two shifts
+ * ("11am-2pm, 5pm-10pm") can be rebuilt from the first opening and the last
+ * close rather than losing everything after the comma.
+ */
+function inferEndpoints(h1, m1, ap1, h2, m2, ap2) {
   const toMin = (h, m, ap) => {
     let hh = Number(h) % 12;
     if (ap === 'pm') hh += 12;
@@ -213,7 +249,7 @@ function inferRange(h1, m1, ap1, h2, m2, ap2) {
     // A 24-hour clock: take the numbers as written, but only when written as
     // times ("10:00-20:00"). A bare "10-20" is as likely a date or a count.
     if (m1 === undefined || m2 === undefined) return null;
-    return sane(Number(h1) * 60 + Number(m1 || 0), (Number(h2) % 24) * 60 + Number(m2 || 0));
+    return { open: Number(h1) * 60 + Number(m1 || 0), close: (Number(h2) % 24) * 60 + Number(m2 || 0) };
   }
   if (!ap1 && !ap2) {
     // Shops open in the morning or at noon and close in the afternoon or evening.
@@ -223,7 +259,13 @@ function inferRange(h1, m1, ap1, h2, m2, ap2) {
   }
   if (!ap1) ap1 = (Number(h1) >= 7 && Number(h1) <= 11) ? 'am' : (ap2 === 'am' ? 'pm' : ap2);
   if (!ap2) ap2 = 'pm';
-  return sane(toMin(h1, m1, ap1), toMin(h2, m2, ap2));
+  return { open: toMin(h1, m1, ap1), close: toMin(h2, m2, ap2) };
+}
+
+/** Turn "10" "7" with missing am/pm into a believable 10am-7pm. */
+function inferRange(h1, m1, ap1, h2, m2, ap2) {
+  const e = inferEndpoints(h1, m1, ap1, h2, m2, ap2);
+  return e ? sane(e.open, e.close) : null;
 }
 
 /** Day indexes a stretch of text names: "mon-fri", "tue, thu & sat", "sat-sun". */
@@ -307,10 +349,27 @@ function parseTextHours(lines) {
     events.sort((a, b) => a.at - b.at);
     let cursor = 0;
     let lineHadDays = false;
+    // The range last assigned on this line, so "Mon 11am-2pm, 5pm-10pm" can be
+    // read as one day that opens at eleven and shuts at ten. Before this, the
+    // second range had no days of its own and was simply lost, and the shop
+    // was published as closing at two in the afternoon.
+    let lastShift = null;
     for (let e = 0; e < events.length; e++) {
       const ev = events[e];
       if (ev.at < cursor) continue;                  // consumed as another range's days
       const before = line.slice(cursor, ev.at);
+      if (ev.kind === 'range' && lastShift && !textDays(before).length && SHIFT_SEPARATOR.test(before)) {
+        const second = inferEndpoints(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
+        const merged = second ? sane(lastShift.open, second.close) : null;
+        if (merged) {
+          // Overwrite rather than assign: the same day already holds the first
+          // shift, and assign() would call the pair a conflict and refuse both.
+          for (const d of lastShift.days) out[DAYS[d]] = merged;
+          lastShift = { days: lastShift.days, open: lastShift.open };
+          cursor = ev.end;
+          continue;
+        }
+      }
       let days = textDays(before);
       if (days.length) lineHadDays = true;
       if (!days.length && carriedDays) days = carriedDays;
@@ -352,10 +411,14 @@ function parseTextHours(lines) {
         continue;
       }
       pendingValue = null;
-      const value = ev.kind === 'closed' ? 'Closed' : inferRange(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
+      const ends = ev.kind === 'range' ? inferEndpoints(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]) : null;
+      const value = ev.kind === 'closed' ? 'Closed' : (ends ? sane(ends.open, ends.close) : null);
       if (value) {
         for (const d of days) assign(d, value);
         rules++;
+        lastShift = ends ? { days, open: ends.open } : null;
+      } else {
+        lastShift = null;
       }
       carriedDays = null;
       cursor = ev.end;
@@ -370,7 +433,48 @@ function parseTextHours(lines) {
     }
     carriedDays = !events.length && tail.length ? tail : (tail.length && !lineHadDays ? tail : null);
   }
+  dropHalfDayOutliers(out);
   return Object.keys(out).length ? { hours: order(out), rules, conflicts } : null;
+}
+
+/** The opening time of "10am-7pm", in minutes, or null for Closed and oddities. */
+function openingMinute(value) {
+  const m = /^(\d{1,2})(?::(\d{2}))?(am|pm)-/.exec(String(value || ''));
+  if (!m) return null;
+  let h = Number(m[1]) % 12;
+  if (m[3] === 'pm') h += 12;
+  return h * 60 + Number(m[2] || 0);
+}
+
+/**
+ * A single day exactly twelve hours out of step with every other is an am/pm
+ * typo, not a night shift: "8am-4pm" six days a week and "8pm-4am" on the
+ * seventh. Both readings are believable on their own, which is why sane()
+ * lets it through, and publishing it tells a customer the shop is open all
+ * night on a Wednesday.
+ *
+ * Deliberately narrow. It needs at least four days that agree with each other
+ * and exactly one that does not, and it makes that day unknown rather than
+ * guessing at what was meant. A shop really open late on one night says so on
+ * more than one day, or differs by something other than exactly twelve hours.
+ */
+function dropHalfDayOutliers(out) {
+  const opens = new Map();
+  for (const d of DAYS) {
+    const o = openingMinute(out[d]);
+    if (o !== null) opens.set(d, o);
+  }
+  if (opens.size < 5) return;
+  const tally = new Map();
+  for (const o of opens.values()) tally.set(o, (tally.get(o) || 0) + 1);
+  const [common, n] = [...tally.entries()].sort((a, b) => b[1] - a[1])[0];
+  if (n < 4) return;
+  const odd = [...opens].filter(([, o]) => Math.abs(o - common) === 720);
+  // Exactly one. Two days twelve hours out of step with the rest is a shop that
+  // really is open late at weekends, and dropping those would be the same
+  // mistake in the other direction.
+  if (odd.length !== 1) return;
+  delete out[odd[0][0]];
 }
 
 // ── Shared ───────────────────────────────────────────────────────────────────
@@ -407,7 +511,8 @@ function describe(hours) {
   return { days: vals.length, open: vals.filter(v => v !== 'Closed').length };
 }
 
-module.exports = { parseOpeningHoursString, parseSpecification, parseTextHours, fillClosedPerSpec, normText, sane, fmt, describe, DAYS };
+module.exports = { parseOpeningHoursString, parseSpecification, parseTextHours, fillClosedPerSpec,
+  normText, sane, fmt, describe, inferEndpoints, openingMinute, dropHalfDayOutliers, DAYS };
 
 // ── Self-test ────────────────────────────────────────────────────────────────
 if (require.main === module) {
@@ -552,6 +657,45 @@ if (require.main === module) {
   ok(r === null, 'a price is not hours', r);
   r = parseTextHours(['Established 2008. Over 200 cigars in our walk-in humidor.']);
   ok(r === null, 'prose is not hours', r);
+
+  // ── the six the hours re-audit was asked to fix ─────────────────────────────
+
+  // 1. A day written as two shifts. Only the first used to be read, so a shop
+  //    open until ten at night was published as shutting at two in the
+  //    afternoon.
+  r = parseTextHours(['Mon-Fri 11am-2pm, 5pm-10pm']);
+  ok(r && r.hours.Mon === '11am-10pm' && r.hours.Fri === '11am-10pm', 'a day written as two shifts runs from the first opening to the last close', r && r.hours);
+  r = parseTextHours(['Sat 12pm-3pm and 6pm-11pm']);
+  ok(r && r.hours.Sat === '12pm-11pm', '"and" joins two shifts as well as a comma', r && r.hours);
+  r = parseTextHours(['Mon 11am-2pm phone orders 5pm-10pm']);
+  ok(r && r.hours.Mon === '11am-2pm', 'but words between two ranges mean they are not one day', r && r.hours);
+
+  // 2. The midnight-to-four segment belongs to the night before.
+  ok(JSON.stringify(parseOpeningHoursString('Fr 00:00-04:00,17:00-02:00')) === '{"Fri":"5pm-2am"}',
+    'a leading midnight-to-four segment is last night, not this morning', parseOpeningHoursString('Fr 00:00-04:00,17:00-02:00'));
+
+  // 3. The extended clock.
+  ok(JSON.stringify(parseOpeningHoursString('Sa 25:00-28:00')) === '{"Sat":"1am-4am"}', '25:00-28:00 is one in the morning to four');
+  ok(JSON.stringify(parseOpeningHoursString('Fr 17:00-26:00')) === '{"Fri":"5pm-2am"}', 'and 17:00-26:00 is five in the evening to two');
+
+  // 4. A space after the colon.
+  r = parseTextHours(['Monday 12: 00 - 20: 00']);
+  ok(r && r.hours.Mon === '12pm-8pm', '"12: 00" is a time with a stray space, not nothing', r && r.hours);
+
+  // 5. "4 pm - 12 pm" is midnight. Reading the opening as the mistake instead
+  //    published a shop open all morning and shut all evening.
+  r = parseTextHours(['Friday 4 pm - 12 pm']);
+  ok(r && r.hours.Fri === '4pm-12am', '"4 pm - 12 pm" closes at midnight', r && r.hours);
+  ok(sane(23 * 60, 17 * 60) === '11am-5pm', 'and a genuine flipped opening still flips');
+  ok(sane(0, 22 * 60) === '12pm-10pm', 'and "12 AM - 10 PM" is still noon');
+
+  // 6. One day half a day out of step is a typo, not a night shift.
+  r = parseTextHours(['Mon 8am-4pm', 'Tue 8am-4pm', 'Wed 8pm-4am', 'Thu 8am-4pm', 'Fri 8am-4pm', 'Sat 8am-4pm']);
+  ok(r && !r.hours.Wed && r.hours.Mon === '8am-4pm', 'a single day twelve hours out of step becomes unknown', r && r.hours);
+  r = parseTextHours(['Mon 8am-4pm', 'Tue 8am-4pm', 'Wed 8am-4pm', 'Thu 8am-4pm', 'Fri 8pm-4am', 'Sat 8pm-4am']);
+  ok(r && r.hours.Fri === '8pm-4am' && r.hours.Sat === '8pm-4am', 'but two late nights are a shop that is open late, and are kept', r && r.hours);
+  r = parseTextHours(['Mon 8am-4pm', 'Tue 8am-4pm', 'Wed 8pm-4am', 'Thu 8am-4pm']);
+  ok(r && r.hours.Wed === '8pm-4am', 'and four days are too few to call any of them the odd one out', r && r.hours);
 
   console.log(`\nhoursParser self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
