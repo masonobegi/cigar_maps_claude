@@ -43,9 +43,9 @@ No task is marked done on the strength of an apply that did not happen.
 |---|------|-------|
 | 1 | 5.1 Search completeness | **code done, tested, committed** — applying is not a step this task has |
 | 2 | 5.2 Pins, states and foreign rows | **code done, tested** — the crawl is blocked by the network policy |
-| 3 | 5.3 Hijacked links and thumbnails | starting |
-| 4 | 5.4 Finish the amenity crawl | not started |
-| 5 | 5.5 Re-audit the hours we publish | not started |
+| 3 | 5.3 Hijacked links and thumbnails | **code done, tested** — the crawl is blocked |
+| 4 | 5.4 Finish the amenity crawl | **saved crawl re-read in full; rules fixed** — the remaining 1,095 sites are blocked |
+| 5 | 5.5 Re-audit the hours we publish | starting |
 | 6 | 5.6 Menu scanner | not started |
 | 7 | 5.7 Closures and licence registries | not started |
 | 8 | 5.8 Claim safety gate | not started |
@@ -94,3 +94,31 @@ No task is marked done on the strength of an apply that did not happen.
     and cigar is Mission Viejo, California); their clocks follow. The five
     hidden ones are left alone — no customer sees their clock.
   - **Blocked:** the `read` step. Neither geocoder is reachable from here.
+
+- **5.3 Hijacked links and thumbnails — code done.** Four new linkCheck
+  verdicts (`elsewhere`, `hijacked`, `parked`, `store_unavailable`), all dead
+  links; 402 moved out of the firewall bucket where it never belonged. New
+  `jobs/thumbCheck.js`. A taken-over own-domain is a weak closure signal only.
+  - linkCheck selftest **33 passed**, thumbCheck selftest **27 passed**.
+  - Fixed in passing: `FOR_SALE_PATTERNS` used `[^.<>]` as its gap, so it could
+    not cross the dot in the domain name it exists to span — the Porkbun example
+    in its own comment did not match.
+  - The profile page now explains the three new statuses instead of silently
+    dropping the link.
+  - **Blocked:** the recheck of every public website, and the thumbnail read.
+- **5.4 Amenity crawl — the saved half is done, and it found real errors.**
+  All 1,343 crawled sites re-read at the sentence each verdict rests on:
+  **653 rest on a plain statement, 7 are false positives, 65 need re-reading.**
+  - The 7: Padre Island Cigar Company's site says it *does not have a lounge*
+    and then recommends somebody else's — that recommendation is what matched.
+    Three sites share an owner biography ("took a retail job in a cigar
+    lounge"); three more describe the opening of Burn by Rocky Patel.
+  - The 65 are a defect in the read step, not in the shops: `quote()` kept 200
+    characters of the matching *line*, and a line is often a paragraph, so the
+    words that matched were cut off the end. Reading those as refusals would
+    have removed 65 badges on no evidence. `quote()` now keeps the matching
+    sentence; `read --redo-truncated` picks them up.
+  - `sweeps/decisions/site-facts/sentence_review.json` is real output about real
+    listings — the one piece of this session's work that is not a fixture.
+  - **Blocked:** the remaining 1,095 sites, and the add/remove lists (they need
+    the stores table to know which badges exist today).
