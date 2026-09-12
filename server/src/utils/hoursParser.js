@@ -437,6 +437,16 @@ function parseTextHours(lines) {
   return Object.keys(out).length ? { hours: order(out), rules, conflicts } : null;
 }
 
+/** Minutes of trading in "10am-7pm", wrapping past midnight. null if unreadable. */
+function daySpan(value) {
+  const m = /^(\d{1,2})(?::(\d{2}))?(am|pm)-(\d{1,2})(?::(\d{2}))?(am|pm)$/.exec(String(value || ''));
+  if (!m) return null;
+  const at = (h, mm, ap) => ((Number(h) % 12) + (ap === 'pm' ? 12 : 0)) * 60 + Number(mm || 0);
+  const open = at(m[1], m[2], m[3]), close = at(m[4], m[5], m[6]);
+  if (open === close) return 0;                      // open round the clock
+  return close > open ? close - open : close + 1440 - open;
+}
+
 /** The opening time of "10am-7pm", in minutes, or null for Closed and oddities. */
 function openingMinute(value) {
   const m = /^(\d{1,2})(?::(\d{2}))?(am|pm)-/.exec(String(value || ''));
@@ -459,6 +469,17 @@ function openingMinute(value) {
  * more than one day, or differs by something other than exactly twelve hours.
  */
 function dropHalfDayOutliers(out) {
+  // A "day" of under two hours is not a day of trading. The Office Cigar Bar
+  // prints "Sunday - Thursday: 12 AM - 10 PM / Friday - Saturday: 12 AM - 1 AM":
+  // read as written the weekend opens at midnight for one hour. Both weekend
+  // days are the same typo, so this has to be judged per day and not as an odd
+  // one out. A day open round the clock is a statement, not a slip, and is left
+  // alone.
+  for (const d of DAYS) {
+    const span = daySpan(out[d]);
+    if (span !== null && span > 0 && span < 120) delete out[d];
+  }
+
   const opens = new Map();
   for (const d of DAYS) {
     const o = openingMinute(out[d]);
@@ -512,7 +533,7 @@ function describe(hours) {
 }
 
 module.exports = { parseOpeningHoursString, parseSpecification, parseTextHours, fillClosedPerSpec,
-  normText, sane, fmt, describe, inferEndpoints, openingMinute, dropHalfDayOutliers, DAYS };
+  normText, sane, fmt, describe, inferEndpoints, openingMinute, daySpan, dropHalfDayOutliers, DAYS };
 
 // ── Self-test ────────────────────────────────────────────────────────────────
 if (require.main === module) {
@@ -696,6 +717,16 @@ if (require.main === module) {
   ok(r && r.hours.Fri === '8pm-4am' && r.hours.Sat === '8pm-4am', 'but two late nights are a shop that is open late, and are kept', r && r.hours);
   r = parseTextHours(['Mon 8am-4pm', 'Tue 8am-4pm', 'Wed 8pm-4am', 'Thu 8am-4pm']);
   ok(r && r.hours.Wed === '8pm-4am', 'and four days are too few to call any of them the odd one out', r && r.hours);
+
+  // 7. A day of under two hours is not a day of trading. The Office Cigar Bar
+  //    prints midnight to one in the morning for its whole weekend — the same
+  //    typo on two days, which no odd-one-out rule can catch.
+  r = parseTextHours(['Sun-Thu 12am-10pm', 'Fri-Sat 12am-1am']);
+  ok(r && !r.hours.Fri && !r.hours.Sat && r.hours.Mon === '12pm-10pm',
+    'a one-hour weekend is dropped, both days of it, and the rest of the week stands', r && r.hours);
+  ok(daySpan('12am-12am') === 0 && parseTextHours(['Mon-Sun 12am-12am']).hours.Mon === '12am-12am',
+    'but a shop open round the clock is a statement, not a slip');
+  ok(daySpan('8pm-4am') === 480, 'a span is measured across midnight', daySpan('8pm-4am'));
 
   console.log(`\nhoursParser self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
