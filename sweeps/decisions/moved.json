@@ -1,0 +1,760 @@
+[
+ {
+  "id": 23521,
+  "name": "Cigars Mardos",
+  "address": "6522 Gateway Ave",
+  "city": "Sarasota",
+  "state": "FL",
+  "phone": "(941) 706-3325",
+  "site": "mardocigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 414,
+    "address": "4801 S Tamiami Trl"
+   }
+  ],
+  "site_addresses": [
+   "4801 tamiami"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 6522 Gateway Ave"
+ },
+ {
+  "id": 23591,
+  "name": "Market of Cigars",
+  "address": "1816 E 7th Ave",
+  "city": "Tampa",
+  "state": "FL",
+  "phone": "(813) 609-3474",
+  "site": "Nicahabanacigar.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 704,
+    "address": "1605 E 7th Ave"
+   }
+  ],
+  "site_addresses": [
+   "1605 7th"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 1816 E 7th Ave"
+ },
+ {
+  "id": 23688,
+  "name": "The Cigar Room",
+  "address": "5117 Gall Blvd",
+  "city": "Zephyrhills",
+  "state": "FL",
+  "phone": "(813) 782-3030",
+  "site": "thecigarroom301.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 865,
+    "address": "5519 Gall Blvd"
+   }
+  ],
+  "site_addresses": [
+   "5519 gall"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 5117 Gall Blvd"
+ },
+ {
+  "id": 1464,
+  "name": "The House Of Lucky Cigar",
+  "address": "2865 SW 30th Ave #1",
+  "city": "Pembroke Park",
+  "state": "FL",
+  "phone": "(954) 822-1570",
+  "site": "luckycigar.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 909,
+    "address": "5223 Orient Rd"
+   }
+  ],
+  "site_addresses": [
+   "5550 40th",
+   "506 1st",
+   "5223 orient"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "5550 40th",
+  "action": "hide",
+  "reason": "its own website lists 3 addresses and not 2865 SW 30th Ave #1"
+ },
+ {
+  "id": 1309,
+  "name": "Rocky Patel Premium Cigars, Inc.",
+  "address": "10960 Harmony Park Dr",
+  "city": "Bonita Springs",
+  "state": "FL",
+  "phone": "(239) 593-1833",
+  "site": "rockypatel.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 1082,
+    "address": "4244 Corporate Sq"
+   }
+  ],
+  "site_addresses": [
+   "4244 corporate"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 10960 Harmony Park Dr"
+ },
+ {
+  "id": 1129,
+  "name": "Mlura Cigars",
+  "address": "25555 NW 102nd. Avenue suite 108",
+  "city": "Hialeah",
+  "state": "FL",
+  "phone": "(305) 470-4552",
+  "site": "miuracigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 1292,
+    "address": "2555 NW 102nd Ave"
+   }
+  ],
+  "site_addresses": [
+   "2555 102nd"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 25555 NW 102nd. Avenue suite 108"
+ },
+ {
+  "id": 2008,
+  "name": "3J's Cigar",
+  "address": "7159 Lake Worth Rd",
+  "city": "Lake Worth Beach",
+  "state": "FL",
+  "phone": "(561) 868-5600",
+  "site": "3jcigar.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 1755,
+    "address": "4115 S State Road 7"
+   }
+  ],
+  "site_addresses": [
+   "4115 state"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 7159 Lake Worth Rd"
+ },
+ {
+  "id": 2993,
+  "name": "Creekside Cigar Lounge",
+  "address": "219 S East St",
+  "city": "Belton",
+  "state": "TX",
+  "phone": "(254) 831-3131",
+  "site": "creeksidecigarlounge.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 2994,
+    "address": "602 E Central Ave"
+   }
+  ],
+  "site_addresses": [
+   "602 central"
+  ],
+  "moved_wording": true,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 219 S East St"
+ },
+ {
+  "id": 3029,
+  "name": "Bright Fire Cigars",
+  "address": "12701 W State Highway 29 Ste 2",
+  "city": "Liberty Hill",
+  "state": "TX",
+  "phone": "(512) 548-5388",
+  "site": "brightfirecigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 3032,
+    "address": "2015 Main St"
+   }
+  ],
+  "site_addresses": [
+   "2015 main"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 12701 W State Highway 29 Ste 2"
+ },
+ {
+  "id": 3673,
+  "name": "El Beso Cigars",
+  "address": "205 W Whittier Blvd",
+  "city": "La Habra",
+  "state": "CA",
+  "phone": "(562) 690-7707",
+  "site": "elbeso.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 3671,
+    "address": "581 W La Habra Blvd"
+   }
+  ],
+  "site_addresses": [
+   "581 la"
+  ],
+  "moved_wording": true,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 205 W Whittier Blvd"
+ },
+ {
+  "id": 25751,
+  "name": "Havana Style Inc.",
+  "address": "3744 E Chapman Ave",
+  "city": "Orange",
+  "state": "CA",
+  "phone": "(714) 633-3000",
+  "site": "maxamarcigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 4757,
+    "address": "3804 E Chapman Ave Unit a"
+   }
+  ],
+  "site_addresses": [
+   "3804 chapman"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 3744 E Chapman Ave"
+ },
+ {
+  "id": 6442,
+  "name": "Cigarz On The Avenue",
+  "address": "331 S Park Ave",
+  "city": "Winter Park",
+  "state": "FL",
+  "phone": "(407) 647-2427",
+  "site": "cigarzontheavenue.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 6439,
+    "address": "963 Orange Ave"
+   }
+  ],
+  "site_addresses": [
+   "963 orange",
+   "2026 by"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "2026 by",
+  "action": "hide",
+  "reason": "its own website lists 2 addresses and not 331 S Park Ave"
+ },
+ {
+  "id": 8439,
+  "name": "Brookelynn Cigars",
+  "address": "7225 Market St",
+  "city": "Wilmington",
+  "state": "NC",
+  "phone": "(910) 686-2446",
+  "site": "brookelynncigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 8413,
+    "address": "5671 Market St"
+   }
+  ],
+  "site_addresses": [
+   "5671 market"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 7225 Market St"
+ },
+ {
+  "id": 41464,
+  "name": "Tobacco Xpress",
+  "address": "4420 Bloomfield Highway",
+  "city": "Farmington",
+  "state": "NM",
+  "phone": "(505) 324-6373",
+  "site": "tobaccoxpressnm.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 10825,
+    "address": "2105 E Main St"
+   }
+  ],
+  "site_addresses": [
+   "2105 main"
+  ],
+  "moved_wording": true,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 4420 Bloomfield Highway"
+ },
+ {
+  "id": 15682,
+  "name": "Governor's Cigar Lounge",
+  "address": "1685 W Lane Ave",
+  "city": "Columbus",
+  "state": "OH",
+  "phone": "(614) 392-2302",
+  "site": "thegovernorscigarlounge.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 18835,
+    "address": "33 E College Ave"
+   }
+  ],
+  "site_addresses": [
+   "33 college",
+   "7311 main"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "7311 main",
+  "action": "hide",
+  "reason": "its own website lists 2 addresses and not 1685 W Lane Ave"
+ },
+ {
+  "id": 15694,
+  "name": "House Of Cigar",
+  "address": "1230 Mount Vernon Ave",
+  "city": "Marion",
+  "state": "OH",
+  "phone": "(740) 692-9737",
+  "site": "houseofcigar.net",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 15695,
+    "address": "1230 Mt Vernon Ave"
+   }
+  ],
+  "site_addresses": [
+   "7099 huntley",
+   "9697 sawmill",
+   "1209 high",
+   "2448 high",
+   "1230 mt",
+   "9157 cleveland",
+   "4010 hauck",
+   "11173 reading"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "7099 huntley",
+  "action": "hide",
+  "reason": "its own website lists 8 addresses and not 1230 Mount Vernon Ave"
+ },
+ {
+  "id": 16722,
+  "name": "Le Cigar",
+  "address": "22263 Michigan Ave",
+  "city": "Dearborn",
+  "state": "MI",
+  "phone": "(313) 359-1716",
+  "site": "lecigardearborn.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 16721,
+    "address": "21918 Michigan Ave"
+   }
+  ],
+  "site_addresses": [
+   "21918 michigan"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 22263 Michigan Ave"
+ },
+ {
+  "id": 20001,
+  "name": "Senor Cigar's",
+  "address": "207 Old Landing Rd",
+  "city": "Ocean City",
+  "state": "MD",
+  "phone": "(410) 524-2069",
+  "site": "senorcigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 20007,
+    "address": "3314 Coastal Hwy"
+   }
+  ],
+  "site_addresses": [
+   "3314 coastal",
+   "11805 coastal"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "11805 coastal",
+  "action": "hide",
+  "reason": "its own website lists 2 addresses and not 207 Old Landing Rd"
+ },
+ {
+  "id": 20599,
+  "name": "Sj Cigars",
+  "address": "293 Montgomery Ave",
+  "city": "Bala Cynwyd",
+  "state": "PA",
+  "phone": "(610) 668-2993",
+  "site": "sjcigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 20600,
+    "address": "231 Rock Hill Rd  Fl 2"
+   }
+  ],
+  "site_addresses": [
+   "231 rockhill",
+   "231 rock",
+   "524 3rd"
+  ],
+  "moved_wording": true,
+  "unlisted_street": "231 rockhill",
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 293 Montgomery Ave"
+ },
+ {
+  "id": 22640,
+  "name": "C.B. Perkins Tobacconist",
+  "address": "65 Independence Dr South Wind Plaza",
+  "city": "Hyannis",
+  "state": "MA",
+  "phone": "(508) 790-1261",
+  "site": "cbperkinscigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 22639,
+    "address": "12 Enterprise Rd"
+   }
+  ],
+  "site_addresses": [
+   "649 main",
+   "12 enterprise",
+   "95 washington",
+   "278 teaticket",
+   "430 washington"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "649 main",
+  "action": "hide",
+  "reason": "its own website lists 5 addresses and not 65 Independence Dr South Wind Plaza"
+ },
+ {
+  "id": 455,
+  "name": "King Corona Cigars International Plaza",
+  "address": "2223 N Westshore Blvd Unit B224",
+  "city": "Tampa",
+  "state": "FL",
+  "phone": "(813) 683-6180",
+  "site": "kingcoronacigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 701,
+    "address": "1523 E 7th Ave"
+   }
+  ],
+  "site_addresses": [
+   "1523 7th",
+   "000 sq",
+   "1902 7th",
+   "118 wilshire",
+   "1315 las",
+   "000 square"
+  ],
+  "moved_wording": true,
+  "unlisted_street": "000 sq",
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 2223 N Westshore Blvd Unit B224"
+ },
+ {
+  "id": 1314,
+  "name": "Cuban Crafters Cigars",
+  "address": "2313 NW 7th Ave",
+  "city": "Miami",
+  "state": "FL",
+  "phone": "(305) 573-0222",
+  "site": "cubancrafters.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 983,
+    "address": "3604 NW 7th St"
+   }
+  ],
+  "site_addresses": [
+   "3604 7th"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 2313 NW 7th Ave"
+ },
+ {
+  "id": 2331,
+  "name": "Liberty Tobacco",
+  "address": "2650 Via De La Valle C-230",
+  "city": "San Diego",
+  "state": "CA",
+  "phone": "(858) 523-9240",
+  "site": "libertytobacco.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 2335,
+    "address": "7341 Clairemont Mesa Blvd"
+   }
+  ],
+  "site_addresses": [
+   "7341 clairemont"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 2650 Via De La Valle C-230"
+ },
+ {
+  "id": 9309,
+  "name": "Mr Bill's Pipe & Tobacco Co.",
+  "address": "2575 Montessouri St",
+  "city": "Las Vegas",
+  "state": "NV",
+  "phone": "(702) 253-1060",
+  "site": "mr-bills.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 9268,
+    "address": "8450 W Sahara Ave #113"
+   },
+   {
+    "id": 9464,
+    "address": "4441 W Flamingo Rd"
+   }
+  ],
+  "site_addresses": [
+   "4441 flamingo",
+   "8450 sahara"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 2 addresses and not 2575 Montessouri St"
+ },
+ {
+  "id": 14382,
+  "name": "Karma Tobacco & Cigar Lounge",
+  "address": "8075 Madison St",
+  "city": "Merrillville",
+  "state": "IN",
+  "phone": "(219) 756-0698",
+  "site": "karmacigar.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 14383,
+    "address": "850 W 81st Ave"
+   }
+  ],
+  "site_addresses": [
+   "800 sq",
+   "400 sq",
+   "850 81st"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "800 sq",
+  "action": "hide",
+  "reason": "its own website lists 3 addresses and not 8075 Madison St"
+ },
+ {
+  "id": 17418,
+  "name": "Smoky mountain cigar",
+  "address": "1456 Dellwood Rd",
+  "city": "Waynesville",
+  "state": "NC",
+  "phone": "(828) 547-0047",
+  "site": "smokymountaincigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 17414,
+    "address": "302 S Main St"
+   }
+  ],
+  "site_addresses": [
+   "302 main"
+  ],
+  "moved_wording": false,
+  "unlisted_street": null,
+  "action": "hide",
+  "reason": "its own website lists 1 addresses and not 1456 Dellwood Rd"
+ },
+ {
+  "id": 17434,
+  "name": "Tinder Box",
+  "address": "8128 Providence Rd",
+  "city": "Charlotte",
+  "state": "NC",
+  "phone": "(704) 341-6228",
+  "site": "tinderboxcigars.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 17441,
+    "address": "4400 Sharon Rd"
+   },
+   {
+    "id": 17498,
+    "address": "14815 Ballantyne Village Way"
+   }
+  ],
+  "site_addresses": [
+   "4400 sharon",
+   "3333 pineville",
+   "1301 celebrity",
+   "14825 ballantyne",
+   "400 square"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "3333 pineville",
+  "action": "hide",
+  "reason": "its own website lists 5 addresses and not 8128 Providence Rd"
+ },
+ {
+  "id": 17886,
+  "name": "The Pipe And Pint",
+  "address": "3716 Spring Garden St",
+  "city": "Greensboro",
+  "state": "NC",
+  "phone": "(336) 218-8610",
+  "site": "thepipeandpint.net",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 17942,
+    "address": "616 Dolley Madison Rd"
+   }
+  ],
+  "site_addresses": [
+   "616 dolley",
+   "403 thurston",
+   "3219 watkins",
+   "3025 main",
+   "5177 southport"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "403 thurston",
+  "action": "hide",
+  "reason": "its own website lists 5 addresses and not 3716 Spring Garden St"
+ },
+ {
+  "id": 18308,
+  "name": "Carytown Tobacco",
+  "address": "10459 Midlothian Turnpike",
+  "city": "Richmond",
+  "state": "VA",
+  "phone": "(804) 330-6980",
+  "site": "carytowntobacco.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 18318,
+    "address": "820 W Broad St"
+   },
+   {
+    "id": 18359,
+    "address": "1701 E Main St"
+   }
+  ],
+  "site_addresses": [
+   "1905 seminole",
+   "3103 cary",
+   "4001 broad",
+   "820 broad",
+   "1701 main",
+   "7601 broad",
+   "809 parham",
+   "1420 parham",
+   "7032 forest",
+   "4501 williamsburg",
+   "12284 chattanooga",
+   "219 main"
+  ],
+  "moved_wording": false,
+  "unlisted_street": "1905 seminole",
+  "action": "hide",
+  "reason": "its own website lists 19 addresses and not 10459 Midlothian Turnpike"
+ },
+ {
+  "id": 18629,
+  "name": "Davidus Cigars",
+  "address": "529 W South St",
+  "city": "Frederick",
+  "state": "MD",
+  "phone": "(301) 662-6606",
+  "site": "davidus.com",
+  "sharedSite": true,
+  "keeps": [
+   {
+    "id": 18708,
+    "address": "8925 Fingerboard Rd"
+   }
+  ],
+  "site_addresses": [
+   "40955 merchants",
+   "2134 generals",
+   "25 olney",
+   "1011 light",
+   "1300 bank",
+   "1716 liberty",
+   "9180 baltimore",
+   "10810 reisterstown",
+   "11632 rockville",
+   "15922 shady",
+   "8925 fingerboard",
+   "25 allegheny"
+  ],
+  "moved_wording": true,
+  "unlisted_street": "40955 merchants",
+  "action": "hide",
+  "reason": "its own website says it moved, and no longer lists 529 W South St"
+ }
+]

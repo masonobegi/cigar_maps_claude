@@ -1,0 +1,5456 @@
+[
+ {
+  "key": "phone 2394374085",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 235,
+    "name": "Stogie Pairing Cigar Lounge",
+    "address": "13499 S Cleveland Ave Ste 245",
+    "city": "Fort Myers",
+    "state": "FL",
+    "zip": "33907",
+    "phone": "(239) 437-4085",
+    "website": "stogiepairing.com",
+    "lat": 26.548225,
+    "lng": -81.869446
+   },
+   {
+    "id": 732,
+    "name": "Stogies Ft.Myers Cigar Lounge",
+    "address": "10650 Metro Pkwy #203",
+    "city": "Fort Myers",
+    "state": "FL",
+    "zip": "33966",
+    "phone": "(239) 437-4085",
+    "website": "stogiepairing.com",
+    "lat": 26.588451,
+    "lng": -81.854401
+   }
+  ]
+ },
+ {
+  "key": "phone 7205396398",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 300,
+    "name": "No.1 CIGAR",
+    "address": "4922 73rd Ave N",
+    "city": "Pinellas Park",
+    "state": "FL",
+    "zip": "33781",
+    "phone": "(720) 539-6398",
+    "website": "no1cigar.com",
+    "lat": 27.838112,
+    "lng": -82.700699
+   },
+   {
+    "id": 466,
+    "name": "No.1 Cigar Store & T Lounge",
+    "address": "1616 Gulf To Bay Blvd  Ste B",
+    "city": "Clearwater",
+    "state": "FL",
+    "zip": "33755",
+    "phone": "(720) 539-6398",
+    "website": "no1cigar.com",
+    "lat": 27.96102,
+    "lng": -82.770287
+   }
+  ]
+ },
+ {
+  "key": "phone 7862624887",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 353,
+    "name": "Serafin de Cuba Cigars",
+    "address": "45 Dodecanese Blvd",
+    "city": "Tarpon Springs",
+    "state": "FL",
+    "zip": "34689",
+    "phone": "(786) 262-4887",
+    "website": "serafincigars.com",
+    "lat": 28.155333,
+    "lng": -82.757622
+   },
+   {
+    "id": 432,
+    "name": "Serafin De Cuba Cigar Co.",
+    "address": "124 Commercial Way",
+    "city": "Spring Hill",
+    "state": "FL",
+    "zip": "34606",
+    "phone": "(786) 262-4887",
+    "website": "serafincigars.com",
+    "lat": 28.435282,
+    "lng": -82.638336
+   }
+  ]
+ },
+ {
+  "key": "phone 9417063325",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 414,
+    "name": "Mardo Cigars",
+    "address": "4801 S Tamiami Trl",
+    "city": "Sarasota",
+    "state": "FL",
+    "zip": "34231",
+    "phone": "(941) 706-3325",
+    "website": "mardocigars.com",
+    "lat": 27.291677,
+    "lng": -82.530945
+   },
+   {
+    "id": 23521,
+    "name": "Cigars Mardos",
+    "address": "6522 Gateway Ave",
+    "city": "Sarasota",
+    "state": "FL",
+    "zip": "34231",
+    "phone": "(941) 706-3325",
+    "website": null,
+    "lat": 27.260361,
+    "lng": -82.516556
+   }
+  ]
+ },
+ {
+  "key": "phone 8132482124",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 513,
+    "name": "Diamond Crown Cigar Lounge",
+    "address": "401 Channelside Dr",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33602",
+    "phone": "(813) 248-2124",
+    "website": "jcnewman.com",
+    "lat": 27.942703,
+    "lng": -82.451782
+   },
+   {
+    "id": 720,
+    "name": "J.C. Newman Cigar Company",
+    "address": "2701 N 16th St",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33605",
+    "phone": "(813) 248-2124",
+    "website": "linktr.ee/JCNCigars",
+    "lat": 27.967047,
+    "lng": -82.441528
+   }
+  ]
+ },
+ {
+  "key": "phone 8132500244",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 541,
+    "name": "Vincent Tampa Cigars",
+    "address": "5908 N Armenia Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33603",
+    "phone": "(813) 250-0244",
+    "website": "vincenttampa.com",
+    "lat": 28.001131,
+    "lng": -82.484825
+   },
+   {
+    "id": 678,
+    "name": "Vincent & Tampa Cigar Co.",
+    "address": "3103 N Howard Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33607",
+    "phone": "(813) 250-0244",
+    "website": "vincenttampacigars.com",
+    "lat": 27.967892,
+    "lng": -82.482567
+   }
+  ]
+ },
+ {
+  "key": "phone 2398982593",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 578,
+    "name": "Sticks Cigar Co.",
+    "address": "325 NE 5th Ter",
+    "city": "Cape Coral",
+    "state": "FL",
+    "zip": "33909",
+    "phone": "(239) 898-2593",
+    "website": "stickscigarcompany.com",
+    "lat": 26.662788,
+    "lng": -81.966621
+   },
+   {
+    "id": 23602,
+    "name": "Sticks Cigar Company",
+    "address": "705 Pondella Rd",
+    "city": "North Fort Myers",
+    "state": "FL",
+    "zip": "33903",
+    "phone": "(239) 898-2593",
+    "website": null,
+    "lat": 26.666861,
+    "lng": -81.907127
+   }
+  ]
+ },
+ {
+  "key": "phone 8136093474",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 704,
+    "name": "Nicahabana Cigars",
+    "address": "1605 E 7th Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33605",
+    "phone": "(813) 609-3474",
+    "website": "Nicahabanacigar.com",
+    "lat": 27.960148,
+    "lng": -82.441467
+   },
+   {
+    "id": 23591,
+    "name": "Market of Cigars",
+    "address": "1816 E 7th Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33605",
+    "phone": "(813) 609-3474",
+    "website": null,
+    "lat": 27.960447,
+    "lng": -82.438705
+   }
+  ]
+ },
+ {
+  "key": "phone 3052956110",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 757,
+    "name": "Point Break Cigars Store",
+    "address": "921 Duval St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "phone": "(305) 295-6110",
+    "website": "pointbreakcigars.com",
+    "lat": 24.551352,
+    "lng": -81.799347
+   },
+   {
+    "id": 796,
+    "name": "Point Break Cigars",
+    "address": "403 Greene St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "phone": "(305) 295-6110",
+    "website": "pointbreakcigars.com",
+    "lat": 24.558609,
+    "lng": -81.806221
+   },
+   {
+    "id": 800,
+    "name": "Point Break Cigars",
+    "address": "600 Duval St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "phone": "(305) 295-6110",
+    "website": "pointbreakcigars.com",
+    "lat": 24.554756,
+    "lng": -81.802063
+   }
+  ]
+ },
+ {
+  "key": "phone 8006553385",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 862,
+    "name": "Miami Cigar Shop",
+    "address": "12475 S Dixie Hwy",
+    "city": "Pinecrest",
+    "state": "FL",
+    "zip": "33156",
+    "phone": "(800) 655-3385",
+    "website": "neptunecigar.com",
+    "lat": 25.654028,
+    "lng": -80.328911
+   },
+   {
+    "id": 984,
+    "name": "Neptune Cigar Superstore",
+    "address": "3420 NW 7th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33125",
+    "phone": "(800) 655-3385",
+    "website": "neptunecigar.com",
+    "lat": 25.778854,
+    "lng": -80.251328
+   },
+   {
+    "id": 987,
+    "name": "Neptune Cigar SuperStore",
+    "address": "3050 NW 7th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33125",
+    "phone": "(800) 655-3385",
+    "website": "neptunecigar.com",
+    "lat": 25.779102,
+    "lng": -80.244431
+   },
+   {
+    "id": 1488,
+    "name": "Le Fumoir",
+    "address": "2323 S Federal Hwy",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "zip": "33316",
+    "phone": "(800) 655-3385",
+    "website": "neptunecigar.com",
+    "lat": 26.093115,
+    "lng": -80.136932
+   }
+  ]
+ },
+ {
+  "key": "phone 8137823030",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 865,
+    "name": "The Cigar Room",
+    "address": "5519 Gall Blvd",
+    "city": "Zephyrhills",
+    "state": "FL",
+    "zip": "33542",
+    "phone": "(813) 782-3030",
+    "website": "thecigarroom301.com",
+    "lat": 28.237715,
+    "lng": -82.184166
+   },
+   {
+    "id": 23688,
+    "name": "The Cigar Room",
+    "address": "5117 Gall Blvd",
+    "city": "Zephyrhills",
+    "state": "FL",
+    "zip": "33542",
+    "phone": "(813) 782-3030",
+    "website": null,
+    "lat": 28.231775,
+    "lng": -82.181198
+   }
+  ]
+ },
+ {
+  "key": "phone 9548221570",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 909,
+    "name": "Lucky Cigar Tampa",
+    "address": "5223 Orient Rd",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33610",
+    "phone": "(954) 822-1570",
+    "website": "luckycigar.com",
+    "lat": 27.992867,
+    "lng": -82.372116
+   },
+   {
+    "id": 1464,
+    "name": "The House Of Lucky Cigar",
+    "address": "2865 SW 30th Ave #1",
+    "city": "Pembroke Park",
+    "state": "FL",
+    "zip": "33009",
+    "phone": "(954) 822-1570",
+    "website": "luckycigar.com",
+    "lat": 25.986847,
+    "lng": -80.166298
+   }
+  ]
+ },
+ {
+  "key": "phone 2395931833",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1082,
+    "name": "Rocky Patel Premium Cigars",
+    "address": "4244 Corporate Sq",
+    "city": "Naples",
+    "state": "FL",
+    "zip": "34104",
+    "phone": "(239) 593-1833",
+    "website": "rockypatel.com",
+    "lat": 26.156279,
+    "lng": -81.755951
+   },
+   {
+    "id": 1309,
+    "name": "Rocky Patel Premium Cigars, Inc.",
+    "address": "10960 Harmony Park Dr",
+    "city": "Bonita Springs",
+    "state": "FL",
+    "zip": "34135",
+    "phone": "(239) 593-1833",
+    "website": "rockypatel.com",
+    "lat": 26.322298,
+    "lng": -81.771805
+   }
+  ]
+ },
+ {
+  "key": "phone 7866146480",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1096,
+    "name": "Maddkennyboy Cigars",
+    "address": "2400 W 84th St  Unit 11",
+    "city": "Hialeah",
+    "state": "FL",
+    "zip": "33016",
+    "phone": "(786) 614-6480",
+    "website": "maddkennyboycigars.com",
+    "lat": 25.897207,
+    "lng": -80.333328
+   },
+   {
+    "id": 23869,
+    "name": "Maddkennyboy Cigars",
+    "address": "17701 NW 22nd Ave",
+    "city": "Miami Gardens",
+    "state": "FL",
+    "zip": "33056",
+    "phone": "(786) 614-6480",
+    "website": null,
+    "lat": 25.935894,
+    "lng": -80.236649
+   }
+  ]
+ },
+ {
+  "key": "phone 7865575426",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1100,
+    "name": "Soles Cigars Inc.",
+    "address": "7450 NW 74th Ave",
+    "city": "Medley",
+    "state": "FL",
+    "zip": "33166",
+    "phone": "(786) 557-5426",
+    "website": "solescigars.com",
+    "lat": 25.842077,
+    "lng": -80.319817
+   },
+   {
+    "id": 1818,
+    "name": "Soles Cigars",
+    "address": "5432 E Michigan St",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32812",
+    "phone": "(786) 557-5426",
+    "website": "solescigars.com",
+    "lat": 28.512716,
+    "lng": -81.314857
+   }
+  ]
+ },
+ {
+  "key": "phone 3056688999",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 1120,
+    "name": "The Bouncer Cigar Lounge",
+    "address": "6370 SW 40th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33155",
+    "phone": "(305) 668-8999",
+    "website": "larosadesandiego.com",
+    "lat": 25.733389,
+    "lng": -80.298332
+   },
+   {
+    "id": 1121,
+    "name": "American Caribbean Cigar",
+    "address": "6374 Bird Rd",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33155",
+    "phone": "(305) 668-8999",
+    "website": "americancaribbeancigars.com",
+    "lat": 25.733379,
+    "lng": -80.298355
+   }
+  ]
+ },
+ {
+  "key": "phone 3054704552",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 1129,
+    "name": "Mlura Cigars",
+    "address": "25555 NW 102nd. Avenue suite 108",
+    "city": "Hialeah",
+    "state": "FL",
+    "zip": "33016",
+    "phone": "(305) 470-4552",
+    "website": "miuracigars.com",
+    "lat": 25.888634,
+    "lng": -80.3377
+   },
+   {
+    "id": 1292,
+    "name": "Miura Cigars",
+    "address": "2555 NW 102nd Ave",
+    "city": "Doral",
+    "state": "FL",
+    "zip": "33172",
+    "phone": "(305) 470-4552",
+    "website": "miuracigars.com",
+    "lat": 25.797348,
+    "lng": -80.360161
+   }
+  ]
+ },
+ {
+  "key": "phone 9549873960",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1260,
+    "name": "Road Runner Cigars",
+    "address": "2061 Sw 70th Ave Ste F14",
+    "city": "Davie",
+    "state": "FL",
+    "zip": "33317",
+    "phone": "(954) 987-3960",
+    "website": "roadrunnercigars.com",
+    "lat": 26.09359,
+    "lng": -80.238167
+   },
+   {
+    "id": 6130,
+    "name": "Road Runner Cigars",
+    "address": "4625 Old Winter Garden Rd",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32811",
+    "phone": "(954) 987-3960",
+    "website": "roadrunnercigars.com",
+    "lat": 28.546476,
+    "lng": -81.439621
+   }
+  ]
+ },
+ {
+  "key": "phone 9545225660",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1402,
+    "name": "Havana Social Cigars",
+    "address": "3950 N Federal Hwy",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "zip": "33308",
+    "phone": "(954) 522-5660",
+    "website": "havanasocialcigars.com",
+    "lat": 26.177382,
+    "lng": -80.119125
+   },
+   {
+    "id": 1523,
+    "name": "Havana Republic Cigar",
+    "address": "610 E Las Olas Blvd",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "zip": "33301",
+    "phone": "(954) 522-5660",
+    "website": "havanarepubliccigar.com",
+    "lat": 26.118881,
+    "lng": -80.136497
+   }
+  ]
+ },
+ {
+  "key": "phone 5618685600",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 1755,
+    "name": "Three J's C Cigar Emporium II",
+    "address": "4115 S State Road 7",
+    "city": "Lake Worth",
+    "state": "FL",
+    "zip": "33449",
+    "phone": "(561) 868-5600",
+    "website": "3jcigar.com",
+    "lat": 26.617533,
+    "lng": -80.20607
+   },
+   {
+    "id": 2008,
+    "name": "3J's Cigar",
+    "address": "7159 Lake Worth Rd",
+    "city": "Lake Worth Beach",
+    "state": "FL",
+    "zip": "33467",
+    "phone": "(561) 868-5600",
+    "website": "3jcigar.com",
+    "lat": 26.618456,
+    "lng": -80.159302
+   }
+  ]
+ },
+ {
+  "key": "phone 5617749005",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1764,
+    "name": "platinum nova cigar",
+    "address": "85 N Congress Ave",
+    "city": "Delray Beach",
+    "state": "FL",
+    "zip": "33445",
+    "phone": "(561) 774-9005",
+    "website": "novacigar.com",
+    "lat": 26.462927,
+    "lng": -80.093185
+   },
+   {
+    "id": 1929,
+    "name": "Nova Cigar Club",
+    "address": "330 Clematis St  Ste 111",
+    "city": "West Palm Beach",
+    "state": "FL",
+    "zip": "33401",
+    "phone": "(561) 774-9005",
+    "website": "ncc111.com",
+    "lat": 26.713055,
+    "lng": -80.053032
+   }
+  ]
+ },
+ {
+  "key": "phone 5618184049",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 1825,
+    "name": "D Lopez Cigars",
+    "address": "2590 Forest Hill Blvd",
+    "city": "West Palm Beach",
+    "state": "FL",
+    "zip": "33406",
+    "phone": "(561) 818-4049",
+    "website": "dlopezcigars.com",
+    "lat": 26.650473,
+    "lng": -80.081505
+   },
+   {
+    "id": 24100,
+    "name": "D'Lopez Cigars",
+    "address": "80 Andros Rd",
+    "city": "Palm Springs",
+    "state": "FL",
+    "zip": "33461",
+    "phone": "(561) 818-4049",
+    "website": null,
+    "lat": 26.627851,
+    "lng": -80.095741
+   }
+  ]
+ },
+ {
+  "key": "phone 5616266700",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 1949,
+    "name": "Sabor Havana Cigars",
+    "address": "4530 Pga Blvd",
+    "city": "Palm Beach Gardens",
+    "state": "FL",
+    "zip": "33418",
+    "phone": "(561) 626-6700",
+    "website": "saborhavana.com",
+    "lat": 26.837934,
+    "lng": -80.10894
+   },
+   {
+    "id": 1950,
+    "name": "E&E Cigars",
+    "address": "4530 FL-786 #109",
+    "city": "Palm Beach Gardens",
+    "state": "FL",
+    "zip": "33418",
+    "phone": "(561) 626-6700",
+    "website": "eecigarshop.com",
+    "lat": 26.83791,
+    "lng": -80.108833
+   }
+  ]
+ },
+ {
+  "key": "phone 2108281261",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2468,
+    "name": "Club Humidor",
+    "address": "255 E Basse Rd",
+    "city": "San Antonio",
+    "state": "TX",
+    "zip": "78209",
+    "phone": "(210) 828-1261",
+    "website": "hvhengage.com",
+    "lat": 29.494024,
+    "lng": -98.479828
+   },
+   {
+    "id": 2586,
+    "name": "Club Humidor",
+    "address": "2235 Thousand Oaks Dr #104",
+    "city": "San Antonio",
+    "state": "TX",
+    "zip": "78232",
+    "phone": "(210) 828-1261",
+    "website": "clubhumidor.com",
+    "lat": 29.587616,
+    "lng": -98.451706
+   }
+  ]
+ },
+ {
+  "key": "phone 5124722277",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 2753,
+    "name": "Arman Cigars",
+    "address": "309 E Cesar Chavez St",
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78701",
+    "phone": "(512) 472-2277",
+    "website": "bolivarlounge.com",
+    "lat": 30.262487,
+    "lng": -97.741776
+   },
+   {
+    "id": 2754,
+    "name": "Bolivar Cigar Lounge",
+    "address": "309 Cesar Chavez St E",
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78701",
+    "phone": "(512) 472-2277",
+    "website": "bolivarlounge.com",
+    "lat": 30.262419,
+    "lng": -97.741615
+   },
+   {
+    "id": 2804,
+    "name": "Cigar Palace",
+    "address": "817 Congress Ave",
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78701",
+    "phone": "(512) 472-2277",
+    "website": "bolivarlounge.com",
+    "lat": 30.270409,
+    "lng": -97.741478
+   }
+  ]
+ },
+ {
+  "key": "phone 8177630002",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2841,
+    "name": "Fort Worth Lone Star Cigars and Lounge",
+    "address": "18553 US-377",
+    "city": "Cresson",
+    "state": "TX",
+    "zip": "76035",
+    "phone": "(817) 763-0002",
+    "website": "fwlonestarcigars.com",
+    "lat": 32.576382,
+    "lng": -97.600746
+   },
+   {
+    "id": 2922,
+    "name": "Fort Worth Lone Star Cigars",
+    "address": "3014 Alta Mere Dr",
+    "city": "Fort Worth",
+    "state": "TX",
+    "zip": "76116",
+    "phone": "(817) 763-0002",
+    "website": "bontonroule.com",
+    "lat": 32.729809,
+    "lng": -97.44136
+   },
+   {
+    "id": 2938,
+    "name": "Fort Worth Lone Star Cigars and Lounge",
+    "address": "6500 Camp Bowie Blvd",
+    "city": "Fort Worth",
+    "state": "TX",
+    "zip": "76116",
+    "phone": "(817) 763-0002",
+    "website": "fwlonestarcigars.com",
+    "lat": 32.724167,
+    "lng": -97.428192
+   }
+  ]
+ },
+ {
+  "key": "phone 2548313131",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2993,
+    "name": "Creekside Cigar Lounge",
+    "address": "219 S East St",
+    "city": "Belton",
+    "state": "TX",
+    "zip": "76513",
+    "phone": "(254) 831-3131",
+    "website": "creeksidecigarlounge.com",
+    "lat": 31.055075,
+    "lng": -97.462509
+   },
+   {
+    "id": 2994,
+    "name": "Creekside Cigar Lounge",
+    "address": "602 E Central Ave",
+    "city": "Belton",
+    "state": "TX",
+    "zip": "76513",
+    "phone": "(254) 831-3131",
+    "website": "creeksidecigarlounge.com",
+    "lat": 31.054974,
+    "lng": -97.458267
+   }
+  ]
+ },
+ {
+  "key": "phone 5125485388",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 3029,
+    "name": "Bright Fire Cigars",
+    "address": "12701 W State Highway 29 Ste 2",
+    "city": "Liberty Hill",
+    "state": "TX",
+    "zip": "78642",
+    "phone": "(512) 548-5388",
+    "website": "brightfirecigars.com",
+    "lat": 30.66013,
+    "lng": -97.89621
+   },
+   {
+    "id": 3032,
+    "name": "Bright fire cigars",
+    "address": "2015 Main St",
+    "city": "Liberty Hill",
+    "state": "TX",
+    "zip": "78642",
+    "phone": "(512) 548-5388",
+    "website": "brightfirecigars.com",
+    "lat": 30.674273,
+    "lng": -97.9328
+   }
+  ]
+ },
+ {
+  "key": "phone 5626907707",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 3671,
+    "name": "El Beso Cigars",
+    "address": "581 W La Habra Blvd",
+    "city": "La Habra",
+    "state": "CA",
+    "zip": "90631",
+    "phone": "(562) 690-7707",
+    "website": "elbeso.com",
+    "lat": 33.932114,
+    "lng": -117.951935
+   },
+   {
+    "id": 3673,
+    "name": "El Beso Cigars",
+    "address": "205 W Whittier Blvd",
+    "city": "La Habra",
+    "state": "CA",
+    "zip": "90631",
+    "phone": "(562) 690-7707",
+    "website": "elbeso.com",
+    "lat": 33.93943,
+    "lng": -117.94754
+   }
+  ]
+ },
+ {
+  "key": "phone 4804477845",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 4302,
+    "name": "Figurado Cigar Company",
+    "address": "31673 N Mesquite Way",
+    "city": "San Tan Valley",
+    "state": "AZ",
+    "zip": "85143",
+    "phone": "(480) 447-7845",
+    "website": "figuradocigarcompany.com",
+    "lat": 33.166767,
+    "lng": -111.554558
+   },
+   {
+    "id": 4673,
+    "name": "Figurado Cigar Company",
+    "address": "801 S Power Rd",
+    "city": "Mesa",
+    "state": "AZ",
+    "zip": "85206",
+    "phone": "(480) 447-7845",
+    "website": "figuradocigarcompany.com",
+    "lat": 33.4002,
+    "lng": -111.684097
+   }
+  ]
+ },
+ {
+  "key": "phone 9494464861",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 4312,
+    "name": "Vip Smoke & Cigar",
+    "address": "25102 Marguerite Pkwy  Ste C",
+    "city": "Mission Viejo",
+    "state": "CA",
+    "zip": "92692",
+    "phone": "(949) 446-4861",
+    "website": "vip-smoke-cigar.business.site",
+    "lat": 33.597801,
+    "lng": -117.656364
+   },
+   {
+    "id": 39731,
+    "name": "Vip smoke and cigar",
+    "address": null,
+    "city": "Mission Viejo",
+    "state": "CO",
+    "zip": null,
+    "phone": "(949) 446-4861",
+    "website": null,
+    "lat": 39.954494,
+    "lng": -115.64843
+   }
+  ]
+ },
+ {
+  "key": "phone 7146333000",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 4757,
+    "name": "Maxamar Ultimate Cigars",
+    "address": "3804 E Chapman Ave Unit a",
+    "city": "Orange",
+    "state": "CA",
+    "zip": "92869",
+    "phone": "(714) 633-3000",
+    "website": "maxamarcigars.com",
+    "lat": 33.787338,
+    "lng": -117.812973
+   },
+   {
+    "id": 25751,
+    "name": "Havana Style Inc.",
+    "address": "3744 E Chapman Ave",
+    "city": "Orange",
+    "state": "CA",
+    "zip": "92869",
+    "phone": "(714) 633-3000",
+    "website": null,
+    "lat": 33.787354,
+    "lng": -117.812927
+   }
+  ]
+ },
+ {
+  "key": "phone 7607775839",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 4781,
+    "name": "Havana Club Cigar Lounge",
+    "address": "49433 Eisenhower Dr",
+    "city": "La Quinta",
+    "state": "CA",
+    "zip": "92253",
+    "phone": "(760) 777-5839",
+    "website": "laquintaresort.com",
+    "lat": 33.688435,
+    "lng": -116.310295
+   },
+   {
+    "id": 4782,
+    "name": "Havana Club Cigar Lounge",
+    "address": "49499 Eisenhower Dr",
+    "city": "La Quinta",
+    "state": "CA",
+    "zip": "92253",
+    "phone": "(760) 777-5839",
+    "website": "laquintaresort.com",
+    "lat": 33.682484,
+    "lng": -116.308067
+   }
+  ]
+ },
+ {
+  "key": "phone 8326835605",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5273,
+    "name": "E&A Cigars",
+    "address": "10201 Broadway St",
+    "city": "Pearland",
+    "state": "TX",
+    "zip": "77584",
+    "phone": "(832) 683-5605",
+    "website": "eacigars.com",
+    "lat": 29.556471,
+    "lng": -95.378212
+   },
+   {
+    "id": 5304,
+    "name": "E&a Cigars",
+    "address": "5740 Broadway St  Ste 112",
+    "city": "Pearland",
+    "state": "TX",
+    "zip": "77581",
+    "phone": "(832) 683-5605",
+    "website": "eacigars.com",
+    "lat": 29.558706,
+    "lng": -95.310188
+   }
+  ]
+ },
+ {
+  "key": "phone 7135295555",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 5464,
+    "name": "Briar Shoppe",
+    "address": "2412 Times Blvd",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77005",
+    "phone": "(713) 529-5555",
+    "website": "briarshoppecigars.com",
+    "lat": 29.716904,
+    "lng": -95.415283
+   },
+   {
+    "id": 5465,
+    "name": "Winston's Cigar Lounge - Houston.",
+    "address": "2426 Times Blvd",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77005",
+    "phone": "(713) 529-5555",
+    "website": "houston.winstonscigarlounge.com",
+    "lat": 29.7169,
+    "lng": -95.415382
+   }
+  ]
+ },
+ {
+  "key": "phone 9852620129",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5658,
+    "name": "Cigar Heads",
+    "address": "6279 W Main St",
+    "city": "Houma",
+    "state": "LA",
+    "zip": "70360",
+    "phone": "(985) 262-0129",
+    "website": "cigarheads.net",
+    "lat": 29.624428,
+    "lng": -90.751343
+   },
+   {
+    "id": 5659,
+    "name": "Cigar Heads",
+    "address": "195 Enterprise Dr",
+    "city": "Houma",
+    "state": "LA",
+    "zip": "70360",
+    "phone": "(985) 262-0129",
+    "website": "cigarheads.net",
+    "lat": 29.614527,
+    "lng": -90.749962
+   }
+  ]
+ },
+ {
+  "key": "phone 9795678910",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 5718,
+    "name": "Cars, Guitars & Cigars",
+    "address": "704 S Main St",
+    "city": "Calvert",
+    "state": "TX",
+    "zip": "77837",
+    "phone": "(979) 567-8910",
+    "website": "carsguitarscigars.com",
+    "lat": 30.977917,
+    "lng": -96.673523
+   },
+   {
+    "id": 5719,
+    "name": "Calvert Cigar Company",
+    "address": "700 S Main",
+    "city": "Calvert",
+    "state": "TX",
+    "zip": "77837",
+    "phone": "(979) 567-8910",
+    "website": "calvertsouth.com",
+    "lat": 30.978029,
+    "lng": -96.67363
+   }
+  ]
+ },
+ {
+  "key": "phone 3373665321",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5907,
+    "name": "Black Dog Cigar",
+    "address": "842 W Main St",
+    "city": "New Iberia",
+    "state": "LA",
+    "zip": "70560",
+    "phone": "(337) 366-5321",
+    "website": "Blkdogcigar.com",
+    "lat": 30.014538,
+    "lng": -91.826096
+   },
+   {
+    "id": 5908,
+    "name": "Black Dog Cigar Llc",
+    "address": "234 W Main St",
+    "city": "New Iberia",
+    "state": "LA",
+    "zip": "70560",
+    "phone": "(337) 366-5321",
+    "website": "spiritsreview.com",
+    "lat": 30.008131,
+    "lng": -91.820137
+   }
+  ]
+ },
+ {
+  "key": "phone 5042529789",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 5970,
+    "name": "Big Easy Cigar Lounge",
+    "address": "4650 W Esplanade Ave",
+    "city": "Metairie",
+    "state": "LA",
+    "zip": "70006",
+    "phone": "(504) 252-9789",
+    "website": "bigeasycigarslounge.com",
+    "lat": 30.015835,
+    "lng": -90.190208
+   },
+   {
+    "id": 5972,
+    "name": "Good Habit Cigar Shop",
+    "address": "3321 Severn Ave",
+    "city": "Metairie",
+    "state": "LA",
+    "zip": "70002",
+    "phone": "(504) 252-9789",
+    "website": "goodhabitcigar.com",
+    "lat": 30.009558,
+    "lng": -90.158127
+   }
+  ]
+ },
+ {
+  "key": "phone 3522363499",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 6081,
+    "name": "Roz's Cigar Emporium",
+    "address": "8585 State Rd 200 Unit 16, Ocala, Floor 34481 Unit 16",
+    "city": "Ocala",
+    "state": "FL",
+    "zip": "34481",
+    "phone": "(352) 236-3499",
+    "website": "rozcigars.com",
+    "lat": 29.091236,
+    "lng": -82.453148
+   },
+   {
+    "id": 6082,
+    "name": "Roz's Cigar Emporium",
+    "address": "8585 State 200 Unit 16",
+    "city": "Ocala",
+    "state": "FL",
+    "zip": "34481",
+    "phone": "(352) 236-3499",
+    "website": "rozcigars.com",
+    "lat": 29.097679,
+    "lng": -82.453003
+   },
+   {
+    "id": 6107,
+    "name": "Roz's Cigar Emporium",
+    "address": "8585 SW Highway 200",
+    "city": "Ocala",
+    "state": "FL",
+    "zip": "34481",
+    "phone": "(352) 236-3499",
+    "website": "rozcigars.com",
+    "lat": 29.075378,
+    "lng": -82.262955
+   }
+  ]
+ },
+ {
+  "key": "phone 4076472427",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 6439,
+    "name": "Cigarz On The Avenue",
+    "address": "963 Orange Ave",
+    "city": "Winter Park",
+    "state": "FL",
+    "zip": "32789",
+    "phone": "(407) 647-2427",
+    "website": "cigarzontheavenue.com",
+    "lat": 28.590145,
+    "lng": -81.360466
+   },
+   {
+    "id": 6442,
+    "name": "Cigarz On The Avenue",
+    "address": "331 S Park Ave",
+    "city": "Winter Park",
+    "state": "FL",
+    "zip": "32789",
+    "phone": "(407) 647-2427",
+    "website": "cigarzontheavenue.com",
+    "lat": 28.595236,
+    "lng": -81.351273
+   }
+  ]
+ },
+ {
+  "key": "phone 9048546060",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 6488,
+    "name": "Island Girl Cigar Bar",
+    "address": "7860 Gate Pkwy Ste 115",
+    "city": "Jacksonville",
+    "state": "FL",
+    "zip": "32256",
+    "phone": "(904) 854-6060",
+    "website": "islandgirlcigarbar.com/mayport",
+    "lat": 30.235052,
+    "lng": -81.518501
+   },
+   {
+    "id": 6887,
+    "name": "Island Girl Cigar Bar",
+    "address": "108 N 1st St",
+    "city": "Jacksonville Beach",
+    "state": "FL",
+    "zip": "32250",
+    "phone": "(904) 854-6060",
+    "website": "islandgirlcigarbar.com",
+    "lat": 30.287319,
+    "lng": -81.389427
+   }
+  ]
+ },
+ {
+  "key": "phone 4693962412",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7021,
+    "name": "Faustino Cigars",
+    "address": "9533 Losa Dr  Ste 2",
+    "city": "Dallas",
+    "state": "TX",
+    "zip": "75218",
+    "phone": "(469) 396-2412",
+    "website": "faustinocigar.com",
+    "lat": 32.832726,
+    "lng": -96.69902
+   },
+   {
+    "id": 7125,
+    "name": "Faustino Cigars",
+    "address": "204 N Elm St",
+    "city": "Royse City",
+    "state": "TX",
+    "zip": "75189",
+    "phone": "(469) 396-2412",
+    "website": "faustinocigar.com",
+    "lat": 32.976048,
+    "lng": -96.332664
+   }
+  ]
+ },
+ {
+  "key": "phone 9036558226",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7088,
+    "name": "Tobacco Junction of Henderson",
+    "address": "627 Highway 79 N",
+    "city": "Henderson",
+    "state": "TX",
+    "zip": "75654",
+    "phone": "(903) 655-8226",
+    "website": "tobaccojunction.com",
+    "lat": 32.15863,
+    "lng": -94.7845
+   },
+   {
+    "id": 7101,
+    "name": "Tobacco Junction 2",
+    "address": "1422 S Main St",
+    "city": "Henderson",
+    "state": "TX",
+    "zip": "75654",
+    "phone": "(903) 655-8226",
+    "website": "tobaccojunction.net",
+    "lat": 32.138741,
+    "lng": -94.798576
+   }
+  ]
+ },
+ {
+  "key": "phone 3188613138",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 7155,
+    "name": "M.A.’s Cigars Shreveport",
+    "address": "5863 Fairfield Ave",
+    "city": "Shreveport",
+    "state": "LA",
+    "zip": "71106",
+    "phone": "(318) 861-3138",
+    "website": "indeed.com/cmp/Havana-Sports-&-Cigar-Bar/jobs?jk=5f45843891879433&q&l=Shreveport%2C+LA&start=0",
+    "lat": 32.453953,
+    "lng": -93.746925
+   },
+   {
+    "id": 7156,
+    "name": "M A's Smoke Shop",
+    "address": "855 Pierremont Rd",
+    "city": "Shreveport",
+    "state": "LA",
+    "zip": "71106",
+    "phone": "(318) 861-3138",
+    "website": "mascigars.com",
+    "lat": 32.45406,
+    "lng": -93.746704
+   }
+  ]
+ },
+ {
+  "key": "phone 2059954481",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 7590,
+    "name": "The Humidor Room Cigar & Scotch Bar",
+    "address": "5511 Highway 280 Ste 101",
+    "city": "Birmingham",
+    "state": "AL",
+    "zip": "35242",
+    "phone": "(205) 995-4481",
+    "website": "humidorroom280.com",
+    "lat": 33.40559,
+    "lng": -86.663177
+   },
+   {
+    "id": 7594,
+    "name": "The Humidor Room",
+    "address": "2115 7th Ave S",
+    "city": "Birmingham",
+    "state": "AL",
+    "zip": "35233",
+    "phone": "(205) 995-4481",
+    "website": "humidorroom.com",
+    "lat": 33.506725,
+    "lng": -86.797684
+   },
+   {
+    "id": 7653,
+    "name": "The Humidor Room",
+    "address": "5479 U.S. 280",
+    "city": "Birmingham",
+    "state": "AL",
+    "zip": "35242",
+    "phone": "(205) 995-4481",
+    "website": "humidorroom280.com",
+    "lat": 33.411777,
+    "lng": -86.663979
+   }
+  ]
+ },
+ {
+  "key": "phone 7703827942",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7749,
+    "name": "Old Havana Cigar Bar",
+    "address": "20 W Main St",
+    "city": "Cartersville",
+    "state": "GA",
+    "zip": "30120",
+    "phone": "(770) 382-7942",
+    "website": "oldhavanacigar.com",
+    "lat": 34.16497,
+    "lng": -84.796112
+   },
+   {
+    "id": 7780,
+    "name": "Old Havana Cigar Bar",
+    "address": "602 E Main St",
+    "city": "Cartersville",
+    "state": "GA",
+    "zip": "30121",
+    "phone": "(770) 382-7942",
+    "website": "OldHavanaCigar.com",
+    "lat": 34.175446,
+    "lng": -84.778961
+   }
+  ]
+ },
+ {
+  "key": "phone 6787827600",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7926,
+    "name": "Smoke Kings Fine Cigars",
+    "address": "298 Racetrack Rd  Ste 203",
+    "city": "Mcdonough",
+    "state": "GA",
+    "zip": "30252",
+    "phone": "(678) 782-7600",
+    "website": "smokekingsfinecigars.com",
+    "lat": 33.430298,
+    "lng": -84.134064
+   },
+   {
+    "id": 7929,
+    "name": "Smoke Kings Fine Cigars",
+    "address": "3904 GA-42 Unit B",
+    "city": "Locust Grove",
+    "state": "GA",
+    "zip": "30248",
+    "phone": "(678) 782-7600",
+    "website": "SmokeKingsFineCigars.com",
+    "lat": 33.346169,
+    "lng": -84.109802
+   }
+  ]
+ },
+ {
+  "key": "phone 8439745099",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7958,
+    "name": "Luxe Cigar Lounge",
+    "address": "5101 Ashley Phosphate Rd",
+    "city": "North Charleston",
+    "state": "SC",
+    "zip": "29418",
+    "phone": "(843) 974-5099",
+    "website": "Luxecigarlounge.com",
+    "lat": 32.914639,
+    "lng": -80.102554
+   },
+   {
+    "id": 8207,
+    "name": "Luxe Cigar Lounge, Llc",
+    "address": "415 Corner Square Plz",
+    "city": "Moncks Corner",
+    "state": "SC",
+    "zip": "29461",
+    "phone": "(843) 974-5099",
+    "website": "luxecigarlounge.com",
+    "lat": 33.203114,
+    "lng": -79.989571
+   }
+  ]
+ },
+ {
+  "key": "phone 8436630203",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8002,
+    "name": "Cigar South",
+    "address": "ACROSS FROM MARGARITAS, 9765 N Kings Hwy",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "zip": "29572",
+    "phone": "(843) 663-0203",
+    "website": "nickscigarworld.com",
+    "lat": 33.783813,
+    "lng": -78.785652
+   },
+   {
+    "id": 28307,
+    "name": "Cigar South",
+    "address": "9765 N Kings Hwy",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "zip": "29572",
+    "phone": "(843) 663-0203",
+    "website": null,
+    "lat": 33.780296,
+    "lng": -78.790924
+   }
+  ]
+ },
+ {
+  "key": "phone 7709089388",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8021,
+    "name": "Puff n Stuff Cigars",
+    "address": "2523 Lawrenceville Hwy",
+    "city": "Decatur",
+    "state": "GA",
+    "zip": "30033",
+    "phone": "(770) 908-9388",
+    "website": "puffnstuffcigars.com",
+    "lat": 33.820419,
+    "lng": -84.26413
+   },
+   {
+    "id": 8137,
+    "name": "Puff N' Stuff Cigars",
+    "address": "3315 Fern Dr",
+    "city": "Tucker",
+    "state": "GA",
+    "zip": "30084",
+    "phone": "(770) 908-9388",
+    "website": "puffnstuffcigars.com",
+    "lat": 33.826942,
+    "lng": -84.25441
+   }
+  ]
+ },
+ {
+  "key": "phone 6788220912",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8171,
+    "name": "The Chateau Wine and Cigar Bar",
+    "address": "4090 Johns Creek Pkwy",
+    "city": "Johns Creek",
+    "state": "GA",
+    "zip": "30024",
+    "phone": "(678) 822-0912",
+    "website": "thechateaucigarbar.com",
+    "lat": 34.070938,
+    "lng": -84.165085
+   },
+   {
+    "id": 8218,
+    "name": "The Chateau Cigar Lounge",
+    "address": "9700 Medlock Bridge Rd",
+    "city": "Johns Creek",
+    "state": "GA",
+    "zip": "30097",
+    "phone": "(678) 822-0912",
+    "website": "thechateaucigarlounge.com",
+    "lat": 34.017563,
+    "lng": -84.191849
+   }
+  ]
+ },
+ {
+  "key": "phone 7706400550",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8215,
+    "name": "Cutters Cigar & Spirits",
+    "address": "4915 Windward Pkwy",
+    "city": "Alpharetta",
+    "state": "GA",
+    "zip": "30004",
+    "phone": "(770) 640-0550",
+    "website": "cutterscigarandspirits.com",
+    "lat": 34.096054,
+    "lng": -84.280548
+   },
+   {
+    "id": 8260,
+    "name": "Cutters Cigar Emporium - Alpharetta",
+    "address": "5530 Windward Pkwy",
+    "city": "Alpharetta",
+    "state": "GA",
+    "zip": "30004",
+    "phone": "(770) 640-0550",
+    "website": "cutterscigars.com",
+    "lat": 34.087692,
+    "lng": -84.266541
+   }
+  ]
+ },
+ {
+  "key": "phone 9106862446",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8413,
+    "name": "Brookelynn Premium Cigars",
+    "address": "5671 Market St",
+    "city": "Wilmington",
+    "state": "NC",
+    "zip": "28405",
+    "phone": "(910) 686-2446",
+    "website": "brookelynncigars.com",
+    "lat": 34.248798,
+    "lng": -77.862305
+   },
+   {
+    "id": 8439,
+    "name": "Brookelynn Cigars",
+    "address": "7225 Market St",
+    "city": "Wilmington",
+    "state": "NC",
+    "zip": "28411",
+    "phone": "(910) 686-2446",
+    "website": "brookelynncigars.com",
+    "lat": 34.273659,
+    "lng": -77.817986
+   }
+  ]
+ },
+ {
+  "key": "phone 7023590523",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9157,
+    "name": "Cigarette Cigar Plus",
+    "address": "1941 S Highway 160",
+    "city": "Pahrump",
+    "state": "NV",
+    "zip": "89048",
+    "phone": "(702) 359-0523",
+    "website": "business.cigaretteciarplus.site",
+    "lat": 36.191299,
+    "lng": -115.964622
+   },
+   {
+    "id": 9158,
+    "name": "Cigarette Cigar Plus",
+    "address": "1201 NV-160 Unit 106",
+    "city": "Pahrump",
+    "state": "NV",
+    "zip": "89048",
+    "phone": "(702) 359-0523",
+    "website": "cigaretteCigarPlus.business.site",
+    "lat": 36.201824,
+    "lng": -115.975517
+   }
+  ]
+ },
+ {
+  "key": "phone 7753569444",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9708,
+    "name": "Ruiz Cigars",
+    "address": "1200 Rock Blvd",
+    "city": "Sparks",
+    "state": "NV",
+    "zip": "89431",
+    "phone": "(775) 356-9444",
+    "website": "ruizcigars.com",
+    "lat": 39.54372,
+    "lng": -119.763191
+   },
+   {
+    "id": 9789,
+    "name": "Ruiz Cigars",
+    "address": "662 E Prater Way",
+    "city": "Sparks",
+    "state": "NV",
+    "zip": "89431",
+    "phone": "(775) 356-9444",
+    "website": "Ruizcigar.com",
+    "lat": 39.542759,
+    "lng": -119.734528
+   }
+  ]
+ },
+ {
+  "key": "phone 9712021196",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 10061,
+    "name": "Releaf Cigars",
+    "address": "1535 SE Tacoma St",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97202",
+    "phone": "(971) 202-1196",
+    "website": "Releafcigars.com",
+    "lat": 45.464497,
+    "lng": -122.6502
+   },
+   {
+    "id": 10077,
+    "name": "Cigar Attorney",
+    "address": "8524 SE 17th Ave",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97202",
+    "phone": "(971) 202-1196",
+    "website": "releafcigars.com",
+    "lat": 45.460964,
+    "lng": -122.646645
+   }
+  ]
+ },
+ {
+  "key": "phone 9712660170",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 10076,
+    "name": "Sellwood Cigar",
+    "address": "8524 SE 17th Ave",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97202",
+    "phone": "(971) 266-0170",
+    "website": "sellwoodcigar.com",
+    "lat": 45.461189,
+    "lng": -122.646751
+   },
+   {
+    "id": 42031,
+    "name": "Releaf Cigars",
+    "address": "8532 Southeast 17th Avenue",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97202",
+    "phone": "(971) 266-0170",
+    "website": null,
+    "lat": 45.460923,
+    "lng": -122.646652
+   }
+  ]
+ },
+ {
+  "key": "phone 5053246373",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 10825,
+    "name": "Tobacco Xpress LLC",
+    "address": "2105 E Main St",
+    "city": "Farmington",
+    "state": "NM",
+    "zip": "87401",
+    "phone": "(505) 324-6373",
+    "website": "tobaccoxpressnm.com",
+    "lat": 36.737804,
+    "lng": -108.180595
+   },
+   {
+    "id": 41464,
+    "name": "Tobacco Xpress",
+    "address": "4420 Bloomfield Highway",
+    "city": "Farmington",
+    "state": "NM",
+    "zip": "87401",
+    "phone": "(505) 324-6373",
+    "website": "tobaccoxpressnm.com",
+    "lat": 36.715469,
+    "lng": -108.14899
+   }
+  ]
+ },
+ {
+  "key": "phone 9287787600",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 10839,
+    "name": "Sam Hills Cigars & Lounge",
+    "address": "202 S Montezuma St",
+    "city": "Gallup",
+    "state": "NM",
+    "zip": "86303",
+    "phone": "(928) 778-7600",
+    "website": "samhillcigars.com",
+    "lat": 35.527813,
+    "lng": -108.74218
+   },
+   {
+    "id": 29322,
+    "name": "Sam Hills Cigars & Pipes",
+    "address": "162 S Montezuma St",
+    "city": "Prescott",
+    "state": "AZ",
+    "zip": "86303",
+    "phone": "(928) 778-7600",
+    "website": null,
+    "lat": 34.538036,
+    "lng": -112.470238
+   }
+  ]
+ },
+ {
+  "key": "phone 9522262800",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 13391,
+    "name": "Savage Tobacco",
+    "address": "14101 Highway 13 W",
+    "city": "Savage",
+    "state": "MN",
+    "zip": "55378",
+    "phone": "(952) 226-2800",
+    "website": "savagetobacco.com",
+    "lat": 44.778984,
+    "lng": -93.342194
+   },
+   {
+    "id": 13458,
+    "name": "Savage & Prior Lake Cigars",
+    "address": "14101 State Hwy 13",
+    "city": "Savage",
+    "state": "MN",
+    "zip": "55378",
+    "phone": "(952) 226-2800",
+    "website": "savagetobacco.com",
+    "lat": 44.748142,
+    "lng": -93.377838
+   }
+  ]
+ },
+ {
+  "key": "phone 6123261169",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 13590,
+    "name": "Founders Cigar Company",
+    "address": "9150 Isanti St NE",
+    "city": "Blaine",
+    "state": "MN",
+    "zip": "55449",
+    "phone": "(612) 326-1169",
+    "website": "founderscigarco.com",
+    "lat": 45.136444,
+    "lng": -93.224632
+   },
+   {
+    "id": 13739,
+    "name": "Founders Cigar Company",
+    "address": "855 Village Center Dr",
+    "city": "North Oaks",
+    "state": "MN",
+    "zip": "55127",
+    "phone": "(612) 326-1169",
+    "website": "founderscigarco.com",
+    "lat": 45.080318,
+    "lng": -93.116219
+   }
+  ]
+ },
+ {
+  "key": "phone 6152977963",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 13812,
+    "name": "Belle Meade Premium Cigars",
+    "address": "104 46th Ave N",
+    "city": "Nashville",
+    "state": "TN",
+    "zip": "37209",
+    "phone": "(615) 297-7963",
+    "website": "bellemeadecigars.com/content/belle-meade-premium-cigars",
+    "lat": 36.141651,
+    "lng": -86.841179
+   },
+   {
+    "id": 13813,
+    "name": "Belle Meade Premium Cigars",
+    "address": "4518 Harding Pike",
+    "city": "Nashville",
+    "state": "TN",
+    "zip": "37205",
+    "phone": "(615) 297-7963",
+    "website": "bellemeadecigars.com",
+    "lat": 36.125027,
+    "lng": -86.849083
+   }
+  ]
+ },
+ {
+  "key": "phone 7069462442",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 14867,
+    "name": "Havana Daydreaming Cigars",
+    "address": "1901 Appalachian Hwy",
+    "city": "Blue Ridge",
+    "state": "GA",
+    "zip": "30513",
+    "phone": "(706) 946-2442",
+    "website": "havanadaydreamingcigars.com",
+    "lat": 34.845459,
+    "lng": -84.336914
+   },
+   {
+    "id": 14868,
+    "name": "Havana Day Dreaming Cigars",
+    "address": "576 E Main St",
+    "city": "Blue Ridge",
+    "state": "GA",
+    "zip": "30513",
+    "phone": "(706) 946-2442",
+    "website": "havanadaydreamingcigars.net",
+    "lat": 34.867203,
+    "lng": -84.323158
+   }
+  ]
+ },
+ {
+  "key": "phone 8594121979",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15165,
+    "name": "Blaze Cigar Lounge and Bar, Union KY: Voted Best Bar in NKY 2025 & 2024",
+    "address": "9124 US-42 Suite D",
+    "city": "Union",
+    "state": "KY",
+    "zip": "41091",
+    "phone": "(859) 412-1979",
+    "website": "blazecigarlounge.com",
+    "lat": 38.959038,
+    "lng": -84.678482
+   },
+   {
+    "id": 15185,
+    "name": "Blaze Cigar Lounge: Voted Best Bar in NKY 2025 & 2024",
+    "address": "515 Monmouth St",
+    "city": "Newport",
+    "state": "KY",
+    "zip": "41071",
+    "phone": "(859) 412-1979",
+    "website": "BlazeCigarLounge.com",
+    "lat": 39.092117,
+    "lng": -84.493881
+   }
+  ]
+ },
+ {
+  "key": "phone 4193062224",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15679,
+    "name": "The Social Cigar",
+    "address": "92 S Washington St",
+    "city": "Tiffin",
+    "state": "OH",
+    "zip": "44883",
+    "phone": "(419) 306-2224",
+    "website": "thesocialcigar.net",
+    "lat": 41.11499,
+    "lng": -83.176773
+   },
+   {
+    "id": 15680,
+    "name": "The Social Cigar-Den Cigar Lounge",
+    "address": "58 W Market St",
+    "city": "Tiffin",
+    "state": "OH",
+    "zip": "44883",
+    "phone": "(419) 306-2224",
+    "website": "thesocialcigar.net",
+    "lat": 41.114346,
+    "lng": -83.182526
+   }
+  ]
+ },
+ {
+  "key": "phone 6143922302",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15682,
+    "name": "Governor's Cigar Lounge",
+    "address": "1685 W Lane Ave",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43221",
+    "phone": "(614) 392-2302",
+    "website": "thegovernorscigarlounge.com",
+    "lat": 40.006214,
+    "lng": -83.055359
+   },
+   {
+    "id": 18835,
+    "name": "The Governors Cigar Lounge",
+    "address": "33 E College Ave",
+    "city": "Westerville",
+    "state": "OH",
+    "zip": "43081",
+    "phone": "(614) 392-2302",
+    "website": "thegovernorscigarlounge.com",
+    "lat": 40.126011,
+    "lng": -82.930412
+   }
+  ]
+ },
+ {
+  "key": "phone 7406929737",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 15694,
+    "name": "House Of Cigar",
+    "address": "1230 Mount Vernon Ave",
+    "city": "Marion",
+    "state": "OH",
+    "zip": "43302",
+    "phone": "(740) 692-9737",
+    "website": "houseofcigar.net",
+    "lat": 40.581295,
+    "lng": -83.096519
+   },
+   {
+    "id": 15695,
+    "name": "HOC Marion  D Ellan  Lounge",
+    "address": "1230 Mt Vernon Ave",
+    "city": "Marion",
+    "state": "OH",
+    "zip": "43302",
+    "phone": "(740) 692-9737",
+    "website": "houseofcigar.net",
+    "lat": 40.581223,
+    "lng": -83.096504
+   }
+  ]
+ },
+ {
+  "key": "phone 7087257180",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15804,
+    "name": "Casa De Puros",
+    "address": "1117 S 1st Ave",
+    "city": "Maywood",
+    "state": "IL",
+    "zip": "60153",
+    "phone": "(708) 725-7180",
+    "website": "casadepuroscigars.com",
+    "lat": 41.877449,
+    "lng": -87.833542
+   },
+   {
+    "id": 15811,
+    "name": "Casa de Puros",
+    "address": "7410 Madison St",
+    "city": "Forest Park",
+    "state": "IL",
+    "zip": "60130",
+    "phone": "(708) 725-7180",
+    "website": "casadepuroscigars.com",
+    "lat": 41.879383,
+    "lng": -87.810173
+   }
+  ]
+ },
+ {
+  "key": "phone 7733303004",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 15935,
+    "name": "Puros Birriel Cigars",
+    "address": "6216 Cermak Rd",
+    "city": "Berwyn",
+    "state": "IL",
+    "zip": "60402",
+    "phone": "(773) 330-3004",
+    "website": "PurosBirriel.com",
+    "lat": 41.851021,
+    "lng": -87.77948
+   },
+   {
+    "id": 15936,
+    "name": "Puros Birriel Cigars",
+    "address": "2711 Ridgeland Ave",
+    "city": "Berwyn",
+    "state": "IL",
+    "zip": "60402",
+    "phone": "(773) 330-3004",
+    "website": "purosbirriel.com",
+    "lat": 41.84095,
+    "lng": -87.782906
+   },
+   {
+    "id": 20024,
+    "name": "Jm Cigar Bar and Cafe",
+    "address": "4 Calle Colon",
+    "city": "San Lorenzo",
+    "state": "PR",
+    "zip": "00754",
+    "phone": "(773) 330-3004",
+    "website": "purosbirriel.com",
+    "lat": 18.189947,
+    "lng": -65.960304
+   }
+  ]
+ },
+ {
+  "key": "phone 2622551996",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 16305,
+    "name": "Metro Cigars",
+    "address": "W182N9606 Appleton Ave",
+    "city": "Germantown",
+    "state": "WI",
+    "zip": "53022",
+    "phone": "(262) 255-1996",
+    "website": "metrocigarsllc.com",
+    "lat": 43.192955,
+    "lng": -88.136978
+   },
+   {
+    "id": 16331,
+    "name": "Metro Cigars",
+    "address": "N102W19455 Willow Crk Wy",
+    "city": "Germantown",
+    "state": "WI",
+    "zip": "53022",
+    "phone": "(262) 255-1996",
+    "website": "metrocigarsllc.com",
+    "lat": 43.202591,
+    "lng": -88.150848
+   }
+  ]
+ },
+ {
+  "key": "phone 3133591716",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 16721,
+    "name": "Le Cigar",
+    "address": "21918 Michigan Ave",
+    "city": "Dearborn",
+    "state": "MI",
+    "zip": "48124",
+    "phone": "(313) 359-1716",
+    "website": "lecigardearborn.com",
+    "lat": 42.306629,
+    "lng": -83.243164
+   },
+   {
+    "id": 16722,
+    "name": "Le Cigar",
+    "address": "22263 Michigan Ave",
+    "city": "Dearborn",
+    "state": "MI",
+    "zip": "48124",
+    "phone": "(313) 359-1716",
+    "website": "lecigardearborn.com",
+    "lat": 42.305038,
+    "lng": -83.249001
+   }
+  ]
+ },
+ {
+  "key": "phone 5869998488",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17155,
+    "name": "Robusto’s Cigar Superstore",
+    "address": "25025 Dei St",
+    "city": "Madison Heights",
+    "state": "MI",
+    "zip": "48071",
+    "phone": "(586) 999-8488",
+    "website": "cigarsocialnetwork.com/pages/robustossuperstore",
+    "lat": 42.476822,
+    "lng": -83.09137
+   },
+   {
+    "id": 19352,
+    "name": "Robusto's Cigar Bar and Bistro",
+    "address": "12170 Hall Rd",
+    "city": "Sterling Heights",
+    "state": "MI",
+    "zip": "48313",
+    "phone": "(586) 999-8488",
+    "website": "cigarsocialnetwork.com/pages/robustoscigarbarandbistorsterlingheights",
+    "lat": 42.625622,
+    "lng": -83.007179
+   }
+  ]
+ },
+ {
+  "key": "phone 8282538822",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 17452,
+    "name": "B and B Tobacconists",
+    "address": "520 Hendersonville Rd",
+    "city": "Asheville",
+    "state": "NC",
+    "zip": "28803",
+    "phone": "(828) 253-8822",
+    "website": "bbtobacconists.net",
+    "lat": 35.552795,
+    "lng": -82.538193
+   },
+   {
+    "id": 17470,
+    "name": "Bruce's Pipe Shop",
+    "address": "377 Merrimon Ave",
+    "city": "Asheville",
+    "state": "NC",
+    "zip": "28801",
+    "phone": "(828) 253-8822",
+    "website": "bbtobacconists.com",
+    "lat": 35.611984,
+    "lng": -82.554916
+   }
+  ]
+ },
+ {
+  "key": "phone 3362221300",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 17540,
+    "name": "Jr Cigars",
+    "address": "1515 E Broad St",
+    "city": "Statesville",
+    "state": "NC",
+    "zip": "28625",
+    "phone": "(336) 222-1300",
+    "website": "jrcigars.com",
+    "lat": 35.793221,
+    "lng": -80.860542
+   },
+   {
+    "id": 18173,
+    "name": "JR Cigar Outlet",
+    "address": "2589 Eric Ln",
+    "city": "Burlington",
+    "state": "NC",
+    "zip": "27215",
+    "phone": "(336) 222-1300",
+    "website": "jrcigars.com",
+    "lat": 36.065853,
+    "lng": -79.474403
+   }
+  ]
+ },
+ {
+  "key": "phone 6062540484",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 17560,
+    "name": "FatAsh Cigar Lounge",
+    "address": "8110 US-60",
+    "city": "Ashland",
+    "state": "KY",
+    "zip": "41102",
+    "phone": "(606) 254-0484",
+    "website": "fatash.com",
+    "lat": 38.41745,
+    "lng": -82.704308
+   },
+   {
+    "id": 17581,
+    "name": "Fat  Ash Cigar Lounge",
+    "address": "8110 US Route 60",
+    "city": "Ashland",
+    "state": "KY",
+    "zip": "41102",
+    "phone": "(606) 254-0484",
+    "website": "fatashcigarlounge.com",
+    "lat": 38.437561,
+    "lng": -82.684547
+   }
+  ]
+ },
+ {
+  "key": "phone 3047368858",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17607,
+    "name": "Stogie's Barboursville Location",
+    "address": "3633 US Route 60",
+    "city": "Huntington",
+    "state": "WV",
+    "zip": "25705",
+    "phone": "(304) 736-8858",
+    "website": "Stogieswv.com",
+    "lat": 38.41103,
+    "lng": -82.371765
+   },
+   {
+    "id": 17631,
+    "name": "Stogie’s Barboursville",
+    "address": "3663 US Route 60 E",
+    "city": "Barboursville",
+    "state": "WV",
+    "zip": "25504",
+    "phone": "(304) 736-8858",
+    "website": "smokestogies.com",
+    "lat": 38.410011,
+    "lng": -82.266869
+   }
+  ]
+ },
+ {
+  "key": "phone 9108645705",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 18018,
+    "name": "Anstead's Tobacco Co",
+    "address": "334 Cross Creek Mall",
+    "city": "Fayetteville",
+    "state": "NC",
+    "zip": "28303",
+    "phone": "(910) 864-5705",
+    "website": "ansteads.com",
+    "lat": 35.072449,
+    "lng": -78.960831
+   },
+   {
+    "id": 18019,
+    "name": "Carolina Cigar Lounge",
+    "address": "320 N McPherson Church Rd",
+    "city": "Fayetteville",
+    "state": "NC",
+    "zip": "28303",
+    "phone": "(910) 864-5705",
+    "website": "ANSTEADS.com",
+    "lat": 35.07288,
+    "lng": -78.952072
+   },
+   {
+    "id": 18020,
+    "name": "Anstead's Tobacco Company",
+    "address": "320 N McPherson Church Rd",
+    "city": "Fayetteville",
+    "state": "NC",
+    "zip": "28303",
+    "phone": "(910) 864-5705",
+    "website": "linktr.ee/ansteadstobacco",
+    "lat": 35.072845,
+    "lng": -78.952179
+   }
+  ]
+ },
+ {
+  "key": "phone 8888835596",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 18585,
+    "name": "BnB Tobacco",
+    "address": "44621 Guilford Dr",
+    "city": "Ashburn",
+    "state": "VA",
+    "zip": "20147",
+    "phone": "(888) 883-5596",
+    "website": "bnbtobacco.com",
+    "lat": 39.023144,
+    "lng": -77.458717
+   },
+   {
+    "id": 18702,
+    "name": "Cigar Devil",
+    "address": "344 Maple Ave W, # 110",
+    "city": "Vienna",
+    "state": "VA",
+    "zip": "22180",
+    "phone": "(888) 883-5596",
+    "website": "cigardevil.com",
+    "lat": 38.896858,
+    "lng": -77.270332
+   }
+  ]
+ },
+ {
+  "key": "phone 7032666999",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18599,
+    "name": "Fairfax Corner Cigar Town",
+    "address": "11887 Grand Commons Ave",
+    "city": "Fairfax",
+    "state": "VA",
+    "zip": "22030",
+    "phone": "(703) 266-6999",
+    "website": "cigartowns.com",
+    "lat": 38.858574,
+    "lng": -77.355492
+   },
+   {
+    "id": 35739,
+    "name": "Fairfax Cigar Town",
+    "address": "12184 Fairfax Towne Ctr",
+    "city": "Fairfax",
+    "state": "VA",
+    "zip": "22033",
+    "phone": "(703) 266-6999",
+    "website": null,
+    "lat": 38.86647,
+    "lng": -77.367851
+   }
+  ]
+ },
+ {
+  "key": "phone 7037516444",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18687,
+    "name": "Cigar Palace",
+    "address": "660 S Pickett St",
+    "city": "Alexandria",
+    "state": "VA",
+    "zip": "22304",
+    "phone": "(703) 751-6444",
+    "website": "cigarpalace.com",
+    "lat": 38.803886,
+    "lng": -77.132561
+   },
+   {
+    "id": 18689,
+    "name": "Cigar Palace",
+    "address": "4815 Eisenhower Ave # A",
+    "city": "Alexandria",
+    "state": "VA",
+    "zip": "22304",
+    "phone": "(703) 751-6444",
+    "website": "cigarpalace.com",
+    "lat": 38.804214,
+    "lng": -77.117615
+   }
+  ]
+ },
+ {
+  "key": "phone 7166747833",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19465,
+    "name": "Buffalo Cigars",
+    "address": "500 Main St",
+    "city": "Buffalo",
+    "state": "NY",
+    "zip": "14202",
+    "phone": "(716) 674-7833",
+    "website": "buffalocigars.com",
+    "lat": 42.887417,
+    "lng": -78.874046
+   },
+   {
+    "id": 19655,
+    "name": "Buffalo Cigars",
+    "address": "7032 Transit Rd",
+    "city": "Amherst",
+    "state": "NY",
+    "zip": "14225",
+    "phone": "(716) 674-7833",
+    "website": "BuffaloCigar.Club",
+    "lat": 42.959152,
+    "lng": -78.697258
+   }
+  ]
+ },
+ {
+  "key": "phone 3013749100",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 19931,
+    "name": "Tinder Box",
+    "address": "2754 Crain Hwy",
+    "city": "Waldorf",
+    "state": "MD",
+    "zip": "20601",
+    "phone": "(301) 374-9100",
+    "website": "tinderboxwaldorf.com",
+    "lat": 38.635586,
+    "lng": -76.900467
+   },
+   {
+    "id": 36660,
+    "name": "Waldorf Cigar Bar & Lounge",
+    "address": "Acton Square Shopping Center, 2754 Crain Hwy",
+    "city": "Waldorf",
+    "state": "MD",
+    "zip": "20601",
+    "phone": "(301) 374-9100",
+    "website": null,
+    "lat": 38.635609,
+    "lng": -76.900536
+   }
+  ]
+ },
+ {
+  "key": "phone 7879748830",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 19993,
+    "name": "Tabaco and Puros",
+    "address": "75 C. Cristina",
+    "city": "Ponce",
+    "state": "PR",
+    "zip": "00730",
+    "phone": "(787) 974-8830",
+    "website": "JuanaDiazCigars.com",
+    "lat": 18.01181,
+    "lng": -66.612991
+   },
+   {
+    "id": 20003,
+    "name": "Juana Díaz Cigars",
+    "address": "9 Calle Tomas Carrion Maduro",
+    "city": "Juana Díaz",
+    "state": "PR",
+    "zip": "00795",
+    "phone": "(787) 974-8830",
+    "website": "juanadiazcigars.com",
+    "lat": 18.05323,
+    "lng": -66.506477
+   }
+  ]
+ },
+ {
+  "key": "phone 4105242069",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20001,
+    "name": "Senor Cigar's",
+    "address": "207 Old Landing Rd",
+    "city": "Ocean City",
+    "state": "MD",
+    "zip": "21842",
+    "phone": "(410) 524-2069",
+    "website": "senorcigars.com",
+    "lat": 38.416599,
+    "lng": -75.065849
+   },
+   {
+    "id": 20007,
+    "name": "Senor Cigar's",
+    "address": "3314 Coastal Hwy",
+    "city": "Ocean City",
+    "state": "MD",
+    "zip": "21842",
+    "phone": "(410) 524-2069",
+    "website": "senorcigars.com",
+    "lat": 38.362003,
+    "lng": -75.072701
+   }
+  ]
+ },
+ {
+  "key": "phone 7872418605",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20030,
+    "name": "Don Rey Cigar",
+    "address": "56 C. Betances",
+    "city": "Caguas",
+    "state": "PR",
+    "zip": "00725",
+    "phone": "(787) 241-8605",
+    "website": "donreycigar.com",
+    "lat": 18.234535,
+    "lng": -66.036751
+   },
+   {
+    "id": 20043,
+    "name": "Don Rey Cigar",
+    "address": "1360 C. Roberts Local A",
+    "city": "San Juan",
+    "state": "PR",
+    "zip": "00907",
+    "phone": "(787) 241-8605",
+    "website": "donreycigar.com",
+    "lat": 18.450209,
+    "lng": -66.070023
+   },
+   {
+    "id": 20047,
+    "name": "Don Rey Cigar",
+    "address": "El Mercado de Bayamon, Carr. 167",
+    "city": "Bayamón",
+    "state": "PR",
+    "zip": "00962",
+    "phone": "(787) 241-8605",
+    "website": "donreycigar.com",
+    "lat": 18.397266,
+    "lng": -66.158356
+   },
+   {
+    "id": 20083,
+    "name": "Don Rey Cigar Ft. Buchanan",
+    "address": "North Terminal Road Bldg 689",
+    "city": "Guaynabo",
+    "state": "PR",
+    "zip": "00934",
+    "phone": "(787) 241-8605",
+    "website": "donreycigar.com",
+    "lat": 18.420649,
+    "lng": -66.121552
+   }
+  ]
+ },
+ {
+  "key": "phone 6105642471",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20499,
+    "name": "Cigar Mojo The Grove",
+    "address": "10 Liberty Blvd Ste 100",
+    "city": "Malvern",
+    "state": "PA",
+    "zip": "19355",
+    "phone": "(610) 564-2471",
+    "website": "cigarsocialnetwork.com/pages/cigarmojothegrove",
+    "lat": 40.054203,
+    "lng": -75.526978
+   },
+   {
+    "id": 20641,
+    "name": "Cigar Mojo",
+    "address": "197 E Dekalb Pike",
+    "city": "King Of Prussia",
+    "state": "PA",
+    "zip": "19406",
+    "phone": "(610) 564-2471",
+    "website": "instagram.com/cigarmojo",
+    "lat": 40.094734,
+    "lng": -75.358627
+   }
+  ]
+ },
+ {
+  "key": "phone 6106682993",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20599,
+    "name": "Sj Cigars",
+    "address": "293 Montgomery Ave",
+    "city": "Bala Cynwyd",
+    "state": "PA",
+    "zip": "19004",
+    "phone": "(610) 668-2993",
+    "website": "sjcigars.com",
+    "lat": 40.005508,
+    "lng": -75.242187
+   },
+   {
+    "id": 20600,
+    "name": "Sj Cigars",
+    "address": "231 Rock Hill Rd  Fl 2",
+    "city": "Bala Cynwyd",
+    "state": "PA",
+    "zip": "19004",
+    "phone": "(610) 668-2993",
+    "website": "sjcigars.com",
+    "lat": 40.021713,
+    "lng": -75.233017
+   }
+  ]
+ },
+ {
+  "key": "phone 9733448400",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 21210,
+    "name": "Railroad Cigars",
+    "address": "188 Pulaski St",
+    "city": "Newark",
+    "state": "NJ",
+    "zip": "07105",
+    "phone": "(973) 344-8400",
+    "website": "railroadcigars.com",
+    "lat": 40.718678,
+    "lng": -74.160545
+   },
+   {
+    "id": 37444,
+    "name": "Rail Road Cigars",
+    "address": "50 Dawson St",
+    "city": "Newark",
+    "state": "NJ",
+    "zip": "07114",
+    "phone": "(973) 344-8400",
+    "website": null,
+    "lat": 40.721451,
+    "lng": -74.170784
+   }
+  ]
+ },
+ {
+  "key": "phone 9738870800",
+  "sameName": false,
+  "rows": [
+   {
+    "id": 21378,
+    "name": "JR's Cigars",
+    "address": "10 Whippany Rd",
+    "city": "Whippany",
+    "state": "NJ",
+    "zip": "07981",
+    "phone": "(973) 887-0800",
+    "website": "jrcigars.com",
+    "lat": 40.821209,
+    "lng": -74.412773
+   },
+   {
+    "id": 21379,
+    "name": "Casa de Montecristo Cigar Lounge and Bar",
+    "address": "301 NJ-10",
+    "city": "Whippany",
+    "state": "NJ",
+    "zip": "07981",
+    "phone": "(973) 887-0800",
+    "website": "casademontecristo.com",
+    "lat": 40.818211,
+    "lng": -74.404564
+   },
+   {
+    "id": 37508,
+    "name": "Casa De Montecristo",
+    "address": "301 State Route 10",
+    "city": "Whippany",
+    "state": "NJ",
+    "zip": "07981",
+    "phone": "(973) 887-0800",
+    "website": null,
+    "lat": 40.804668,
+    "lng": -74.368172
+   }
+  ]
+ },
+ {
+  "key": "phone 9145921580",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 22004,
+    "name": "The Cigar Republic Store & Lounge",
+    "address": "116 S Central Ave",
+    "city": "Elmsford",
+    "state": "NY",
+    "zip": "10523",
+    "phone": "(914) 592-1580",
+    "website": "thecigarrepublic.com",
+    "lat": 41.051189,
+    "lng": -73.82177
+   },
+   {
+    "id": 22006,
+    "name": "The Cigar Republic",
+    "address": "133 E Main St",
+    "city": "Elmsford",
+    "state": "NY",
+    "zip": "10523",
+    "phone": "(914) 592-1580",
+    "website": "TheCigarRepublic.com",
+    "lat": 41.051945,
+    "lng": -73.813515
+   },
+   {
+    "id": 37954,
+    "name": "The Cigar Republic Store & Lounge",
+    "address": "133 E Main St Fl 2",
+    "city": "Elmsford",
+    "state": "NY",
+    "zip": "10523",
+    "phone": "(914) 592-1580",
+    "website": null,
+    "lat": 41.054737,
+    "lng": -73.819801
+   }
+  ]
+ },
+ {
+  "key": "phone 5087901261",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 22639,
+    "name": "C.B. Perkins Tobacconist & Cigars",
+    "address": "12 Enterprise Rd",
+    "city": "Barnstable",
+    "state": "MA",
+    "zip": "02601",
+    "phone": "(508) 790-1261",
+    "website": "cbperkinscigars.com",
+    "lat": 41.666855,
+    "lng": -70.302246
+   },
+   {
+    "id": 22640,
+    "name": "C.B. Perkins Tobacconist",
+    "address": "65 Independence Dr South Wind Plaza",
+    "city": "Hyannis",
+    "state": "MA",
+    "zip": "02601",
+    "phone": "(508) 790-1261",
+    "website": "cbperkinscigars.com",
+    "lat": 41.674412,
+    "lng": -70.300079
+   }
+  ]
+ },
+ {
+  "key": "phone 2079922343",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23073,
+    "name": "Cigaret Shopper",
+    "address": "460 Wilson St",
+    "city": "Brewer",
+    "state": "ME",
+    "zip": "04412",
+    "phone": "(207) 992-2343",
+    "website": "cigaretshopper.com",
+    "lat": 44.782631,
+    "lng": -68.748032
+   },
+   {
+    "id": 23094,
+    "name": "Cigaret Shopper",
+    "address": "396 N Main St",
+    "city": "Brewer",
+    "state": "ME",
+    "zip": "04412",
+    "phone": "(207) 992-2343",
+    "website": "cigaretshopper.com",
+    "lat": 44.800228,
+    "lng": -68.75515
+   }
+  ]
+ },
+ {
+  "key": "phone 2078327580",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23085,
+    "name": "Cigaret Shopper",
+    "address": "1411 Atlantic Hwy",
+    "city": "Waldoboro",
+    "state": "ME",
+    "zip": "04572",
+    "phone": "(207) 832-7580",
+    "website": "cigaretshopper.com",
+    "lat": 44.101269,
+    "lng": -69.386139
+   },
+   {
+    "id": 23086,
+    "name": "Cigaret Shopper",
+    "address": "25 Washington Rd",
+    "city": "Waldoboro",
+    "state": "ME",
+    "zip": "04572",
+    "phone": "(207) 832-7580",
+    "website": "cigaretshopper.com",
+    "lat": 44.104061,
+    "lng": -69.367462
+   }
+  ]
+ },
+ {
+  "key": "phone 2077943801",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23102,
+    "name": "Cigaret Shopper",
+    "address": "100 W Broadway",
+    "city": "Lincoln",
+    "state": "ME",
+    "zip": "04457",
+    "phone": "(207) 794-3801",
+    "website": "cigaretshopper.com",
+    "lat": 45.361687,
+    "lng": -68.513824
+   },
+   {
+    "id": 23103,
+    "name": "Cigaret Shopper",
+    "address": "287 W Broadway",
+    "city": "Lincoln",
+    "state": "ME",
+    "zip": "04457",
+    "phone": "(207) 794-3801",
+    "website": "cigaretshopper.com",
+    "lat": 45.355263,
+    "lng": -68.529037
+   }
+  ]
+ },
+ {
+  "key": "phone 9094537253",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 25860,
+    "name": "Bleux Cigar Lounge",
+    "address": "1073 N Mount Vernon Ave",
+    "city": "San Bernardino",
+    "state": "CA",
+    "zip": "92411",
+    "phone": "(909) 453-7253",
+    "website": null,
+    "lat": 34.118992,
+    "lng": -117.313385
+   },
+   {
+    "id": 25949,
+    "name": "Bleux Cigar Lounge",
+    "address": "165 W Hospitality Lane Ste 26",
+    "city": "San Bernardino",
+    "state": "CA",
+    "zip": "92408",
+    "phone": "(909) 453-7253",
+    "website": null,
+    "lat": 34.065784,
+    "lng": -117.286446
+   }
+  ]
+ },
+ {
+  "key": "phone 6624531550",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 27886,
+    "name": "Stogie Shoppe",
+    "address": "931 Highway 82 W",
+    "city": "Greenwood",
+    "state": "MS",
+    "zip": "38930",
+    "phone": "(662) 453-1550",
+    "website": null,
+    "lat": 33.524666,
+    "lng": -90.205688
+   },
+   {
+    "id": 27888,
+    "name": "Stogie Shoppe",
+    "address": "899 US-82 W",
+    "city": "Greenwood",
+    "state": "MS",
+    "zip": "38930",
+    "phone": "(662) 453-1550",
+    "website": null,
+    "lat": 33.516006,
+    "lng": -90.203812
+   }
+  ]
+ },
+ {
+  "key": "phone 2604160636",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 33231,
+    "name": "Tobacco Stop & Big Ash VIP Cigar Lounge",
+    "address": "9111 Lima Rd",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "zip": "46818",
+    "phone": "(260) 416-0636",
+    "website": null,
+    "lat": 41.1646,
+    "lng": -85.166321
+   },
+   {
+    "id": 33232,
+    "name": "Tobacco Stop & Big Ash VIP Cigar lounge",
+    "address": "6214 Lima Rd",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "zip": "46818",
+    "phone": "(260) 416-0636",
+    "website": null,
+    "lat": 41.136024,
+    "lng": -85.160889
+   }
+  ]
+ },
+ {
+  "key": "phone 5083161705",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 38342,
+    "name": "Royal cigars & more",
+    "address": "92 Taunton St",
+    "city": "Plainville",
+    "state": "MA",
+    "zip": "02762",
+    "phone": "(508) 316-1705",
+    "website": null,
+    "lat": 42.031307,
+    "lng": -71.312057
+   },
+   {
+    "id": 38344,
+    "name": "Royal Cigar",
+    "address": "13 Taunton St",
+    "city": "Plainville",
+    "state": "MA",
+    "zip": "02762",
+    "phone": "(508) 316-1705",
+    "website": null,
+    "lat": 42.011761,
+    "lng": -71.305298
+   }
+  ]
+ },
+ {
+  "key": "phone 4019442164",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 38380,
+    "name": "Cigar World Cranston",
+    "address": "22 Rolfe Square",
+    "city": "Cranston",
+    "state": "RI",
+    "zip": "02910",
+    "phone": "(401) 944-2164",
+    "website": null,
+    "lat": 41.77808,
+    "lng": -71.435738
+   },
+   {
+    "id": 38381,
+    "name": "Cigar World",
+    "address": "686 Reservoir Ave",
+    "city": "Cranston",
+    "state": "RI",
+    "zip": "02910",
+    "phone": "(401) 944-2164",
+    "website": null,
+    "lat": 41.780525,
+    "lng": -71.441772
+   }
+  ]
+ },
+ {
+  "key": "name FL|bradenton|cork",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 397,
+    "name": "Cork's Cigar Bar",
+    "address": "424 Old Main St",
+    "city": "Bradenton",
+    "state": "FL",
+    "zip": "34205",
+    "phone": "(941) 744-2589",
+    "website": "corkscigarbar.com",
+    "lat": 27.496225,
+    "lng": -82.57354
+   },
+   {
+    "id": 398,
+    "name": "Cork's Cigar Bar",
+    "address": "1121 14th St W",
+    "city": "Bradenton",
+    "state": "FL",
+    "zip": "34205",
+    "phone": "(941) 742-3945",
+    "website": "corkscigarbar.com",
+    "lat": 27.489326,
+    "lng": -82.574944
+   }
+  ]
+ },
+ {
+  "key": "name FL|tampa|king corona",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 455,
+    "name": "King Corona Cigars International Plaza",
+    "address": "2223 N Westshore Blvd Unit B224",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33607",
+    "phone": "(813) 683-6180",
+    "website": "kingcoronacigars.com",
+    "lat": 27.965757,
+    "lng": -82.521149
+   },
+   {
+    "id": 701,
+    "name": "King Corona Cigars",
+    "address": "1523 E 7th Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33605",
+    "phone": "(813) 923-7982",
+    "website": "kingcoronacigars.com",
+    "lat": 27.960169,
+    "lng": -82.442162
+   }
+  ]
+ },
+ {
+  "key": "name FL|tampa|casa montecristo",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 603,
+    "name": "Casa de Montecristo Cigar Lounge and Bar",
+    "address": "510 S Howard Ave",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33606",
+    "phone": "(813) 257-9380",
+    "website": "eventbrite.com/e/texas-cigar-festival-2024-tickets-799983972597",
+    "lat": 27.939127,
+    "lng": -82.482834
+   },
+   {
+    "id": 824,
+    "name": "Casa de Montecristo by Tampa Humidor Busch",
+    "address": "1418 E Busch Blvd",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33612",
+    "phone": "(813) 990-8535",
+    "website": "casademontecristo.com/tampa",
+    "lat": 28.033171,
+    "lng": -82.443626
+   }
+  ]
+ },
+ {
+  "key": "name FL|fort myers|world famou",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 630,
+    "name": "The World Famous Cigar Lounge",
+    "address": "2150 W First St #4B",
+    "city": "Fort Myers",
+    "state": "FL",
+    "zip": "33901",
+    "phone": "(239) 689-5146",
+    "website": "WorldFamousCigarBar.com",
+    "lat": 26.639015,
+    "lng": -81.87767
+   },
+   {
+    "id": 1416,
+    "name": "The World Famous Cigar Bar",
+    "address": "10045 Gulf Center Dr E-115",
+    "city": "Fort Myers",
+    "state": "FL",
+    "zip": "33913",
+    "phone": "(239) 267-6020",
+    "website": "worldfamouscigarbar.com",
+    "lat": 26.487474,
+    "lng": -81.790047
+   }
+  ]
+ },
+ {
+  "key": "name FL|miami|cuban crafter",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 983,
+    "name": "Cuban Crafters Cigars",
+    "address": "3604 NW 7th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33125",
+    "phone": "(305) 642-5850",
+    "website": "cubancrafters.com",
+    "lat": 25.778765,
+    "lng": -80.253632
+   },
+   {
+    "id": 1314,
+    "name": "Cuban Crafters Cigars",
+    "address": "2313 NW 7th Ave",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33127",
+    "phone": "(305) 573-0222",
+    "website": "cubancrafters.com",
+    "lat": 25.799267,
+    "lng": -80.206902
+   }
+  ]
+ },
+ {
+  "key": "name FL|miami|duran",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1126,
+    "name": "Duran Cigars",
+    "address": "7120 SW 47th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33155",
+    "phone": "(786) 391-4563",
+    "website": "robertodurancigars.com",
+    "lat": 25.726027,
+    "lng": -80.308586
+   },
+   {
+    "id": 23728,
+    "name": "Duran Cigars",
+    "address": "3141A SW 8th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33135",
+    "phone": "(786) 803-8800",
+    "website": null,
+    "lat": 25.765257,
+    "lng": -80.245636
+   }
+  ]
+ },
+ {
+  "key": "name FL|hialeah|fuego",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1127,
+    "name": "J. Fuego Cigar Co.",
+    "address": "7951 W 26th Ave",
+    "city": "Hialeah",
+    "state": "FL",
+    "zip": "33016",
+    "phone": "(305) 471-8155",
+    "website": "jfuego.net",
+    "lat": 25.894581,
+    "lng": -80.335884
+   },
+   {
+    "id": 23774,
+    "name": "Fuego Cigar Lounge",
+    "address": "2900 W 12th Ave #5",
+    "city": "Hialeah",
+    "state": "FL",
+    "zip": "33012",
+    "phone": "(786) 353-9357",
+    "website": null,
+    "lat": 25.848465,
+    "lng": -80.306847
+   }
+  ]
+ },
+ {
+  "key": "name FL|orlando|oasi",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1581,
+    "name": "Cigar Oasis",
+    "address": "4562 S Kirkman Rd",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32811",
+    "phone": "(407) 294-9504",
+    "website": "cigaroasis.com",
+    "lat": 28.496237,
+    "lng": -81.460709
+   },
+   {
+    "id": 24065,
+    "name": "Cigar Oasis",
+    "address": "6651 S Semoran Blvd",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32822",
+    "phone": "(407) 930-2509",
+    "website": null,
+    "lat": 28.46722,
+    "lng": -81.308746
+   }
+  ]
+ },
+ {
+  "key": "name FL|orlando|corona",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 1650,
+    "name": "Corona Cigar Company",
+    "address": "7792 W Sand Lake Rd",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32819",
+    "phone": "(407) 248-1212",
+    "website": "coronacigar.com",
+    "lat": 28.448635,
+    "lng": -81.489258
+   },
+   {
+    "id": 1705,
+    "name": "Corona Cigar Co.",
+    "address": "6450 Kingspointe Pkwy",
+    "city": "Orlando",
+    "state": "FL",
+    "zip": "32819",
+    "phone": "(888) 702-4427",
+    "website": "coronacigar.com",
+    "lat": 28.454315,
+    "lng": -81.438522
+   },
+   {
+    "id": 39708,
+    "name": "Corona Cigar Company",
+    "address": null,
+    "city": "Orlando",
+    "state": "FL",
+    "zip": null,
+    "phone": "(407) 522-0006",
+    "website": null,
+    "lat": 28.579985,
+    "lng": -81.446686
+   }
+  ]
+ },
+ {
+  "key": "name AZ|tucson|anthony",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2063,
+    "name": "Anthony's Cigar Emporium",
+    "address": "4811 E Grant Rd #153",
+    "city": "Tucson",
+    "state": "AZ",
+    "zip": "85712",
+    "phone": "(520) 324-0303",
+    "website": "anthonyscigars.com",
+    "lat": 32.251545,
+    "lng": -110.889885
+   },
+   {
+    "id": 2076,
+    "name": "Anthony's Cigar Emporium",
+    "address": "4419 N Campbell Ave",
+    "city": "Tucson",
+    "state": "AZ",
+    "zip": "85718",
+    "phone": "(520) 529-7184",
+    "website": "anthonyscigars.com",
+    "lat": 32.287548,
+    "lng": -110.944252
+   },
+   {
+    "id": 2134,
+    "name": "Anthony's Cigar Emporium",
+    "address": "5350 E Broadway Blvd",
+    "city": "Tucson",
+    "state": "AZ",
+    "zip": "85711",
+    "phone": "(520) 398-6216",
+    "website": "anthonyscigars.com",
+    "lat": 32.22081,
+    "lng": -110.87822
+   }
+  ]
+ },
+ {
+  "key": "name TX|el paso|rockin grill",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2093,
+    "name": "Rockin' Cigar Bar & Grill @ Thunderbird",
+    "address": "6404 N Mesa St",
+    "city": "El Paso",
+    "state": "TX",
+    "zip": "79912",
+    "phone": "(915) 759-4159",
+    "website": "rockincigar.com",
+    "lat": 31.833344,
+    "lng": -106.536751
+   },
+   {
+    "id": 2130,
+    "name": "The Rockin' Cigar Bar & Grill",
+    "address": "226 Cincinnati Ave",
+    "city": "El Paso",
+    "state": "TX",
+    "zip": "79902",
+    "phone": "(915) 703-3742",
+    "website": "rockincigar.com",
+    "lat": 31.777191,
+    "lng": -106.502411
+   }
+  ]
+ },
+ {
+  "key": "name CA|san diego|liberty",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 2331,
+    "name": "Liberty Tobacco",
+    "address": "2650 Via De La Valle C-230",
+    "city": "San Diego",
+    "state": "CA",
+    "zip": "92014",
+    "phone": "(858) 523-9240",
+    "website": "libertytobacco.com",
+    "lat": 32.981247,
+    "lng": -117.251114
+   },
+   {
+    "id": 2335,
+    "name": "Liberty Tobacco",
+    "address": "7341 Clairemont Mesa Blvd",
+    "city": "San Diego",
+    "state": "CA",
+    "zip": "92111",
+    "phone": "(858) 292-1772",
+    "website": "libertytobacco.com",
+    "lat": 32.831379,
+    "lng": -117.160393
+   }
+  ]
+ },
+ {
+  "key": "name CA|los angeles|lone wolf",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 3400,
+    "name": "Lone Wolf Cigar Company",
+    "address": "223B Broadway",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90401",
+    "phone": "(310) 458-5441",
+    "website": "lonewolfcigars.com/santa-monica",
+    "lat": 34.014133,
+    "lng": -118.495003
+   },
+   {
+    "id": 3592,
+    "name": "The Lone Wolf Cigar Company & Lounge",
+    "address": "11950 Wilshire Blvd",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90025",
+    "phone": "(310) 458-8000",
+    "website": "lonewolfcigars.com/west-los-angeles",
+    "lat": 34.045788,
+    "lng": -118.465263
+   }
+  ]
+ },
+ {
+  "key": "name AZ|phoenix|churchill",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 4456,
+    "name": "Churchill's Fine Cigars",
+    "address": "4940 E Ray Rd Ste 9",
+    "city": "Phoenix",
+    "state": "AZ",
+    "zip": "85044",
+    "phone": "(480) 705-9671",
+    "website": "churchillsaz.com",
+    "lat": 33.321533,
+    "lng": -111.976868
+   },
+   {
+    "id": 4587,
+    "name": "Churchill's Fine Cigars",
+    "address": "5041 N 44th St",
+    "city": "Phoenix",
+    "state": "AZ",
+    "zip": "85018",
+    "phone": "(602) 840-9080",
+    "website": "churchillsaz.com",
+    "lat": 33.510921,
+    "lng": -111.986298
+   }
+  ]
+ },
+ {
+  "key": "name OK|ardmore|red river",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5194,
+    "name": "Red River Cigars & Lounge Ardmore",
+    "address": "1032 Northwest Blvd",
+    "city": "Ardmore",
+    "state": "OK",
+    "zip": "73401",
+    "phone": "(580) 798-3388",
+    "website": "redrivertobacco.com",
+    "lat": 34.192253,
+    "lng": -97.142387
+   },
+   {
+    "id": 5223,
+    "name": "Red River Tobacco",
+    "address": "444 C St SE",
+    "city": "Ardmore",
+    "state": "OK",
+    "zip": "73401",
+    "phone": "(580) 223-0444",
+    "website": "RedRiverTobacco.com",
+    "lat": 34.162849,
+    "lng": -97.128197
+   }
+  ]
+ },
+ {
+  "key": "name TX|houston|casa montecristo",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5206,
+    "name": "Casa De Montecristo Cigar Lounge - West Loop",
+    "address": "2901 West Loop S",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77027",
+    "phone": "(713) 850-8091",
+    "website": "casademontecristo.com",
+    "lat": 29.676767,
+    "lng": -95.422569
+   },
+   {
+    "id": 5687,
+    "name": "Casa de Montecristo Cigar Lounge by Serious Cigars",
+    "address": "15655 John F Kennedy Blvd",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77032",
+    "phone": "(281) 741-5992",
+    "website": "casademontecristo.com",
+    "lat": 29.944168,
+    "lng": -95.332413
+   },
+   {
+    "id": 5793,
+    "name": "Casa de Montecristo Cigar Lounge",
+    "address": "6608 FM 1960 W D",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77069",
+    "phone": "(281) 397-9800",
+    "website": "eventbrite.com/e/texas-cigar-festival-2024-tickets-799983972597",
+    "lat": 29.972034,
+    "lng": -95.529129
+   }
+  ]
+ },
+ {
+  "key": "name TX|humble|top",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 5647,
+    "name": "Top 10 Cigars",
+    "address": "9502 N Sam Houston Pkwy E #111",
+    "city": "Humble",
+    "state": "TX",
+    "zip": "77396",
+    "phone": "(281) 506-8461",
+    "website": "top10-cigars.com",
+    "lat": 29.932875,
+    "lng": -95.248718
+   },
+   {
+    "id": 5842,
+    "name": "Top 10 Cigars",
+    "address": "A 5520 FM 1960 E. Ste",
+    "city": "Humble",
+    "state": "TX",
+    "zip": "77346",
+    "phone": "(281) 312-5572",
+    "website": "top10-cigars.com",
+    "lat": 29.998339,
+    "lng": -95.189682
+   }
+  ]
+ },
+ {
+  "key": "name FL|panama city beach|pcb",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 6312,
+    "name": "PCB Cigars",
+    "address": "17329 Panama City Beach Pkwy",
+    "city": "Panama City Beach",
+    "state": "FL",
+    "zip": "32413",
+    "phone": "(850) 249-6282",
+    "website": "pcbcigars.com",
+    "lat": 30.232187,
+    "lng": -85.894989
+   },
+   {
+    "id": 6374,
+    "name": "PCB Cigars 2",
+    "address": "8015 Front Beach Rd",
+    "city": "Panama City Beach",
+    "state": "FL",
+    "zip": "32407",
+    "phone": "(850) 238-8490",
+    "website": "pcbcigars.com",
+    "lat": 30.185017,
+    "lng": -85.774002
+   }
+  ]
+ },
+ {
+  "key": "name FL|tallahassee|tally",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 6601,
+    "name": "Cigars of Tally",
+    "address": "1401 Market St",
+    "city": "Tallahassee",
+    "state": "FL",
+    "zip": "32312",
+    "phone": "(850) 224-4277",
+    "website": "cigarsoftally.wordpress.com",
+    "lat": 30.506214,
+    "lng": -84.253326
+   },
+   {
+    "id": 6621,
+    "name": "Cigars of Tally Lounge and Bar",
+    "address": "926 N Monroe St",
+    "city": "Tallahassee",
+    "state": "FL",
+    "zip": "32303",
+    "phone": "(850) 727-0085",
+    "website": "cigarsoftally.com",
+    "lat": 30.452156,
+    "lng": -84.281075
+   }
+  ]
+ },
+ {
+  "key": "name TX|longview|junction",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7073,
+    "name": "Tobacco Junction of Longview",
+    "address": "2415 Gilmer Rd",
+    "city": "Longview",
+    "state": "TX",
+    "zip": "75604",
+    "phone": "(903) 295-3393",
+    "website": "tobaccojunction.com",
+    "lat": 32.532391,
+    "lng": -94.7892
+   },
+   {
+    "id": 7223,
+    "name": "Tobacco Junction of Longview",
+    "address": "522 E Loop 281 # C",
+    "city": "Longview",
+    "state": "TX",
+    "zip": "75605",
+    "phone": "(903) 234-1212",
+    "website": "tobaccojunction.com",
+    "lat": 32.539795,
+    "lng": -94.729858
+   },
+   {
+    "id": 7245,
+    "name": "Tobacco Junction",
+    "address": "1201 E Marshall Ave #A",
+    "city": "Longview",
+    "state": "TX",
+    "zip": "75601",
+    "phone": "(903) 234-0641",
+    "website": "tobaccojunction.com",
+    "lat": 32.50354,
+    "lng": -94.724052
+   }
+  ]
+ },
+ {
+  "key": "name TX|mckinney|fuego",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7239,
+    "name": "En Fuego Tobacco Shop",
+    "address": "7550 State Hwy 121 #400",
+    "city": "Mckinney",
+    "state": "TX",
+    "zip": "75070",
+    "phone": "(972) 668-3782",
+    "website": "Enfuegocigars.com",
+    "lat": 33.135754,
+    "lng": -96.709671
+   },
+   {
+    "id": 7300,
+    "name": "En Fuego Tobacco Shop",
+    "address": "301 E Virginia St #101",
+    "city": "Mckinney",
+    "state": "TX",
+    "zip": "75069",
+    "phone": "(469) 678-5100",
+    "website": "enfuegocigars.com",
+    "lat": 33.198059,
+    "lng": -96.613403
+   }
+  ]
+ },
+ {
+  "key": "name GA|griffin|lola",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7859,
+    "name": "Lola Cigar",
+    "address": "1742 Zebulon Rd",
+    "city": "Griffin",
+    "state": "GA",
+    "zip": "30224",
+    "phone": "(678) 692-8272",
+    "website": "lolacigar.com",
+    "lat": 33.193615,
+    "lng": -84.284798
+   },
+   {
+    "id": 28199,
+    "name": "Lola Cigar",
+    "address": "128 S Hill St",
+    "city": "Griffin",
+    "state": "GA",
+    "zip": "30223",
+    "phone": "(770) 584-6549",
+    "website": null,
+    "lat": 33.247589,
+    "lng": -84.263718
+   }
+  ]
+ },
+ {
+  "key": "name GA|mcdonough|jaguar",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 7880,
+    "name": "Jaguars Cigar Lounge",
+    "address": "3771 Jodeco Rd",
+    "city": "Mcdonough",
+    "state": "GA",
+    "zip": "30253",
+    "phone": "(678) 272-0511",
+    "website": "jaguarscigarlounge.com",
+    "lat": 33.483398,
+    "lng": -84.19149
+   },
+   {
+    "id": 7882,
+    "name": "Jaguars Cigar Lounge",
+    "address": "Behind Elitte Restaurant, 715 Industrial Blvd",
+    "city": "Mcdonough",
+    "state": "GA",
+    "zip": "30253",
+    "phone": "(678) 272-0900",
+    "website": "jaguarscigarlounge.com",
+    "lat": 33.424019,
+    "lng": -84.175591
+   }
+  ]
+ },
+ {
+  "key": "name SC|charleston|row event",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8027,
+    "name": "Cigar Row Events",
+    "address": "188 Meeting St",
+    "city": "Charleston",
+    "state": "SC",
+    "zip": "29401",
+    "phone": "(843) 607-4428",
+    "website": "cigarrowevents.com",
+    "lat": 32.780819,
+    "lng": -79.930519
+   },
+   {
+    "id": 8090,
+    "name": "Cigar Row Events",
+    "address": "3 Gamecock Ave Ste 303b",
+    "city": "Charleston",
+    "state": "SC",
+    "zip": "29407",
+    "phone": "(843) 607-4423",
+    "website": "cigarrowevents.com",
+    "lat": 32.820435,
+    "lng": -79.993965
+   }
+  ]
+ },
+ {
+  "key": "name SC|myrtle beach|white ash",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8029,
+    "name": "White Ash Cigar The Dunes",
+    "address": "7708 N Kings Hwy",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "zip": "29572",
+    "phone": "(843) 282-9160",
+    "website": "whiteashcigar.com",
+    "lat": 33.747566,
+    "lng": -78.817169
+   },
+   {
+    "id": 8039,
+    "name": "White Ash Cigar",
+    "address": "4030 River Oaks Dr A-4",
+    "city": "Myrtle Beach",
+    "state": "SC",
+    "zip": "29579",
+    "phone": "(843) 787-9957",
+    "website": "whiteashcigar.com/index.html",
+    "lat": 33.753998,
+    "lng": -78.864578
+   }
+  ]
+ },
+ {
+  "key": "name GA|atlanta|havana",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8044,
+    "name": "Havana Cigars",
+    "address": "376 Auburn Ave NE",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30312",
+    "phone": "(678) 399-3475",
+    "website": "havanacigarsATL.com",
+    "lat": 33.75565,
+    "lng": -84.374702
+   },
+   {
+    "id": 8241,
+    "name": "Havana Cigar Lounge",
+    "address": "6010 Sandy Springs Cir",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30328",
+    "phone": "(404) 500-2483",
+    "website": "thehavanacigarlounge.com",
+    "lat": 33.920361,
+    "lng": -84.385284
+   }
+  ]
+ },
+ {
+  "key": "name SC|charleston|king leaf",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 8063,
+    "name": "King's Leaf Cigar Lounge",
+    "address": "395 King St",
+    "city": "Charleston",
+    "state": "SC",
+    "zip": "29403",
+    "phone": "(843) 577-7339",
+    "website": "kingsleafcigars.com",
+    "lat": 32.786362,
+    "lng": -79.936928
+   },
+   {
+    "id": 8091,
+    "name": "King's Leaf Cigar Lounge",
+    "address": "1714 Old Towne Rd",
+    "city": "Charleston",
+    "state": "SC",
+    "zip": "29407",
+    "phone": "(843) 225-7148",
+    "website": "kingsleafcigars.com/west-ashley",
+    "lat": 32.817657,
+    "lng": -79.992584
+   }
+  ]
+ },
+ {
+  "key": "name CA|bakersfield|more",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9009,
+    "name": "Cigars and More",
+    "address": "4208 Rosedale Hwy #304",
+    "city": "Bakersfield",
+    "state": "CA",
+    "zip": "93308",
+    "phone": "(661) 861-1116",
+    "website": "yelp.com/biz/cigars-and-more-bakersfield",
+    "lat": 35.384308,
+    "lng": -119.054802
+   },
+   {
+    "id": 9027,
+    "name": "Cigars & More 2",
+    "address": "1403 Allen Rd #800",
+    "city": "Bakersfield",
+    "state": "CA",
+    "zip": "93314",
+    "phone": "(661) 695-8666",
+    "website": "cigarsandmore2.com",
+    "lat": 35.371044,
+    "lng": -119.147408
+   }
+  ]
+ },
+ {
+  "key": "name CA|bakersfield|town",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9123,
+    "name": "Tobacco Town",
+    "address": "2222 S Chester Ave",
+    "city": "Bakersfield",
+    "state": "CA",
+    "zip": "93304",
+    "phone": "(661) 398-8105",
+    "website": "tobaccotown.com",
+    "lat": 35.334038,
+    "lng": -119.015106
+   },
+   {
+    "id": 28946,
+    "name": "Cigar Town",
+    "address": "5613 Calloway Dr",
+    "city": "Bakersfield",
+    "state": "CA",
+    "zip": "93312",
+    "phone": "(661) 679-6100",
+    "website": null,
+    "lat": 35.411232,
+    "lng": -119.112259
+   }
+  ]
+ },
+ {
+  "key": "name NV|las vegas|havana",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9257,
+    "name": "Havana Cigar Company",
+    "address": "3900 Paradise Rd  Ste J",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89169",
+    "phone": "(702) 732-2829",
+    "website": "gatreehunters.com",
+    "lat": 36.118004,
+    "lng": -115.154373
+   },
+   {
+    "id": 9441,
+    "name": "Havana Cigar Lounge",
+    "address": "4850 W Flamingo Rd",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89103",
+    "phone": "(702) 750-0204",
+    "website": "havanacigarlounge.vegas",
+    "lat": 36.116539,
+    "lng": -115.206772
+   }
+  ]
+ },
+ {
+  "key": "name NV|las vegas|bill",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9268,
+    "name": "Mr. Bill's Pipe & Tobacco Company",
+    "address": "8450 W Sahara Ave #113",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89117",
+    "phone": "(702) 362-4427",
+    "website": "mr-bills.com",
+    "lat": 36.144417,
+    "lng": -115.275658
+   },
+   {
+    "id": 9309,
+    "name": "Mr Bill's Pipe & Tobacco Co.",
+    "address": "2575 Montessouri St",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89117",
+    "phone": "(702) 253-1060",
+    "website": "mr-bills.com",
+    "lat": 36.142818,
+    "lng": -115.247925
+   },
+   {
+    "id": 9464,
+    "name": "Mr. Bill's Pipe and Tobacco Company",
+    "address": "4441 W Flamingo Rd",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89103",
+    "phone": "(702) 221-9771",
+    "website": "mr-bills.com",
+    "lat": 36.114849,
+    "lng": -115.201042
+   }
+  ]
+ },
+ {
+  "key": "name NV|las vegas|leaf",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9289,
+    "name": "Tobacco Leaf Cigars & Lounge",
+    "address": "7175 W Lake Mead Blvd",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89128",
+    "phone": "(702) 432-3000",
+    "website": "tobaccoleafvegas.com",
+    "lat": 36.195347,
+    "lng": -115.248253
+   },
+   {
+    "id": 9430,
+    "name": "Tobacco Leaf Cigars & Lounge",
+    "address": "9400 S Eastern Ave #105",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89123",
+    "phone": "(702) 897-5977",
+    "website": "longashes2u.com",
+    "lat": 36.01823,
+    "lng": -115.118019
+   }
+  ]
+ },
+ {
+  "key": "name NV|las vegas|davidoff geneva",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9400,
+    "name": "Davidoff of Geneva Cigar Bar",
+    "address": "3200 Las Vegas Blvd S",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89109",
+    "phone": "(702) 473-5001",
+    "website": "davidoffcigarbarlv.com",
+    "lat": 36.126675,
+    "lng": -115.169159
+   },
+   {
+    "id": 9497,
+    "name": "Davidoff of Geneva",
+    "address": "3655 Las Vegas Blvd S",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89109",
+    "phone": "(702) 733-0195",
+    "website": "davidoff.com",
+    "lat": 36.112492,
+    "lng": -115.170494
+   }
+  ]
+ },
+ {
+  "key": "name NV|las vegas|montecristo",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9495,
+    "name": "Montecristo Cigar Bar",
+    "address": "3570 Las Vegas Boulevard South",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89109",
+    "phone": "(866) 227-5938",
+    "website": "caesars.com/caesars-palace/things-to-do/nightlife/montecristo-cigar-bar",
+    "lat": 36.116749,
+    "lng": -115.175133
+   },
+   {
+    "id": 9496,
+    "name": "Montecristo Cigar Bar",
+    "address": "3655 Las Vegas Boulevard South, Paris Las Vegas",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89109",
+    "phone": "(877) 796-2096",
+    "website": "caesars.com/paris-las-vegas/things-to-do/nightlife/montecristo-cigar-bar?utm_campaign=bing&utm_source=bing&utm_medium=local&utm_term=PLV42&utm_content=bar",
+    "lat": 36.113018,
+    "lng": -115.170006
+   }
+  ]
+ },
+ {
+  "key": "name NV|reno|lagrone",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9582,
+    "name": "Lagrone Cigar Co",
+    "address": "3680 Grant Dr",
+    "city": "Reno",
+    "state": "NV",
+    "zip": "89509",
+    "phone": "(775) 302-8496",
+    "website": "lagronecigarco.com",
+    "lat": 39.489212,
+    "lng": -119.802139
+   },
+   {
+    "id": 9605,
+    "name": "LaGrone Cigar Co",
+    "address": "2470 Wrondel Way",
+    "city": "Reno",
+    "state": "NV",
+    "zip": "89502",
+    "phone": "(775) 203-0508",
+    "website": "Lagronecigarco.com",
+    "lat": 39.50153,
+    "lng": -119.795761
+   }
+  ]
+ },
+ {
+  "key": "name UT|provo|stogie",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 9649,
+    "name": "Stogies",
+    "address": "410 Freedom Blvd 200 W",
+    "city": "Provo",
+    "state": "UT",
+    "zip": "84601",
+    "phone": "(801) 373-4019",
+    "website": "stogies.net",
+    "lat": 40.239311,
+    "lng": -111.662041
+   },
+   {
+    "id": 9662,
+    "name": "Stogies",
+    "address": "692 E 300 S",
+    "city": "Provo",
+    "state": "UT",
+    "zip": "84606",
+    "phone": "(801) 374-3163",
+    "website": "stogies.net",
+    "lat": 40.229496,
+    "lng": -111.646881
+   }
+  ]
+ },
+ {
+  "key": "name OR|portland|rich",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 10057,
+    "name": "Rich's Cigar Store",
+    "address": "820 SW Alder St",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97205",
+    "phone": "(503) 228-1700",
+    "website": "richscigarstore.com",
+    "lat": 45.520229,
+    "lng": -122.680733
+   },
+   {
+    "id": 10091,
+    "name": "Rich's Cigar Store",
+    "address": "922 NW Flanders St",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97209",
+    "phone": "(503) 595-5556",
+    "website": "richscigarstore.com",
+    "lat": 45.525642,
+    "lng": -122.680656
+   }
+  ]
+ },
+ {
+  "key": "name OR|portland|town",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 10110,
+    "name": "Tobacco Town",
+    "address": "16640 SE McLoughlin Blvd",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97267",
+    "phone": "(503) 656-4682",
+    "website": "tobaccotown.com",
+    "lat": 45.403606,
+    "lng": -122.62191
+   },
+   {
+    "id": 10154,
+    "name": "Tobacco Town",
+    "address": "8200 SW Barbur Blvd",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97219",
+    "phone": "(503) 452-9990",
+    "website": "tobaccotown.com",
+    "lat": 45.465397,
+    "lng": -122.697548
+   },
+   {
+    "id": 10189,
+    "name": "Tobacco Town",
+    "address": "4860 SE 82nd Ave #1",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97266",
+    "phone": "(503) 771-7347",
+    "website": "tobaccotown.com",
+    "lat": 45.487186,
+    "lng": -122.578796
+   }
+  ]
+ },
+ {
+  "key": "name OK|tulsa|ted",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 11113,
+    "name": "Ted's Pipe Shoppe",
+    "address": "2002 Utica Sq",
+    "city": "Tulsa",
+    "state": "OK",
+    "zip": "74114",
+    "phone": "(918) 742-4996",
+    "website": "tedspipeshop.com",
+    "lat": 36.132225,
+    "lng": -95.963028
+   },
+   {
+    "id": 11371,
+    "name": "Ted's Pipe Shop",
+    "address": "5215 S Sheridan Rd",
+    "city": "Tulsa",
+    "state": "OK",
+    "zip": "74145",
+    "phone": "(918) 660-0092",
+    "website": "tedspipeshop.com",
+    "lat": 36.088394,
+    "lng": -95.903496
+   }
+  ]
+ },
+ {
+  "key": "name SD|sioux falls|stogeez",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 13023,
+    "name": "Stogeez Cigar Lounge",
+    "address": "201 E 11th St",
+    "city": "Sioux Falls",
+    "state": "SD",
+    "zip": "57104",
+    "phone": "(605) 274-3810",
+    "website": "stogeez.com",
+    "lat": 43.544521,
+    "lng": -96.724899
+   },
+   {
+    "id": 42289,
+    "name": "Stogeez Cigar Lounge",
+    "address": "215 South Phillips Avenue",
+    "city": "Sioux Falls",
+    "state": "SD",
+    "zip": "57104",
+    "phone": null,
+    "website": null,
+    "lat": 43.545461,
+    "lng": -96.727018
+   }
+  ]
+ },
+ {
+  "key": "name IN|merrillville|karma",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 14382,
+    "name": "Karma Tobacco & Cigar Lounge",
+    "address": "8075 Madison St",
+    "city": "Merrillville",
+    "state": "IN",
+    "zip": "46410",
+    "phone": "(219) 756-0698",
+    "website": "karmacigar.com",
+    "lat": 41.472233,
+    "lng": -87.341263
+   },
+   {
+    "id": 14383,
+    "name": "Karma Cigar Bar",
+    "address": "850 W 81st Ave",
+    "city": "Merrillville",
+    "state": "IN",
+    "zip": "46410",
+    "phone": "(219) 226-3038",
+    "website": "karmacigar.com",
+    "lat": 41.471596,
+    "lng": -87.346809
+   }
+  ]
+ },
+ {
+  "key": "name TN|chattanooga|burn",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 14645,
+    "name": "Burns Tobacconist",
+    "address": "110 Jordan Dr",
+    "city": "Chattanooga",
+    "state": "TN",
+    "zip": "37421",
+    "phone": "(423) 855-5200",
+    "website": "burnstobacconist.com",
+    "lat": 35.046684,
+    "lng": -85.16317
+   },
+   {
+    "id": 42306,
+    "name": "Burns Tobacconist",
+    "address": null,
+    "city": "Chattanooga",
+    "state": "TN",
+    "zip": null,
+    "phone": "(423) 531-1130",
+    "website": "cbcburns.com/burns/about_burns.php",
+    "lat": 35.047608,
+    "lng": -85.308563
+   }
+  ]
+ },
+ {
+  "key": "name IN|fort wayne|riegel",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15251,
+    "name": "Riegel's Pipe and Tobacco Shop",
+    "address": "6410 W Jefferson Blvd",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "zip": "46804",
+    "phone": "(260) 432-0002",
+    "website": "riegelspipeandtobacco.com",
+    "lat": 41.056976,
+    "lng": -85.226242
+   },
+   {
+    "id": 15296,
+    "name": "Riegel's Pipe & Tobacco Shop",
+    "address": "624 S Calhoun St",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "zip": "46802",
+    "phone": "(260) 424-1429",
+    "website": "riegelscigars.com",
+    "lat": 41.080605,
+    "lng": -85.140175
+   },
+   {
+    "id": 15384,
+    "name": "Riegel's Pipe and Tobacco Shop",
+    "address": "6556 E State Blvd",
+    "city": "Fort Wayne",
+    "state": "IN",
+    "zip": "46815",
+    "phone": "(260) 493-2806",
+    "website": "riegelscigars.com",
+    "lat": 41.10125,
+    "lng": -85.05706
+   }
+  ]
+ },
+ {
+  "key": "name OH|columbus|barclay",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15562,
+    "name": "Barclay Pipe Tobacco & Cigar",
+    "address": "2673 Federated Blvd",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43235",
+    "phone": "(614) 764-0300",
+    "website": "barclaypipetobaccoandcigar.com",
+    "lat": 40.101761,
+    "lng": -83.088852
+   },
+   {
+    "id": 15681,
+    "name": "Barclay Pipe Tobacco And Cigar",
+    "address": "1685 W Lane Ave",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43221",
+    "phone": "(614) 486-4243",
+    "website": "barclaypipetobaccoandcigar.com",
+    "lat": 40.006214,
+    "lng": -83.055359
+   }
+  ]
+ },
+ {
+  "key": "name OH|columbus|royale",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 15706,
+    "name": "Royale Cigar Lounge",
+    "address": "299 Georgesville Rd",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43228",
+    "phone": "(614) 549-0096",
+    "website": "royalecigar.com",
+    "lat": 39.946369,
+    "lng": -83.111816
+   },
+   {
+    "id": 39224,
+    "name": "Royale Cigar Lounge",
+    "address": "5652 Vessey Ct",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43016",
+    "phone": null,
+    "website": null,
+    "lat": 40.068779,
+    "lng": -83.130302
+   }
+  ]
+ },
+ {
+  "key": "name MI|lansing|puff puff",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 16763,
+    "name": "Puff Puff Tobacco",
+    "address": "5603 W Saginaw Hwy",
+    "city": "Lansing",
+    "state": "MI",
+    "zip": "48917",
+    "phone": "(517) 708-7973",
+    "website": "puffpufftobacco.com",
+    "lat": 42.740376,
+    "lng": -84.628479
+   },
+   {
+    "id": 16844,
+    "name": "Puff Puff Tobacco",
+    "address": "340 E Morgan Ln",
+    "city": "Lansing",
+    "state": "MI",
+    "zip": "48912",
+    "phone": "(517) 580-7359",
+    "website": "PUFFPUFFTOBACCO.COM",
+    "lat": 42.736992,
+    "lng": -84.505379
+   },
+   {
+    "id": 16869,
+    "name": "Puff Puff Tobacco",
+    "address": "2110 N Larch St",
+    "city": "Lansing",
+    "state": "MI",
+    "zip": "48906",
+    "phone": "(517) 580-8612",
+    "website": "puffpufftobacco.com",
+    "lat": 42.756485,
+    "lng": -84.543701
+   },
+   {
+    "id": 16941,
+    "name": "PUFF PUFF TOBACCO",
+    "address": "5912 S Cedar",
+    "city": "Lansing",
+    "state": "MI",
+    "zip": "48911",
+    "phone": "(517) 721-1990",
+    "website": "puffpufftobacco.com",
+    "lat": 42.670956,
+    "lng": -84.545311
+   }
+  ]
+ },
+ {
+  "key": "name NC|waynesville|smoky mountain",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17414,
+    "name": "Smoky Mountain Cigars",
+    "address": "302 S Main St",
+    "city": "Waynesville",
+    "state": "NC",
+    "zip": "28786",
+    "phone": "(828) 848-3066",
+    "website": "smokymountaincigars.com",
+    "lat": 35.48621,
+    "lng": -82.9907
+   },
+   {
+    "id": 17418,
+    "name": "Smoky mountain cigar",
+    "address": "1456 Dellwood Rd",
+    "city": "Waynesville",
+    "state": "NC",
+    "zip": "28786",
+    "phone": "(828) 547-0047",
+    "website": "smokymountaincigars.com",
+    "lat": 35.526306,
+    "lng": -82.989601
+   }
+  ]
+ },
+ {
+  "key": "name NC|charlotte|tinder box",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17434,
+    "name": "Tinder Box",
+    "address": "8128 Providence Rd",
+    "city": "Charlotte",
+    "state": "NC",
+    "zip": "28277",
+    "phone": "(704) 341-6228",
+    "website": "tinderboxcigars.com",
+    "lat": 35.096031,
+    "lng": -80.78022
+   },
+   {
+    "id": 17441,
+    "name": "Tinder Box",
+    "address": "4400 Sharon Rd",
+    "city": "Charlotte",
+    "state": "NC",
+    "zip": "28211",
+    "phone": "(704) 366-5164",
+    "website": "tinderboxcigars.com",
+    "lat": 35.15242,
+    "lng": -80.832581
+   },
+   {
+    "id": 17498,
+    "name": "Tinder Box Cigars Ballantyne",
+    "address": "14815 Ballantyne Village Way",
+    "city": "Charlotte",
+    "state": "NC",
+    "zip": "28277",
+    "phone": "(704) 910-3918",
+    "website": "tinderboxcigars.com",
+    "lat": 35.053257,
+    "lng": -80.851707
+   }
+  ]
+ },
+ {
+  "key": "name OH|columbus|don rey",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17667,
+    "name": "Don Rey Cigar Lounge",
+    "address": "49 S Grant Ave",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43215",
+    "phone": "(787) 922-2874",
+    "website": "donreycigar.com",
+    "lat": 39.962132,
+    "lng": -82.991058
+   },
+   {
+    "id": 41944,
+    "name": "Don Rey Cigar",
+    "address": null,
+    "city": "Columbus",
+    "state": "OH",
+    "zip": null,
+    "phone": null,
+    "website": null,
+    "lat": 39.963501,
+    "lng": -83.000515
+   }
+  ]
+ },
+ {
+  "key": "name VA|bristol|sidetrack",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17729,
+    "name": "Sidetrack Tobacco",
+    "address": "523 State St",
+    "city": "Bristol",
+    "state": "VA",
+    "zip": "24201",
+    "phone": "(276) 466-8450",
+    "website": "sidetracktobacco.com",
+    "lat": 36.595192,
+    "lng": -82.182907
+   },
+   {
+    "id": 17730,
+    "name": "Sidetrack Tobacco",
+    "address": "1061 Old Abingdon Hwy Ste 6",
+    "city": "Bristol",
+    "state": "VA",
+    "zip": "24201",
+    "phone": "(276) 821-3043",
+    "website": "sidetracktobaccollc.com",
+    "lat": 36.624687,
+    "lng": -82.154205
+   }
+  ]
+ },
+ {
+  "key": "name NC|greensboro|pint",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 17886,
+    "name": "The Pipe And Pint",
+    "address": "3716 Spring Garden St",
+    "city": "Greensboro",
+    "state": "NC",
+    "zip": "27407",
+    "phone": "(336) 218-8610",
+    "website": "thepipeandpint.net",
+    "lat": 36.061207,
+    "lng": -79.85614
+   },
+   {
+    "id": 17942,
+    "name": "The Pipe and Pint",
+    "address": "616 Dolley Madison Rd",
+    "city": "Greensboro",
+    "state": "NC",
+    "zip": "27410",
+    "phone": "(336) 500-8475",
+    "website": "thepipeandpint.net",
+    "lat": 36.088192,
+    "lng": -79.88427
+   }
+  ]
+ },
+ {
+  "key": "name VA|richmond|carytown",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18308,
+    "name": "Carytown Tobacco",
+    "address": "10459 Midlothian Turnpike",
+    "city": "Richmond",
+    "state": "VA",
+    "zip": "23235",
+    "phone": "(804) 330-6980",
+    "website": "carytowntobacco.com",
+    "lat": 37.50647,
+    "lng": -77.588707
+   },
+   {
+    "id": 18318,
+    "name": "Carytown Tobacco",
+    "address": "820 W Broad St",
+    "city": "Richmond",
+    "state": "VA",
+    "zip": "23220",
+    "phone": "(804) 716-4593",
+    "website": "carytowntobacco.com",
+    "lat": 37.550179,
+    "lng": -77.449135
+   },
+   {
+    "id": 18359,
+    "name": "Carytown Tobacco",
+    "address": "1701 E Main St",
+    "city": "Richmond",
+    "state": "VA",
+    "zip": "23223",
+    "phone": "(804) 716-8794",
+    "website": "carytowntobacco.com",
+    "lat": 37.533283,
+    "lng": -77.428574
+   }
+  ]
+ },
+ {
+  "key": "name VA|ashland|realm",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18414,
+    "name": "Cigar Realm",
+    "address": "10393 Sliding Hill Rd",
+    "city": "Ashland",
+    "state": "VA",
+    "zip": "23005",
+    "phone": "(804) 496-6150",
+    "website": "cigarrealm.com",
+    "lat": 37.68594,
+    "lng": -77.461533
+   },
+   {
+    "id": 18415,
+    "name": "Cigar Realm",
+    "address": "11657 Lakeridge Pkwy",
+    "city": "Ashland",
+    "state": "VA",
+    "zip": "23005",
+    "phone": "(804) 496-6767",
+    "website": "cigarrealm.com",
+    "lat": 37.718212,
+    "lng": -77.452797
+   }
+  ]
+ },
+ {
+  "key": "name MD|frederick|davidu",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18629,
+    "name": "Davidus Cigars",
+    "address": "529 W South St",
+    "city": "Frederick",
+    "state": "MD",
+    "zip": "21701",
+    "phone": "(301) 662-6606",
+    "website": "davidus.com",
+    "lat": 39.412643,
+    "lng": -77.424263
+   },
+   {
+    "id": 18708,
+    "name": "Davidus Cigars",
+    "address": "8925 Fingerboard Rd",
+    "city": "Frederick",
+    "state": "MD",
+    "zip": "21704",
+    "phone": "(301) 874-1100",
+    "website": "davidus.com",
+    "lat": 39.325077,
+    "lng": -77.348167
+   }
+  ]
+ },
+ {
+  "key": "name VA|alexandria|old virginia",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 18651,
+    "name": "Old Virginia Tobacco Co.",
+    "address": "5860 Kingstowne Ctr",
+    "city": "Alexandria",
+    "state": "VA",
+    "zip": "22315",
+    "phone": "(703) 971-1933",
+    "website": "ovtc.com",
+    "lat": 38.773518,
+    "lng": -77.137276
+   },
+   {
+    "id": 18751,
+    "name": "Old Virginia Tobacco Co.",
+    "address": "210 King St",
+    "city": "Alexandria",
+    "state": "VA",
+    "zip": "22314",
+    "phone": "(571) 685-2100",
+    "website": "oldvatobacco.com",
+    "lat": 38.804333,
+    "lng": -77.041962
+   }
+  ]
+ },
+ {
+  "key": "name PA|johnstown|corojo",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19461,
+    "name": "Corojos Cigar Shop",
+    "address": "10 Entrance Dr",
+    "city": "Johnstown",
+    "state": "PA",
+    "zip": "15905",
+    "phone": "(814) 244-4627",
+    "website": "corojos-cigar-shop.business.site",
+    "lat": 40.321381,
+    "lng": -78.955986
+   },
+   {
+    "id": 36327,
+    "name": "Corojo's Cigar Shop & Lounge",
+    "address": "518 Washington St",
+    "city": "Johnstown",
+    "state": "PA",
+    "zip": "15901",
+    "phone": "(814) 244-4096",
+    "website": null,
+    "lat": 40.326191,
+    "lng": -78.916374
+   }
+  ]
+ },
+ {
+  "key": "name VA|virginia beach|emerson",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19849,
+    "name": "Emerson's Cigars",
+    "address": "5325 Cleveland St",
+    "city": "Virginia Beach",
+    "state": "VA",
+    "zip": "23462",
+    "phone": "(800) 842-2990",
+    "website": "emersonscigars.com",
+    "lat": 36.842888,
+    "lng": -76.164848
+   },
+   {
+    "id": 19850,
+    "name": "Emerson's Cigars",
+    "address": "4435 Virginia Beach Blvd",
+    "city": "Virginia Beach",
+    "state": "VA",
+    "zip": "23462",
+    "phone": "(757) 493-9910",
+    "website": "emersonscigars.com",
+    "lat": 36.842995,
+    "lng": -76.128952
+   },
+   {
+    "id": 20004,
+    "name": "Emerson's Cigars",
+    "address": "1564 Laskin Rd",
+    "city": "Virginia Beach",
+    "state": "VA",
+    "zip": "23451",
+    "phone": "(757) 422-2971",
+    "website": "emersonscigars.com",
+    "lat": 36.852947,
+    "lng": -76.017082
+   }
+  ]
+ },
+ {
+  "key": "name VA|suffolk|bond",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19859,
+    "name": "Bonds Fine Cigar Shoppe",
+    "address": "6255 College Dr I",
+    "city": "Suffolk",
+    "state": "VA",
+    "zip": "23435",
+    "phone": "(757) 484-6006",
+    "website": "bondscigarshoppe.com",
+    "lat": 36.880405,
+    "lng": -76.426659
+   },
+   {
+    "id": 42606,
+    "name": "Bond's Fine Cigars",
+    "address": "College Drive",
+    "city": "Suffolk",
+    "state": "VA",
+    "zip": null,
+    "phone": null,
+    "website": null,
+    "lat": 36.880451,
+    "lng": -76.426608
+   }
+  ]
+ },
+ {
+  "key": "name VA|norfolk|emerson",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19872,
+    "name": "Emerson's Cigars",
+    "address": "116 Granby St",
+    "city": "Norfolk",
+    "state": "VA",
+    "zip": "23510",
+    "phone": "(757) 624-1520",
+    "website": "emersonscigars.com",
+    "lat": 36.846786,
+    "lng": -76.291924
+   },
+   {
+    "id": 19920,
+    "name": "Emerson's Cigars",
+    "address": "735 E 23rd St",
+    "city": "Norfolk",
+    "state": "VA",
+    "zip": "23504",
+    "phone": "(757) 317-1800",
+    "website": "emersonscigars.com",
+    "lat": 36.868103,
+    "lng": -76.278595
+   }
+  ]
+ },
+ {
+  "key": "name MD|waldorf|invictu",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 19910,
+    "name": "Invictus Cigar Bar And Lounge",
+    "address": "2894 Old Washington Rd",
+    "city": "Waldorf",
+    "state": "MD",
+    "zip": "20601",
+    "phone": "(240) 448-5882",
+    "website": "invictuscigarlounge.com",
+    "lat": 38.630779,
+    "lng": -76.901749
+   },
+   {
+    "id": 19934,
+    "name": "Invictus II Cigars",
+    "address": "2068 Crain Hwy",
+    "city": "Waldorf",
+    "state": "MD",
+    "zip": "20601",
+    "phone": "(240) 412-0064",
+    "website": "invictuscigarlounge.com",
+    "lat": 38.654026,
+    "lng": -76.876816
+   }
+  ]
+ },
+ {
+  "key": "name MD|nottingham|leviticu",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20331,
+    "name": "Leviticus Cigars",
+    "address": "7527 Belair Rd",
+    "city": "Nottingham",
+    "state": "MD",
+    "zip": "21236",
+    "phone": "(410) 668-0597",
+    "website": "leviticuscigars.com",
+    "lat": 39.363445,
+    "lng": -76.520561
+   },
+   {
+    "id": 36879,
+    "name": "Leviticus Cigars",
+    "address": "4300 Ridge Rd",
+    "city": "Nottingham",
+    "state": "MD",
+    "zip": "21236",
+    "phone": "(443) 946-1946",
+    "website": null,
+    "lat": 39.375813,
+    "lng": -76.504189
+   }
+  ]
+ },
+ {
+  "key": "name PA|philadelphia|holt",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20611,
+    "name": "Holt's Cigar Company",
+    "address": "1522 Walnut St",
+    "city": "Philadelphia",
+    "state": "PA",
+    "zip": "19102",
+    "phone": "(215) 732-8500",
+    "website": "holts.com",
+    "lat": 39.949596,
+    "lng": -75.167084
+   },
+   {
+    "id": 20995,
+    "name": "Holt's Cigar Company",
+    "address": "2990 Southampton Rd",
+    "city": "Philadelphia",
+    "state": "PA",
+    "zip": "19154",
+    "phone": "(215) 676-3926",
+    "website": "holts.com",
+    "lat": 40.102947,
+    "lng": -74.983315
+   }
+  ]
+ },
+ {
+  "key": "name PA|bethlehem|international",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 20743,
+    "name": "Cigars International",
+    "address": "535 Main St",
+    "city": "Bethlehem",
+    "state": "PA",
+    "zip": "18018",
+    "phone": "(610) 419-2076",
+    "website": "cigarsinternational.com/retail/store/ci-downtown-store/11/?sourceCode=CIRTPA01",
+    "lat": 40.62149,
+    "lng": -75.382103
+   },
+   {
+    "id": 20803,
+    "name": "Cigars International",
+    "address": "1911 Spillman Dr 26",
+    "city": "Bethlehem",
+    "state": "PA",
+    "zip": "18015",
+    "phone": "(888) 244-2790",
+    "website": "cigarsinternational.com",
+    "lat": 40.61343,
+    "lng": -75.343315
+   }
+  ]
+ },
+ {
+  "key": "name NY|new york|davidoff geneva",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 21243,
+    "name": "Davidoff of Geneva",
+    "address": "225 Liberty St #126",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10281",
+    "phone": "(212) 897-2866",
+    "website": "davidoff.com/where-to-buy",
+    "lat": 40.712727,
+    "lng": -74.014977
+   },
+   {
+    "id": 21333,
+    "name": "Davidoff of Geneva Brooklyn",
+    "address": "156 Broadway",
+    "city": "New York",
+    "state": "NY",
+    "zip": "11211",
+    "phone": "(347) 599-0565",
+    "website": "davidoffbrooklyn.com",
+    "lat": 40.710064,
+    "lng": -73.963127
+   },
+   {
+    "id": 21716,
+    "name": "Davidoff Geneva",
+    "address": "1390 Avenue of the Americas",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10019",
+    "phone": "(212) 757-3167",
+    "website": "davidoffgeneva.com",
+    "lat": 40.763813,
+    "lng": -73.977203
+   },
+   {
+    "id": 21746,
+    "name": "Davidoff of Geneva",
+    "address": "515 Madison Ave",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10022",
+    "phone": "(212) 751-9060",
+    "website": "davidoffmadison.com",
+    "lat": 40.75972,
+    "lng": -73.973892
+   }
+  ]
+ },
+ {
+  "key": "name ME|portland|cigaret shopper",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23034,
+    "name": "Cigaret Shopper",
+    "address": "263 Saint John St",
+    "city": "Portland",
+    "state": "ME",
+    "zip": "04102",
+    "phone": "(207) 253-5550",
+    "website": "cigaretshopper.com",
+    "lat": 43.65229,
+    "lng": -70.279221
+   },
+   {
+    "id": 23050,
+    "name": "Cigaret Shopper",
+    "address": "579 Congress St",
+    "city": "Portland",
+    "state": "ME",
+    "zip": "04101",
+    "phone": "(207) 772-2709",
+    "website": "cigaretshopper.com",
+    "lat": 43.654671,
+    "lng": -70.26265
+   }
+  ]
+ },
+ {
+  "key": "name FL|clearwater|fusion",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23447,
+    "name": "Fusion Cigar Lounge",
+    "address": "483 Mandalay Ave",
+    "city": "Clearwater",
+    "state": "FL",
+    "zip": "33767",
+    "phone": null,
+    "website": "fusioncigarlounge.com",
+    "lat": 27.98148,
+    "lng": -82.82682
+   },
+   {
+    "id": 23462,
+    "name": "Fusion Cigar Lounge",
+    "address": "696 S Gulfview Blvd",
+    "city": "Clearwater",
+    "state": "FL",
+    "zip": "33767",
+    "phone": "(727) 617-0000",
+    "website": null,
+    "lat": 27.966608,
+    "lng": -82.824188
+   }
+  ]
+ },
+ {
+  "key": "name FL|miami|coral gable",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 23748,
+    "name": "Coral Gables Cigars",
+    "address": "4743 SW 8th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33134",
+    "phone": "(305) 476-1234",
+    "website": null,
+    "lat": 25.764372,
+    "lng": -80.272774
+   },
+   {
+    "id": 23772,
+    "name": "Coral Gables Cigars",
+    "address": "1124 SW 8th St",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33130",
+    "phone": "(305) 860-1225",
+    "website": null,
+    "lat": 25.765795,
+    "lng": -80.213219
+   }
+  ]
+ },
+ {
+  "key": "name GA|atlanta|leaf",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 28207,
+    "name": "Leaf Lounge",
+    "address": "1700 Northside Dr NW",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30318",
+    "phone": null,
+    "website": "leafloungecigars.com/home",
+    "lat": 33.800507,
+    "lng": -84.408318
+   },
+   {
+    "id": 28258,
+    "name": "The Leaf Cigar Lounge",
+    "address": "931 Monroe Dr Ne  Ste C206",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30308",
+    "phone": null,
+    "website": "kingsleafcigars.com",
+    "lat": 33.779716,
+    "lng": -84.367661
+   }
+  ]
+ },
+ {
+  "key": "name WA|lynden|tin can",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 29843,
+    "name": "Tin Can Cigar",
+    "address": "509 Front St",
+    "city": "Lynden",
+    "state": "WA",
+    "zip": "98264",
+    "phone": null,
+    "website": "tincancigar.co",
+    "lat": 48.942471,
+    "lng": -122.453346
+   },
+   {
+    "id": 29844,
+    "name": "Tin Can Cigar",
+    "address": "1501 E Badger Rd",
+    "city": "Lynden",
+    "state": "WA",
+    "zip": "98264",
+    "phone": null,
+    "website": "tincancigar.co",
+    "lat": 48.963787,
+    "lng": -122.40699
+   }
+  ]
+ },
+ {
+  "key": "name WA|kent|land",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 29846,
+    "name": "Cigar Land",
+    "address": "25451 104th Ave Se Ste 106",
+    "city": "Kent",
+    "state": "WA",
+    "zip": "98030",
+    "phone": "(253) 856-3199",
+    "website": null,
+    "lat": 47.373215,
+    "lng": -122.202972
+   },
+   {
+    "id": 42724,
+    "name": "Cigar Land",
+    "address": "10700 Southeast 208th Street",
+    "city": "Kent",
+    "state": "WA",
+    "zip": "98031",
+    "phone": null,
+    "website": null,
+    "lat": 47.416411,
+    "lng": -122.19813
+   }
+  ]
+ },
+ {
+  "key": "name WA|auburn|land",
+  "sameName": true,
+  "rows": [
+   {
+    "id": 42732,
+    "name": "Cigar Land",
+    "address": "1202 Outlet Collection Way Southwest",
+    "city": "Auburn",
+    "state": "WA",
+    "zip": "98001",
+    "phone": null,
+    "website": null,
+    "lat": 47.296123,
+    "lng": -122.247411
+   },
+   {
+    "id": 42797,
+    "name": "Cigar Land",
+    "address": null,
+    "city": "Auburn",
+    "state": "WA",
+    "zip": null,
+    "phone": null,
+    "website": null,
+    "lat": 47.273405,
+    "lng": -122.227306
+   }
+  ]
+ }
+]

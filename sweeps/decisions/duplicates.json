@@ -1,0 +1,1642 @@
+[
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 458,
+   "name": "Cigars Direct",
+   "address": "1208 N Ward St",
+   "city": "Tampa",
+   "state": "FL",
+   "phone": "(813) 386-3245",
+   "website": "cigarsdirect.com"
+  },
+  "drop": [
+   {
+    "id": 457,
+    "name": "Humidors Direct",
+    "address": "1208 N Ward St",
+    "phone": "(813) 386-3245",
+    "website": "humidorsdirect.com"
+   }
+  ],
+  "fill": {
+   "hours": "{\"Mon\":\"9am-6pm\",\"Tue\":\"9am-6pm\",\"Wed\":\"9am-6pm\",\"Thu\":\"9am-6pm\",\"Fri\":\"9am-6pm\"}",
+   "hours_source": "website"
+  }
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 400,
+   "name": "Tobacco Depot",
+   "address": "1530 McMullen Booth Rd D9",
+   "city": "Clearwater",
+   "state": "FL",
+   "phone": "(727) 712-9830",
+   "website": "tobacco-depot.com"
+  },
+  "drop": [
+   {
+    "id": 485,
+    "name": "Tobacco Depot",
+    "address": "1530 N Mcmullen Booth Rd  Ste D9",
+    "phone": "(727) 712-9830",
+    "website": "tobaccodepot.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 1027,
+   "name": "Family Tobacco Traders",
+   "address": "5100 NW 72nd Ave",
+   "city": "Miami",
+   "state": "FL",
+   "phone": "(305) 599-9332",
+   "website": "familytobaccotraders.com"
+  },
+  "drop": [
+   {
+    "id": 23750,
+    "name": "Family Cigar Shop",
+    "address": "5100 NW 72nd Ave",
+    "phone": "(305) 283-6297",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 793,
+   "name": "Key West Cigar City USA",
+   "address": "410 Wall St",
+   "city": "Key West",
+   "state": "FL",
+   "phone": "(305) 295-2622",
+   "website": "keywestcigarcityusa.com"
+  },
+  "drop": [
+   {
+    "id": 825,
+    "name": "Cigar City USA",
+    "address": "410 Wall St",
+    "phone": "(305) 902-2849",
+    "website": "keywestcigarcityusa.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 1447,
+   "name": "Habano BarCafe",
+   "address": "1800 S Young Cir",
+   "city": "Hollywood",
+   "state": "FL",
+   "phone": "(786) 488-5749",
+   "website": "habanobarcafe.com"
+  },
+  "drop": [
+   {
+    "id": 1423,
+    "name": "Habano Cigar Club",
+    "address": "1800 S Young Cir",
+    "phone": "(954) 926-2006",
+    "website": "habanocigarclub.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 2979,
+   "name": "Tobacco Junction Of Marshall",
+   "address": "1303 E Grand Ave",
+   "city": "Marshall",
+   "state": "TX",
+   "phone": "(903) 935-1030",
+   "website": "tobaccojunction.net"
+  },
+  "drop": [
+   {
+    "id": 7224,
+    "name": "Tobacco Junction",
+    "address": "1303 E Grand Ave",
+    "phone": "(903) 935-1030",
+    "website": "tobaccojunction.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 2997,
+   "name": "Tobacco Barn",
+   "address": "406 S Frontage Rd",
+   "city": "Lorena",
+   "state": "TX",
+   "phone": "(254) 857-4958",
+   "website": "brookshirebrothers.com/store-location/store-63"
+  },
+  "drop": [
+   {
+    "id": 3183,
+    "name": "Tobacco Barn",
+    "address": "406 I 35 N Frontage Rd",
+    "phone": "(254) 857-4958",
+    "website": "brookshirebrothers.com/store-location/store-63"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 4314,
+   "name": "E & E Cigars",
+   "address": "23706 S Power Rd #107",
+   "city": "Queen Creek",
+   "state": "AZ",
+   "phone": "(480) 999-0218",
+   "website": "eecigars.com"
+  },
+  "drop": [
+   {
+    "id": 40001,
+    "name": "E&E Cigars",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 4316,
+   "name": "Maduro's Social - Cigar Club & Lounge",
+   "address": "4991 S Alma School Rd",
+   "city": "Chandler",
+   "state": "AZ",
+   "phone": "(480) 883-8888",
+   "website": "madurostix.com"
+  },
+  "drop": [
+   {
+    "id": 39945,
+    "name": "Maduro's Fine Cigars",
+    "address": "4991 South Alma School Road",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 5686,
+   "name": "Tobacco Barn",
+   "address": "455 TX-36",
+   "city": "Caldwell",
+   "state": "TX",
+   "phone": "(979) 567-6458",
+   "website": "brookshirebrothers.com/store-location/store-44"
+  },
+  "drop": [
+   {
+    "id": 5695,
+    "name": "Tobacco Barn",
+    "address": "455 State Highway 36 S",
+    "phone": "(979) 567-6458",
+    "website": "brookshirebrothers.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + name",
+  "keep": {
+   "id": 6081,
+   "name": "Roz's Cigar Emporium",
+   "address": "8585 State Rd 200 Unit 16, Ocala, Floor 34481 Unit 16",
+   "city": "Ocala",
+   "state": "FL",
+   "phone": "(352) 236-3499",
+   "website": "rozcigars.com"
+  },
+  "drop": [
+   {
+    "id": 6082,
+    "name": "Roz's Cigar Emporium",
+    "address": "8585 State 200 Unit 16",
+    "phone": "(352) 236-3499",
+    "website": "rozcigars.com"
+   },
+   {
+    "id": 6107,
+    "name": "Roz's Cigar Emporium",
+    "address": "8585 SW Highway 200",
+    "phone": "(352) 236-3499",
+    "website": "rozcigars.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 6254,
+   "name": "City Wine & Cigar",
+   "address": "111 Victoria Commons Blvd",
+   "city": "Deland",
+   "state": "FL",
+   "phone": "(386) 337-7008",
+   "website": "citywineandcigar.com"
+  },
+  "drop": [
+   {
+    "id": 26836,
+    "name": "City Cigar Llc",
+    "address": "111 N Woodland Blvd",
+    "phone": "(386) 736-0080",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 6535,
+   "name": "Tobacco Leaf",
+   "address": "1998 State Road 44 Ste 7",
+   "city": "New Smyrna Beach",
+   "state": "FL",
+   "phone": "(386) 423-6760",
+   "website": "tobaccoleafsmokeshop.com"
+  },
+  "drop": [
+   {
+    "id": 6536,
+    "name": "Tobacco Leaf",
+    "address": "1998-7 FL-44",
+    "phone": "(386) 423-6760",
+    "website": "tobaccoleafnsb.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 7177,
+   "name": "Renegade Cigars",
+   "address": "1002 N Central Expy #589",
+   "city": "Richardson",
+   "state": "TX",
+   "phone": "(972) 231-6545",
+   "website": "renegadecigars.com"
+  },
+  "drop": [
+   {
+    "id": 42369,
+    "name": "Renegade Cigar Shop & Lounge",
+    "address": "1002 North Central Expressway",
+    "phone": "(972) 231-6545",
+    "website": "renegadecigars.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 7524,
+   "name": "Cutters Cigars",
+   "address": "1848 McFarland Blvd",
+   "city": "Northport",
+   "state": "AL",
+   "phone": "(205) 409-8495",
+   "website": "cutterscigarsttown.com"
+  },
+  "drop": [
+   {
+    "id": 39921,
+    "name": "Cutter's Cigars",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 7722,
+   "name": "Cigar Gallery Club and Lounge",
+   "address": "3600 Cherokee St NW #102",
+   "city": "Kennesaw",
+   "state": "GA",
+   "phone": "(770) 575-0678",
+   "website": "cigargalleryclub.com"
+  },
+  "drop": [
+   {
+    "id": 7720,
+    "name": "Cigar Gallery Club & Lounge",
+    "address": "3600 Cherokee St Nw  Ste 102",
+    "phone": "(770) 575-0678",
+    "website": "cigargalleryclub.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 8288,
+   "name": "Buckhead Cigar Club",
+   "address": "3400 Around Lenox Rd NE",
+   "city": "Atlanta",
+   "state": "GA",
+   "phone": "(404) 844-0400",
+   "website": "buckheadcigarclub.com"
+  },
+  "drop": [
+   {
+    "id": 8304,
+    "name": "Buckhead Cigar",
+    "address": "3400 Around Lenox Rd NE #304",
+    "phone": "(404) 844-0400",
+    "website": "buckheadcigarclub.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 8404,
+   "name": "The Cigar Exchange",
+   "address": "107 Market St",
+   "city": "Wilmington",
+   "state": "NC",
+   "phone": "(910) 251-5015",
+   "website": "thecigarexchange.com"
+  },
+  "drop": [
+   {
+    "id": 41885,
+    "name": "Cigar",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 8600,
+   "name": "Humidor",
+   "address": "765 Wave St",
+   "city": "Monterey",
+   "state": "CA",
+   "phone": "(831) 375-7833",
+   "website": "thehumidorlounge.com"
+  },
+  "drop": [
+   {
+    "id": 40304,
+    "name": "The Humidor - Cigars",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 9313,
+   "name": "Eight Cigar Lounge",
+   "address": "3000 S Las Vegas Blvd",
+   "city": "Las Vegas",
+   "state": "NV",
+   "phone": "(702) 676-7405",
+   "website": "eightloungelv.com"
+  },
+  "drop": [
+   {
+    "id": 9312,
+    "name": "Eight Humidor",
+    "address": "3000 Las Vegas Blvd S",
+    "phone": "(702) 676-8025",
+    "website": "eightloungelv.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 9729,
+   "name": "Stogies",
+   "address": "695 N State St",
+   "city": "Orem",
+   "state": "UT",
+   "phone": "(801) 734-1301",
+   "website": "stogies.net"
+  },
+  "drop": [
+   {
+    "id": 42509,
+    "name": "Stogie's",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "pin + name",
+  "keep": {
+   "id": 10151,
+   "name": "J & M Tobacco",
+   "address": "806 E Yelm Ave",
+   "city": "Yelm",
+   "state": "WA",
+   "phone": "(360) 458-1300",
+   "website": "jandmtobacco.com"
+  },
+  "drop": [
+   {
+    "id": 42751,
+    "name": "J&M Tobacco",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {
+   "hours": "{\"Sun\":\"9am-6pm\",\"Mon\":\"9am-6pm\",\"Tue\":\"9am-6pm\",\"Wed\":\"9am-6pm\",\"Thu\":\"9am-6pm\",\"Fri\":\"9am-6pm\",\"Sat\":\"10am-4:30pm\"}",
+   "hours_source": null
+  }
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 10222,
+   "name": "Cigar Plus",
+   "address": "20 SW 7th St C",
+   "city": "Renton",
+   "state": "WA",
+   "phone": "(425) 793-7755",
+   "website": "cigarsplus.com"
+  },
+  "drop": [
+   {
+    "id": 42731,
+    "name": "Cigars Plus",
+    "address": "20 Southwest 7th Street",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 11135,
+   "name": "Omerta Cigar Co. South Tulsa",
+   "address": "6929 E 71st St",
+   "city": "Tulsa",
+   "state": "OK",
+   "phone": "(539) 525-0909",
+   "website": "omertacigar.com"
+  },
+  "drop": [
+   {
+    "id": 11260,
+    "name": "Omerta Cigar Co.",
+    "address": "6929 E 71st St",
+    "phone": "(539) 525-0909",
+    "website": "omertacigar.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + contained",
+  "keep": {
+   "id": 11516,
+   "name": "3D's Cigars",
+   "address": "3065 S Academy Blvd",
+   "city": "Colorado Springs",
+   "state": "CO",
+   "phone": "(719) 375-5172",
+   "website": "3dscigars.com"
+  },
+  "drop": [
+   {
+    "id": 40404,
+    "name": "3D's Cigars & Lounge",
+    "address": "3065 South Academy Boulevard",
+    "phone": "(719) 375-5172",
+    "website": "3dscigars.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 11929,
+   "name": "Alford Tobacco Store",
+   "address": "521 W Main St Ste C",
+   "city": "Cabot",
+   "state": "AR",
+   "phone": "(501) 941-3179",
+   "website": "alfordtobacco.com"
+  },
+  "drop": [
+   {
+    "id": 40022,
+    "name": "Tobacco Store",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 12541,
+   "name": "JR Cigars - Clayton",
+   "address": "4 N Central Ave",
+   "city": "Clayton",
+   "state": "MO",
+   "phone": "(314) 727-5667",
+   "website": "jrcigars.com"
+  },
+  "drop": [
+   {
+    "id": 41319,
+    "name": "JR Cigars",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 13015,
+   "name": "Stogies",
+   "address": "2717 First Ave N",
+   "city": "Billings",
+   "state": "MT",
+   "phone": "(406) 248-6879",
+   "website": "billingspipescigars.com/welcome.html"
+  },
+  "drop": [
+   {
+    "id": 41331,
+    "name": "Stogie’s",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 13468,
+   "name": "Eagan Cigars and Tobacco",
+   "address": "3450 Pilot Knob Rd",
+   "city": "Eagan",
+   "state": "MN",
+   "phone": "(651) 454-2475",
+   "website": "eagancigarsandtobacco.com"
+  },
+  "drop": [
+   {
+    "id": 41267,
+    "name": "Tobacco",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 13471,
+   "name": "Champlin Tobacco Cigar & E-cig",
+   "address": "508 Jefferson Highway N",
+   "city": "Champlin",
+   "state": "MN",
+   "phone": "(763) 205-3425",
+   "website": "smokedaletobacco.com"
+  },
+  "drop": [
+   {
+    "id": 41220,
+    "name": "Tobacco",
+    "address": "508 Jefferson Highway North",
+    "phone": "(763) 205-3425",
+    "website": null
+   }
+  ],
+  "fill": {
+   "hours": "{\"Mon\":\"8am-10pm\",\"Tue\":\"8am-10pm\",\"Wed\":\"8am-10pm\",\"Thu\":\"8am-10pm\",\"Fri\":\"8am-10pm\",\"Sat\":\"8am-10pm\",\"Sun\":\"8am-10pm\"}",
+   "hours_source": null
+  }
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 14950,
+   "name": "Kentucky Gentlemen Cigars & Cap City Cigar Lounge",
+   "address": "313 Saint Clair St",
+   "city": "Frankfort",
+   "state": "KY",
+   "phone": "(502) 352-1687",
+   "website": "kentuckygentlemencigars.com"
+  },
+  "drop": [
+   {
+    "id": 14951,
+    "name": "Kentucky Gentlemen Cigars",
+    "address": "313 St Clair St",
+    "phone": "(502) 699-2294",
+    "website": "kentuckygentlemencigars.com"
+   },
+   {
+    "id": 33007,
+    "name": "Cap City Cigar Bar",
+    "address": "475 Eastwood Shopping Ctr",
+    "phone": "(502) 352-6684",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 15723,
+   "name": "Roosevelt Tobacco",
+   "address": "133 Roosevelt Rd Unit F",
+   "city": "Villa Park",
+   "state": "IL",
+   "phone": "(630) 620-0336",
+   "website": "roosevelttobacco.com/oc/profile?g=1531391"
+  },
+  "drop": [
+   {
+    "id": 15724,
+    "name": "Roosevelt Tobacco",
+    "address": "133 W Roosevelt Rd Unit F",
+    "phone": "(630) 620-0336",
+    "website": "roosevelttobacco.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 16733,
+   "name": "Tuttle's Select Cigars & Tobaccos",
+   "address": "3835 28th St SE",
+   "city": "Grand Rapids",
+   "state": "MI",
+   "phone": "(616) 942-6990",
+   "website": "tuttlescigars.com"
+  },
+  "drop": [
+   {
+    "id": 16779,
+    "name": "Tuttle's Select Cigars and Tobaccos",
+    "address": "3835 28th St SE",
+    "phone": "(616) 942-6990",
+    "website": "nolansgrandrapids.com/visit-gr"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 17001,
+   "name": "Wild Bill's Tobacco",
+   "address": "2530 W Twelve Mile Rd",
+   "city": "Berkley",
+   "state": "MI",
+   "phone": "(248) 607-3656",
+   "website": "wildbillstobacco.com/locations/wild-bills-of-berkley"
+  },
+  "drop": [
+   {
+    "id": 17003,
+    "name": "Wild Bill's Tobacco",
+    "address": "2530 12 Mile Rd",
+    "phone": "(248) 607-3656",
+    "website": "wildbillstobacco.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 17075,
+   "name": "Wild Bill's Tobacco",
+   "address": "131 M-66 N",
+   "city": "Charlevoix",
+   "state": "MI",
+   "phone": "(231) 437-3826",
+   "website": "wildbillstobacco.com"
+  },
+  "drop": [
+   {
+    "id": 17097,
+    "name": "Wild Bill's Tobacco",
+    "address": "131 M-66",
+    "phone": "(231) 437-3826",
+    "website": "wildbillstobacco.com/locations/wild-bills-of-charlevoix"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 17144,
+   "name": "Sweet Fire Tobacco",
+   "address": "2205 US-23 #116",
+   "city": "Alpena",
+   "state": "MI",
+   "phone": "(989) 340-2050",
+   "website": "sweetfiretobacco.com"
+  },
+  "drop": [
+   {
+    "id": 17183,
+    "name": "Sweet Fire Tobacco",
+    "address": "2205 us 23 Ste 116",
+    "phone": "(989) 340-2050",
+    "website": "sweetfiretobacco.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "pin + distinctive",
+  "keep": {
+   "id": 17432,
+   "name": "Tobacco Trader",
+   "address": "8152 S Tryon St",
+   "city": "Charlotte",
+   "state": "NC",
+   "phone": "(704) 588-0440",
+   "website": "tobaccotradercigars.com"
+  },
+  "drop": [
+   {
+    "id": 41877,
+    "name": "Tobacco Traders",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + name",
+  "keep": {
+   "id": 41757,
+   "name": "K&S Cigars",
+   "address": "2722 NC Highway 55",
+   "city": "Cary",
+   "state": "NC",
+   "phone": "(919) 387-8262",
+   "website": "kandscigars.com"
+  },
+  "drop": [
+   {
+    "id": 35105,
+    "name": "K & S Cigars",
+    "address": "2722 NC 55 Hwy",
+    "phone": "(919) 267-9886",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 17989,
+   "name": "H and M Tobacco Shop",
+   "address": "1756 Mileground Rd # D",
+   "city": "Morgantown",
+   "state": "WV",
+   "phone": "(304) 241-1314",
+   "website": "hm-tobacco-shop.business.site"
+  },
+  "drop": [
+   {
+    "id": 35119,
+    "name": "H&m Tobacco Shop",
+    "address": "1756 Mileground Rd  Ste D",
+    "phone": "(304) 241-1314",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 18089,
+   "name": "Clayton Tobacco Shop",
+   "address": "11514 US Highway 70 Bus W",
+   "city": "Clayton",
+   "state": "NC",
+   "phone": "(919) 243-0124",
+   "website": "clayton-tobacco.hub.biz"
+  },
+  "drop": [
+   {
+    "id": 41813,
+    "name": "Tobacco Shop",
+    "address": "11466 US-70 Business",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 18127,
+   "name": "The Pipe & Pint (Durham)",
+   "address": "3219 Watkins Rd",
+   "city": "Durham",
+   "state": "NC",
+   "phone": "(919) 908-1113",
+   "website": "thepipeandpint.net"
+  },
+  "drop": [
+   {
+    "id": 18189,
+    "name": "The Pipe & Pint (Durham)",
+    "address": "3219 Watkins Rd #200",
+    "phone": "(919) 908-1113",
+    "website": "thepipeandpint.net"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 18173,
+   "name": "JR Cigar Outlet",
+   "address": "2589 Eric Ln",
+   "city": "Burlington",
+   "state": "NC",
+   "phone": "(336) 222-1300",
+   "website": "jrcigars.com"
+  },
+  "drop": [
+   {
+    "id": 41800,
+    "name": "JR Cigar",
+    "address": "2589 Eric Lane",
+    "phone": "(336) 222-1300",
+    "website": "jrburlington.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 35536,
+   "name": "B & B Tobacco Co.",
+   "address": "243 Neff Ave Ste G",
+   "city": "Harrisonburg",
+   "state": "VA",
+   "phone": "(540) 432-7990",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 42647,
+    "name": "B&B Tobacco",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 42517,
+   "name": "Unlimited Cigars, Vape & CBD",
+   "address": "4215 Fairfax Drive",
+   "city": "Arlington",
+   "state": "VA",
+   "phone": "(571) 858-5255",
+   "website": "cigarunlimitedva.com"
+  },
+  "drop": [
+   {
+    "id": 18681,
+    "name": "Cigar Unlimited",
+    "address": "4215 N Fairfax Dr",
+    "phone": "(571) 312-0724",
+    "website": "cigarunlimitedva.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + contained",
+  "keep": {
+   "id": 40522,
+   "name": "TG Cigar Lounge",
+   "address": "1120 9th Street Northwest",
+   "city": "Washington",
+   "state": "DC",
+   "phone": "(877) 280-8684",
+   "website": "tgcigar.com"
+  },
+  "drop": [
+   {
+    "id": 20058,
+    "name": "TG Cigar",
+    "address": "1120 9th St NW",
+    "phone": "(202) 289-8684",
+    "website": "tgcigar.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 19074,
+   "name": "Cousin's Cigar",
+   "address": "1812 Merriman Rd",
+   "city": "Akron",
+   "state": "OH",
+   "phone": "(234) 678-3050",
+   "website": "dads-smokeshop.com"
+  },
+  "drop": [
+   {
+    "id": 41966,
+    "name": "Cousins Cigar",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 19175,
+   "name": "The Pipe Rack",
+   "address": "2200 Manchester Rd",
+   "city": "Akron",
+   "state": "OH",
+   "phone": "(330) 745-9022",
+   "website": "thepiperackohio.com"
+  },
+  "drop": [
+   {
+    "id": 41895,
+    "name": "The Pipe",
+    "address": "2200 Manchester Road",
+    "phone": "(330) 745-9022",
+    "website": "thepiperackohio.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 19362,
+   "name": "Cigar Cigars Ohio City",
+   "address": "2718 Lorain Ave",
+   "city": "Cleveland",
+   "state": "OH",
+   "phone": "(216) 965-0895",
+   "website": "restyourash.com"
+  },
+  "drop": [
+   {
+    "id": 41911,
+    "name": "Cigars Cigars",
+    "address": "2718 Lorain Avenue",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 19340,
+   "name": "Wild Bill's Tobacco",
+   "address": "16970 E Thirteen Mile Rd",
+   "city": "Roseville",
+   "state": "MI",
+   "phone": "(586) 872-2165",
+   "website": "wildbillstobacco.com/locations/wild-bills-of-roseville-2"
+  },
+  "drop": [
+   {
+    "id": 19343,
+    "name": "Wild Bill's Tobacco",
+    "address": "16970 E 13 Mile Rd",
+    "phone": "(586) 872-2165",
+    "website": "wildbillstobacco.com"
+   }
+  ],
+  "fill": {
+   "web_image_url": "https://wildbillstobacco.com/wp-content/uploads/2023/05/GMB-2022-Cover-Photo.jpg"
+  }
+ },
+ {
+  "tier": "review",
+  "why": "pin + distinctive",
+  "keep": {
+   "id": 19859,
+   "name": "Bonds Fine Cigar Shoppe",
+   "address": "6255 College Dr I",
+   "city": "Suffolk",
+   "state": "VA",
+   "phone": "(757) 484-6006",
+   "website": "bondscigarshoppe.com"
+  },
+  "drop": [
+   {
+    "id": 42606,
+    "name": "Bond's Fine Cigars",
+    "address": "College Drive",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 19978,
+   "name": "Leonardtown Cigars",
+   "address": "40955 Merchants Ln #14",
+   "city": "Leonardtown",
+   "state": "MD",
+   "phone": "(240) 309-4108",
+   "website": "leonardtowncigars.com"
+  },
+  "drop": [
+   {
+    "id": 41059,
+    "name": "Cigars",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 36852,
+   "name": "Mt Vernon Cigars",
+   "address": "221 W Read St",
+   "city": "Baltimore",
+   "state": "MD",
+   "phone": "(443) 963-5964",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 40994,
+    "name": "Mount Vernon Tobacco Co.",
+    "address": "221 West Read Street",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {
+   "hours": "{\"Tue\":\"11am-5pm\",\"Wed\":\"11am-5pm\",\"Thu\":\"11am-5pm\",\"Fri\":\"11am-5pm\",\"Sat\":\"11am-5pm\"}",
+   "hours_source": null
+  }
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 20760,
+   "name": "Cole's Tobacco",
+   "address": "215 E High St",
+   "city": "Pottstown",
+   "state": "PA",
+   "phone": "(610) 323-4991",
+   "website": "colestobacco.net"
+  },
+  "drop": [
+   {
+    "id": 42064,
+    "name": "Coles Tobacco",
+    "address": "215 East High Street",
+    "phone": "(610) 323-4991",
+    "website": "colestobacco.net"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "pin + contained",
+  "keep": {
+   "id": 41526,
+   "name": "Tobacco Shop",
+   "address": "107 Clinton Street",
+   "city": "New York",
+   "state": "NY",
+   "phone": "(718) 304-3908",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 37367,
+    "name": "Fancy tobacco shop",
+    "address": "102 Clinton St",
+    "phone": "(212) 777-1440",
+    "website": null
+   }
+  ],
+  "fill": {
+   "zip": "10002"
+  }
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 21379,
+   "name": "Casa de Montecristo Cigar Lounge and Bar",
+   "address": "301 NJ-10",
+   "city": "Whippany",
+   "state": "NJ",
+   "phone": "(973) 887-0800",
+   "website": "casademontecristo.com"
+  },
+  "drop": [
+   {
+    "id": 37508,
+    "name": "Casa De Montecristo",
+    "address": "301 State Route 10",
+    "phone": "(973) 887-0800",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 21525,
+   "name": "Havana On The Hudson Cigars",
+   "address": "500 Ave At Port Imperial Blvd  Ste 150",
+   "city": "Weehawken",
+   "state": "NJ",
+   "phone": "(201) 867-3300",
+   "website": "havanaonthehudsoncigars.com"
+  },
+  "drop": [
+   {
+    "id": 21597,
+    "name": "Havana On the Hudson Cigars",
+    "address": "500 Ave at Port Imperial #150",
+    "phone": "(201) 867-3300",
+    "website": "havanaonthehudsoncigars.com"
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 21667,
+   "name": "The Tobacco Shop of Ridgewood",
+   "address": "10 Chestnut St",
+   "city": "Ridgewood",
+   "state": "NJ",
+   "phone": "(201) 447-2204",
+   "website": "tobaccoshop.com"
+  },
+  "drop": [
+   {
+    "id": 41451,
+    "name": "The Tobacco Shop",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + name",
+  "keep": {
+   "id": 21796,
+   "name": "C & C Tobacco",
+   "address": "109 N Meadow St",
+   "city": "Ithaca",
+   "state": "NY",
+   "phone": "(607) 272-0637",
+   "website": "c-c-tobacco.business.site"
+  },
+  "drop": [
+   {
+    "id": 41563,
+    "name": "C&C Tobacco",
+    "address": "109 North Meadow Street",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 22006,
+   "name": "The Cigar Republic",
+   "address": "133 E Main St",
+   "city": "Elmsford",
+   "state": "NY",
+   "phone": "(914) 592-1580",
+   "website": "TheCigarRepublic.com"
+  },
+  "drop": [
+   {
+    "id": 37954,
+    "name": "The Cigar Republic Store & Lounge",
+    "address": "133 E Main St Fl 2",
+    "phone": "(914) 592-1580",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 22099,
+   "name": "The Tobacconist of Greenwich",
+   "address": "8 Havemeyer Pl",
+   "city": "Greenwich",
+   "state": "CT",
+   "phone": "(203) 869-5401",
+   "website": "tobacconistofgreenwich.com"
+  },
+  "drop": [
+   {
+    "id": 40490,
+    "name": "The Tobacconist",
+    "address": "8 Havemeyer Place",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 22208,
+   "name": "J & J Tobacco",
+   "address": "3273 Berlin Tpke",
+   "city": "Newington",
+   "state": "CT",
+   "phone": "(860) 666-0439",
+   "website": "jjtobacco.com"
+  },
+  "drop": [
+   {
+    "id": 40509,
+    "name": "J&J Tobacco",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "pin + contained",
+  "keep": {
+   "id": 23015,
+   "name": "Radloffs Cigar Shop & On The Rox Lounge",
+   "address": "38 N Main St",
+   "city": "Rochester",
+   "state": "NH",
+   "phone": "(603) 948-1073",
+   "website": "radloffscigarshop.com"
+  },
+  "drop": [
+   {
+    "id": 41404,
+    "name": "The Cigar Shop",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + name",
+  "keep": {
+   "id": 24995,
+   "name": "M & A Tobacco",
+   "address": "1803 Lincoln Blvd D",
+   "city": "Santa Monica",
+   "state": "CA",
+   "phone": "(310) 314-9839",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 40335,
+    "name": "M&A Tobacco",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 29619,
+   "name": "Number 1 Tobacco",
+   "address": "1888 SE Sedgwick Rd",
+   "city": "Port Orchard",
+   "state": "WA",
+   "phone": "(360) 895-1601",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 29620,
+    "name": "#1 Tobacco",
+    "address": "1888 SE Sedgwick Rd",
+    "phone": "(360) 895-1601",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 29859,
+   "name": "Cigar Q",
+   "address": "19018 Lenton Pl SE",
+   "city": "Monroe",
+   "state": "WA",
+   "phone": "(360) 217-6135",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 42784,
+    "name": "Cigar",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 35487,
+   "name": "Carrboro Tobacco Shop",
+   "address": "104 NC 54",
+   "city": "Carrboro",
+   "state": "NC",
+   "phone": "(919) 969-8777",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 41805,
+    "name": "Tobacco",
+    "address": "104 NC 54",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "address + contained",
+  "keep": {
+   "id": 35636,
+   "name": "EZ TOBACCO & CIGAR's LOVETTSVILLE",
+   "address": "11 Town Center Dr Ste 175",
+   "city": "Lovettsville",
+   "state": "VA",
+   "phone": "(540) 668-5306",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 42583,
+    "name": "EZ Tobacco",
+    "address": "11 Town Center Drive",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + distinctive",
+  "keep": {
+   "id": 36744,
+   "name": "Tobacco Hut",
+   "address": "15634 Old Columbia Pike",
+   "city": "Burtonsville",
+   "state": "MD",
+   "phone": "(240) 994-1489",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 41031,
+    "name": "Tobbaco Hut & Cigars",
+    "address": "15634 Old Columbia Pike",
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "review",
+  "why": "address + name",
+  "keep": {
+   "id": 36830,
+   "name": "Sams Tobacco Shop",
+   "address": "4315 Mountain Rd  Ste C2",
+   "city": "Pasadena",
+   "state": "MD",
+   "phone": "(202) 993-3509",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 40996,
+    "name": "Sam's Tobacco Shop",
+    "address": "4315 Mountain Road",
+    "phone": "(443) 305-2238",
+    "website": null
+   }
+  ],
+  "fill": {}
+ },
+ {
+  "tier": "auto",
+  "why": "pin + contained",
+  "keep": {
+   "id": 38316,
+   "name": "Humidor Smoke Shop",
+   "address": "6595 Post Rd",
+   "city": "North Kingstown",
+   "state": "RI",
+   "phone": "(401) 885-1285",
+   "website": null
+  },
+  "drop": [
+   {
+    "id": 42241,
+    "name": "Humidor",
+    "address": null,
+    "phone": null,
+    "website": null
+   }
+  ],
+  "fill": {}
+ }
+]

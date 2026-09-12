@@ -1,0 +1,344 @@
+=== #1 Make fixes stick: one field-ownership model in the importer, plus a re-import test [cross-area (closures, location, names, contact, amenities, chains, licences)]
+PROBLEM: Jobs undo each other's work. storefrontCheck reset Redland Cigar Co (#2585, closed per its own site) from 'closed' back to 'yes' 6 minutes after closureCheck closed it. At the next import, visible = 1 and operating_status = 'open', so the shop returns to the map as open. The same applies to #11014, #8767 and #18397. chainCheck writes the non-standard operating_status 'closed', so its 7 closures never appear in the staff Closures queue. The importer also overwrites name, address, phone and lat/lng on every unclaimed row, even staff_edited ones. has_lounge can only go up (GREATEST), and tags are written only on insert. Any rename, move, pin, phone or badge fix is therefore undone at the next deploy.
+SCALE: Measured: 4 website closures and 7 chain closures at risk today, and all 7,431 public rows exposed to future reverts. Six auditors each proposed their own source column for the same UPDATE statement. The critic confirmed the Redland timestamps.
+METHOD: Ship in two steps.
+
+Step A, in 2-3 hours:
+- storefrontCheck skips any row whose storefront is 'closed' or 'duplicate', or whose operating_status is 'permanently_closed' or 'likely_closed'.
+- The importer treats our own permanently_closed as binding, and stops writing the source's 'open' over a closure we set.
+- chainCheck writes 'permanently_closed' instead of 'closed'.
+- From a reviewed file, set #2585 and #11014 closed again. Send #8767 Boatyard (probably open; see rank 7) and #18397 to a person.
+
+Step B:
+- Add one per-field provenance map to stores, covering name, address block, lat/lng, phone, website, hours, amenities and tags. Values: directory, rule, website, chain, registry, geocode, staff, owner.
+- Add a store_edits log that records field, before, after, job, and time.
+- The importer writes a field only when its source is 'directory'. It recomputes the timezone whenever the state or pin changes, and recomputes tags and badges only for directory-owned rows.
+- Extend scratchpad test_reimport.js: seed a website closure, a chain closure, a report closure, a renamed row, a moved pin, a staff phone and a removed lounge badge. Run storefrontCheck and a forced import, and assert that every one survives.
+NEEDS: nothing
+RISK: A wrong closure also becomes sticky, so #8767 and #18397 go to a person first. Backfill every existing row as 'directory' so nothing changes until a sweep writes. The re-import test must pass before any other sweep in this plan is applied.
+EFFORT: Step A 2-3 h. Step B about 1.5 days, including the log and the test.
+
+=== #2 Time zones from county lines, not longitude rules [location / hours]
+PROBLEM: The longitude rules in storeHours.splitState (lines 39-47) put split-state towns on the wrong clock. The Open/Closed badge is then an hour off at both ends of the day. Examples: Burns Tobacconist in Chattanooga shows 'Open until 7pm' from 7 to 8pm Eastern while its door is locked; Mandan ND is on Mountain time; Houghton and Negaunee MI are on Central; Michigan City IN and Glasgow KY are on Eastern.
+SCALE: Measured: 26 (hours auditor) to 31 (location auditor) public listings. These are the same rows found two ways: Chattanooga/East Ridge/Lakesite 10-12, MI Upper Peninsula 5, south-central KY 4-5, La Porte County 2, Mandan, Crossville and Phenix City 1 each, and 2-5 wrong-state records. 10-11 of them have hours today. fillTimezones only fills NULLs, so fixing the code alone would not correct them.
+METHOD: Replace splitState with a county lookup: Census county polygons plus the 49 CFR 71 split-county list, or a vendored tz-lookup restricted to US zones. Fall back to the state rule when the lookup returns a non-US zone (Houlton ME, Calais ME and Sault Ste. Marie come back as Canadian). Add a manual Eastern override for Phenix City and Russell County AL: legally Central, but it keeps Columbus GA time. Run a one-off recompute of every row, not just NULLs, and change only rows whose UTC offset actually differs. Log old and new values. Add self-tests for every town named above. Leave the 3 rows whose pin and state disagree for rank 9.
+NEEDS: nothing
+RISK: A wrong zone shifts a whole town by an hour. Review the full diff (about 30 rows) before applying. Watford City ND stays Central unless checked.
+EFFORT: 3-4 h build, 30 min review
+
+=== #3 Map-only hours: stop asserting Open/Closed, re-read the shops that publish hours, and stop inventing Closed days [hours]
+PROBLEM: Hours that come only from OpenStreetMap look exactly as authoritative as hours read from the shop's own site, yet about half are wrong. Examples: Rich's Cigar Store Pearl (#10091) shows Mon-Sat 10-6 while the shop opens only Mon/Wed/Fri 1:30-4. Charles P Stanley shows Sat 1pm-1:30am. Mike's Cigars shows its customer-service line. A Closed day is also inferred whenever the mapper left the day out (Merced shows Sun Closed; aggregators say it opens 9-7). El Septimo Hollywood (#4061) shows hours but is marked CLOSED on Yelp.
+SCALE: 234 public listings carry map hours. Measured: 5 of 11 in a random draw were wrong and 1 looked closed. 33 of 71 overlap cases differed from the shop's site, 14 of 71 badly. Estimate: about 105-130 wrong on some day. 41 have an inferred Closed day. 45 have a dead website. 32 have a readable hours block on their own site already on disk.
+METHOD: (a) Product change: for rows where hours_source is null, show the hours as 'from OpenStreetMap, not confirmed', with no green or grey badge. Keep these rows out of 'Open now', or give them a 'probably open' label.
+(b) Stop writing Closed for days the OSM tag omits; show them as unknown.
+(c) Re-run decide on the 32 with new rules: 'Store' lines outrank Phone, Customer service and Office lines; read '&'/comma day lists and 'Closed all other days'; accept address-tied blocks. Review, then apply with hours_source='website'.
+(d) Send map-hours rows with a dead site and an OSM edit older than 2 years to the closure queue as review items, never hidden automatically.
+NEEDS: One decision: drop the badge for unverified map hours, or keep it with a qualifier. Recommended: drop it.
+RISK: Parts (a), (b) and (d) only remove a claim, never add one. Part (c) could pick up a sister branch's block, so it uses the review-file flow and the sibling-town guard from rank 6.
+EFFORT: 1 day, plus 1-2 h review
+
+=== #4 Moved shops and closed branches (one sweep owns the whole pool) [closures / duplicates / location / chains / licences]
+PROBLEM: When a shop moves or shuts one branch, the old address often stays public next to the new one, or instead of it. Customers drive to an empty storefront. The closures, duplicates, location and chains auditors each proposed a sweep over what is largely the same pool.
+SCALE: Measured: 92 distinct phone-and-name pairs (173 public listings) after merging the closures pool (78 pairs) with the duplicates pool (70 T3 pairs, 56 in common). The critic's warning holds: don't add their yields.
+
+Other pools, which overlap partly:
+- 49 chainCheck 'former_branch' holdbacks;
+- about 9 site-address mismatches (location auditor);
+- 10 licence-holder moves (TX and Chicago);
+- 51 shared-phone chain groups.
+
+About 18 checked live and confirmed stale:
+- SJ Cigars Springfield (#20529) and Bala Cynwyd (#20599);
+- El Beso (#3673);
+- Churchill's Glendale (#4859), whose new address is not listed at all;
+- Creekside Belton (#2993);
+- Cigarz on the Avenue (#6442);
+- Cigar Palace (#18687);
+- Cigars Mardos (#23521);
+- Fort Worth Lone Star (#2922, #2938);
+- Senor Cigar's (#20001);
+- F. K. Kirsten (#10133);
+- Carlos Cabeza (#26226);
+- Cigaret Shopper Brewer, Lincoln and Waldoboro (#23073, #23102, #23085);
+- Holy Smokes (#27021).
+
+Estimate: 45-60 stale listings (duplicates auditor, 6 of 7 random clusters). The closures auditor's 20-40 came from 5 hand-picked candidates.
+METHOD: Build candidates from all five pools, deduplicated by listing id. For each group, reuse the hours sweep's collect step (homepage plus up to 3 contact or locations pages, rendered for JS sites), JSON-LD PostalAddress, WPSL and chain feeds, and the licence holder's current address once rank 11 exists.
+
+Match house number first. Then compare the street name after dedupeListings.normalizeAddress, allowing an edit distance of 1 so 'Green' matches 'Greene'.
+
+Verdicts:
+- The site says moved or new location and names one street: hide the other listing with storefront='moved' and a pointer.
+- The site works, names the business, publishes full addresses, at least as many as the listings we keep, and never mentions B's house number: hide B.
+- The site names a new street in B's town that no listing has: propose an address change, geocoded (Census or Nominatim, rank 9 rules).
+- Both addresses named: keep both.
+- No readable site: no action.
+
+Write a decisions file. Apply with --from reviewed --confirm.
+NEEDS: One decision: when the new address is not listed yet (Churchill's Glendale), edit the old row in place or create a new row and hide the old one.
+RISK: The risk is hiding a real second branch. Point Break Cigars has 5 Key West stores on one phone, and its site spells '403 Green St'. Guardrails: house-number matching, the address-coverage rule, and a phone match or explicit moved wording. Chains with more than 10 locations need their locator feed. Every decision is reviewed, and every hide is reversible, with a pointer. Depends on rank 1, so that address edits survive re-import.
+EFFORT: 1.5 days build, about 1 h crawl, 2-3 h review
+
+=== #5 Cigar search counts only visible stores, and never shows $0.00 [inventory / ranking]
+PROBLEM: The cigar list, city/state, price and in-stock filters join inventory without checking stores.visible. Stock at closed, duplicate and not-retail listings therefore counts. Example: Kristoff Sumatra (cigar 176) shows '1 store, from $200', yet its 'Where to find it' list is empty; the stock belongs to #1056, hidden as not_retail. Hoyo Excalibur counts closed #2013 Anthony's. /availability also treats a $0 price as a real price, so the cigar page prints '$0.00' for shops that publish no price.
+SCALE: Measured: 4 hidden listings hold 2,790 in-stock rows across 741 cigar lines. For 238 of those lines, every stocked store is hidden. 254 fully unpriced lines sit on 11 public listings (Cypress Cigars alone has 148).
+METHOD: In cigars.js (list, /followed, city/state, min/max price, in_stock_only, price-comparison), smoke-list.js and users.js, join stores with s.visible = 1. Use MIN(NULLIF(price,0)). In /availability, count only prices above 0 and otherwise show 'price not listed'. When any job or staff action hides a listing, set its source='web' rows to in_stock=0, without deleting them. One-off for the 4 hidden listings. Test: for every one of the 741 lines, store_count equals the length of /availability.
+NEEDS: nothing
+RISK: Very low. Hidden stores are already excluded from store lists and from 'Where to find it'. Unhiding a listing plus the next menu read restores its rows.
+EFFORT: 2-3 h including tests
+
+=== #6 Re-audit the 1,077 website-sourced hours: wrong site, sister branch, host venue, office line, expired season, typos [hours / contact / images]
+PROBLEM: Some hours read from websites belong to someone else or to another schedule:
+- another business's site: Tobacco Master (#16701) shows Grout Masters' Mon-Fri 8-5; King Cut Rate (#18065) shows King County WA's HR office hours; Bellmore Cigars (#21385) shows an Exxon station's 6am-12am;
+- directory pages: #3889 and #20502 carry Yahoo Local hours stored as 'website';
+- a sister branch: The Cigar Room Guntersville, Florence and Madison, and El Cubano;
+- a host venue: Skookum Creek shows the casino's 8am-3am while the lounge opens Thu-Sun evenings;
+- office or support lines: Puro Cigar House, Cherokee Tobacco;
+- an expired season: Federal Cigar's winter hours, Welton Room's summer hours;
+- typos kept as impossible days: The Office Cigar Bar Fri/Sat 12am-1am, 1865 Steak's '12: 00';
+- two ranges in one day, of which only the first is read: Euphoria shows Closed all afternoon.
+The critic showed that the hours auditor's guard would miss the wrong-site class, because mentionsShop matches 'master' inside groutmasters.
+SCALE: Measured:
+- 5 wrong-branch or venue cases confirmed, from 24 sibling-town, 11 host-venue and 6-9 office candidates;
+- at least 5 wrong-site cases;
+- 19 seasonal labels, 3 already outside their window;
+- 8 implausible days;
+- 4 two-range listings.
+Estimate: about 30-50 wrong schedules.
+METHOD: 1) Tighten the shared identity test in hoursSweep's mentionsShop:
+- match the name as a whole word, never as a substring of a domain;
+- drop the town-only fallback;
+- generic names such as 'Tobacco Store' pass only when the domain is the name;
+- add local.yahoo.com, exxonmobilfuels.com, usps.com and wikipedia.org to NOT_THE_SHOPS_SITE.
+2) Refuse at decide time:
+- another listing's town or a brand-plus-town heading between the address and the hours;
+- blocks labelled casino, convenience store, mall or '<town> hours';
+- weekday-only 8-5 or 9-5 blocks near support, office, fax, orders or example.com.
+3) Parser fixes:
+- read every comma range;
+- a leading 00:00-04:00 segment is the previous night;
+- accept 25:00-28:00;
+- '12: 00' reads as '12:00';
+- '4 pm - 12 pm' means midnight;
+- a day 12 hours off the others, or shorter than 2 hours, becomes unknown and goes to review.
+4) Parse season windows into hours_valid_from and hours_valid_until, and refuse a schedule whose window excludes today.
+5) Re-run decide on the saved evidence for all 1,077. Review every schedule that would now be refused or changed. Clear or replace only the confirmed ones.
+NEEDS: One decision: when a seasonal window lapses with no new season posted, show the last schedule with a warning or clear it.
+RISK: The risk is clearing hours that are right: House of Cigar and Anthony's name sibling towns but are correct. Guardrails: review only, never clear automatically. A cleared listing shows 'Hours not listed', which is never a wrong Closed. Extend the parser self-tests with every example above.
+EFFORT: 1.5-2 days build, 2-3 h review
+
+=== #7 Taken-over, parked and redirected links; closure reader trusts only the shop's own page [contact / images / closures / names / claims]
+PROBLEM: Lapsed shop domains now serve gambling, spam or for-sale pages. linkCheck rates them 'ok', and the page links and labels the destination.
+- Gambling: puffnstuffcigars.com goes to gamebaidoithuong.property; havanaonhudson.com goes to a betting site.
+- The same takeovers supply thumbnails: Mike's Cigar Room shows an Indonesian gambling banner and 82nd Ave Tobacco a bikini slot-machine image.
+- Parked: GoDaddy /lander pages (Paradise Cigars, Screaming Eagle) pass as working.
+- The closure reader followed a redirect to a political blog and hid a trading shop, #8767 Boatyard Tobacco.
+- Shopify 402 'store unavailable' pages are rated 'blocked', which counts as working.
+SCALE: Measured: 360 public links end on another domain; 318 of them are shown (critic's recount; the 287 and 329 figures do not reproduce).
+
+Confirmed live:
+- 14 thumbnails from gambling or for-sale sites;
+- about 24 gambling or for-sale redirects;
+- 83 shown links whose crawl today landed on parking hosts.
+
+Contact's desk review of 132 unrelated redirects found about 71 spam or unrelated sites and 9 for-sale pages. A further 50-150 parked pages are estimated among the 564 thin 'ok' pages. 1 live shop is wrongly hidden now.
+METHOD: Extend linkCheck, forcing a recheck of every public website. New verdicts:
+- 'elsewhere': the final registrable domain differs and the destination does not name the shop (distinctive name token in title, og:site_name or JSON-LD, or our phone, or our street number).
+- 'hijacked': 2 or more gambling terms in the title or first 64 KB, and no cigar or tobacco word.
+- 'parked': a /lander stub, a for-sale host, or a 'Resources and Information' template.
+- 'store_unavailable': HTTP 402.
+All four count as dead.
+
+Consumers:
+- websiteInfo follows website_final_url only on a same-business verdict.
+- closureCheck returns no opinion when the final domain differs, unless the page names the shop.
+- Add maps.apple.com, g.co, maps.app.goo.gl, share.google, tinyurl, bit.ly and parking hosts to NOT_THE_SHOPS_SITE.
+- Hijacked or parked domains lose their thumbnail and any website hours.
+- A parked or hijacked own-domain link is a weak likely_closed signal, queued for staff and never auto-hidden.
+- Re-run the 4 existing website closures (Boatyard is probably a reopen).
+
+Deep links: when a path returns 404 but the root works and names a single-location shop, store the root. Chain branch pages instead go to chainCheck as closed-branch leads.
+
+Optional: run RDAP on dead roots, which feeds rank 13.
+NEEDS: One decision: should a parked or hijacked own-domain count as a weak closure signal (about 90 listings would enter the queue)?
+RISK: The risk is a real rebrand redirect losing its link (stogiepairing.com to stogiesftmyers.com). Guardrails: a phone or address match on the destination passes; an allow-list covers proven parent redirects (tobaccoconnection.net to jacksonbevco.com, cheaptobaccousa.com to wildbillstobacco.com); casino-resort lounges need the gambling words in the title and the shop's name absent from it. Every 'elsewhere' verdict is reviewed. A false positive hides only a link, never a shop.
+EFFORT: 1-1.5 days build, 30 min run, about 2 h review
+
+=== #8 Non-shop purge, plus the classifier and storefront rule fixes that let them through [relevance / names / amenities / images / contact / duplicates]
+PROBLEM: Some public 'shops' are places a customer can't buy cigars:
+- Makers, head offices and landmarks: R.J. Reynolds x5, Lorillard, Liggett and Myers, Universal Leaf.
+- Places that aren't shops: a trail parking lot, an RV lot, a marina, a union hall, a state office, an ATF office.
+- Anti-smoking campaigns: Tobacco Free Sarpy, 'Tobacco 21'.
+- Online-only sellers tagged 'Walk-in Humidor': Humidors Direct, Luxury Cigar Humidors, Grand Humidors.
+- Mobile or event lounges with a pin: 17 by name.
+- Private homes and joke check-ins: 'Monica Lewinsky Cigar Lounge', backyard 'lounges'.
+- Head shops and a plumber, public because 'pipe' scores as tobacco: Pipe Dreams Sanford, pipedreamsplumb.com.
+- Vape and kava lounges, and a vape review site, public through the 'cigarette' or 'lounge' domain bonus.
+- Hookah restaurants and corner smoke shops typed cigar_lounge with a Lounge badge: Lava Hookah.
+- Online warehouses sharing a door: Thompson/CI, Cigars Direct.
+In the other direction, storefrontCheck lets 'Co', 'Company' or 'House' count as a premises word by itself.
+SCALE: Measured lists:
+- 56 manufacturer, B2B or landmark rows (about 40 not walk-in);
+- 40 hand-reviewed 'not a shop' names;
+- 123 pipe-only names (about 50-65 head shops or plumbers);
+- 69 cigarette or lounge domain-bonus rows (about 25-35 not cigar places);
+- 45 smoke or vape names in the cigar_bar category;
+- about 25 private or joke places;
+- 17 mobile and about 25 event services;
+- 81 rows kept only by the co/company/house loophole;
+- 92 toll-free numbers (about 20-25 non-shops);
+- 2 foreign records.
+These overlap. Estimate: about 150-250 public rows hidden or retyped after review. About 10 confirmed live.
+METHOD: 1) Name and category pass. Mark storefront not_retail or online_only, with a reason, when a known maker or HQ, union, association, government, trail, RV, marina, landmark, 'No Public Sales' or event/mobile name coincides with an Overture category such as corporate_office, tobacco_company, landmark, coworking, hiking_trail, central_government_office, party_and_event_planning or wholesaler. Also cover humidor web catalogues, toll-free rows whose site is a brand, and Meta rows with no phone, no site and a residential or missing street plus a possessive first name or 'backyard'/'porch'.
+2) Classifier (osm.classify, buildDirectory):
+- the domain bonus uses cigar(?!et) and counts 'lounge' only with a cigar word;
+- add vapes, kava, 710, dab, bong, hydro, headshop, 'peace pipe' and 'pipe dreams' to the strong negatives;
+- type cigar_lounge (and the Lounge tag) only with cigar vocabulary, never from the cigar_bar category when the name says smoke, vape, mart or deli.
+3) storefrontCheck: co/company/house alone is no longer enough off the retail allow-list.
+Run a dry-run diff of public-to-hidden flips with the triggering rule, and review it. Flips toward public go to rank 25, not live.
+NEEDS: Two decisions: are members-only lounges badged or hidden (badge recommended), and are head shops, pipe-and-vape shops and hookah lounges in scope?
+RISK: The risk is hiding a factory that sells retail (J.C. Newman, Corona Cigar Co, Tampa factories) or a real tobacconist named 'Pipe'. Guardrails: never auto-hide a row whose name has a cigar or brand word and a retail category; claimed and staff_edited rows are untouched; staff review every row; every hide is written as a storefront reason so the importer honours it. Self-tests: #5413, #22109 and #12898 must stay; #4581, #6466 and #10186 must go. Run this before rank 12, because a complete distance-first list surfaces these rows in dense metros. Include #41488 Nat Sherman Townhouse (closed 2020) and #37650 Cigars & Roses in the queue.
+EFFORT: 1-1.5 days build, 2-3 h review
+
+=== #9 Pins, states and foreign records [location / duplicates / contact]
+PROBLEM: Some pins sit far from the shop's own address: Tobacco Junction of Marshall is 404 km off; Amsterdam Tobacco House (Upper West Side) is pinned on Long Island; Greystone Cigars is 40 km off. Some listings are filed under the wrong state: Black Jack's Cigar Lounge in El Paso's Hotel Paso del Norte is listed and pinned in New London CT; Sam Hill's (Prescott AZ) is listed in Gallup NM; Tobacco Country (Greenwood LA) is listed as TX. Some are foreign: La Casa del Habano in Windsor, Ontario, and a Lebanese 'Tobacco Bar'. In 35 same-address twin pairs the pins are more than 300 m apart, so a merge must pick the right pin.
+SCALE: Measured: 153 public pins more than 1 km from the Census geocode of their own address (47 more than 5 km, 4 more than 50 km). On ordinary street addresses, 11 of 11 sampled disagreements had the pin wrong. On highway-style addresses the geocoder itself is wrong about 40% of the time. Estimate: 100-130 real pin errors. Also 17 wrong-state or foreign rows (4 confirmed), 13 ZIP/state contradictions and 9 area-code conflicts (the same rows, detected by phone).
+METHOD: 1) Run the Census batch geocoder (free, 10k rows per request) over every public address. Take a second opinion from Nominatim for disagreements over 1 km. Use chain-feed coordinates only when the feed's address equals ours.
+2) Move a pin automatically only when all of these hold: an ordinary street (not US-/SR-/FM/Hwy/Route); a Census exact match plus a Nominatim house-level match within 250 m of each other; both more than 1 km from the pin; a move of at most 50 km; and the address backed by the shop's site, a chain feed or the geocoder's ZIP. Everything else goes to review.
+3) State: change it only when the ZIP prefix and one more signal (a detailed Census boundary, the area code, or GeoNames city-in-state) agree on the same other state. Then re-geocode the row and recompute its timezone.
+4) Foreign records (+961, Canadian postcode or area code) and records with three or more contradictions (Cigar Crafted, Cigar Vibes, Mort's, Vip smoke) become hidden after review.
+5) Build-time guards: buildDirectory checks Overture's region against the ZIP and the pin; fetchOsmStores keeps addr:state and addr:postcode.
+Write location_source='geocode' and keep the previous coordinates.
+NEEDS: Decide whether foreign and self-contradicting records are hidden or repaired.
+RISK: The risk is moving a pin to an old address the shop has left. Run rank 4 first, and send addresses the site disputes to review. Guardrails: highway exclusion; two geocoders must agree; never act on a foreign phone alone (Puro Estilo is a real Bethlehem PA seller); hand-review 30 decisions before applying; claimed and owner rows are untouched. Needs rank 1.
+EFFORT: 1.5 days build, 1 h run, 2-3 h review
+
+=== #10 Likely-closed flag: clean its inputs, extend it to stale OSM pins, and warn shoppers [closures / location]
+PROBLEM: The likely-closed flag rests on weak links, and shoppers never see it. 12 of the 45 flagged listings rest only on a dead platform or directory link (business.site, cigarplaces.com), and two rows are one shop (Tin Can #29843/#29844). Torch Cigar Lounge was flagged but is open. Holy Smokes (#27021) is truly closed, yet its card looks normal. Meanwhile, OSM-only pins with no phone, no website and often no street are never checked at all: Edward's Pipe & Tobacco in Los Altos, closed since 2025, is still public.
+SCALE: Measured: 45 public listings flagged likely_closed (1 of 3 sampled was closed). 651 public listings have no website and no phone. The strongest subset is 46: OSM-only, last edited before 2020, with no Overture record within 150 m (1 of 2 checked was closed). 268 more public listings have no address, no phone and no website (location auditor; these overlap).
+METHOD: 1) Treat dead links on platform or directory hosts as 'no website'.
+2) Merge duplicates before flagging.
+3) New rule: flag likely_closed when a listing is OSM-only, with no phone, website or hours, last edited on OSM before 2020 (Overpass out meta; change the fetch to 'out center meta'), and no Overture cigar or tobacco record within 150 m.
+4) On a likely_closed card, drop the 'Open now' badge and show 'We couldn't confirm this shop is still open. Call or check before you go.'
+5) Clear the flag automatically when the listing gains a phone, a working site or hours.
+6) Sort the staff queue by strength of evidence.
+Never auto-hide from this signal.
+NEEDS: One decision: may a public caveat appear on likely-closed listings? Recommended yes.
+RISK: A neutral caveat on a live shop (Torch, Tin Can) could cost it a visit. Guardrails: neutral wording, never hide, and clear the flag automatically on new contact data.
+EFFORT: Half a day
+
+=== #11 State licence registries: join, verify, and queue closures, renames and moves [closures / names / location (gap audit)]
+PROBLEM: No job uses the free tobacco-retailer licence registries, yet they caught what Overture, the website check and the contact check missed.
+- Winston's Cigar Lounge in Houston (#5465) closed on 12 January after 63 years. Its TX permit ended that day, and the listing is public and marked open.
+- The Smoking Lamp in Allen TX (#7233) now trades as Allen Cigar Lounge, at the same suite with the same phone.
+- Churchill Cigar Lounge in San Diego (#2377) is now Royal Cigar Lounge.
+- Creekside (#2993) and Carlos Cabeza (#26226) moved, and the registries give the new addresses.
+SCALE: Measured on 2,850 public listings covered by bulk files (38.4%: FL 848, CA 553, TX 549, PA 420, NY 322, WA 119, Chicago 39):
+- 1,339 match an active licence in their own name;
+- 101 have only inactive licences in their own name. Of 12 checked: 1 closed, 3 renamed, 2 moved, 1 probably moved, 3 open, 2 unresolved;
+- 24 are renamed or replaced candidates (4 of 4 checked were renamed);
+- 10 are moves (2 of 3 checked confirmed).
+Estimate: 45-65 listings corrected. A lapse alone is roughly a coin flip.
+METHOD: 1) licenceSync job: load the 9 free sources (NYC DCWP, NYS Tax and DOH, TX Comptroller, FL DBPR, CA CDTFA, PA DOR, Chicago BACP, WA LCB) into server/data/licences.json.gz, refreshed monthly.
+2) Join on phone; or ZIP/town plus house number plus a shared street word; or matching suites; or within 60 m with the names agreeing. Compare names on distinctive words only, without the town word.
+3) Stamp last_verified_at wherever an active licence matches both address and name.
+4) Queues, which never write visibility:
+- (a) Replaced: another business's active licence at our suite or phone, with name similarity below 0.8. Propose that business's trading name.
+- (b) Moved: the same holder is now active elsewhere in town, and the old licence ended within 60 days of the new one starting. Feed this to rank 4.
+- (c) Closed: the licence ended at least 60 days ago with a real end date, plus one independent signal. Write likely_closed with the reason.
+Skip TX INACTIVE permits with no end date, listings whose own site gave hours in the last 30 days, and claimed or staff rows.
+NEEDS: Confirm that registry evidence only flags and never hides. Name and address changes need rank 1. Decide whether NYC smoke shops are exempt from lapse flags (many trade without a licence).
+RISK: The risk is renaming or closing an open shop: 3 of 12 lapses were open (Stogies, BlackHouse, Manhattan Tobacco). Guardrails: flag only; a 60-day lag allowance; 'no website' does not count as a second signal; ignore the stale NY DOH (January) and WA (February) lists for closures; staff check the shop's site or Yelp before approving; keep the old name as a search alias.
+EFFORT: 1.5-2 days for the sync, 1 day for the queues, 2-3 h review
+
+=== #12 Complete search results: distance first, a hard radius, exact counts, Open now on the full set [ranking (gap audit)]
+PROBLEM: GET /stores sorts by a feed-size and confidence key, applies LIMIT 300, and only then cuts to the radius, sorts by distance and filters Open now. In dense metros the list drops shops a few blocks away while showing shops 49 miles out, and the page counts only what it kept, so nothing says the list is incomplete. Missing in live API responses: Manhattan Tobacco at 0.9 mi from Midtown, Tap That Ash in Wilton Manors, and at 100 mi Davidoff Madison Ave and Jhaveri Cigar Stand.
+SCALE: Measured by replay, which matched the live API id for id:
+- 131 public listings can't be found from their own door at 50 mi (1,032 at 100 mi).
+- In 949 of 7,431 locations the 50-mi search overflows the cap.
+- Recall is 93.5% at 50 mi and 73.1% at 100 mi.
+- Midtown returns 272 of 364 within 50 mi.
+- Open now loses 41 of 983 open shops at 50 mi and 397 of 1,831 at 100 mi.
+- 82% of listings have no hours and silently never appear under Open now.
+METHOD: When lat/lng are given:
+- Select light columns inside the bbox prefilter with every SQL filter applied, and keep rows whose haversine distance (computed in SQL) is within the radius. Apply no LIMIT to this candidate set; the worst case today is 743 rows.
+- Run openStatus over the full set.
+- Sort by distance, then id.
+- Return total plus one page of about 60 with 'Show more', hydrating ratings and inventory only for that page.
+- Cap the radius at 100 mi, and set a ceiling (e.g. 5,000) that answers 'narrow your search' instead of truncating silently.
+- The page shows '364 shops within 50 mi' and, under Open now, 'N more nearby have no hours on file'.
+- Add a recall monitor to CI or run it nightly: 62 metros x 4 radii x filters, requiring 100% recall (work/ranking m1-m3.js already do this).
+NEEDS: Two decisions: keep the 100-mi option, and how Featured/Partner placement appears inside a radius (the plans promise top placement).
+RISK: The list now also surfaces low-confidence rows the cap used to hide (131 at 50 mi, mostly 0.55 tobacco_shop, including non-shops). Run rank 8 on the 8 affected metros first. Diff the first 30 cards before and after for Midtown, Brooklyn, Newark, Long Island, DC, Baltimore, Fort Lauderdale and LA.
+EFFORT: 1.5 days, plus 1 h before/after review
+
+=== #13 Claim safety gate (must ship before SMTP is switched on) [claims (gap audit)]
+PROBLEM: Instant claim trusts the domain of the stored website and nothing else.
+- It never checks website status, where the site redirects, or when the domain was registered.
+- rootDomain keeps only two labels, so any .com.au, .co.uk, *.wi.us or @yahoo.com mailbox 'owns' a listing.
+- One chain or directory mailbox can claim every listing that shares its domain, because contact_email comes from the request and account emails are never checked.
+- Staff approval re-publishes hidden closed or duplicate rows with a verified badge (#10022 Broadway Cigar is confirmed closed).
+- A claim can't be revoked.
+A claim then exempts the row from every sweep.
+SCALE: Measured:
+- 4,533 public listings are eligible for instant claim.
+- 1,150 of them have a dead site. RDAP showed 14 of 20 sampled dns_fail .com roots are unregistered, so an estimated 290-560 roots (about 480 listings) can be bought today.
+- gulfportcigars.com was re-registered on 2026-08-17.
+- 314 eligible working links redirect to another domain.
+- 12 listings sit on public-suffix, free-mail or government hosts.
+- 1,662 listings share 420 domains.
+- 13,850 verdict-hidden rows can be claimed.
+No harm yet: 0 claims exist and SMTP is off.
+METHOD: Allow the instant email code only when all of these hold; otherwise send the claim to staff, with the reasons shown:
+- a live linkCheck says 'ok';
+- the listed URL, the final URL and the email share one registrable domain under the vendored Public Suffix List (including its private section);
+- the domain is not free-mail, an ISP, a directory, a shortener, .gov/.edu/.us locality, or a foreign ccTLD;
+- exactly one public listing uses the domain;
+- the page names the shop (the rank 6 matcher);
+- RDAP shows the domain registered at least 365 days ago and not after import;
+- contact_email equals the account email, which must be verified, with one email-verified claim per email.
+Staff side:
+- approveClaim keeps the current visibility;
+- claims on duplicates are refused;
+- the claim card shows storefront, closure, website status, redirect, shared-domain count and RDAP date instead of the two-label badge;
+- add an unclaim action and ON DELETE SET NULL;
+- the deals feed filters visible = 1.
+NEEDS: Accept that about two-thirds of claims (2,996 of 4,533 on today's data) go to staff review. SMTP credentials. Decide what proof staff accept for manual claims, such as a call-back to the listed phone.
+RISK: Real owners with a down, shared or new site wait for staff. The gate never rejects a claim; it only removes the self-serve shortcut. Test that all 25 live examples from the audit behave as expected (the 12 bad suffixes, the 4 dead domains and the 14 gambling redirects are refused; the 5 good domains pass).
+EFFORT: About 2.5 days (gate 1.5, staff review changes 1)
+
+=== #14 Menu scanner: unstick the queue, expire stale stock, attach shared feeds to the right branch [inventory]
+PROBLEM: scanStale re-reads the same 323 failed or unsupported shops every 6 hours, because a failed read never records the matcher version. As a result no new shop is ever read, and most current shelves will stop refreshing while their 'in stock' claims stay up indefinitely. #875 fails every scan, yet its rows stay in stock. Meanwhile, one online store's stock appears at every listing sharing its website: 3J's feed (the site presents only Lake Worth) shows at 4 listings, including '1804 Cigars Davie', which the site never names.
+SCALE: Measured by replay: in the next 30 days, 36 of 43 public shelves get no re-read and 0 never-read listings are reached. 11 public listings on 4 websites share a feed (7 extra copies). The latent exposure is 1,449 unread public listings that share a website with another listing.
+METHOD: 1) scanStale: record an attempt stamp on every outcome. Back off by outcome: ok 7 days, unsupported 60, errors 3, 7, 14, then 30. Skip dead website statuses. Put never-read listings ahead of low-value re-reads.
+2) Expiry: when a shop's last successful read is older than N days, set its web rows to in_stock=0 with an 'expired' marker. Turn the 'checked N days ago' label amber after 7 days.
+3) Shared websites: attach the feed only to the listing whose address the site names. The others get 'This company sells online at <site>', and listings the site never names get nothing. Decide the chain rule (Anthony's x3).
+4) A first write for a never-read shop requires the name check, an unshared host, storefront='yes' and not closed.
+The widening crawl itself is rank 31; the critic says to sample 50 unread sites across confidence bands before sizing its yield.
+NEEDS: The expiry window (14, 21 or 30 days) and how a chain's single web store shows at its branches.
+RISK: A shop whose site blocks us for 3 weeks loses a real shelf. That is honest, since we can no longer vouch for it. Only 4 shared-feed groups exist today, all reviewed by hand.
+EFFORT: About 1 day
+
+=== #15 Search that finds what people type: apostrophes, aliases, city plus state, local autocomplete [names / ranking]
+PROBLEM: Store search is a plain ILIKE with no punctuation folding. 'wild bills' finds 2 of 215 Wild Bill's listings, 'smokin joes' 0 of 18, and 'holts' 0 of 3. City chips match substrings in every state: the Jacksonville chip mixes in 13 North Carolina shops, and 'Washington, DC' returns rows from MI, MO and PA. Navbar autocomplete ignores location, so typing 'cigar' offers the three Tucson Anthony's to everyone.
+SCALE: Measured: 926 public names contain an apostrophe. 22 of the top 40 city chips mix in other towns (121 rows); 19 of them mix in other states (82 rows).
+METHOD: 1) Add a name_search column maintained from name plus aliases (former names from ranks 11 and 17): lower-case, strip apostrophes and periods, fold accents, and treat '&' as 'and'. Fold St/Saint and Mt/Mount for cities.
+2) Chips send city and state, matched exactly. A typed city resolves to a centre and runs rank 12 with a 15-mi radius.
+3) Apply the same fix to the city LIKE in cigars.js.
+4) Autocomplete passes the saved location, ordered by match quality and then distance.
+NEEDS: nothing
+RISK: This affects search only. Guardrail: every chip's result count must equal the chip's own count.
+EFFORT: Half to 1 day
+
+=== #16 Same-door duplicate merge, and stop the build from re-creating duplicates [duplicates / location / chains]
+PROBLEM: The same shop appears two or three times at one door, and the copies disagree: one shows hours and 'Open now', the other doesn't; one has the Lounge badge, the other doesn't. Examples: The Pipe Rack / 'The Pipe' in Akron; three Roz's Cigar Emporium rows in Ocala; Wild Bill's Berkley ('Twelve Mile' vs '12 Mile'). dedupeListings finds 0 more, because its exact-name, same-city rule is too narrow. osm.namesMatch fails on 'Cole's' vs 'Coles' and 'JR Cigars - Clayton' vs 'JR Cigars'. The importer never retires a row the rebuilt file folded away.
+SCALE: Measured: 148 public listings in 73 clusters, 75 extra rows, all hand-checked; 3 are wrong, so about 72 true extras. 41 of the extras are OSM rows. 35 twin pairs have pins more than 300 m apart, and rank 9 settles which pin is right. The location auditor found 55 address-less OSM pins within 150 m of an addressed listing, which are probable duplicates.
+METHOD: 1) Same door: same house number plus at least 50% of street words shared after normalising (Twelve to 12, SR/State Rd/US to 'hwy N', suites removed), with the same ZIP or city; or pins within 60 m.
+2) Same shop: names equal after folding punctuation and plurals, or distinctive words match with trade words and the town name removed.
+3) Merge automatically only with a matching phone or website host, or when one twin is a bare record. Different house numbers, conflicting phones and clusters of 3+ go to review.
+4) Survivor: the row holding inventory or activity, then the pin agreeing with the geocode, then the working website, then website hours. Fill its empty fields from the twin. Hide the rest with storefront='duplicate' and a pointer, and re-point child rows.
+5) Fix osm.js nameKey (apostrophes, '&', joined initials, squashed spaces, drop the town word). Let buildDirectory fold every OSM twin, not only the first. Have importStores hide an existing OSM row that the new file folded into an Overture record.
+6) Run the automatic tier after every import.
+NEEDS: One decision: a shop and its in-house lounge on one phone (JR Cigar + Casa de Montecristo x3, House of Cigar + HOC D.Ellan): one listing or two?
+RISK: The risk is merging neighbours. Bellevue Cigar at 565 Lincoln and a separate dealer at 553 matched only on the town name. Guardrails: the town name never counts toward a match; hide, never delete; review the whole dry run (about 80 rows); matcher self-tests with negatives (Holt's/Ashton, Tobacco Town/Tobacco Row).
+EFFORT: About 1 day build, 2 h review

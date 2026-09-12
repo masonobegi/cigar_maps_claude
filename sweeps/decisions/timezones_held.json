@@ -1,0 +1,90 @@
+[
+ {
+  "id": 5577,
+  "name": "Cigar Mafia",
+  "city": "Houston",
+  "state": "NY",
+  "lat": 29.762873,
+  "lng": -95.364677,
+  "from": "America/New_York",
+  "to": "America/Chicago",
+  "visible": 1
+ },
+ {
+  "id": 5780,
+  "name": "Cigar Crafted",
+  "city": "Salt Lake City",
+  "state": "UT",
+  "lat": 29.9821,
+  "lng": -95.296501,
+  "from": "America/Denver",
+  "to": "America/Chicago",
+  "visible": 1
+ },
+ {
+  "id": 10445,
+  "name": "Vapenzone",
+  "city": "Chicago",
+  "state": "IL",
+  "lat": 44.999992,
+  "lng": -120.000015,
+  "from": "America/Chicago",
+  "to": "America/Los_Angeles",
+  "visible": 0
+ },
+ {
+  "id": 24506,
+  "name": "The Joint Smoke Shop Taos",
+  "city": "Taos",
+  "state": "NM",
+  "lat": 32.661976,
+  "lng": -109.325806,
+  "from": "America/Denver",
+  "to": "America/Phoenix",
+  "visible": 0
+ },
+ {
+  "id": 25561,
+  "name": "SunBurst Smoke Shop 3 -Vape Shop Near Me",
+  "city": "Glendale",
+  "state": "AR",
+  "lat": 33.58416,
+  "lng": -112.186203,
+  "from": "America/Chicago",
+  "to": "America/Phoenix",
+  "visible": 0
+ },
+ {
+  "id": 35028,
+  "name": "Pahvant Travel Plaza",
+  "city": "Beaver",
+  "state": "UT",
+  "lat": 37.799278,
+  "lng": -81.037262,
+  "from": "America/Denver",
+  "to": "America/New_York",
+  "visible": 0
+ },
+ {
+  "id": 39731,
+  "name": "Vip smoke and cigar",
+  "city": "Mission Viejo",
+  "state": "CO",
+  "lat": 39.954494,
+  "lng": -115.64843,
+  "from": "America/Denver",
+  "to": "America/Los_Angeles",
+  "visible": 1
+ },
+ {
+  "id": 41380,
+  "name": "Stoney J's",
+  "city": "Bullhead City",
+  "state": "NV",
+  "lat": 35.108962,
+  "lng": -114.615989,
+  "from": "America/Los_Angeles",
+  "to": "America/Phoenix",
+  "visible": 0
+ }
+]

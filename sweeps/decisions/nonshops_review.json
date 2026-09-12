@@ -1,0 +1,24 @@
+[
+ {
+  "id": 38848,
+  "name": "Backyard Cigars",
+  "city": "The Woodlands",
+  "state": "TX",
+  "phone": null,
+  "website": null,
+  "store_type": "cigar_lounge",
+  "storefront": "not_retail",
+  "reason": "\"Backyard Cigars\" is somebody's own place, not a shop"
+ },
+ {
+  "id": 39041,
+  "name": "My Back Porch Cigar Lounge",
+  "city": "Mt Vernon",
+  "state": "WA",
+  "phone": null,
+  "website": null,
+  "store_type": "cigar_lounge",
+  "storefront": "not_retail",
+  "reason": "\"My Back Porch Cigar Lounge\" is somebody's own place, not a shop"
+ }
+]
