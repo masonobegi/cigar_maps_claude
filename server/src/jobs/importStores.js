@@ -128,7 +128,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // put it back on the map just because the classifier still likes its
         // name — that regression put Cigar City Brewing back among the cigar
         // shops once already.
-        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate', 'moved'].includes(found.storefront)
+        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate', 'moved', 'unproven'].includes(found.storefront)
           || found.operating_status === 'permanently_closed';
         // Only the fields the directory still owns are refreshed. A sweep that
         // renamed a shop, moved its pin to the right door or fixed its phone

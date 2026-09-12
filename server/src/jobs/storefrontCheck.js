@@ -260,7 +260,7 @@ async function sweep({ confirm = false, sample = 0, out = null, applyFrom = null
     SELECT id, name, city, state, phone, website, source, source_id, visible, store_type
     FROM stores
     WHERE claimed = 0 AND COALESCE(staff_edited, 0) = 0 AND source IN ('osm', 'overture')
-      AND COALESCE(storefront, 'yes') NOT IN ('closed', 'duplicate', 'moved')
+      AND COALESCE(storefront, 'yes') NOT IN ('closed', 'duplicate', 'moved', 'unproven')
       AND COALESCE(operating_status, 'open') NOT IN ('permanently_closed', 'likely_closed')
     ORDER BY id
   `);
