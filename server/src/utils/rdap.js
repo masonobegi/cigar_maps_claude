@@ -207,7 +207,10 @@ function selfTest() {
 
 if (require.main === module) {
   const domain = process.argv[2];
-  if (!domain) process.exit(selfTest() ? 0 : 1);
+  // 'selftest' is the name of the test, not a domain to go and look up. Said
+  // explicitly so a runner that passes the argument to every file does not
+  // send this one off to a registry asking who owns "selftest".
+  if (!domain || domain === 'selftest') process.exit(selfTest() ? 0 : 1);
   lookup(domain, { fresh: true })
     .then(r => { console.log(JSON.stringify(r, null, 2)); process.exit(0); })
     .catch(err => { console.error(err.message); process.exit(1); });

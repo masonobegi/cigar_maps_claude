@@ -52,9 +52,10 @@ async function main() {
   if (first.skipped) { console.log('no directory file to import; run npm run build:directory first'); process.exit(2); }
 
   const rows = [];
-  for (let i = 0; i < 8; i++) rows.push(await pickPublic(i * 37));
+  for (let i = 0; i < 11; i++) rows.push(await pickPublic(i * 37));
   if (rows.some(r => !r)) { console.log('not enough public listings in this database'); process.exit(2); }
-  const [ruledOut, ourClosure, chainClosure, renamed, movedPin, staffPhone, badgeOff, siteHours] = rows;
+  const [ruledOut, ourClosure, chainClosure, renamed, movedPin, staffPhone, badgeOff, siteHours,
+    tidied, newSite, ownerAddr] = rows;
 
   // A sweep's verdict, without staff_edited: the importer must honour it.
   await db.run(`UPDATE stores SET visible = 0, storefront = 'not_retail', storefront_reason = 'test' WHERE id = ?`, [ruledOut.id]);
@@ -71,6 +72,18 @@ async function main() {
   await writeFields(badgeOff.id, { has_lounge: 0 }, { source: 'website', job: 'test', reason: 'its own site describes no lounge' });
   await db.run(`UPDATE stores SET hours = ?, hours_source = 'website' WHERE id = ?`,
     [JSON.stringify({ Mon: '9am-9pm', Sun: 'Closed' }), siteHours.id]);
+
+  // A display name a tidy rule cleaned. The rule is display-only and has to
+  // stay reversible, so source_name must still hold what the directory says.
+  await writeFields(tidied.id, { name: 'Tidied Name' }, { source: 'rule', job: 'test', reason: 'stripped a marketing tail' });
+  // A listing whose website we had already judged dead. The verdict describes
+  // that domain, so it must not be carried onto a different one.
+  await db.run(`UPDATE stores SET website = 'definitely-lapsed-example.invalid', website_status = 'parked',
+      website_final_url = 'https://sedoparking.com/x', website_checked_at = NOW() WHERE id = ?`, [newSite.id]);
+  // An address the owner set. Everything derived from it has to follow.
+  await writeFields(ownerAddr.id, { address: '1 Owner Way', city: 'Ownerville', state: 'AZ', zip: '85001' },
+    { source: 'owner', job: 'test', reason: 'the owner corrected their own address' });
+  await db.run(`UPDATE stores SET timezone = 'America/Phoenix' WHERE id = ?`, [ownerAddr.id]);
 
   console.log('re-import...');
   await importStoresFromFile(null, { force: true, log: () => {} });
@@ -92,6 +105,36 @@ async function main() {
   ok(Number(g.has_lounge) === 0, 'a lounge badge taken off after reading the site stays off', g.has_lounge);
   const h = await after(siteHours.id);
   ok(h.hours_source === 'website' && JSON.parse(h.hours).Mon === '9am-9pm', 'hours read from the shop\'s website survive', h.hours);
+
+  // source_name is the directory's own name, on every row, whoever owns the
+  // displayed one. Without it a tidy is not reversible and a later rename at
+  // source cannot be told apart from our own edit.
+  const i2 = await after(tidied.id);
+  ok(i2.name === 'Tidied Name', 'a name a tidy rule cleaned survives the import', i2.name);
+  ok(i2.source_name === tidied.name,
+    'and source_name still holds what the directory calls it, so the tidy can be undone',
+    { shown: i2.name, source: i2.source_name });
+  const everySource = await db.get(`SELECT COUNT(*)::int AS n FROM stores
+    WHERE source IN ('osm', 'overture') AND (source_name IS NULL OR source_name = '')`);
+  ok(everySource.n === 0, 'every directory listing carries its source name', everySource.n);
+
+  // A verdict about one domain must not be inherited by another.
+  const j2 = await after(newSite.id);
+  if (j2.website === 'definitely-lapsed-example.invalid') {
+    ok(j2.website_status === 'parked', 'a dead-link verdict stays while the address does', j2.website_status);
+  } else {
+    ok(j2.website_status === 'checking' && j2.website_final_url === null && j2.website_checked_at === null,
+      'a new domain from the directory does not inherit the old one\'s verdict',
+      { site: j2.website, status: j2.website_status, final: j2.website_final_url });
+  }
+
+  // The owner's address, and the clock that follows from it.
+  const k2 = await after(ownerAddr.id);
+  ok(k2.address === '1 Owner Way' && k2.city === 'Ownerville' && k2.state === 'AZ',
+    'an address the owner set is not overwritten', { a: k2.address, c: k2.city, s: k2.state });
+  ok(k2.timezone === 'America/Phoenix',
+    'and the time zone derived from it survives, so "open now" is still judged on the shop\'s clock',
+    k2.timezone);
 
   // And the directory still refreshes what nobody has corrected.
   const untouched = await db.get(`SELECT COUNT(*)::int AS n FROM stores WHERE field_sources IS NULL AND source IN ('osm', 'overture')`);

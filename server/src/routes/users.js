@@ -254,7 +254,7 @@ router.get('/me/feed', requireAuth, asyncRoute(async (req, res) => {
 
   const deals = await db.all(`
     SELECT d.*, s.name as store_name, c.brand, c.name as cigar_name
-    FROM deals d JOIN stores s ON s.id = d.store_id LEFT JOIN cigars c ON c.id = d.cigar_id
+    FROM deals d JOIN stores s ON s.id = d.store_id AND s.visible = 1 LEFT JOIN cigars c ON c.id = d.cigar_id
     WHERE (d.expires_at IS NULL OR d.expires_at > NOW())
     ORDER BY d.created_at DESC LIMIT 8
   `, []);

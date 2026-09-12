@@ -63,8 +63,19 @@ const OVERALL_BUDGET_MS = 30000;  // whole check for one store, redirects includ
  * and 'parked' now also catches registrar landers and the "Resources and
  * Information" template, not just the for-sale wording.
  */
-const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked',
+//
+// 'checking' is written by a hand that changes the address — the owner form,
+// the staff editor, a directory re-import that brings a new domain — and means
+// "this link is new and has not been looked at yet". It is deliberately not
+// NULL: NULL means nobody has ever looked, which on today's data is 5,214 of
+// the 5,214 public listings that carry a website, because the first full sweep
+// has not run. Treating those two as one state would either hide every website
+// on the site or dress a just-typed address up as verified.
+const STATUSES = ['ok', 'blocked', 'checking', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked',
   'elsewhere', 'hijacked', 'store_unavailable'];
+
+/** The verdict a fresh or edited address carries until a sweep reaches it. */
+const PENDING_STATUS = 'checking';
 
 /** Verdicts that mean "there is no working link here". */
 const DEAD_STATUSES = ['dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked',
@@ -566,6 +577,32 @@ function looksParked(finalUrl, body) {
  * profile, or somebody's platform. Kept on the evidence so the review can
  * label a Facebook link rather than throw it away.
  */
+/**
+ * The human name of the network a link points at, or null for an ordinary
+ * site. A listing whose only "website" is a Facebook page is not a listing
+ * with no website, and it is not a listing with a website either — it wants
+ * saying for what it is.
+ */
+const SOCIAL_NAMES = [
+  [/(^|\.)facebook\.com$|(^|\.)fb\.(com|me)$/, 'Facebook page'],
+  [/(^|\.)instagram\.com$/, 'Instagram profile'],
+  [/(^|\.)twitter\.com$|(^|\.)x\.com$/, 'X profile'],
+  [/(^|\.)tiktok\.com$/, 'TikTok profile'],
+  [/(^|\.)yelp\.com$/, 'Yelp page'],
+  [/(^|\.)linkedin\.com$/, 'LinkedIn page'],
+  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, 'YouTube channel'],
+  [/(^|\.)linktr\.ee$|(^|\.)linktree\.com$/, 'Linktree'],
+  [/(^|\.)google\.com$|(^|\.)business\.site$/, 'Google listing'],
+  [/(^|\.)square\.site$|(^|\.)clover\.com$|(^|\.)toast\.?tab\.com$/, 'ordering page'],
+];
+
+function socialNetwork(url) {
+  let host = '';
+  try { host = new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`).hostname.toLowerCase(); } catch { return null; }
+  for (const [re, name] of SOCIAL_NAMES) if (re.test(host)) return name;
+  return null;
+}
+
 function destinationKind(url) {
   let host = '';
   try { host = new URL(url).hostname.toLowerCase(); } catch { return 'site'; }
@@ -857,6 +894,17 @@ function selftest() {
 
   // The status vocabulary has to agree with itself, or a dead link is rendered
   // as a working one somewhere.
+  ok(socialNetwork('https://www.facebook.com/tampasweethearts') === 'Facebook page', 'a Facebook link is named');
+  ok(socialNetwork('http://m.facebook.com/x') === 'Facebook page', 'so is the mobile host');
+  ok(socialNetwork('instagram.com/elreycigars') === 'Instagram profile', 'a bare host still parses');
+  ok(socialNetwork('https://x.com/shop') === 'X profile', 'x.com is Twitter');
+  ok(socialNetwork('https://linktr.ee/shop') === 'Linktree', 'a link hub is named');
+  ok(socialNetwork('https://tampasweethearts.com') === null, 'a shop on its own domain has no network');
+  ok(socialNetwork('https://notfacebook.com') === null, 'the name has to be the domain, not a substring');
+  ok(socialNetwork('') === null && socialNetwork('::::') === null, 'junk is not a network');
+  ok(PENDING_STATUS === 'checking' && STATUSES.includes(PENDING_STATUS), 'the pending verdict is a status');
+  ok(!DEAD_STATUSES.includes(PENDING_STATUS),
+    'a link we have not looked at yet is not a dead link: it is unknown, and the two get different copy');
   ok(DEAD_STATUSES.every(v => STATUSES.includes(v)), 'every dead status is a status');
   ok(TAKEN_OVER_STATUSES.every(v => DEAD_STATUSES.includes(v)), 'a taken-over domain is a dead link');
   ok(!DEAD_STATUSES.includes('ok') && !DEAD_STATUSES.includes('blocked'),
@@ -878,8 +926,8 @@ function selftest() {
 module.exports = {
   checkWebsite, checkStores, checkStore, runStartupLinkCheck,
   parseWebsite, looksParked, looksHijacked, namesShop, pageIdentity, visibleText,
-  registrableDomain, destinationKind,
-  STATUSES, DEAD_STATUSES, TAKEN_OVER_STATUSES, GAMBLING_TERMS, selftest,
+  registrableDomain, destinationKind, socialNetwork,
+  STATUSES, DEAD_STATUSES, TAKEN_OVER_STATUSES, PENDING_STATUS, GAMBLING_TERMS, selftest,
 };
 
 if (require.main === module && process.argv[2] === 'selftest') {

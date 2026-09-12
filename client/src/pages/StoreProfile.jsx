@@ -125,7 +125,33 @@ const WEBSITE_WHY = {
   hijacked:  'That domain is no longer the shop\u2019s \u2014 it now serves a gambling site.',
   elsewhere: 'That domain now lands on a different business\u2019s website.',
   store_unavailable: 'The shop\u2019s online store has been switched off by its platform.',
+  // Not a failure: an address somebody has just changed, which no sweep has
+  // reached yet. It says so rather than either hiding the link or presenting it
+  // as one we have stood behind.
+  checking: 'This address was changed recently and we have not checked it yet.',
 };
+
+// The networks worth naming, so a listing whose only "website" is a Facebook
+// page says that instead of printing an opaque URL. Kept in step with
+// socialNetwork() in server/src/jobs/linkCheck.js.
+const SOCIAL_NAMES = [
+  [/(^|\.)facebook\.com$|(^|\.)fb\.(com|me)$/, 'Facebook page'],
+  [/(^|\.)instagram\.com$/, 'Instagram profile'],
+  [/(^|\.)twitter\.com$|(^|\.)x\.com$/, 'X profile'],
+  [/(^|\.)tiktok\.com$/, 'TikTok profile'],
+  [/(^|\.)yelp\.com$/, 'Yelp page'],
+  [/(^|\.)linkedin\.com$/, 'LinkedIn page'],
+  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, 'YouTube channel'],
+  [/(^|\.)linktr\.ee$|(^|\.)linktree\.com$/, 'Linktree'],
+  [/(^|\.)google\.com$|(^|\.)business\.site$/, 'Google listing'],
+];
+
+export function socialName(website) {
+  const host = domainOf(website);
+  if (!host) return null;
+  for (const [re, name] of SOCIAL_NAMES) if (re.test(host)) return name;
+  return null;
+}
 
 const withScheme = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`);
 
@@ -137,25 +163,50 @@ export function websiteInfo(store) {
   const status = store.website_status || null;
   // 'blocked' means the site answered but would not serve our checker (a
   // Cloudflare front door). A person with a browser gets in, so it stays a link.
+  //
+  // 'checking' is an address a hand changed a moment ago — the owner's form,
+  // the staff editor, or a directory refresh that brought a new domain. It is
+  // not a link we have stood behind, so it does not get rendered as one.
+  //
+  // A NULL status is different again, and is deliberately still a link: it
+  // means nobody has looked yet, which is true of 5,214 of the 5,214 public
+  // listings that carry a website, because the first full sweep has not run.
+  // Withholding those links would empty the website line across the whole
+  // directory over an absence of evidence rather than any evidence of a
+  // problem. It carries no freshness claim instead.
   const ok = !status || status === 'ok' || status === 'blocked';
   const listed = domainOf(store.website);
   const finalDomain = domainOf(store.website_final_url);
-  // A redirect that lands somewhere else means the shop has moved. Send people
-  // where it actually lives now rather than to the address on the old listing.
-  const moved = ok && !!store.website_final_url && !!finalDomain && finalDomain !== listed;
+  // A redirect that lands somewhere else means the shop has moved, and people
+  // should be sent where it actually lives now. Only a plain 'ok' says that:
+  // it is the verdict the checker gives when it read the page and found the
+  // shop named on it, and a domain that had been taken over by somebody else
+  // would have come back 'elsewhere' or 'hijacked' instead. 'blocked' and NULL
+  // are excluded on purpose — with those we never saw the destination, so we
+  // cannot claim it is the same business.
+  const moved = status === 'ok' && !!store.website_final_url && !!finalDomain && finalDomain !== listed;
   const when = freshness(store.website_checked_at);
+  const network = socialName(moved ? store.website_final_url : store.website);
   return {
     ok,
     status,
     moved,
     listed,
+    // Whether we have actually stood behind this address, as opposed to merely
+    // having no evidence against it.
+    verified: status === 'ok' || status === 'blocked',
+    pending: status === 'checking',
+    // The network behind the link, when it is a social profile rather than the
+    // shop's own site. Null for an ordinary domain.
+    network,
     href: ok ? withScheme(moved ? store.website_final_url : store.website) : null,
-    label: moved
+    label: network || (moved
       ? String(store.website_final_url).replace(/^https?:\/\//i, '').replace(/\/$/, '')
-      : store.website,
-    note: ok ? null : (status === 'parked' ? 'this domain is parked' : 'link looks broken'),
+      : store.website),
+    note: ok ? null : (status === 'parked' ? 'this domain is parked'
+      : status === 'checking' ? 'checking this link' : 'link looks broken'),
     why: ok ? null
-      : `${WEBSITE_WHY[status] || 'We could not reach this website when we last checked it.'}${when ? ` (${when})` : ''}`,
+      : `${WEBSITE_WHY[status] || 'We could not reach this website when we last checked it.'}${status === 'checking' || !when ? '' : ` (${when})`}`,
   };
 }
 
@@ -249,16 +300,27 @@ function UnclaimedBanner({ store, myClaim, menuStatus, site, onClaim, onReport }
           <MapPin className="w-4 h-4" style={{ color: AMBER }} /> Unclaimed listing
         </p>
         <p className="text-xs mt-1" style={{ color: MUTED }}>
-          Details come from OpenStreetMap contributors and may be out of date. Inventory, deals, and events appear once the owner claims this shop.
+          {/* The credit was wrong: most of this directory is Overture, not OSM,
+              and both licences ask to be named. */}
+          Details come from the Overture Maps Foundation and OpenStreetMap contributors, and may be out of date.
+          {/* Saying "inventory appears once claimed" over a menu we are already
+              showing contradicts the page. Only say it when there is none. */}
+          {autoMenu ? ' Deals and events appear once the owner claims this shop.'
+            : ' Inventory, deals, and events appear once the owner claims this shop.'}
         </p>
         {autoMenu && (
           <p className="text-xs mt-1" style={{ color: MUTED }}>
             Menu read automatically from {domainOf(menuStatus.url || store.website)}. Prices and stock may lag the shop.
           </p>
         )}
-        {site && !site.ok && (
+        {/* The dead address is deliberately not reprinted here. The page has
+            already withheld the link; naming the domain in the next breath
+            publishes it again in the one place a reader is most likely to type
+            it in by hand. An owner does not need to be told which of their own
+            domains lapsed, only that the one we hold does not work. */}
+        {site && !site.ok && !site.pending && (
           <p className="text-xs mt-1" style={{ color: AMBER }}>
-            The website on this listing ({site.listed}) no longer works — claim the shop and we will point people at the right one.
+            The website on this listing no longer works — claim the shop and we will point people at the right one.
           </p>
         )}
       </div>

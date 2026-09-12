@@ -3,6 +3,9 @@ const db = require('../database/db');
 const { requireAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { createInventorySheet } = require('../utils/googleSheets');
+// Every staff write to a listing is recorded against the field it touched, so
+// the next directory import honours it and the edit log says who did what.
+const { writeFields } = require('../utils/storeEdits');
 function requireAdmin(req, res, next) {
   if (!['admin', 'staff'].includes(req.user.account_type)) return res.status(403).json({ error: 'Staff only' });
   next();
@@ -118,6 +121,23 @@ router.get('/stores', requireAuth, requireAdmin, asyncRoute(async (req, res) => 
 
 const { approveClaim, rejectClaim } = require('../utils/claims');
 
+/**
+ * The claim queue, with the evidence a decision actually needs.
+ *
+ * It used to return the claimant, the shop's name and its address, which is
+ * not enough to answer the only question that matters: does this person run
+ * this shop, and is this listing a shop we should be publishing at all? A
+ * staff member approving a claim on a listing we had already hidden as a
+ * duplicate, or on a domain that 40 other listings share, had nothing on the
+ * card to tell them so.
+ *
+ * So the card now carries the listing's standing (visible, storefront,
+ * operating status and the reasons behind each), the state of its website, the
+ * gate's own verdict and reasons, how many listings share the domain, and what
+ * the registry says about when that domain was registered — a shop domain
+ * registered last week, behind a claim on a listing that has been in the
+ * directory for years, is the shape of a takeover.
+ */
 router.get('/claims', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
   const { status } = req.query;
   const params = [];
@@ -125,7 +145,20 @@ router.get('/claims', requireAuth, requireAdmin, asyncRoute(async (req, res) => 
   if (status) { where = 'sc.status = ?'; params.push(status); }
   const rows = await db.all(`
     SELECT sc.*, s.name as store_name, s.city, s.state, s.website as store_website, s.phone as store_phone, s.address as store_address,
-      u.email as user_email, u.name as user_name
+      -- Is this listing one we are publishing, and if not, why not.
+      s.visible as store_visible, s.storefront, s.storefront_reason,
+      s.operating_status, s.closed_reason, s.staff_edited,
+      -- Does the address on the listing still serve the shop's own site.
+      s.website_status, s.website_final_url, s.website_checked_at,
+      u.email as user_email, u.name as user_name, u.created_at as user_created_at,
+      -- How many other listings stand on this domain. A claim proved by an
+      -- email at a domain 40 listings share proves control of a chain's
+      -- mailbox, not of this branch.
+      (SELECT COUNT(*) FROM stores d
+        WHERE d.website IS NOT NULL AND d.website <> '' AND d.id <> s.id
+          AND regexp_replace(regexp_replace(lower(d.website), '^https?://', ''), '^www\\.', '')
+              LIKE regexp_replace(regexp_replace(lower(s.website), '^https?://', ''), '^www\\.', '') || '%'
+      )::int AS listings_sharing_domain
     FROM store_claims sc
     JOIN stores s ON s.id = sc.store_id
     JOIN users u ON u.id = sc.user_id
@@ -133,7 +166,37 @@ router.get('/claims', requireAuth, requireAdmin, asyncRoute(async (req, res) => 
     ORDER BY CASE sc.status WHEN 'pending' THEN 1 WHEN 'approved' THEN 2 ELSE 3 END, sc.created_at DESC
     LIMIT 200
   `, params);
-  res.json(rows);
+
+  // What the registry knows about each domain, from the cache the gate fills.
+  // Read-only here: the queue must not make a staff member wait on RDAP, and a
+  // domain nobody has looked up simply says so.
+  const { registrableDomain } = require('../jobs/linkCheck');
+  const domains = [...new Set(rows.map(r => r.store_website && registrableDomain(r.store_website)).filter(Boolean))];
+  const facts = new Map();
+  if (domains.length) {
+    const holes = domains.map(() => '?').join(',');
+    for (const f of await db.all(`SELECT * FROM domain_facts WHERE domain IN (${holes})`, domains)) {
+      facts.set(f.domain, f);
+    }
+  }
+
+  res.json(rows.map(r => {
+    const domain = r.store_website ? registrableDomain(r.store_website) : null;
+    const fact = domain ? facts.get(domain) : null;
+    return {
+      ...r,
+      // The gate's own reasons, recorded when the claim was filed.
+      proof_reasons: (() => {
+        try { return JSON.parse(r.proof_reasons || 'null'); } catch { return null; }
+      })(),
+      domain,
+      domain_rdap_status: fact ? fact.rdap_status : null,
+      domain_registered_at: fact ? fact.registered_at : null,
+      // Set when a person has to look at this one whatever the proof says.
+      needs_manual_review: !r.store_visible || r.storefront === 'duplicate'
+        || r.operating_status === 'permanently_closed' || r.storefront === 'closed',
+    };
+  }));
 }));
 
 router.post('/claims/:id/approve', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
@@ -162,20 +225,66 @@ router.post('/claims/:id/reject', requireAuth, requireAdmin, asyncRoute(async (r
   }
 }));
 
+/**
+ * Hand a listing back. There was no way to undo an approval: a claim granted
+ * to the wrong person, or to somebody who has since sold the shop, left that
+ * account in control of the listing for good, and the only alternative was to
+ * delete the whole row.
+ *
+ * The listing keeps its visibility and its data; it loses its owner, its
+ * claimed flag and its verified badge, because all three were statements about
+ * the account that is being removed. Any pending claims are left alone so a
+ * legitimate owner can still be approved.
+ */
+router.post('/stores/:id/unclaim', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const store = await db.get('SELECT id, name, user_id, claimed, verified FROM stores WHERE id = ?', [req.params.id]);
+  if (!store) return res.status(404).json({ error: 'Store not found' });
+  if (!store.claimed && store.user_id === null) return res.status(409).json({ error: 'That listing is not claimed' });
+
+  const reason = String(req.body?.reason || '').slice(0, 400) || `unclaimed by staff user ${req.user.id}`;
+  // Recorded field by field, so the edit log can say what was taken away and
+  // why — the same log every sweep writes to.
+  await writeFields(store.id, { user_id: null, claimed: 0, verified: 0 },
+    { source: 'staff', job: 'admin-unclaim', reason, force: true });
+  // Approved claims on this listing no longer describe anything, so they are
+  // marked rather than left looking live.
+  await db.run(`UPDATE store_claims SET status = 'revoked', admin_notes = ?, reviewed_at = NOW()
+                WHERE store_id = ? AND status = 'approved'`, [reason, store.id]);
+
+  res.json({ success: true, id: store.id, unclaimed: store.user_id });
+}));
+
 // ── Directory listings (auto-imported, unclaimed) ───────────────────────────
 
 router.get('/listings', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
-  const { q, state, visible, min_conf, max_conf } = req.query;
+  const { q, state, visible, min_conf, max_conf, storefront } = req.query;
   const limit = Math.min(500, parseInt(req.query.limit) || 100);
-  const where = ["s.source = 'osm'", 's.claimed = 0'];
+  // Both directory sources. This said `source = 'osm'` and so showed staff
+  // only the OpenStreetMap rows — the Overture ones, which are most of the
+  // directory, could not be reviewed, retyped or hidden from here at all.
+  const where = ["s.source IN ('osm', 'overture')", 's.claimed = 0'];
   const params = [];
   if (q) { where.push('(s.name ILIKE ? OR s.city ILIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
   if (state) { where.push('s.state = ?'); params.push(String(state).toUpperCase()); }
   if (visible === '0' || visible === '1') { where.push('s.visible = ?'); params.push(+visible); }
+  // Why a hidden listing is hidden. Without this the only way to review, say,
+  // every row a sweep called a duplicate was to page through all of them.
+  if (storefront) {
+    const wanted = String(storefront).split(',').map(v => v.trim()).filter(Boolean);
+    if (wanted.length) {
+      where.push(`s.storefront IN (${wanted.map(() => '?').join(',')})`);
+      params.push(...wanted);
+    }
+  }
   if (min_conf) { where.push('s.confidence >= ?'); params.push(+min_conf); }
   if (max_conf) { where.push('s.confidence <= ?'); params.push(+max_conf); }
   const rows = await db.all(`
-    SELECT s.id, s.name, s.city, s.state, s.address, s.phone, s.website, s.store_type, s.confidence, s.visible, s.source_id, s.lat, s.lng,
+    SELECT s.id, s.name, s.source_name, s.city, s.state, s.address, s.phone, s.website, s.store_type,
+      s.confidence, s.visible, s.source, s.source_id, s.lat, s.lng,
+      -- Why this listing stands where it does, so a staff member can see the
+      -- sweep's reasoning instead of guessing at it.
+      s.storefront, s.storefront_reason, s.operating_status, s.closed_reason,
+      s.website_status, s.hours_source, s.field_sources,
       (SELECT COUNT(*) FROM store_views sv WHERE sv.store_id = s.id) as views,
       (SELECT COUNT(*) FROM store_reports sr WHERE sr.store_id = s.id AND sr.status = 'open') as open_reports
     FROM stores s
@@ -183,7 +292,10 @@ router.get('/listings', requireAuth, requireAdmin, asyncRoute(async (req, res) =
     ORDER BY s.confidence DESC, s.name
     LIMIT ?
   `, [...params, limit]);
-  res.json(rows);
+  // How large the queue actually is, so "100 rows" is not mistaken for "all of
+  // them" the way the map's 1,000 was.
+  const total = await db.get(`SELECT COUNT(*)::int AS n FROM stores s WHERE ${where.join(' AND ')}`, params);
+  res.json({ items: rows, total: Number(total.n), returned: rows.length, limit });
 }));
 
 const STORE_TYPES = ['cigar_shop', 'cigar_lounge', 'tobacco_shop', 'smoke_shop'];
@@ -214,8 +326,23 @@ router.patch('/reports/:id', requireAuth, requireAdmin, asyncRoute(async (req, r
   const { status, hide_store } = req.body || {};
   const report = await db.get('SELECT * FROM store_reports WHERE id = ?', [req.params.id]);
   if (!report) return res.status(404).json({ error: 'Not found' });
+  if (hide_store) {
+    // This used to carry `AND claimed = 0` and so did nothing at all on a
+    // claimed listing, while still answering "success". A visitor reporting
+    // that a claimed shop has shut got a staff member clicking Hide and
+    // nothing happening, with no way to tell. Hiding a claimed listing is a
+    // decision about somebody's business, so it is refused out loud instead.
+    const store = await db.get('SELECT id, claimed FROM stores WHERE id = ?', [report.store_id]);
+    if (!store) return res.status(404).json({ error: 'That report points at a listing that no longer exists' });
+    if (store.claimed) {
+      return res.status(409).json({
+        error: 'That listing is claimed by its owner. Take the claim back first (Unclaim), then hide it.',
+        store_id: store.id, claimed: true,
+      });
+    }
+    await db.run('UPDATE stores SET visible = 0, staff_edited = 1 WHERE id = ?', [report.store_id]);
+  }
   if (status) await db.run('UPDATE store_reports SET status = ? WHERE id = ?', [status, report.id]);
-  if (hide_store) await db.run('UPDATE stores SET visible = 0, staff_edited = 1 WHERE id = ? AND claimed = 0', [report.store_id]);
   res.json({ success: true });
 }));
 

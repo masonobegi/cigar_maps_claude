@@ -61,6 +61,9 @@ export default function Stores() {
   const [tempGeoLoading, setTempGeoLoading] = useState(false);
   // Map mode loads whatever is in the viewport (the directory has thousands of listings)
   const [mapStores, setMapStores] = useState(null);
+  // The server's answer for the current viewport: pins, cluster bubbles and an
+  // exact total. Null until the first bounds report comes in.
+  const [mapData, setMapData] = useState(null);
   const [mapLoading, setMapLoading] = useState(false);
   const [mapBbox, setMapBbox] = useState(null);
   const mapReq = useRef({ timer: null, seq: 0 });
@@ -73,9 +76,10 @@ export default function Stores() {
 
   // Panning only records where we are. The fetch lives in the effect below so
   // that changing a filter refreshes the map even when it never moves.
-  function handleBounds({ bbox }) {
+  function handleBounds({ bbox, zoom }) {
     clearTimeout(mapReq.current.timer);
-    mapReq.current.timer = setTimeout(() => setMapBbox(bbox.join(',')), 350);
+    // The zoom decides the cluster cell size, so it travels with the box.
+    mapReq.current.timer = setTimeout(() => setMapBbox(`${bbox.join(',')}|${zoom}`), 350);
   }
 
   // Serialized so the effects below can depend on the type selection by value.
@@ -94,13 +98,19 @@ export default function Stores() {
     return p;
   }
 
+  // The map asks its own endpoint, which groups in the database over every
+  // matching listing. It used to ask the list for `limit=1000` rows and cluster
+  // those in the browser: with 7,904 public listings the national view drew
+  // 1,000 of them, every bubble's count was taken from that thousand, and the
+  // header said "1000+ stores in view" because it was counting the rows it had
+  // been handed rather than the shops that were there.
   useEffect(() => {
     if (viewMode !== 'map' || !mapBbox) return;
     const seq = ++mapReq.current.seq;
     setMapLoading(true);
-    const p = { ...filterParams(), bbox: mapBbox, limit: 1000 };
-    api.searchStores(p)
-      .then(rows => { if (seq === mapReq.current.seq) setMapStores(rows); })
+    const [bbox, zoom] = mapBbox.split('|');
+    api.getStoreMap({ ...filterParams(), bbox, zoom })
+      .then(data => { if (seq === mapReq.current.seq) setMapData(data); })
       .catch(() => {})
       .finally(() => { if (seq === mapReq.current.seq) setMapLoading(false); });
   }, [mapBbox, viewMode, q, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly]);
@@ -110,6 +120,18 @@ export default function Stores() {
   // Location is opt-in per visit. We never quietly narrow the directory to
   // wherever the browser last saw you — the list stays nationwide until you
   // press Near Me or type a place.
+
+  // What the map has in view. The exact number, because the server counted
+  // every matching listing rather than the page it happened to return: the old
+  // line said "1000+ stores in view" whenever the cap was hit, which on the
+  // national view it always was.
+  function mapCountLine() {
+    if (!mapData) return 'Drag or zoom to explore.';
+    if (mapData.too_many) return mapData.message;
+    const n = mapData.total;
+    if (n === 0) return 'No shops in view. Drag or zoom out to explore.';
+    return `${n.toLocaleString()} ${n === 1 ? 'shop' : 'shops'} in view. Drag or zoom to explore.`;
+  }
 
   // The parameters for the list, without the paging offset.
   function listParams() {
@@ -399,7 +421,7 @@ export default function Stores() {
 
       <p className="text-xs mb-4" style={{ color: MUTED }}>
         {viewMode === 'map'
-          ? (mapLoading ? 'Loading map...' : `${(mapStores || stores).length}${(mapStores || stores).length >= 1000 ? '+' : ''} stores in view. Drag or zoom to explore.`)
+          ? (mapLoading ? 'Loading map...' : mapCountLine())
           : loading ? 'Loading...' : listCountLine()}
       </p>
 
@@ -411,7 +433,7 @@ export default function Stores() {
               <div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
             </div>
           }>
-            <StoreMap stores={mapStores || stores} userLocation={userLocation} onBoundsChange={handleBounds} height="560px" />
+            <StoreMap stores={mapStores || stores} mapData={mapData} userLocation={userLocation} onBoundsChange={handleBounds} height="560px" />
           </Suspense>
         </div>
       )}

@@ -532,6 +532,38 @@ const MIGRATIONS = [
       registered_at TIMESTAMP,
       checked_at TIMESTAMP DEFAULT NOW()
     )` },
+
+  // The name the directory gave a shop, kept beside the name we show. Every
+  // name sweep is display-only and reversible from this: without it, a tidy
+  // that turns "SMOKE SHOP #4 - BEST PRICES!!" into "Smoke Shop" cannot be
+  // undone, and cannot tell a later directory rename from its own edit.
+  // Refreshed on every import, whoever owns the displayed name.
+  { name: '103_stores_source_name', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS source_name TEXT' },
+
+  // Names this shop has also gone by: what it was called before a rebrand, its
+  // legal name, its chain's brand. A JSON array. Search reads it, so a
+  // customer looking for "Cheap Tobacco" still finds the shop that is now
+  // called something else — which is the whole point of recording a rename
+  // rather than overwriting it.
+  { name: '104_stores_name_aliases', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS name_aliases TEXT' },
+
+  // Backfill: on today's rows the displayed name IS the directory's name,
+  // because no name sweep has run. Stating that explicitly costs one pass and
+  // means source_name is never null on an existing row, so the importer's
+  // "has the source renamed this shop?" test has something to compare against
+  // from the very first refresh rather than from the second.
+  { name: '105_backfill_source_name', sql: 'UPDATE stores SET source_name = name WHERE source_name IS NULL' },
+
+  // Deleting a user who owns a listing used to fail outright: the foreign key
+  // was NO ACTION, so DELETE /admin/users/:id threw a constraint violation for
+  // every store account. The listing should outlive the account — it is a real
+  // shop either way — so the owner is detached rather than the row destroyed.
+  // Clearing `claimed` is done at boot (runStartupImport), because a foreign
+  // key cannot set a second column and a trigger is more machinery than this
+  // needs.
+  { name: '106_stores_user_id_set_null', sql: `ALTER TABLE stores DROP CONSTRAINT IF EXISTS stores_user_id_fkey` },
+  { name: '107_stores_user_id_fk', sql: `ALTER TABLE stores
+      ADD CONSTRAINT stores_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL` },
 ];
 
 async function runMigrations() {

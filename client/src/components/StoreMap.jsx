@@ -55,11 +55,30 @@ function clusterIcon(count, claimed) {
   });
 }
 
-function ClusterLayer({ stores }) {
+/**
+ * The markers, from whichever source the caller gave.
+ *
+ * `mapData` is the server's answer from GET /stores/map: it has counted every
+ * matching listing, so its bubbles carry real numbers. `stores` is a plain
+ * array, which is what the profile page and the smaller maps pass, and those
+ * are still clustered here — they hold tens of rows, not thousands.
+ *
+ * The directory map uses the server. It has to: clustering in the browser
+ * means first shipping every pin to the browser, and the old map asked for
+ * 1,000 of the 7,904 public listings and then labelled its bubbles from those
+ * — so a bubble marked "84" could open onto nine shops.
+ */
+function ClusterLayer({ stores, mapData }) {
   const map = useMap();
   const [zoom, setZoom] = useState(map.getZoom());
   useMapEvents({ zoomend: () => setZoom(map.getZoom()) });
-  const items = useMemo(() => clusterStores(stores, zoom), [stores, zoom]);
+  const items = useMemo(() => {
+    if (!mapData) return clusterStores(stores, zoom);
+    return [
+      ...(mapData.pins || []).map(p => ({ single: p, lat: p.lat, lng: p.lng })),
+      ...(mapData.clusters || []).map(c => ({ count: c.count, claimed: c.claimed, lat: c.lat, lng: c.lng })),
+    ];
+  }, [stores, mapData, zoom]);
 
   return items.map((it, i) => it.single ? (
     <CircleMarker
@@ -100,7 +119,7 @@ function ClusterLayer({ stores }) {
   ));
 }
 
-export default function StoreMap({ stores, userLocation, onClose, onBoundsChange, height = '500px', initialCenter, initialZoom }) {
+export default function StoreMap({ stores, mapData, userLocation, onClose, onBoundsChange, height = '500px', initialCenter, initialZoom }) {
   const saved   = userLocation || loadSavedLocation();
   const center  = initialCenter || (saved ? [saved.lat, saved.lng] : [38.5, -96]);
   const zoom    = initialZoom || (saved ? 11 : 4);
@@ -119,8 +138,17 @@ export default function StoreMap({ stores, userLocation, onClose, onBoundsChange
           </CircleMarker>
         )}
 
-        <ClusterLayer stores={storesWithCoords} />
+        <ClusterLayer stores={storesWithCoords} mapData={mapData} />
       </MapContainer>
+
+      {/* A view the server would not draw says so, rather than showing a
+          plausible-looking subset of it. */}
+      {mapData?.too_many && (
+        <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 1000, background: 'rgba(26,20,16,0.94)',
+          border: '1px solid #4D3A1A', color: '#E8DDD0', borderRadius: '10px', padding: '8px 12px', fontSize: '12px', maxWidth: '260px' }}>
+          {mapData.message}
+        </div>
+      )}
 
       {/* Legend */}
       <div style={{ position: 'absolute', bottom: '12px', left: '12px', zIndex: 1000, background: 'rgba(26,20,16,0.92)', border: '1px solid #453C2E',

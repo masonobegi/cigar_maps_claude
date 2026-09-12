@@ -50,6 +50,42 @@ function newZone(found, incoming, keep) {
 }
 
 /**
+ * The names to keep on a row after an import, given what the directory now
+ * calls the shop.
+ *
+ * source_name always becomes the directory's current name: it is the record of
+ * what the source says, so a display name a sweep cleaned stays reversible and
+ * a later rename at source is recognisable as a rename rather than mistaken
+ * for our own edit.
+ *
+ * name_aliases collects the names the shop has also gone by. A name we are
+ * about to replace goes in, so a customer searching the old one still finds
+ * the shop: a rebrand should make a listing easier to find, not harder. The
+ * list is deduplicated case-insensitively, never contains the current name,
+ * and is capped — a shop that changes hands repeatedly should not grow an
+ * unbounded column.
+ */
+const ALIAS_LIMIT = 12;
+
+function mergeAliases(existingJson, current, ...candidates) {
+  let list = [];
+  try { const parsed = JSON.parse(existingJson || '[]'); if (Array.isArray(parsed)) list = parsed; } catch { list = []; }
+  const seen = new Set([String(current || '').trim().toLowerCase()]);
+  const out = [];
+  for (const n of [...list, ...candidates]) {
+    const name = String(n ?? '').trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(name);
+  }
+  // Newest first: the name a shop had most recently is the one somebody is
+  // most likely to still be searching for.
+  return out.slice(-ALIAS_LIMIT).reverse();
+}
+
+/**
  * The merged Overture + OpenStreetMap directory is the source of truth. The
  * OSM-only file stays as a fallback so a checkout without the built directory
  * still comes up with a populated map.
@@ -73,7 +109,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
   const meta = await db.get("SELECT value FROM seed_meta WHERE key = 'osm_import_version'");
   if (!force && meta && meta.value === version) return { skipped: true, reason: `already imported ${version}` };
 
-  const existing = await db.all('SELECT id, name, state, lat, lng, source, source_id, osm_id, claimed, staff_edited, visible, store_type, storefront, operating_status, field_sources FROM stores');
+  const existing = await db.all('SELECT id, name, source_name, name_aliases, state, lat, lng, website, source, source_id, osm_id, claimed, staff_edited, visible, store_type, storefront, operating_status, field_sources FROM stores');
   // Directory rows are addressed by source + id. An OSM id is also indexed on
   // its own so a listing first imported from OSM is upgraded in place when a
   // later build folds it into an Overture record.
@@ -135,6 +171,25 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // recorded itself in field_sources, and the import leaves those alone;
         // otherwise every correction would be undone at the next refresh.
         const keep = field => !ownedByDirectory(found, field);
+        // A new domain has not been checked, and the verdict on the row
+        // describes the old one. Carrying it across is how a listing whose
+        // website the directory corrected kept "this domain is parked" on a
+        // working address — and, worse, kept a green clickable link on one we
+        // had already found dead.
+        const siteChanges = !(keepStaff || keep('website')) && !!s.website
+          && String(s.website) !== String(found.website ?? '');
+        // The name after this import, and the names the shop has also gone by.
+        // When the import is about to replace the displayed name, the name it
+        // replaces becomes an alias; when a sweep owns the name, the
+        // directory's new name becomes one instead, so it is still findable
+        // without overwriting what we decided to show.
+        const nameChanges = !(keepStaff || keep('name')) && !!s.name
+          && String(s.name) !== String(found.name ?? '');
+        const nextName = nameChanges ? s.name : found.name;
+        const aliases = JSON.stringify(mergeAliases(
+          found.name_aliases, nextName,
+          nameChanges ? found.name : null,
+          (keepStaff || keep('name')) && s.name !== found.name ? s.name : null));
         await db.run(`
           UPDATE stores SET
             name = COALESCE(?, name), address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),
@@ -157,7 +212,13 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
             -- A badge a sweep took off after reading the shop's own site does not
             -- come back because the map data still carries the old tag.
             has_lounge = CASE WHEN ? THEN has_lounge ELSE GREATEST(COALESCE(has_lounge, 0), ?) END,
-            has_walk_in_humidor = CASE WHEN ? THEN has_walk_in_humidor ELSE GREATEST(COALESCE(has_walk_in_humidor, 0), ?) END
+            has_walk_in_humidor = CASE WHEN ? THEN has_walk_in_humidor ELSE GREATEST(COALESCE(has_walk_in_humidor, 0), ?) END,
+            website_status = CASE WHEN ? THEN 'checking' ELSE website_status END,
+            website_final_url = CASE WHEN ? THEN NULL ELSE website_final_url END,
+            website_checked_at = CASE WHEN ? THEN NULL ELSE website_checked_at END,
+            -- Always the directory's own name, whoever owns the displayed one.
+            source_name = ?,
+            name_aliases = ?
           WHERE id = ?
         `, [keep('name') ? null : s.name, keep('address') ? null : s.address, keep('city') ? null : s.city,
             keep('state') ? null : s.state, keep('zip') ? null : s.zip, keep('phone') ? null : s.phone,
@@ -169,7 +230,9 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
             keepStaff ? found.visible : ((closedAtSource || ruledOut) ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
             opStatus, closedAtSource,
             keep('has_lounge'), s.has_lounge || 0,
-            keep('has_walk_in_humidor'), s.has_walk_in_humidor || 0, found.id]);
+            keep('has_walk_in_humidor'), s.has_walk_in_humidor || 0,
+            siteChanges, siteChanges, siteChanges,
+            s.name, aliases, found.id]);
         updated++;
       }
       continue;
@@ -188,11 +251,11 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
     }
 
     await db.run(`
-      INSERT INTO stores (user_id, name, address, city, state, zip, phone, website, instagram, lat, lng, hours, hours_raw, tags,
+      INSERT INTO stores (user_id, name, source_name, address, city, state, zip, phone, website, instagram, lat, lng, hours, hours_raw, tags,
         has_lounge, has_walk_in_humidor, verified, setup_complete, claimed, source, source_id, osm_id, store_type, confidence, visible,
         operating_status, closed_reason)
-      VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [s.name, s.address, s.city, s.state, s.zip, s.phone, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw, tags,
+      VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [s.name, s.name, s.address, s.city, s.state, s.zip, s.phone, s.website, s.instagram, s.lat, s.lng, hours, s.hours_raw, tags,
         s.has_lounge || 0, s.has_walk_in_humidor || 0, source, s.source_id, s.osm_id || null,
         store_type, confidence,
         closedAtSource ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0),
@@ -283,6 +346,12 @@ async function fillTimezones({ log = console.log } = {}) {
 async function runStartupImport({ log = console.log } = {}) {
   // Any store with an owner is claimed by definition (covers demo seeds and old rows).
   await db.run('UPDATE stores SET claimed = 1 WHERE user_id IS NOT NULL AND (claimed IS NULL OR claimed = 0)');
+  // And the reverse: a listing with no owner is not claimed, whatever the
+  // column says. Deleting an account now detaches its listings (the foreign
+  // key is ON DELETE SET NULL, migration 107) rather than failing, which
+  // leaves a row marked as claimed with nobody behind it — a badge saying the
+  // shop verified this listing when no account can edit it any more.
+  await db.run('UPDATE stores SET claimed = 0, verified = 0 WHERE user_id IS NULL AND claimed = 1');
   await db.run("UPDATE stores SET source = 'owner' WHERE source IS NULL");
 
   const result = await importStoresFromFile(null, { log });
@@ -293,6 +362,62 @@ async function runStartupImport({ log = console.log } = {}) {
     setInterval(() => fillMissingCities({ max: 100, log }).catch(() => {}), 60 * 60 * 1000);
   }
   return result;
+}
+
+// ── Self-test ───────────────────────────────────────────────────────────────
+
+/**
+ * The importer's own rules, checked without a database. These three decide
+ * whether every sweep in sweeps/plan.json survives the next directory refresh,
+ * which is exactly the kind of thing that breaks quietly.
+ */
+function selftest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, msg) => { if (cond) { pass++; console.log('  ok   ' + msg); } else { fail++; console.log('  FAIL ' + msg); } };
+
+  // ownedByDirectory: what the import is allowed to overwrite.
+  const fresh = { field_sources: null };
+  const swept = { field_sources: JSON.stringify({ name: 'website', lat: 'geocode' }) };
+  ok(ownedByDirectory(fresh, 'name'), 'a field nobody has touched belongs to the directory');
+  ok(!ownedByDirectory(swept, 'name'), 'a name a website sweep wrote does not');
+  ok(!ownedByDirectory(swept, 'lat'), 'nor a pin a geocoder moved');
+  ok(ownedByDirectory(swept, 'phone'), 'but the untouched fields on the same row still do');
+
+  // newZone: the clock follows the door, and only when the door moves.
+  const keepNothing = () => false;
+  const row = { lat: 42.33, lng: -83.05, state: 'MI' };
+  ok(newZone(row, { lat: 42.33, lng: -83.05, state: 'MI' }, keepNothing) === null,
+    'an import that moves nothing leaves the zone alone');
+  ok(newZone(row, { lat: 34.05, lng: -118.24, state: 'CA' }, keepNothing) === 'America/Los_Angeles',
+    'a pin that crosses the country gets the zone it landed in');
+  ok(newZone(row, { lat: 34.05, lng: -118.24, state: 'CA' }, f => f === 'lat' || f === 'lng' || f === 'state') === null,
+    'and a pin a sweep already fixed keeps the zone that pin stands in');
+
+  // mergeAliases: a rename makes a shop easier to find, not harder.
+  const A = (...a) => mergeAliases(...a);
+  ok(JSON.stringify(A(null, 'Wild Bills Tobacco', 'Cheap Tobacco')) === '["Cheap Tobacco"]',
+    'the name a rebrand replaced becomes an alias');
+  ok(JSON.stringify(A(null, 'Smoke Shop', 'Smoke Shop')) === '[]',
+    'the current name is never its own alias');
+  ok(JSON.stringify(A(null, 'Smoke Shop', 'SMOKE SHOP')) === '[]',
+    'and case alone is not a different name');
+  ok(JSON.stringify(A('["Cheap Tobacco"]', 'Wild Bills', 'Cheap Tobacco')) === '["Cheap Tobacco"]',
+    'an alias already held is not added twice');
+  ok(JSON.stringify(A('["Old A"]', 'Now', 'Old B')) === '["Old B","Old A"]',
+    'the most recent former name comes first, because that is the one still being searched');
+  ok(A(null, 'Now', '', null, '   ').length === 0, 'blank and missing names are not aliases');
+  ok(JSON.stringify(A('not json at all', 'Now', 'Old')) === '["Old"]',
+    'a corrupt column is treated as empty rather than throwing mid-import');
+  ok(JSON.stringify(A('{"a":1}', 'Now', 'Old')) === '["Old"]', 'so is a non-array');
+  ok(A(JSON.stringify(Array.from({ length: 30 }, (_, i) => 'N' + i)), 'Now').length === ALIAS_LIMIT,
+    'the list is capped, so a shop that changes hands often does not grow without bound');
+
+  console.log(`\nimportStores self-test: ${pass} passed, ${fail} failed`);
+  return fail > 0;
+}
+
+if (require.main === module && process.argv[2] === 'selftest') {
+  process.exit(selftest() ? 1 : 0);
 }
 
 if (require.main === module) {
@@ -309,4 +434,5 @@ if (require.main === module) {
   })().catch(err => { console.error(err); process.exit(1); });
 }
 
-module.exports = { importStoresFromFile, fillMissingCities, fillTimezones, runStartupImport, DIRECTORY_FILE, OSM_ONLY_FILE };
+module.exports = { importStoresFromFile, fillMissingCities, fillTimezones, runStartupImport,
+  mergeAliases, newZone, ownedByDirectory, ALIAS_LIMIT, selftest, DIRECTORY_FILE, OSM_ONLY_FILE };

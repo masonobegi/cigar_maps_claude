@@ -9,6 +9,11 @@ const { sendMail } = require('../utils/email');
 // publicStore is shared with the list so the two can never disagree about
 // which columns are operational and which are the public's.
 const { listStores, publicStore } = require('../utils/storeList');
+// Every write to a listing records the hand that made it, so the nightly
+// directory import knows what not to overwrite. See utils/storeEdits.js.
+const { writeFields } = require('../utils/storeEdits');
+const { mapStores } = require('../utils/storeMap');
+const { PENDING_STATUS } = require('../jobs/linkCheck');
 
 const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
 
@@ -40,6 +45,16 @@ async function geocode(address, city, state) {
  */
 router.get('/', asyncRoute(async (req, res) => {
   res.json(await listStores(req.query));
+}));
+
+/**
+ * The map. Pins and cluster bubbles for one viewport, counted over every
+ * matching listing rather than over the first thousand the list returned.
+ * The work is in utils/storeMap.js. Must be declared before '/:id', or
+ * Express reads "map" as a store id.
+ */
+router.get('/map', asyncRoute(async (req, res) => {
+  res.json(await mapStores(req.query));
 }));
 
 // Real totals for the home page. The list endpoint pages at 300 and the cities
@@ -304,15 +319,64 @@ router.put('/:id', requireAuth, asyncRoute(async (req, res) => {
 
   const { name, description, address, city, state, zip, phone, website, hours, has_lounge, has_walk_in_humidor, tags, sheet_url } = req.body;
   const n = v => v ?? null;
-  await db.run(`
-    UPDATE stores SET name=?, description=?, address=?, city=?, state=?, zip=?, phone=?, website=?,
-    hours=?, hours_source='owner', hours_checked_at=NOW(),
-    has_lounge=?, has_walk_in_humidor=?, tags=?, sheet_url=?, setup_complete=1 WHERE id=?
-  `, [name, n(description), n(address), city, state, n(zip), n(phone), n(website),
-    typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
-    has_lounge ? 1 : 0, has_walk_in_humidor ? 1 : 0, JSON.stringify(tags || []), n(sheet_url), req.params.id]);
 
-  res.json({ success: true });
+  // The owner is the strongest source there is, so these writes go through
+  // writeFields: it records the owner against each field in field_sources, and
+  // the next directory import then leaves them alone. Before this, an owner
+  // could fix their own address and watch the import put the old one back at
+  // the next deploy.
+  const fields = {
+    name, description: n(description), address: n(address), city, state, zip: n(zip),
+    phone: n(phone), website: n(website),
+    hours: typeof hours === 'object' ? JSON.stringify(hours) : (hours || '{}'),
+    has_lounge: has_lounge ? 1 : 0, has_walk_in_humidor: has_walk_in_humidor ? 1 : 0,
+    tags: JSON.stringify(tags || []),
+  };
+  const written = await writeFields(req.params.id, fields, {
+    source: 'owner', job: 'owner-edit', reason: `owner ${req.user.id} edited their listing`,
+  });
+
+  // Not provenance-tracked: the sheet URL is a capability link the owner holds,
+  // and setup_complete is a flag about the form, not a fact about the shop.
+  await db.run('UPDATE stores SET sheet_url = ?, setup_complete = 1 WHERE id = ?', [n(sheet_url), req.params.id]);
+  if (written.includes('hours')) {
+    await db.run("UPDATE stores SET hours_source = 'owner', hours_checked_at = NOW() WHERE id = ?", [req.params.id]);
+  }
+
+  // A moved shop needs a new pin and, with it, a new clock. Without this the
+  // pin stayed at the old door — the map showed the shop across town — and
+  // "open now" was judged in the old time zone.
+  const movedDoor = written.includes('address') || written.includes('city')
+    || written.includes('state') || written.includes('zip');
+  if (movedDoor) {
+    const coords = await geocode(fields.address, fields.city, fields.state).catch(() => null);
+    if (coords) {
+      await writeFields(req.params.id, { lat: coords.lat, lng: coords.lng }, {
+        source: 'owner', job: 'owner-edit', reason: 'geocoded from the address the owner set',
+      });
+    }
+    // The zone is derived, never typed, so it is recomputed from whatever pin
+    // and state the row now holds rather than from what the form said.
+    const row = await db.get('SELECT state, lat, lng FROM stores WHERE id = ?', [req.params.id]);
+    if (row) await db.run('UPDATE stores SET timezone = ? WHERE id = ?', [timeZoneFor(row.state, row.lat, row.lng), req.params.id]);
+  }
+
+  // A new address has not been checked, and the old verdict describes the old
+  // domain. Carrying it over is how a working new site inherited "this domain
+  // is parked" — and how a dead one kept a green link.
+  if (written.includes('website')) {
+    await db.run(
+      'UPDATE stores SET website_status = ?, website_final_url = NULL, website_checked_at = NULL WHERE id = ?',
+      [fields.website ? PENDING_STATUS : null, req.params.id]);
+    if (fields.website) {
+      // Fire and forget: a check is one HTTP request but the owner should not
+      // wait on somebody else's server to see their own edit saved.
+      require('../jobs/linkCheck').checkStore(req.params.id, { log: () => {} })
+        .catch(err => console.error('[stores] link re-check failed for', req.params.id, err.message));
+    }
+  }
+
+  res.json({ success: true, written });
 }));
 
 router.get('/:id/manage-inventory', requireAuth, asyncRoute(async (req, res) => {

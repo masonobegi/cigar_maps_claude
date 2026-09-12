@@ -66,6 +66,10 @@ export const api = {
   searchStorePage: (p = {}) => request(`/stores?${new URLSearchParams(p)}`),
   searchStores: (p = {}) => request(`/stores?${new URLSearchParams(p)}`)
     .then(r => (Array.isArray(r) ? r : r.stores || [])),
+  // The map's own endpoint. It returns pins and cluster bubbles counted over
+  // every matching listing, not over a page of them, so the bubble labels and
+  // the header count are the real numbers. See server/src/utils/storeMap.js.
+  getStoreMap: (p = {}) => request(`/stores/map?${new URLSearchParams(p)}`),
   getStoreCities: () => request('/stores/cities'),
   getDirectoryStats: () => request('/stores/stats'),
   getStore: (id) => request(`/stores/${id}`),

@@ -268,11 +268,95 @@ function boundingBox(lat, lng, radiusMi) {
   return { minLat: lat - dLat, maxLat: lat + dLat, minLng: lng - dLng, maxLng: lng + dLng };
 }
 
-// Names are compared with the punctuation people leave out: apostrophes and
-// periods dropped, "&" read as "and". Otherwise "wild bills" misses every one
-// of Wild Bill's listings.
-const fold = value => `replace(translate(lower(${value}), '''’.,-', ''), '&', 'and')`;
-const folded = text => String(text).toLowerCase().replace(/['’.,-]/g, '').replace(/&/g, 'and');
+// ── Folding a name the way a customer types it ─────────────────────────────
+//
+// Names are compared with the punctuation people leave out, the accents they
+// cannot reach on a phone keyboard, and the abbreviations they expand or do
+// not. Otherwise "wild bills" misses every one of Wild Bill's listings, "cafe
+// havana" misses Caf\u00e9 Havana, "hawaii cigar" misses Hawai\u02bbi Cigar, and
+// "saint james" misses St. James.
+//
+// Both halves must fold identically: `fold` is the SQL expression applied to
+// the column, `folded` the JavaScript applied to what the customer typed. A
+// difference between them is a search that quietly matches nothing rather than
+// one that errors, so sweeps/scripts/fold_parity.js runs the pair against each
+// other in the database engine itself.
+//
+// Accents are removed by Unicode decomposition rather than by a table of
+// characters: NFD splits an accented letter into a plain letter plus a
+// combining mark, and the marks are then dropped. Postgres has done this since
+// version 13 (`normalize(text, NFD)`) and PGlite carries it, so both halves can
+// use the same rule. A hand-kept table was the first attempt and it was already
+// wrong on real data — it folded the Spanish names it was written for but not
+// the macrons in Ā and ū, nor the Vietnamese ệ and ả, and there is no reason
+// to keep discovering that one alphabet at a time.
+//
+// The steps, in order:
+//   1. lower-case
+//   2. NFD, then drop the combining marks (Caf\u00e9 \u2192 cafe, Đ\u1ec7 \u2192 de)
+//   3. the letters NFD does not decompose, which need a letter of their own
+//      (\u00df \u2192 ss, \u00e6 \u2192 ae, \u0153 \u2192 oe, \u00f8 \u2192 o, \u0111 \u2192 d, \u0142 \u2192 l)
+//   4. decoration nobody types: \u00ae \u2122 \u2713 \u2714, the emoji block, and the variation
+//      selector that follows them
+//   5. apostrophes of every shape, periods, commas and hyphens dropped — the
+//      okina in Hawai\u02bbi is an apostrophe to everyone who types it
+//   6. "&" read as "and"
+//   7. St \u2192 Saint and Mt \u2192 Mount, as whole words only, so "1st" and a shop
+//      called "Smoke St" fold the same way on both sides and still match
+//
+// Step 7 runs after step 5 so that "St." has already lost its period.
+//
+// Characters outside the Latin alphabet are deliberately left alone. A shop
+// whose name is in Arabic or Japanese is searchable by its own name; stripping
+// those letters would make it searchable by nothing.
+
+/** Letters with no canonical decomposition, each needing its own replacement. */
+const EXPANSIONS = [
+  ['\u00df', 'ss'], ['\u00e6', 'ae'], ['\u0153', 'oe'], ['\u00f8', 'o'],
+  ['\u0111', 'd'], ['\u0142', 'l'], ['\u00f0', 'd'], ['\u0127', 'h'], ['\u00fe', 'th'],
+];
+/** Marks and badges that appear in names but that nobody searches for. */
+const DECORATION = '\u00ae\u2122\u2713\u2714\u2605\u2606\u2665\u00a9\ufe0f\u200d';
+/** Every apostrophe shape in use, including the Hawaiian okina. */
+const DROPPED = "'\u2019\u2018\u02bb\u02bc\u02bd\u0060\u00b4.,-";
+/** Abbreviations customers expand or do not, folded to the long form. */
+const WORD_FORMS = [['st', 'saint'], ['mt', 'mount']];
+/** The emoji planes, as a Postgres and a JavaScript pattern. */
+const EMOJI_SQL = '[\\U0001F000-\\U0001FAFF\\u2600-\\u27bf]';
+const EMOJI_JS = /[\u{1F000}-\u{1FAFF}\u2600-\u27bf]/gu;
+/** Combining marks, which is what NFD leaves an accent as. */
+const MARKS_SQL = '[\\u0300-\\u036f\\u1ab0-\\u1aff\\u20d0-\\u20f0\\ufe20-\\ufe2f]';
+const MARKS_JS = /[\u0300-\u036f\u1ab0-\u1aff\u20d0-\u20f0\ufe20-\ufe2f]/g;
+
+const sqlLiteral = text => `'${text.replace(/'/g, "''")}'`;
+
+/** The SQL expression that folds a column. */
+function fold(value) {
+  let expr = `regexp_replace(normalize(lower(${value}), NFD), ${sqlLiteral(MARKS_SQL)}, '', 'g')`;
+  for (const [from, to] of EXPANSIONS) expr = `replace(${expr}, ${sqlLiteral(from)}, ${sqlLiteral(to)})`;
+  expr = `regexp_replace(${expr}, ${sqlLiteral(EMOJI_SQL)}, '', 'g')`;
+  expr = `translate(${expr}, ${sqlLiteral(DECORATION + DROPPED)}, '')`;
+  expr = `replace(${expr}, '&', 'and')`;
+  // \y is a word boundary in Postgres' regular expressions, so this expands a
+  // standalone "st" and leaves the "st" inside "1st" and "Best" alone.
+  for (const [from, to] of WORD_FORMS) {
+    expr = `regexp_replace(${expr}, ${sqlLiteral('\\y' + from + '\\y')}, ${sqlLiteral(to)}, 'g')`;
+  }
+  return expr;
+}
+
+/** The same folding, in JavaScript, for what the customer typed. */
+function folded(text) {
+  let out = String(text).toLowerCase().normalize('NFD').replace(MARKS_JS, '');
+  for (const [from, to] of EXPANSIONS) out = out.split(from).join(to);
+  out = out.replace(EMOJI_JS, '');
+  for (const ch of DECORATION + DROPPED) out = out.split(ch).join('');
+  out = out.replace(/&/g, 'and');
+  for (const [from, to] of WORD_FORMS) {
+    out = out.replace(new RegExp(`\\b${from}\\b`, 'g'), to);
+  }
+  return out;
+}
 
 /**
  * Every non-spatial filter the list, the map and the monitor share.
@@ -290,8 +374,15 @@ function buildFilters(query = {}) {
   const params = [];
 
   if (q) {
-    where.push(`(${fold('s.name')} LIKE ? OR s.description ILIKE ? OR ${fold('s.city')} LIKE ?)`);
-    params.push(`%${folded(q)}%`, `%${q}%`, `%${folded(q)}%`);
+    // name_aliases holds the names a shop has also gone by — what it was
+    // called before a rebrand, its chain's brand — as a JSON array. Searching
+    // the column's text is enough for a substring match and needs no JSON
+    // functions: the quotes between entries stop a needle matching across two
+    // separate aliases, which is the only thing that could go wrong here.
+    where.push(`(${fold('s.name')} LIKE ? OR ${fold('COALESCE(s.name_aliases, \'\')')} LIKE ?`
+      + ` OR s.description ILIKE ? OR ${fold('s.city')} LIKE ?)`);
+    const needle = `%${folded(q)}%`;
+    params.push(needle, needle, `%${q}%`, needle);
   }
   // A city chip carries its state, and matches the town itself: "Washington, DC"
   // used to return shops in Michigan, Missouri and Pennsylvania.
@@ -325,6 +416,7 @@ function matchesFilters(store, query = {}) {
   if (q) {
     const needle = folded(q);
     const hit = folded(store.name || '').includes(needle)
+      || folded(store.name_aliases || '').includes(needle)
       || String(store.description || '').toLowerCase().includes(String(q).toLowerCase())
       || folded(store.city || '').includes(needle);
     if (!hit) return false;
@@ -396,6 +488,34 @@ if (require.main === module) {
   // Folding: the reason "wild bills" finds Wild Bill's.
   ok(folded("Wild Bill's Tobacco") === 'wild bills tobacco', 'an apostrophe folds away');
   ok(folded('Smith & Sons') === 'smith and sons', '"&" reads as "and"');
+  // Accents: a phone keyboard does not reach them, so neither side may need them.
+  ok(folded('Caf\u00e9 Havana') === 'cafe havana', 'an accent folds to its plain letter');
+  ok(folded('Do\u00f1a Flor') === 'dona flor', 'and so does a tilde');
+  ok(folded('EL RE\u00dd') === 'el rey', 'folding is case-blind');
+  ok(folded('Str\u00e6nge \u00dftuff') === 'straenge sstuff', 'a two-letter fold expands rather than dropping');
+  ok(folded('plain ascii') === 'plain ascii', 'ordinary text is left as it is');
+  // Abbreviations, whole words only.
+  ok(folded('St. James Cigars') === 'saint james cigars', '"St." reads as "Saint"');
+  ok(folded('Saint James Cigars') === 'saint james cigars', 'and so does "Saint", so the two agree');
+  ok(folded('Mt Pleasant') === folded('Mount Pleasant'), '"Mt" and "Mount" agree too');
+  ok(folded('1st Street Smokes') === '1st street smokes', 'the "st" in "1st" is not an abbreviation');
+  ok(folded('Best Cigars') === 'best cigars', 'nor the one inside a word');
+  ok(folded('Smoke St') === 'smoke saint', 'a trailing "St" folds, and folds the same way on both sides');
+  // The two halves of the pair have to agree about their own shape.
+  // Real names from the directory that the first, hand-kept accent table missed.
+  ok(folded('Hawai\u02bbi Cigar') === 'hawaii cigar', 'the Hawaiian okina is an apostrophe');
+  ok(folded('\u0100loha \u016bkulele') === 'aloha ukulele', 'a macron folds away');
+  ok(folded('Ti\u1ec7m Thu\u1ed1c L\u00e1') === 'tiem thuoc la', 'and so do stacked Vietnamese marks');
+  ok(folded('Ve\u0301lazquez') === folded('V\u00e9lazquez'),
+    'a name typed as letter-plus-mark folds the same as the single composed character');
+  ok(folded('Smoke\u00ae Shop\u2122') === 'smoke shop', 'a trademark badge is not part of the name');
+  ok(folded('Smoke \ud83d\udca8 Shop') === 'smoke  shop', 'nor is an emoji');
+  ok(folded('\u0160KODA') === 'skoda' && folded('Zigarren\u00dftube') === 'zigarrensstube',
+    'the letters with no decomposition still get one');
+  ok(folded('\u0645\u062d\u0644 \u0627\u0644\u062f\u062e\u0627\u0646') === '\u0645\u062d\u0644 \u0627\u0644\u062f\u062e\u0627\u0646',
+    'a name in another alphabet is left intact, so it stays searchable by its own letters');
+  ok(DECORATION.split('').every(c => !/[a-z0-9]/.test(c)) && DROPPED.split('').every(c => !/[a-z0-9]/.test(c)),
+    'nothing dropped is a letter or a digit, which would corrupt ordinary names');
 
   // buildFilters and matchesFilters must agree on what a filter means.
   const rows = [

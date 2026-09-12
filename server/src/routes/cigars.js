@@ -2,13 +2,10 @@ const router = require('express').Router();
 const db = require('../database/db');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
-
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 3958.8, toRad = d => d * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
+// One distance function and one text-folding rule for the whole site: a second
+// copy here is how "Washington, DC" came to mean something different on the
+// cigar page than on the store list.
+const { haversine, fold, folded } = require('../utils/storeSearch');
 
 router.get('/', asyncRoute(async (req, res) => {
   const { q, brand, strength, wrapper, country, city, state, min_price, max_price,
@@ -45,8 +42,9 @@ router.get('/', asyncRoute(async (req, res) => {
       JOIN inventory ci_check ON ci_check.cigar_id = c.id AND ci_check.in_stock = 1
       JOIN stores ci_store ON ci_store.id = ci_check.store_id AND ci_store.visible = 1
     `;
-    if (city) { where.push('ci_store.city LIKE ?'); params.push(`%${city}%`); }
-    if (state) { where.push('ci_store.state = ?'); params.push(state); }
+    if (city && state) { where.push(`${fold('ci_store.city')} = ?`); params.push(folded(city)); }
+    else if (city) { where.push(`${fold('ci_store.city')} LIKE ?`); params.push(`%${folded(city)}%`); }
+    if (state) { where.push('ci_store.state = ?'); params.push(String(state).toUpperCase()); }
   }
 
   if (min_price) { where.push('(SELECT MIN(NULLIF(i2.price, 0)) FROM inventory i2 JOIN stores s2 ON s2.id = i2.store_id AND s2.visible = 1 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) >= ?'); params.push(+min_price); }
@@ -194,8 +192,14 @@ router.get('/:id/availability', asyncRoute(async (req, res) => {
   const { city, state, lat, lng } = req.query;
   let where = 'i.cigar_id = ? AND i.in_stock = 1 AND COALESCE(s.visible, 1) = 1';
   const params = [req.params.id];
-  if (city) { where += ' AND s.city LIKE ?'; params.push(`%${city}%`); }
-  if (state) { where += ' AND s.state = ?'; params.push(state); }
+  // A city chip carries its state, and then it means that town and no other:
+  // a case-sensitive `city LIKE '%washington%'` matched nothing typed in lower
+  // case and, when it did match, mixed Washington DC with the Washingtons in
+  // Michigan, Missouri and Pennsylvania. Same folding as the store list, so a
+  // chip that works there works here.
+  if (city && state) { where += ` AND ${fold('s.city')} = ?`; params.push(folded(city)); }
+  else if (city) { where += ` AND ${fold('s.city')} LIKE ?`; params.push(`%${folded(city)}%`); }
+  if (state) { where += ' AND s.state = ?'; params.push(String(state).toUpperCase()); }
 
   const rows = await db.all(`
     SELECT s.id as store_id, s.name as store_name, s.city, s.state, s.phone, s.verified,
@@ -235,16 +239,22 @@ router.get('/:id/availability', asyncRoute(async (req, res) => {
     const rowSource = row.source && row.source !== 'owner' ? 'web' : 'owner';
     if (rowSource === 'web') s.source = 'web';
     const confirmed = row.last_confirmed_at || row.updated_at;
+    const price = row.price != null && Number(row.price) > 0 ? Number(row.price) : null;
     s.vitolas.push({
       vitola_id: row.vitola_id, name: row.vitola_name, length: row.length,
-      ring_gauge: row.ring_gauge, price: row.price, quantity: row.quantity,
+      ring_gauge: row.ring_gauge, price, quantity: row.quantity,
       is_new_arrival: row.is_new_arrival,
       source: rowSource, source_url: row.source_url || null,
       last_confirmed_at: confirmed || null,
     });
-    if (row.price != null) {
-      if (s.min_price == null || row.price < s.min_price) s.min_price = row.price;
-      if (s.max_price == null || row.price > s.max_price) s.max_price = row.price;
+    // A zero price is a feed that gave us no price, not a cigar being given
+    // away: web menus write 0 for "call for price" and for a variant that is
+    // out of stock at the size level. Showing "$0.00" on a shop's card is
+    // worse than showing nothing, so a price counts only when it is above
+    // zero, and the range stays null when none is.
+    if (price != null) {
+      if (s.min_price == null || price < s.min_price) s.min_price = price;
+      if (s.max_price == null || price > s.max_price) s.max_price = price;
     }
     // Freshest signal wins: an explicit re-confirmation or the last edit.
     for (const t of [row.updated_at, row.last_confirmed_at]) {
