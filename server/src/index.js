@@ -108,6 +108,14 @@ async function start() {
     console.error('[links] could not start the link checker:', err.message);
   }
 
+  // Keep the public directory to the listings every fact of which is backed:
+  // a shop whose hours get read tomorrow appears, one whose domain lapses goes.
+  try {
+    require("./jobs/verifiedSet").runOnStartup();
+  } catch (err) {
+    console.error("[verified] could not schedule the verified-set check:", err.message);
+  }
+
   // Find shops that have shut down, so the map only shows places still trading.
   try {
     require('./jobs/closureCheck').runStartupClosureCheck();

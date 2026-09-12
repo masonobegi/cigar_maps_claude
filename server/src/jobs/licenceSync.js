@@ -490,6 +490,9 @@ async function apply(file, { log = console.log } = {}) {
     await writeFields(v.id, { last_verified_at: new Date() }, {
       source: 'registry', job: 'licenceSync', reason: v.why,
     });
+    // The registry agreeing that this business is at this door is what the
+    // verified set means by a backed address.
+    await db.run("UPDATE stores SET address_backed_by = 'licence' WHERE id = ? AND address_backed_by IS NULL", [v.id]);
     // A current licence is the best free argument there is that a shop exists.
     // It clears a likely-closed flag outright.
     const r = await db.run(`

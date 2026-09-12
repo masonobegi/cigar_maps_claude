@@ -81,8 +81,8 @@ function siteAddresses() {
 
   const rows = await db.all(`
     SELECT id, name, address, city, state, zip, phone, website, website_status, hours, hours_source,
-           web_image_url, has_lounge, storefront, storefront_reason, last_verified_at, lat, lng
-    FROM stores WHERE visible = 1 ORDER BY id`);
+           web_image_url, has_lounge, storefront, storefront_reason, last_verified_at, lat, lng, visible
+    FROM stores WHERE visible = 1 OR storefront = 'unverified' ORDER BY id`);
 
   const score = [];
   for (const s of rows) {
@@ -107,8 +107,10 @@ function siteAddresses() {
     });
   }
 
-  const n = f => score.filter(f).length;
-  console.log(`public listings: ${rows.length}`);
+  const publicRows = new Set(rows.filter(r => Number(r.visible) === 1).map(r => r.id));
+  const pub = score.filter(x => publicRows.has(x.id));
+  const n = f => pub.filter(f).length;
+  console.log(`scored ${score.length} listings, ${pub.length} of them public`);
   console.log(`  proved a cigar shop:            ${n(x => x.shop)}`);
   console.log(`  a live website of its own:      ${n(x => x.site)}`);
   console.log(`  hours read off that website:    ${n(x => x.hours)}`);
@@ -124,7 +126,7 @@ function siteAddresses() {
     ['shop + hours from a site (site may not answer now)', x => x.shop && x.hours],
   ];
   for (const [label, f] of tiers) {
-    const kept = score.filter(f);
+    const kept = pub.filter(f);
     const withPic = kept.filter(x => x.picture).length;
     console.log(`${String(kept.length).padStart(5)}  ${label}`);
     console.log(`       of those, ${withPic} have a picture and ${kept.filter(x => x.phone).length} a phone`);
@@ -134,7 +136,21 @@ function siteAddresses() {
     console.log(`       top states: ${top.map(([st, c]) => `${st} ${c}`).join(', ')}`);
   }
 
-  const strict = score.filter(x => x.shop && x.site && x.hours && x.door);
+  // Write the backing onto the row, so the scheduled verified-set job can read
+  // it without these evidence files — which live in this repository and not on
+  // the server.
+  if (process.env.WRITE_BACKING === "1") {
+    let wrote = 0;
+    for (const x of score) {
+      if (!x.doorBy) continue;
+      const r = await db.run("UPDATE stores SET address_backed_by = ? WHERE id = ? AND address_backed_by IS DISTINCT FROM ?",
+        [x.doorBy, x.id, x.doorBy]);
+      wrote += r.changes;
+    }
+    console.log(`wrote address_backed_by on ${wrote} listings`);
+  }
+
+  const strict = pub.filter(x => x.shop && x.site && x.hours && x.door);
   fs.writeFileSync(path.join(SWEEPS, 'decisions', 'certain.json'),
     JSON.stringify({ note: 'Listings where every displayed fact has evidence behind it.', count: strict.length, rows: strict }, null, 1));
   console.log(`\nwritten to sweeps/decisions/certain.json`);
