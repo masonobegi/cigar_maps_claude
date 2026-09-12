@@ -37,7 +37,10 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..', '..');
-const DIRS = [path.join(ROOT, 'server', 'src', 'jobs'), path.join(ROOT, 'server', 'src', 'utils')];
+const DIRS = [path.join(ROOT, 'server', 'src', 'jobs'), path.join(ROOT, 'server', 'src', 'utils'),
+  // database/ carries rules too: which passwords a production seed refuses to
+  // leave in place is exactly the kind of thing that is only found afterwards.
+  path.join(ROOT, 'server', 'src', 'database')];
 const QUIET = process.argv.includes('--quiet');
 
 // A scratch database, so running the tests never touches a real one.

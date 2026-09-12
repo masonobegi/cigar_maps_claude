@@ -111,6 +111,21 @@ async function seed() {
     [staffEmail, staffHash]
   );
 
+  // ── The hole those two inserts leave ──────────────────────────────────────
+  //
+  // ON CONFLICT DO NOTHING means an account keeps the password it was born
+  // with, for ever, whatever ADMIN_PASSWORD is set to afterwards. A database
+  // first seeded locally — where the default really is 'admin123' — and then
+  // pointed at production carries that password into production, and setting
+  // the environment variable later does nothing at all.
+  //
+  // That is not hypothetical: admin@cigarbuddy.com / admin123 was a working
+  // admin login on the live site on 2026-09-12. So on a real database, a staff
+  // account still holding a password this repository has shipped as a default
+  // has it replaced, and the replacement is printed once because there is
+  // nowhere else to read it from.
+  if (process.env.DATABASE_URL) await retireDefaultPasswords();
+
   // ── Phase 2: demo catalog ─────────────────────────────────────────────────
   // Never in production. The real catalog and the national store directory are
   // seeded separately, and placeholder shops next to real ones look like a bug
@@ -369,7 +384,77 @@ async function seed() {
   }
 }
 
-module.exports = { seed };
+/** Passwords this repository has ever shipped as a default. */
+const KNOWN_DEFAULTS = ['admin123', 'staff123', 'password', 'changeme', 'letmein'];
+
+/**
+ * Which shipped default a hash is, or null. Takes the comparer so the rule can
+ * be checked without bcrypt's cost in a test.
+ */
+async function defaultPasswordFor(hash, compare = bcrypt.compare) {
+  if (!hash) return null;
+  for (const candidate of KNOWN_DEFAULTS) {
+    try { if (await compare(candidate, hash)) return candidate; } catch { /* not a bcrypt hash */ }
+  }
+  return null;
+}
+
+async function retireDefaultPasswords() {
+  const crypto = require('crypto');
+  let rows = [];
+  try {
+    const r = await db.pool.query(
+      "SELECT id, email, account_type, password_hash FROM users WHERE account_type IN ('admin', 'staff')");
+    rows = r.rows || [];
+  } catch { return; }
+
+  for (const u of rows) {
+    const weak = await defaultPasswordFor(u.password_hash);
+    if (!weak) continue;
+    const chosen = (u.account_type === 'admin' ? process.env.ADMIN_PASSWORD : process.env.STAFF_PASSWORD)
+      || crypto.randomBytes(12).toString('base64url');
+    await db.pool.query('UPDATE users SET password_hash = $1 WHERE id = $2',
+      [await bcrypt.hash(chosen, 10), u.id]);
+    console.log(`[seed] ${u.email} was still using the shipped default "${weak}" on a production database.`);
+    console.log(`[seed] It is now: ${chosen}`);
+    console.log('[seed] Copy that now. Set ADMIN_PASSWORD to choose your own instead.');
+  }
+}
+
+module.exports = { seed, defaultPasswordFor, retireDefaultPasswords, KNOWN_DEFAULTS, selftest };
+
+// ── self-test ───────────────────────────────────────────────────────────────
+function selftest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, label, extra) => {
+    if (cond) { pass++; console.log(`  ok   ${label}`); }
+    else { fail++; console.log(`  FAIL ${label}${extra !== undefined ? ` — ${JSON.stringify(extra)}` : ''}`); }
+  };
+
+  // A stand-in comparer, so the rule is checked rather than bcrypt.
+  const hashOf = plain => `hashed:${plain}`;
+  const compare = async (candidate, hash) => hash === hashOf(candidate);
+
+  return (async () => {
+    ok(await defaultPasswordFor(hashOf('admin123'), compare) === 'admin123',
+      'the password that was live on production is recognised');
+    ok(await defaultPasswordFor(hashOf('staff123'), compare) === 'staff123', 'and the staff one');
+    ok(await defaultPasswordFor(hashOf('a-real-random-one'), compare) === null,
+      'a password somebody actually chose is left alone');
+    ok(await defaultPasswordFor(null, compare) === null, 'and a missing hash is not a default');
+    ok(await defaultPasswordFor('not-a-bcrypt-hash', async () => { throw new Error('bad hash'); }) === null,
+      'a hash bcrypt cannot read is not a reason to crash the boot');
+    ok(KNOWN_DEFAULTS.includes('admin123') && KNOWN_DEFAULTS.includes('staff123'),
+      'both shipped defaults are on the list');
+
+    console.log(`\nseed self-test: ${pass} passed, ${fail} failed`);
+    return fail === 0;
+  })();
+}
+
+if (require.main === module && process.argv[2] === 'selftest') {
+  selftest().then(okAll => process.exit(okAll ? 0 : 1));
+}
 
 // Allow running directly: node seed.js
 // This will NOT wipe the DB — it runs the same idempotent seed() function.
