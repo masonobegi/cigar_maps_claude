@@ -562,6 +562,21 @@ const MIGRATIONS = [
   // key cannot set a second column and a trigger is more machinery than this
   // needs.
   { name: '106_stores_user_id_set_null', sql: `ALTER TABLE stores DROP CONSTRAINT IF EXISTS stores_user_id_fkey` },
+  // Who we have written to about their own listing, and what came of it.
+  // One row per shop, so a shop can never be written to twice by accident.
+  { name: '108_store_outreach', sql: `CREATE TABLE IF NOT EXISTS store_outreach (
+    id SERIAL PRIMARY KEY,
+    store_id INTEGER UNIQUE NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+    email TEXT,
+    candidates TEXT,
+    looked_at TIMESTAMP,
+    queued_at TIMESTAMP,
+    sent_at TIMESTAMP,
+    followed_up_at TIMESTAMP,
+    replied_at TIMESTAMP,
+    unsubscribed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+  )` },
   { name: '107_stores_user_id_fk', sql: `ALTER TABLE stores
       ADD CONSTRAINT stores_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL` },
 ];
