@@ -84,6 +84,11 @@ async function start() {
   await seedCatalog(require('./database/db')).catch(err => console.error('[catalog] seed failed:', err.message));
   app.listen(PORT, () => console.log(`CigarBuddy API running on :${PORT}`));
 
+  // Say in the boot log whether mail can actually leave, because the failure is
+  // otherwise invisible: every send fails into a console line nobody reads, and
+  // "email is broken" looks identical to "email was never set up".
+  require("./utils/email").verifyTransport().catch(() => {});
+
   const { syncAllSheets } = require('./utils/sheetSync');
   setInterval(() => {
     syncAllSheets().catch(err => console.error('[sheet-sync] background error:', err.message));

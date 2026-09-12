@@ -207,6 +207,40 @@ function metaFor({ pathname, store = null, place = null, shops = [], base }) {
 }
 
 /**
+ * The tags a deployment adds to every page: proof of ownership for a search
+ * console, and an analytics script.
+ *
+ * All of it is environment, not code, because the alternative is editing
+ * client/index.html and redeploying to paste a verification string — and then
+ * again to change it. Nothing is emitted unless the variable is set, so a
+ * deployment that wants none of this carries none of it.
+ *
+ *   GOOGLE_SITE_VERIFICATION   the token from Search Console's HTML tag method
+ *   BING_SITE_VERIFICATION     the same from Bing Webmaster Tools
+ *   PLAUSIBLE_DOMAIN           e.g. cigarbuddy.com — privacy-friendly, one script
+ *   GA_MEASUREMENT_ID          e.g. G-XXXXXXX — Google Analytics 4
+ */
+function headExtras(env = process.env) {
+  const tags = [];
+  if (env.GOOGLE_SITE_VERIFICATION) {
+    tags.push(`<meta name="google-site-verification" content="${esc(env.GOOGLE_SITE_VERIFICATION)}">`);
+  }
+  if (env.BING_SITE_VERIFICATION) {
+    tags.push(`<meta name="msvalidate.01" content="${esc(env.BING_SITE_VERIFICATION)}">`);
+  }
+  if (env.PLAUSIBLE_DOMAIN) {
+    tags.push(`<script defer data-domain="${esc(env.PLAUSIBLE_DOMAIN)}" src="https://plausible.io/js/script.js"></script>`);
+  }
+  if (env.GA_MEASUREMENT_ID) {
+    const id = esc(env.GA_MEASUREMENT_ID);
+    tags.push(`<script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>`);
+    tags.push('<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
+      + `gtag('js',new Date());gtag('config','${id}');</script>`);
+  }
+  return tags;
+}
+
+/**
  * Put the meta into the built index.html.
  *
  * The tags the build ships are removed rather than added to: two canonicals or
@@ -242,6 +276,7 @@ function render(template, meta) {
   for (const block of [].concat(meta.jsonld || [])) {
     tags.push(`<script type="application/ld+json">${escJson(block)}</script>`);
   }
+  tags.push(...headExtras());
 
   return html.replace(/<\/head>/i, `${tags.join('\n    ')}\n  </head>`);
 }
@@ -392,7 +427,7 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
 }
 
 module.exports = { mount, metaFor, render, storeJsonLd, storeDescription, placeJsonLd, placeDescription,
-  hoursSpec, esc, escJson, sitemapXml, sitemapIndexXml, robotsTxt, urlEntry, selftest };
+  headExtras, hoursSpec, esc, escJson, sitemapXml, sitemapIndexXml, robotsTxt, urlEntry, selftest };
 
 // ── self-test ───────────────────────────────────────────────────────────────
 function selftest() {
@@ -469,6 +504,16 @@ function selftest() {
   const bothBlocks = render(template, cityMeta);
   ok((bothBlocks.match(/application\/ld\+json/g) || []).length === 2, 'and both blocks reach the page',
     (bothBlocks.match(/application\/ld\+json/g) || []).length);
+
+  // Proof of ownership and analytics, from the environment rather than from an
+  // edit to the built index.html.
+  ok(headExtras({}).length === 0, 'a deployment that sets none of it carries none of it');
+  const extras = headExtras({ GOOGLE_SITE_VERIFICATION: 'abc123', PLAUSIBLE_DOMAIN: 'cigarbuddy.com' }).join('');
+  ok(extras.includes('<meta name="google-site-verification" content="abc123">'), 'Search Console gets its tag', extras);
+  ok(extras.includes('data-domain="cigarbuddy.com"'), 'and Plausible its script');
+  ok(headExtras({ GA_MEASUREMENT_ID: 'G-ABC' }).length === 2, 'GA4 needs both of its tags');
+  ok(headExtras({ GOOGLE_SITE_VERIFICATION: '"><script>alert(1)</script>' }).join('')
+    .includes('&quot;&gt;&lt;script&gt;'), 'and a token is escaped like anything else from outside');
 
   // robots.txt and the sitemaps.
   const robots = robotsTxt(base);
