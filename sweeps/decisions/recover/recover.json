@@ -1,0 +1,118 @@
+{
+ "note": "Read every row. A listing here comes back onto the public map, and rule 2 says a listing we cannot show is a cigar shop stays off it. The \"why\" is what will be quoted if anyone asks.",
+ "generated_at": "2026-09-12T19:10:51.458Z",
+ "recover": [],
+ "leave_count": 2807,
+ "name_only_examples": [
+  {
+   "id": 5780,
+   "name": "Cigar Crafted",
+   "city": "Salt Lake City",
+   "state": "UT",
+   "website": "teeplush.com",
+   "store_type": "cigar_shop",
+   "hidden_because": "a Salt Lake City address, a Houston pin, a toll-free number and a t-shirt shop for a website: no two facts in the row agree",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 10839,
+   "name": "Sam Hills Cigars & Lounge",
+   "city": "Gallup",
+   "state": "NM",
+   "website": "samhillcigars.com",
+   "store_type": "cigar_lounge",
+   "hidden_because": "the record contradicts itself: its ZIP is AZ but it is filed in NM; its area code is AZ but it is filed in NM; its pin is in NM and its ZIP is in AZ; its pin is 357 km from the address it gives",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 12264,
+   "name": "Smoky J's Humidor LLC",
+   "city": "High Ridge",
+   "state": "MO",
+   "website": "smoky-js-humidor-llc.creator-spring.com",
+   "store_type": "cigar_shop",
+   "hidden_because": "the record contradicts itself: its area code is IL but it is filed in MO; its ZIP says MO and its phone says IL; \"Lower Skyline Dr\" is not a street address",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 22498,
+   "name": "Black Jacks Cigar Lounge",
+   "city": "New London",
+   "state": "CT",
+   "website": "hotelpdn.com",
+   "store_type": "cigar_lounge",
+   "hidden_because": "the record contradicts itself: its ZIP is TX but it is filed in CT; its area code is TX but it is filed in CT; its pin is in CT and its ZIP is in TX",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 24935,
+   "name": "Mort's Cigar Bar",
+   "city": "Irving",
+   "state": "TX",
+   "website": null,
+   "store_type": "cigar_lounge",
+   "hidden_because": "the record contradicts itself: its ZIP is IL but it is filed in TX; its area code is IL but it is filed in TX; its pin is in TX and its ZIP is in IL",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 38662,
+   "name": "Cigars",
+   "city": "Fort Myers Beach",
+   "state": "FL",
+   "website": null,
+   "store_type": "cigar_shop",
+   "hidden_because": "the record contradicts itself: its ZIP is AK but it is filed in FL; its ZIP says AK and its phone says FL; its pin is in FL and its ZIP is in AK; \"no address\" is not a street address",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 38848,
+   "name": "Backyard Cigars",
+   "city": "The Woodlands",
+   "state": "TX",
+   "website": null,
+   "store_type": "cigar_lounge",
+   "hidden_because": "reads as a private back garden, with no phone and no website to confirm a shop",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 39041,
+   "name": "My Back Porch Cigar Lounge",
+   "city": "Mt Vernon",
+   "state": "WA",
+   "website": null,
+   "store_type": "cigar_lounge",
+   "hidden_because": "reads as a private back garden, with no phone and no website to confirm a shop",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 39731,
+   "name": "Vip smoke and cigar",
+   "city": "Mission Viejo",
+   "state": "CO",
+   "website": null,
+   "store_type": "cigar_shop",
+   "hidden_because": "no address, no ZIP and no website; a California town, a Colorado state and a pin in empty Nevada",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  },
+  {
+   "id": 41124,
+   "name": "La Casa Del Habano",
+   "city": "Windsor",
+   "state": "MI",
+   "website": null,
+   "store_type": "cigar_shop",
+   "hidden_because": "this listing is not in the United States: \"N9A\" is a Canadian postcode, not a ZIP; 519 is a Canadian area code; its pin stands in America/Toronto",
+   "why": "no evidence was ever gathered for this listing",
+   "name_would_say": "name"
+  }
+ ]
+}

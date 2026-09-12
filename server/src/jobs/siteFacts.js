@@ -119,7 +119,7 @@ function plainStatement(quoted, re) {
     if (THIRD_PARTY.test(sentence)) continue;
     if (NOT_A_CLAIM.test(sentence)) continue;
     // "private club", "lockers", "dues": only in the shop's own voice.
-    if (re === MEMBERS && MEMBERS_WEAK.test(sentence) && !/(members?\s*(-|\s)?only|membership)/i.test(sentence)
+    if (re === MEMBERS && MEMBERS_WEAK.test(sentence) && !/\b(members?\s*(-|\s)?only|membership)\b/i.test(sentence)
         && !OWN_VOICE.test(sentence)) continue;
     return sentence.slice(0, 200);
   }

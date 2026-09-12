@@ -38,6 +38,13 @@ const SWEEPS = path.join(__dirname, '..', '..', '..', 'sweeps');
 /** The verdicts this job is allowed to reverse. */
 const RECOVERABLE = ['unproven'];
 
+/**
+ * Hide reasons this job may not argue with, read off storefront_reason. Each
+ * names a chain or a host business rather than a shortage of evidence, and the
+ * website behind such a listing belongs to that chain.
+ */
+const CHAIN_HIDE = /\b(chain|outlet|counter inside|inside a|grocery|convenience|supermarket|petrol|gas station)\b/i;
+
 function readJsonl(file) {
   if (!fs.existsSync(file)) return [];
   const out = [];
@@ -101,6 +108,19 @@ function recoveryVerdict(listing, evidence = {}, { licence = null, stockLines = 
   }
   if (Number(listing.claimed) === 1 || Number(listing.staff_edited) === 1) {
     return { recover: false, why: 'claimed or staff-edited: a sweep never argues with the shop or with staff' };
+  }
+
+  // A branch of an outlet chain, or a counter inside a grocery store, was
+  // hidden on a reading of the chain — not on a shortage of evidence. Its
+  // website is the chain's website, so "its site says cigars" is the same
+  // page that was read when the chain came off the map, and recovering on it
+  // would undo a decision by quoting the thing the decision was made about.
+  //
+  // The first real run proposed 320 of these and nothing else: 197 Wild Bill's,
+  // 61 Sweet Fire, 32 Cheap Tobacco, 21 The Tobacco Shoppe and 9 tobacco
+  // counters in Brookshire Brothers grocery stores.
+  if (CHAIN_HIDE.test(String(listing.storefront_reason || ''))) {
+    return { recover: false, why: 'hidden as a branch of an outlet chain, which its own chain website cannot undo' };
   }
 
   // 1. Stock read from its own web shop. Somebody is selling cigars there.
@@ -254,6 +274,21 @@ function selftest() {
     'and one whose site is mostly another trade');
   ok(!recoveryVerdict(hidden, { site: { ok: true, cigar: 2, other: 0 } }).recover,
     'two cigar words is not "plainly and mostly"');
+
+  // A branch of an outlet chain: the website that would speak for it is the
+  // chain's, and the chain is why it was hidden. The first real run proposed
+  // 320 of these — every recovery it found — and nothing else.
+  const outlet = { id: 2, name: "Wild Bill's Tobacco", storefront: 'unproven', claimed: 0, staff_edited: 0,
+    storefront_reason: "Wild Bill's Tobacco is a cigarette and vape chain with a cigar counter" };
+  ok(!recoveryVerdict(outlet, { site: { ok: true, cigar: 19, other: 0 } }).recover,
+    'a chain branch is not recovered by the chain’s own website');
+  const counter = { id: 3, name: 'Tobacco Barn', storefront: 'unproven', claimed: 0, staff_edited: 0,
+    storefront_reason: 'this is a tobacco counter inside a Brookshire Brothers grocery store' };
+  ok(!recoveryVerdict(counter, { site: { ok: true, cigar: 19, other: 0 } }).recover,
+    'nor is a counter inside a grocery store by the grocer’s');
+  ok(recoveryVerdict({ ...hidden, storefront_reason: 'nothing on its own site says cigars' },
+    { site: { ok: true, cigar: 19, other: 0 } }).recover,
+    'but an ordinary unproven listing still comes back on its own site');
 
   // The pure-cigar check's own threshold, pointed the other way.
   let v = recoveryVerdict(hidden, { site: { ok: true, cigar: 19, other: 0 } });

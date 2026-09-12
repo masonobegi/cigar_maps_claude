@@ -17,3 +17,7 @@ Thumbs.db
 # The evidence archive, unpacked. sweeps/evidence.tar.gz is the committed copy;
 # the extracted files are 30 MB of the same bytes.
 sweeps/evidence/
+
+# Licence registry downloads: 27 MB of public data that `licenceSync fetch`
+# re-creates in a minute. The matched result (decisions/licences.json) is kept.
+sweeps/decisions/licences/*.json

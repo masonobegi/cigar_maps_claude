@@ -43,7 +43,9 @@ const REGISTRIES = [
   {
     key: 'nyc',
     name: 'NYC Department of Consumer and Worker Protection: Tobacco Retail Dealer licences',
-    url: 'https://data.cityofnewyork.us/resource/w7w3-xahh.json?$limit=50000&$where=license_category%20like%20%27%25Tobacco%25%27',
+    // The filter column is business_category ("Tobacco Retail Dealer");
+    // license_category does not exist and the endpoint answered 400.
+    url: 'https://data.cityofnewyork.us/resource/w7w3-xahh.json?$limit=50000&$where=business_category%20like%20%27%25Tobacco%25%27',
     states: ['NY'],
     map: r => ({
       name: r.business_name_2 || r.business_name, address: r.address_building && r.address_street_name
@@ -55,23 +57,32 @@ const REGISTRIES = [
   {
     key: 'ny_state',
     name: 'New York State: registered tobacco and vapour retailers',
-    url: 'https://data.ny.gov/resource/aca8-pmd4.json?$limit=50000',
+    // aca8-pmd4 answered 404: the register moved to 55xf-9jat, which lists
+    // 22,095 current registrants and names its columns phys_*.
+    url: 'https://data.ny.gov/resource/55xf-9jat.json?$limit=50000',
     states: ['NY'],
     map: r => ({
-      name: r.legal_name || r.dba, address: r.street_address || r.address,
-      city: r.city, state: 'NY', zip: r.zip_code || r.zip,
-      phone: null, status: r.status, expires: r.expiration_date,
+      name: r.dba_name || r.last_or_bus_name, address: r.phys_ln_2_adr,
+      city: r.phys_city_adr, state: r.phys_state_adr || 'NY', zip: r.phys_zip_5_adr,
+      phone: null,
+      // Everyone in this file is registered; a suspension is the only status
+      // it carries, and a suspended shop is not a current licence.
+      status: r.susp_beg_dt && !r.susp_end_dt ? 'SUSPENDED' : 'ACTIVE', expires: null,
     }),
   },
   {
     key: 'tx',
     name: 'Texas Comptroller: cigarette, cigar and tobacco permits',
-    url: 'https://data.texas.gov/resource/e4wh-ax6g.json?$limit=50000',
+    // e4wh-ax6g answered 404. yrkr-maw5 is the permit list, and all 90,567
+    // rows of it do not fit one request, so it asks for the active ones: a
+    // lapse here is a staff flag and never a hide, so the absence of an
+    // expired permit costs nothing.
+    url: 'https://data.texas.gov/resource/yrkr-maw5.json?$limit=50000&$where=permit_status%20=%20%27ACTIVE%27',
     states: ['TX'],
     map: r => ({
-      name: r.taxpayer_name || r.location_name, address: r.location_address,
-      city: r.location_city, state: r.location_state || 'TX', zip: r.location_zip,
-      phone: r.taxpayer_phone, status: r.permit_status || 'ACTIVE', expires: r.permit_expiration_date,
+      name: r.out_name || r.name, address: r.address,
+      city: r.city, state: r.state || 'TX', zip: r.zip,
+      phone: null, status: r.permit_status || 'ACTIVE', expires: r.permit_end_date,
     }),
   },
   {
@@ -112,13 +123,13 @@ const REGISTRIES = [
   {
     key: 'wa',
     name: 'Washington State Department of Revenue: cigarette and tobacco licences',
-    url: 'https://data.wa.gov/resource/7xux-kdmd.json?$limit=50000',
+    // 7xux-kdmd answered 404 and data.wa.gov's catalogue has no tobacco
+    // licence file to replace it: the Business Lookup is a search form, not a
+    // dataset. Washington is a manual download until one appears.
+    url: 'https://dor.wa.gov/open-records/public-records-requests',
     states: ['WA'],
-    map: r => ({
-      name: r.business_name || r.legal_name, address: r.street_address || r.location_address,
-      city: r.city, state: 'WA', zip: r.zip_code,
-      phone: null, status: r.status, expires: r.expiration_date,
-    }),
+    format: 'manual',
+    note: 'Washington does not publish the tobacco licence list as a dataset. Save an export as wa.csv in the fetch directory.',
   },
 ];
 
@@ -342,6 +353,11 @@ function getJson(url) {
   });
 }
 
+// Every registry URL asks for $limit=50000, so a full page means there is
+// more behind it. MAX_ROWS is a backstop against a registry that never ends.
+const PAGE = 50000;
+const MAX_ROWS = 400000;
+
 async function fetchAll({ outDir, only = null, log = console.log } = {}) {
   fs.mkdirSync(outDir, { recursive: true });
   for (const reg of REGISTRIES) {
@@ -352,10 +368,20 @@ async function fetchAll({ outDir, only = null, log = console.log } = {}) {
       continue;
     }
     try {
-      const raw = await getJson(reg.url);
-      const rows = (Array.isArray(raw) ? raw : []).map(reg.map).filter(r => r.address);
+      // Socrata answers at most one page. Texas alone holds 59,603 active
+      // permits, so a single request came back exactly at the limit and the
+      // rest were silently missing — the kind of cap that reads as complete.
+      const rows = [];
+      let offset = 0, page;
+      do {
+        const url = `${reg.url}${reg.url.includes('?') ? '&' : '?'}$offset=${offset}`;
+        page = await getJson(url);
+        if (!Array.isArray(page)) break;
+        rows.push(...page.map(reg.map).filter(r => r.address));
+        offset += page.length;
+      } while (page.length >= PAGE && offset < MAX_ROWS);
       fs.writeFileSync(path.join(outDir, `${reg.key}.json`), JSON.stringify(rows, null, 1));
-      log(`${reg.key}: ${rows.length} licences`);
+      log(`${reg.key}: ${rows.length} licences${offset >= MAX_ROWS ? ` (stopped at ${MAX_ROWS})` : ''}`);
     } catch (e) {
       log(`${reg.key}: could not fetch — ${e.message}`);
     }

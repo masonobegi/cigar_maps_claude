@@ -293,13 +293,27 @@ function judgeThumb(rec, shared = 0) {
  * three branches of Anthony's is right; the same stock photo across three
  * unrelated shops is not.
  */
+/**
+ * Words that say what the shop sells, not which shop it is. Without these
+ * struck out, "Premium Cigars of Georgia" and "Windy City Cigars" shared the
+ * word "cigars" and were read as branches of one business — which made the
+ * whole shared-image check inert, because almost every listing here has
+ * "cigars" or "tobacco" in its name.
+ */
+const TRADE_WORDS = new Set(['cigar', 'cigars', 'cigarette', 'cigarettes', 'tobacco', 'tobaccos', 'tobacconist',
+  'smoke', 'smokes', 'smoking', 'shop', 'shops', 'shoppe', 'store', 'stores', 'lounge', 'lounges', 'bar',
+  'company', 'humidor', 'humidors', 'emporium', 'outlet', 'vape', 'vapes', 'vapor', 'pipe', 'pipes', 'club',
+  'room', 'premium', 'fine', 'quality', 'discount', 'house', 'depot', 'world', 'city', 'town']);
+
 function sameBusiness(a, b) {
   const domA = a.website ? registrableDomain(parseWebsite(a.website)?.host || '') : null;
   const domB = b.website ? registrableDomain(parseWebsite(b.website)?.host || '') : null;
   if (domA && domB && domA === domB) return true;
   const key = s => String(s.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-  const wordsA = new Set(key(a).split(' ').filter(w => w.length > 3));
-  const wordsB = key(b).split(' ').filter(w => w.length > 3);
+  const own = n => key(n).split(' ').filter(w => w.length > 3 && !TRADE_WORDS.has(w));
+  const wordsA = new Set(own(a));
+  const wordsB = own(b);
+  if (!wordsA.size || !wordsB.length) return false;
   return wordsB.some(w => wordsA.has(w));
 }
 
@@ -321,8 +335,17 @@ async function decide({ from, out, log = console.log } = {}) {
   const sharedGroups = [];
   for (const [hash, group] of byHash) {
     if (group.length < 2) continue;
-    const unrelated = group.filter(a => group.some(b => a.id !== b.id && !sameBusiness(a, b)));
-    for (const r of unrelated) unrelatedCount.set(r.id, unrelated.length - 1);
+    // Counted per listing, against the others: how many of the shops serving
+    // these exact bytes are not this one's own branches.
+    //
+    // This used to mark every member of a group in which ANY pair was
+    // unrelated, so one odd shop tainted the rest — twenty-three Cigaret
+    // Shopper branches lost their own logo because a twenty-fourth listing
+    // shared it. A chain's logo across its own branches is the right picture
+    // on every one of them.
+    const strangers = a => group.filter(b => b.id !== a.id && !sameBusiness(a, b)).length;
+    const unrelated = group.filter(a => strangers(a) >= 2);
+    for (const r of unrelated) unrelatedCount.set(r.id, strangers(r));
     if (unrelated.length >= 2) {
       sharedGroups.push({ sha256: hash, count: group.length,
         listings: group.map(r => ({ id: r.id, name: r.name, city: r.city, state: r.state, website: r.website })) });
@@ -458,6 +481,22 @@ function selftest() {
   ok(sameBusiness(a, b), 'two branches on one domain are one business');
   ok(sameBusiness({ ...a, website: null }, { ...b, website: null }), 'and so are two branches by name alone');
   ok(!sameBusiness(a, c), 'but two different shops are not');
+
+  // A chain's own logo across its own branches is the right picture on every
+  // one of them. The count is per listing, against the others: twenty-three
+  // Cigaret Shopper branches shared one logo with a twenty-fourth listing,
+  // and the old rule dropped the logo from all twenty-four.
+  const branch = n => ({ id: n, name: 'Cigaret Shopper', website: 'cigaretshopper.com' });
+  const chain = [branch(1), branch(2), branch(3), { id: 4, name: 'Somebody Else', website: 'elsewhere.com' }];
+  const strangers = x => chain.filter(y => y.id !== x.id && !sameBusiness(x, y)).length;
+  ok(strangers(chain[0]) === 1, 'a branch counts only the shops that are not its own', strangers(chain[0]));
+  ok(strangers(chain[3]) === 3, 'and the stranger counts all three branches', strangers(chain[3]));
+  ok(!sameBusiness({ name: 'Premium Cigars of Georgia' }, { name: 'Windy City Cigars' }),
+    'two shops are not one business because both say "cigars"');
+  ok(!sameBusiness({ name: 'The Tobacco Shop' }, { name: 'Smoke Shop Lounge' }),
+    'nor because both are made of trade words');
+  ok(sameBusiness({ name: "Anthony's Cigar Emporium Tucson" }, { name: "Anthony's Cigar Emporium Oro Valley" }),
+    'but two branches sharing the name that identifies them still are');
 
   // A CDN is noted, never a reason on its own.
   const cdn = judgeThumb({ ...good, url: 'https://cdn.shopify.com/x/og.jpg' });
