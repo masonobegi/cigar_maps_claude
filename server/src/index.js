@@ -49,6 +49,61 @@ app.use('/api/outreach', require('./routes/outreach'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
 
+/**
+ * Is this deployment actually set up?
+ *
+ * Booleans and one public URL — never a value, never a secret. It exists
+ * because every setup step here is invisible from outside: an SMTP password
+ * that is wrong looks exactly like one that was never set, and the only way to
+ * find out used to be to claim a listing and wait for an email that never
+ * arrives. After setting a variable, open this and read it back.
+ */
+app.get('/api/health/config', async (_, res) => {
+  const db = require('./database/db');
+  const { mailConfigured } = require('./utils/email');
+  const { appUrl, onDefaultDomain } = require('./utils/appUrl');
+  const env = process.env;
+
+  const counts = await db.get(`SELECT
+      COUNT(*) FILTER (WHERE visible = 1)::int AS public_listings,
+      COUNT(*) FILTER (WHERE visible = 1 AND hours_source = 'website')::int AS with_verified_hours,
+      COUNT(*) FILTER (WHERE visible = 1 AND claimed = 1)::int AS claimed,
+      COUNT(*) FILTER (WHERE visible = 0 AND storefront = 'unverified')::int AS held_back
+    FROM stores`).catch(() => null);
+  const outreach = await db.get(`SELECT
+      COUNT(*) FILTER (WHERE email IS NOT NULL)::int AS with_an_address,
+      COUNT(*) FILTER (WHERE sent_at IS NOT NULL)::int AS written_to
+    FROM store_outreach`).catch(() => null);
+
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    app_url: appUrl(),
+    still_on_the_railway_subdomain: onDefaultDomain(),
+    email: {
+      configured: mailConfigured(),
+      provider: env.SMTP_HOST ? 'a host of its own' : env.SMTP_SERVICE ? env.SMTP_SERVICE : mailConfigured() ? 'gmail' : null,
+      from_address_set: !!env.MAIL_FROM,
+      postal_address_set: !!env.OUTREACH_POSTAL_ADDRESS,
+    },
+    search_engines: {
+      google_verification: !!env.GOOGLE_SITE_VERIFICATION,
+      bing_verification: !!env.BING_SITE_VERIFICATION,
+      sitemap: `${appUrl()}/sitemap.xml`,
+    },
+    analytics: {
+      plausible: !!env.PLAUSIBLE_DOMAIN,
+      google_analytics: !!env.GA_MEASUREMENT_ID,
+      any: !!(env.PLAUSIBLE_DOMAIN || env.GA_MEASUREMENT_ID),
+    },
+    // A signing key that is not set means the built-in fallback is signing
+    // tokens, and that fallback is in this repository's public history.
+    auth: { signing_key_set: !!env.JWT_SECRET },
+    payments: { stripe: !!env.STRIPE_SECRET_KEY },
+    directory: counts,
+    outreach,
+  });
+});
+
 // Locally uploaded images (no object storage configured). Immutable filenames,
 // so they can be cached hard.
 const storage = require('./utils/storage');
