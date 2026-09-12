@@ -43,16 +43,16 @@ router.get('/', asyncRoute(async (req, res) => {
   if (city || state) {
     storeJoin = `
       JOIN inventory ci_check ON ci_check.cigar_id = c.id AND ci_check.in_stock = 1
-      JOIN stores ci_store ON ci_store.id = ci_check.store_id
+      JOIN stores ci_store ON ci_store.id = ci_check.store_id AND ci_store.visible = 1
     `;
     if (city) { where.push('ci_store.city LIKE ?'); params.push(`%${city}%`); }
     if (state) { where.push('ci_store.state = ?'); params.push(state); }
   }
 
-  if (min_price) { where.push('(SELECT MIN(i2.price) FROM inventory i2 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) >= ?'); params.push(+min_price); }
-  if (max_price) { where.push('(SELECT MIN(i2.price) FROM inventory i2 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) <= ?'); params.push(+max_price); }
+  if (min_price) { where.push('(SELECT MIN(NULLIF(i2.price, 0)) FROM inventory i2 JOIN stores s2 ON s2.id = i2.store_id AND s2.visible = 1 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) >= ?'); params.push(+min_price); }
+  if (max_price) { where.push('(SELECT MIN(NULLIF(i2.price, 0)) FROM inventory i2 JOIN stores s2 ON s2.id = i2.store_id AND s2.visible = 1 WHERE i2.cigar_id = c.id AND i2.in_stock = 1) <= ?'); params.push(+max_price); }
   if (in_stock_only === '1') {
-    where.push('EXISTS (SELECT 1 FROM inventory i3 WHERE i3.cigar_id = c.id AND i3.in_stock = 1)');
+    where.push('EXISTS (SELECT 1 FROM inventory i3 JOIN stores s3 ON s3.id = i3.store_id AND s3.visible = 1 WHERE i3.cigar_id = c.id AND i3.in_stock = 1)');
   }
   if (min_rating) {
     where.push('(SELECT COALESCE(AVG(r2.rating),0) FROM reviews r2 WHERE r2.cigar_id = c.id) >= ?');
@@ -78,11 +78,11 @@ router.get('/', asyncRoute(async (req, res) => {
       COALESCE(AVG(r.rating), 0) as avg_rating,
       COUNT(DISTINCT r.id) as review_count,
       COUNT(DISTINCT i.store_id) as store_count,
-      MIN(i.price) as min_price
+      MIN(NULLIF(i.price, 0)) as min_price
     FROM cigars c
     ${storeJoin}
     LEFT JOIN reviews r ON r.cigar_id = c.id
-    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1 AND EXISTS (SELECT 1 FROM stores sv WHERE sv.id = i.store_id AND sv.visible = 1)
     WHERE ${whereStr}
     GROUP BY c.id
     ORDER BY ${sortClause}
@@ -113,11 +113,11 @@ router.get('/followed', requireAuth, asyncRoute(async (req, res) => {
   const cigars = await db.all(`
     SELECT c.*, cf.created_at as followed_at,
       COUNT(DISTINCT i.store_id) as store_count,
-      MIN(i.price) as min_price,
+      MIN(NULLIF(i.price, 0)) as min_price,
       COALESCE(AVG(r.rating), 0) as avg_rating
     FROM cigar_follows cf
     JOIN cigars c ON c.id = cf.cigar_id
-    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1 AND EXISTS (SELECT 1 FROM stores sv WHERE sv.id = i.store_id AND sv.visible = 1)
     LEFT JOIN reviews r ON r.cigar_id = c.id
     WHERE cf.user_id = ?
     GROUP BY c.id, cf.created_at
@@ -275,7 +275,7 @@ router.get('/:id/price-comparison', asyncRoute(async (req, res) => {
       v.name as vitola_name, v.ring_gauge, v.length,
       i.price, i.quantity, i.in_stock
     FROM inventory i
-    JOIN stores s ON s.id = i.store_id
+    JOIN stores s ON s.id = i.store_id AND COALESCE(s.visible, 1) = 1
     JOIN vitolas v ON v.id = i.vitola_id
     WHERE i.cigar_id = ?
     ORDER BY v.ring_gauge, i.price ASC

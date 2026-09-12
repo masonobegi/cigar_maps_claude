@@ -12,11 +12,11 @@ router.get('/', requireAuth, asyncRoute(async (req, res) => {
   const items = await db.all(`
     SELECT sl.*, c.brand, c.name as cigar_name, c.strength, c.country, c.wrapper, c.flavor_notes,
       COALESCE(AVG(r.rating), 0) as avg_rating, COUNT(r.id) as review_count,
-      COUNT(DISTINCT i.store_id) as store_count, MIN(i.price) as min_price
+      COUNT(DISTINCT i.store_id) as store_count, MIN(NULLIF(i.price, 0)) as min_price
     FROM smoke_list sl
     JOIN cigars c ON c.id = sl.cigar_id
     LEFT JOIN reviews r ON r.cigar_id = sl.cigar_id
-    LEFT JOIN inventory i ON i.cigar_id = sl.cigar_id AND i.in_stock = 1
+    LEFT JOIN inventory i ON i.cigar_id = sl.cigar_id AND i.in_stock = 1 AND EXISTS (SELECT 1 FROM stores sv WHERE sv.id = i.store_id AND sv.visible = 1)
     WHERE ${where}
     GROUP BY sl.id, c.id
     ORDER BY

@@ -100,10 +100,10 @@ router.get('/me/recommendations', requireAuth, asyncRoute(async (req, res) => {
       SELECT c.id, c.brand, c.name, c.strength, c.wrapper, c.country, c.flavor_notes,
         COALESCE(ROUND((SELECT AVG(r3.rating) FROM reviews r3 WHERE r3.cigar_id = c.id)::numeric, 1), 0) as avg_rating,
         COUNT(DISTINCT r2.id) as review_count,
-        COUNT(DISTINCT i.store_id) as store_count, MIN(i.price) as min_price
+        COUNT(DISTINCT i.store_id) as store_count, MIN(NULLIF(i.price, 0)) as min_price
       FROM cigars c
       LEFT JOIN reviews r2 ON r2.cigar_id = c.id
-      LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+      LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1 AND EXISTS (SELECT 1 FROM stores sv WHERE sv.id = i.store_id AND sv.visible = 1)
       WHERE c.source IS DISTINCT FROM 'retired'
       GROUP BY c.id HAVING COUNT(DISTINCT r2.id) >= 2
       ORDER BY avg_rating DESC, review_count DESC LIMIT 8
@@ -133,10 +133,10 @@ router.get('/me/recommendations', requireAuth, asyncRoute(async (req, res) => {
     SELECT c.id, c.brand, c.name, c.strength, c.wrapper, c.country, c.flavor_notes,
       COALESCE(ROUND((SELECT AVG(r3.rating) FROM reviews r3 WHERE r3.cigar_id = c.id)::numeric, 1), 0) as avg_rating,
       COUNT(DISTINCT r2.id) as review_count,
-      COUNT(DISTINCT i.store_id) as store_count, MIN(i.price) as min_price
+      COUNT(DISTINCT i.store_id) as store_count, MIN(NULLIF(i.price, 0)) as min_price
     FROM cigars c
     LEFT JOIN reviews r2 ON r2.cigar_id = c.id
-    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1
+    LEFT JOIN inventory i ON i.cigar_id = c.id AND i.in_stock = 1 AND EXISTS (SELECT 1 FROM stores sv WHERE sv.id = i.store_id AND sv.visible = 1)
     WHERE c.id NOT IN (SELECT cigar_id FROM reviews WHERE user_id = ?)
       AND c.source IS DISTINCT FROM 'retired'
     GROUP BY c.id HAVING COUNT(DISTINCT r2.id) >= 1
