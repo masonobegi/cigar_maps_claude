@@ -120,6 +120,11 @@ const WEBSITE_WHY = {
   error:     'The site returned an error when we last checked it.',
   parked:    'That domain is parked — it lands on a placeholder page, not the shop.',
   removed:   'That page has been taken down.',
+  // A lapsed shop domain does not go quiet; it gets resold. These three say so
+  // plainly rather than letting a customer click through to a casino.
+  hijacked:  'That domain is no longer the shop\u2019s \u2014 it now serves a gambling site.',
+  elsewhere: 'That domain now lands on a different business\u2019s website.',
+  store_unavailable: 'The shop\u2019s online store has been switched off by its platform.',
 };
 
 const withScheme = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`);

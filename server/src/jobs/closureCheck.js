@@ -54,8 +54,30 @@ const CONCURRENCY = 5;
 
 /** website_status values that mean a customer can still reach the page. */
 const LIVE_STATUSES = new Set(['ok', 'blocked']);
-/** website_status values that mean the link is dead. 'blocked' is not one. */
-const DEAD_STATUSES = ['dns_fail', 'not_found', 'parked', 'refused', 'timeout', 'error', 'removed'];
+/**
+ * website_status values that mean the link is dead. 'blocked' is not one.
+ *
+ * 'elsewhere', 'hijacked' and 'store_unavailable' are linkCheck's verdicts for
+ * a domain that answers but is no longer the shop's: resold to a casino, parked
+ * for sale, or a shop page the platform switched off for non-payment.
+ */
+const DEAD_STATUSES = ['dns_fail', 'not_found', 'parked', 'refused', 'timeout', 'error', 'removed',
+  'elsewhere', 'hijacked', 'store_unavailable'];
+
+/**
+ * A shop's own domain gone to a casino or a for-sale page is a real hint that
+ * the shop went with it — a trading business keeps paying for its domain. It is
+ * only ever a hint: a lapsed domain is also what a shop that just stopped
+ * bothering with a website looks like, and a live shop was once hidden because
+ * a closure reader followed a redirect to a political blog. So it goes to the
+ * staff queue as a weak signal and never hides anything on its own.
+ */
+const TAKEN_OVER_STATUSES = ['parked', 'hijacked', 'elsewhere'];
+const reasonTakenOver = status => (status === 'hijacked'
+  ? "the shop's own domain now serves a gambling site"
+  : status === 'parked'
+    ? "the shop's own domain is parked or offered for sale"
+    : "the shop's own domain now lands on somebody else's site");
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -606,6 +628,11 @@ async function checkStore(id, { confirm = false, log = console.log } = {}) {
   const noHours = !row.hours || ['{}', '[]', 'null'].includes(String(row.hours).trim());
   const deadSite = !!row.website && DEAD_STATUSES.includes(row.website_status);
   if (deadSite && noPhone && noHours) signals.push({ signal: 'unreachable', reason: reasonUnreachable(row.website_status), weak: true });
+  // Weak, always, and on its own: a taken-over domain reaches the staff queue
+  // without needing the shop to be unreachable by every other means too.
+  if (!!row.website && TAKEN_OVER_STATUSES.includes(row.website_status)) {
+    signals.push({ signal: 'domain_taken_over', reason: reasonTakenOver(row.website_status), weak: true });
+  }
 
   const out = {
     id: row.id, name: row.name, city: row.city, state: row.state,
@@ -656,7 +683,7 @@ function runStartupClosureCheck({ log = console.log } = {}) {
 module.exports = {
   checkWebsiteForClosure, readClosureText, visibleText,
   findClosures, applyClosures, checkStore, runStartupClosureCheck,
-  reasonKey, DEAD_STATUSES, LIVE_STATUSES,
+  reasonKey, DEAD_STATUSES, LIVE_STATUSES, TAKEN_OVER_STATUSES, reasonTakenOver,
 };
 
 // ── CLI ─────────────────────────────────────────────────────────────────────

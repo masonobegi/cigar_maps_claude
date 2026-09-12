@@ -16,6 +16,8 @@
  *  - never throw: every failure mode is a status
  *
  * CLI:  node src/jobs/linkCheck.js [--limit N] [--store ID] [--recheck-days N]
+ *       node src/jobs/linkCheck.js --all        recheck every public website
+ *       node src/jobs/linkCheck.js selftest
  */
 'use strict';
 
@@ -33,14 +35,35 @@ const TINY_BODY = 24 * 1024;      // a "for sale" page is small; a real shop's i
 const CONCURRENCY = 6;
 const OVERALL_BUDGET_MS = 30000;  // whole check for one store, redirects included
 
-/** Statuses this module can write. Only 'ok' means the link is usable. */
-const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked'];
+/**
+ * Statuses this module can write. Only 'ok' and 'blocked' mean a customer can
+ * reach the page; everything else is a dead link and must not be rendered as
+ * one.
+ *
+ * The last four are what a lapsed shop domain turns into. About 318 public
+ * links now end on a different domain than the one we store, and fourteen of
+ * those supply a thumbnail — Mike's Cigar Room showed a gambling banner on its
+ * card. Calling all of that 'ok' because the server returned 200 is how that
+ * happened.
+ */
+const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error',
+  'parked', 'elsewhere', 'hijacked', 'store_unavailable'];
+
+/** Everything that is not a link we can show a customer. */
+const DEAD_STATUSES = ['dns_fail', 'timeout', 'refused', 'not_found', 'error',
+  'parked', 'elsewhere', 'hijacked', 'store_unavailable'];
+
+/** A dead domain someone else is now using. These lose their thumbnail. */
+const TAKEN_OVER_STATUSES = ['parked', 'hijacked', 'elsewhere'];
 
 // A site that answers but refuses to serve a robot is alive for a customer.
 // Cloudflare and similar front doors return 403 to anything that is not a
 // browser, and several real shops sit behind them, so this is its own verdict
 // and is treated as a working link.
-const BLOCKED_CODES = new Set([401, 402, 403, 407, 429, 451]);
+//
+// 402 used to be in here. It is not a WAF: Shopify and Squarespace answer 402
+// when a shop stopped paying, so the store is genuinely gone for a customer.
+const BLOCKED_CODES = new Set([401, 403, 407, 429, 451]);
 
 // Hosts that only ever serve a for-sale / parking page. Landing on one of these
 // means the domain is not the shop's site any more, whatever it returns.
@@ -74,10 +97,16 @@ const FOR_SALE_PHRASES = [
 
 // The same idea where the domain name itself sits between the two halves, e.g.
 // Porkbun's "The domain cigarsandsmokeshop.com is for sale."
+//
+// The gap used to be [^.<>], which cannot cross the dot in the domain name it
+// exists to span — so the example in this very comment did not match. It now
+// allows a dot inside a word and stops at a sentence end (a dot followed by
+// whitespace) or a tag, so the two halves still have to be one sentence.
+const GAP = '(?:(?!\\.[\\s<])[^<>]){0,80}?';
 const FOR_SALE_PATTERNS = [
-  /\bdomain\b[^.<>]{0,80}?\bis for sale\b/,
-  /\bis for sale\b[^.<>]{0,80}?\bdomain\b/,
-  /\bfor sale\b[^.<>]{0,60}?\bmake (an )?offer\b/,
+  new RegExp(`\\bdomain\\b${GAP}\\bis for sale\\b`),
+  new RegExp(`\\bis for sale\\b${GAP}\\bdomain\\b`),
+  new RegExp(`\\bfor sale\\b${GAP}\\bmake (an )?offer\\b`),
 ];
 
 // Phrases that only count on a PLACEHOLDER_HOST — an unfinished builder site.
@@ -87,6 +116,108 @@ const PLACEHOLDER_PHRASES = [
   'this domain is not connected', 'default web page', 'welcome to nginx',
   'apache2 ubuntu default page', 'index of /',
 ];
+
+/**
+ * Gambling words. A lapsed shop domain is very often resold to an online
+ * casino, so two or more of these with no cigar word anywhere is the signature
+ * of a takeover. Two, not one: a real cigar lounge may well mention poker
+ * night, and a shop called "Lucky" must not be hidden for its name.
+ */
+const GAMBLING_TERMS = [
+  'casino', 'slot', 'slots', 'betting', 'bet365', 'sportsbook', 'baccarat',
+  'roulette', 'blackjack', 'jackpot', 'gacor', 'togel', 'judi', 'situs',
+  'poker online', 'online casino', 'free spins', 'deposit bonus', 'wagering',
+  'bandar', 'maxwin', 'slot88', 'pragmatic play', 'live casino', 'agen',
+  'taruhan', 'bo slot', 'rtp slot', 'link alternatif',
+];
+
+/** Any word that says the page is still about cigars. */
+const CIGAR_WORDS = /\b(cigars?|cigarros?|tobacco|tobacconist|humidor|pipes?|stogie|habano|torpedo|robusto|churchill|maduro|connecticut wrapper|smoke ?shop|lounge)\b/i;
+
+/**
+ * A short public-suffix list, enough for the domains this directory holds.
+ * Comparing whole hostnames would call every www -> apex or apex -> shop
+ * redirect a takeover; comparing registrable domains does not.
+ */
+const MULTI_LABEL_SUFFIXES = new Set([
+  'co.uk', 'org.uk', 'me.uk', 'ac.uk', 'gov.uk', 'com.au', 'net.au', 'org.au',
+  'co.nz', 'co.za', 'com.br', 'com.mx', 'com.ar', 'co.jp', 'co.in', 'co.kr',
+  'com.sg', 'com.hk', 'com.tw', 'com.ph', 'com.my', 'co.il', 'com.tr',
+]);
+
+/** example.co.uk from shop.example.co.uk; example.com from www.example.com. */
+function registrableDomain(hostOrUrl) {
+  let host = String(hostOrUrl || '').toLowerCase();
+  if (/^[a-z][a-z0-9+.-]*:\/\//.test(host)) {
+    try { host = new URL(host).hostname.toLowerCase(); } catch { return null; }
+  }
+  host = host.replace(/^\[|\]$/g, '').split(':')[0].replace(/\.+$/, '');
+  if (!host || /^\d+\.\d+\.\d+\.\d+$/.test(host)) return host || null;
+  const parts = host.split('.');
+  if (parts.length < 2) return host;
+  const lastTwo = parts.slice(-2).join('.');
+  if (MULTI_LABEL_SUFFIXES.has(lastTwo) && parts.length >= 3) return parts.slice(-3).join('.');
+  return lastTwo;
+}
+
+/** The digits of a phone number, for comparing one against a page. */
+function phoneDigits(phone) {
+  const d = String(phone || '').replace(/\D/g, '');
+  return d.length === 11 && d[0] === '1' ? d.slice(1) : d;
+}
+
+/**
+ * Does this page belong to this shop? The guardrail on 'elsewhere': a real
+ * rebrand redirect keeps its link, and a phone number or a street address on
+ * the destination is what proves it is one.
+ *
+ * Deliberately generous. Wrongly calling a live shop's new site "elsewhere"
+ * takes a working link off a real listing, which is worse than leaving one
+ * stale link in place for another month.
+ */
+function destinationNamesShop(body, store) {
+  if (!store) return false;
+  const text = String(body || '').toLowerCase().replace(/\s+/g, ' ');
+  if (!text) return false;
+
+  // The phone number, however it is punctuated on the page.
+  const digits = phoneDigits(store.phone);
+  if (digits.length === 10) {
+    const loose = String(body || '').replace(/[^0-9]/g, '');
+    if (loose.includes(digits)) return true;
+  }
+
+  // The street number with the first real word of the street name.
+  const addr = String(store.address || '').toLowerCase();
+  const num = /^\s*(\d+[a-z]?)\s+(.+)$/.exec(addr);
+  if (num) {
+    const streetWord = num[2].split(/\s+/).find(w => w.length > 2 && !/^(n|s|e|w|ne|nw|se|sw|north|south|east|west)$/.test(w));
+    if (streetWord && text.includes(num[1].toLowerCase()) && text.includes(streetWord)) return true;
+  }
+
+  // The distinctive words of the shop's own name — not the trade words every
+  // cigar shop shares, which would match any cigar site in the world.
+  const GENERIC = new Set(['cigar', 'cigars', 'tobacco', 'tobacconist', 'lounge', 'shop', 'store',
+    'smoke', 'house', 'company', 'co', 'club', 'room', 'the', 'and', 'of', 'llc', 'inc', 'humidor', 'pipe', 'pipes']);
+  const words = String(store.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ')
+    .filter(w => w.length > 3 && !GENERIC.has(w));
+  if (words.length && words.some(w => text.includes(w))) return true;
+
+  return false;
+}
+
+/**
+ * Has someone else taken this domain over? Two gambling terms and not one
+ * cigar word.
+ */
+function looksHijacked(body) {
+  const text = String(body || '').toLowerCase().replace(/\s+/g, ' ');
+  if (!text) return false;
+  if (CIGAR_WORDS.test(text)) return false;
+  const hits = new Set();
+  for (const term of GAMBLING_TERMS) if (text.includes(term)) hits.add(term);
+  return hits.size >= 2;
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -295,10 +426,12 @@ function looksParked(finalUrl, body) {
 // ── The check ───────────────────────────────────────────────────────────────
 
 /**
- * Decide whether a stored website actually serves a page.
+ * Decide whether a stored website actually serves a page — and, when a store
+ * row is given, whether the page it serves is still that shop's.
+ *
  * Returns { status, code, final_url } and never throws.
  */
-async function checkWebsite(website) {
+async function checkWebsite(website, store = null) {
   const parsed = parseWebsite(website);
   if (!parsed) return { status: 'error', code: null, final_url: null };
   const { host, path } = parsed;
@@ -353,15 +486,39 @@ async function checkWebsite(website) {
     const len = Number(res.headers && res.headers['content-length']);
     const type = String(res.headers && res.headers['content-type'] || '').toLowerCase();
     const htmlish = !type || type.includes('html') || type.includes('text');
-    if (!body && htmlish && !(Number.isFinite(len) && len > TINY_BODY) && Date.now() < deadline - 500) {
+    // Without a store row we only need enough to sniff a for-sale notice, which
+    // is always small. With one, the page has to be read to tell a rebrand from
+    // a takeover, however big it is.
+    const needFullRead = !!store;
+    if (!body && htmlish && (needFullRead || !(Number.isFinite(len) && len > TINY_BODY)) && Date.now() < deadline - 500) {
       try {
         const g = await once(finalUrl || ('https://' + host + path), 'GET', { wantBody: true, timeout: Math.min(TIMEOUT_MS, deadline - Date.now()) });
         body = g.body || '';
       } catch { /* the HEAD already proved it answers; parking sniff is best effort */ }
     }
     if (looksParked(finalUrl, body)) return { status: 'parked', code, final_url: finalUrl };
+
+    // Somebody else's site on the shop's old domain. Order matters: a hijacked
+    // page is the more specific answer, and it is also the one that must never
+    // be shown, so it is asked first.
+    if (looksHijacked(body)) return { status: 'hijacked', code, final_url: finalUrl };
+
+    // A link that ends on a different registrable domain than the one we hold.
+    // A real rebrand keeps its link — a phone number or a street address on the
+    // destination passes it. Without a store row we cannot ask, so we do not
+    // guess, and the old behaviour stands.
+    const storedDomain = registrableDomain(host);
+    const landedDomain = registrableDomain(finalUrl || '');
+    if (store && storedDomain && landedDomain && storedDomain !== landedDomain
+        && !destinationNamesShop(body, store)) {
+      return { status: 'elsewhere', code, final_url: finalUrl };
+    }
     return { status: 'ok', code, final_url: finalUrl };
   }
+
+  // A shop that stopped paying its platform. Shopify and Squarespace answer
+  // 402 here, and the store really is gone for a customer.
+  if (code === 402) return { status: 'store_unavailable', code, final_url: finalUrl };
 
   if (code >= 300 && code < 400) {
     // A 3xx we could not follow to a body still lands somewhere real when it
@@ -398,13 +555,17 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
   const t0 = Date.now();
   try {
     const days = Math.max(0, Math.floor(Number(recheckDays)) || 0);
-    const take = Math.max(1, Math.min(Math.floor(Number(limit)) || 200, 5000));
+    // 5,000 is the ceiling for the routine background pass. A deliberate full
+    // sweep (onlyMissing: false) has to be able to cover the whole directory,
+    // or "recheck every public website" quietly means "recheck 5,000 of them".
+    const ceiling = onlyMissing ? 5000 : 100000;
+    const take = Math.max(1, Math.min(Math.floor(Number(limit)) || 200, ceiling));
     const staleClause = onlyMissing
       ? `AND (website_checked_at IS NULL OR website_checked_at < NOW() - INTERVAL '${days} days')`
       : '';
 
     const rows = await db.all(`
-      SELECT id, name, website, claimed, confidence
+      SELECT id, name, website, claimed, confidence, phone, address, city, state
       FROM stores
       WHERE website IS NOT NULL AND website <> '' AND visible = 1
       ${staleClause}
@@ -454,7 +615,7 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
         inFlight.add(host);
         let result;
         try {
-          result = await checkWebsite(row.website);
+          result = await checkWebsite(row.website, row);
         } catch (err) {
           result = { status: 'error', code: null, final_url: null };   // belt and braces: checkWebsite should not throw
         } finally {
@@ -485,10 +646,10 @@ async function checkStores({ limit = 200, recheckDays = 30, onlyMissing = true, 
 
 /** Check one listing by id and record the verdict. */
 async function checkStore(id, { log = console.log } = {}) {
-  const store = await db.get('SELECT id, name, website FROM stores WHERE id = ?', [id]);
+  const store = await db.get('SELECT id, name, website, phone, address, city, state FROM stores WHERE id = ?', [id]);
   if (!store) return { error: 'store not found' };
   if (!store.website) return { error: 'store has no website' };
-  const result = await checkWebsite(store.website);
+  const result = await checkWebsite(store.website, store);
   await db.run(
     'UPDATE stores SET website_status = ?, website_checked_at = NOW(), website_final_url = ? WHERE id = ?',
     [result.status, result.final_url || null, store.id]);
@@ -513,17 +674,98 @@ function runStartupLinkCheck({ log = console.log } = {}) {
 
 module.exports = {
   checkWebsite, checkStores, checkStore, runStartupLinkCheck,
-  parseWebsite, looksParked, STATUSES,
+  parseWebsite, looksParked, looksHijacked, destinationNamesShop, registrableDomain, phoneDigits,
+  STATUSES, DEAD_STATUSES, TAKEN_OVER_STATUSES, GAMBLING_TERMS, selftest,
 };
 
-if (require.main === module) {
+// ── self-test ───────────────────────────────────────────────────────────────
+function selftest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, label, extra) => {
+    if (cond) { pass++; console.log(`  ok   ${label}`); }
+    else { fail++; console.log(`  FAIL ${label}${extra !== undefined ? ` — ${JSON.stringify(extra)}` : ''}`); }
+  };
+
+  // Registrable domains, so a www or shop subdomain is not called a takeover.
+  ok(registrableDomain('www.mikescigarroom.com') === 'mikescigarroom.com', 'www is the same domain');
+  ok(registrableDomain('https://shop.davidoff.com/us') === 'davidoff.com', 'so is a shop subdomain');
+  ok(registrableDomain('cigars.co.uk') === 'cigars.co.uk', 'a two-label suffix is not the domain');
+  ok(registrableDomain('shop.cigars.co.uk') === 'cigars.co.uk', 'and a subdomain under one still is not');
+  ok(registrableDomain('') === null, 'nothing is nothing');
+
+  // Hijacked: two gambling terms, no cigar word.
+  ok(looksHijacked('<h1>Situs Slot Gacor</h1><p>Daftar judi bola dan live casino terbaik</p>'),
+    'a casino page on a lapsed domain is hijacked');
+  ok(looksHijacked('Welcome to our online casino. Free spins and a deposit bonus await.'),
+    'so is a plain English one');
+  ok(!looksHijacked('Join us for poker night at the cigar lounge. Blackjack too.'),
+    'a cigar lounge with a poker night is not hijacked — it says cigar');
+  ok(!looksHijacked('Lucky Cigar — premium cigars and pipe tobacco since 1974'),
+    'and a shop called Lucky is safe');
+  ok(!looksHijacked('Our slot machines are in the back room.'),
+    'one gambling word alone is not enough');
+  ok(!looksHijacked(''), 'an empty page is not hijacked');
+
+  // The rebrand guardrail. This is the one that must not misfire: a live shop
+  // keeps its link.
+  const shop = { name: "Mike's Cigar Room", phone: '(305) 866-2277', address: '1030 Kane Concourse', city: 'Bay Harbor Islands' };
+  ok(destinationNamesShop('Call us on 305-866-2277 for hours', shop), 'a phone number on the destination is a rebrand');
+  ok(destinationNamesShop('Visit us at 1030 Kane Concourse', shop), 'so is the street address');
+  ok(destinationNamesShop('Welcome to the new home of Mikes Cigars', shop), 'so is the distinctive part of the name');
+  ok(!destinationNamesShop('Premium cigars and lounge, established 1974', shop),
+    'but the trade words every cigar shop shares are not — they would match any cigar site anywhere');
+  ok(!destinationNamesShop('Situs slot gacor', shop), 'and a casino page names nobody');
+  ok(!destinationNamesShop('anything at all', null), 'with no store row we do not guess');
+  // A different shop's site must not pass as this shop's.
+  ok(!destinationNamesShop("Welcome to Anthony's Cigar Emporium, Tucson", shop),
+    "another shop's site does not pass as this one's");
+
+  // Parking, unchanged, plus the phrase patterns.
+  ok(looksParked('http://sedoparking.com/x', ''), 'a known parking host is parked whatever it serves');
+  ok(looksParked('https://cigarsandsmokeshop.com/', 'The domain cigarsandsmokeshop.com is for sale.'),
+    'and a for-sale notice is parked');
+  ok(!looksParked('https://realshop.com/', '<html>' + 'x'.repeat(40000) + 'buy this domain</html>'),
+    'a big page is not a for-sale notice, whatever words it contains');
+  ok(!looksParked('https://realshop.com/', 'We stock every domain of cigar. Our finest robusto is for sale now.'),
+    'and the two halves of the phrase have to be in one sentence');
+
+  // The status vocabulary has to agree with itself, or a dead link is rendered
+  // as a working one somewhere.
+  ok(DEAD_STATUSES.every(v => STATUSES.includes(v)), 'every dead status is a status');
+  ok(TAKEN_OVER_STATUSES.every(v => DEAD_STATUSES.includes(v)), 'a taken-over domain is a dead link');
+  ok(!DEAD_STATUSES.includes('ok') && !DEAD_STATUSES.includes('blocked'),
+    'ok and blocked are the only statuses a customer may be shown');
+  ok(!BLOCKED_CODES.has(402), '402 is no longer treated as a working link behind a firewall');
+  for (const v of ['elsewhere', 'hijacked', 'store_unavailable', 'parked']) {
+    ok(DEAD_STATUSES.includes(v), `${v} counts as dead`);
+  }
+
+  // parseWebsite, which everything above rests on.
+  ok(parseWebsite('120cigarbar.com').host === '120cigarbar.com', 'a bare hostname parses');
+  ok(parseWebsite('http://127.0.0.1/') === null, 'loopback is refused');
+  ok(parseWebsite('mailto:a@b.com') === null, 'an email address is not a website');
+
+  console.log(`\nlinkCheck self-test: ${pass} passed, ${fail} failed`);
+  return fail;
+}
+
+if (require.main === module && process.argv[2] === 'selftest') {
+  process.exit(selftest() ? 1 : 0);
+}
+
+if (require.main === module && process.argv[2] !== 'selftest') {
   const argv = process.argv.slice(2);
   const arg = name => {
     const i = argv.indexOf(name);
     return i >= 0 && argv[i + 1] ? argv[i + 1] : null;
   };
   const storeId = arg('--store');
-  const limit = Number(arg('--limit')) || 200;
+  // --all forces a recheck of every public website, however recently it was
+  // looked at. The new verdicts (elsewhere, hijacked, store_unavailable) did
+  // not exist when the current statuses were written, so every 'ok' in the
+  // table predates them and has to be asked again.
+  const all = argv.includes('--all');
+  const limit = Number(arg('--limit')) || (all ? 100000 : 200);
   const recheckDays = arg('--recheck-days') != null ? Number(arg('--recheck-days')) : 30;
   const { initSchema, runMigrations } = require('../database/schema');
 
@@ -533,7 +775,7 @@ if (require.main === module) {
     if (storeId) {
       console.log(JSON.stringify(await checkStore(Number(storeId)), null, 2));
     } else {
-      console.log(JSON.stringify(await checkStores({ limit, recheckDays }), null, 2));
+      console.log(JSON.stringify(await checkStores({ limit, recheckDays, onlyMissing: !all }), null, 2));
     }
     process.exit(0);
   })().catch(err => { console.error(err); process.exit(1); });
