@@ -329,11 +329,22 @@ Nothing needs new code.
 
 ## Notes for whoever picks this up
 
-- **The `sweep/*` branches are merged into this branch's work and can be
-  deleted.** Nothing useful is left on them: `sweep/claims`, `sweep/pins` and
-  `sweep/links` were adopted whole, `sweep/hours` contributed its span rule, and
-  `sweep/search-and-menus` was superseded. Check this file's correction table
-  before deleting, so the record of what came from where survives.
+- **The `sweep/*` branches are merged into master and can be deleted — but I
+  could not do it from here.** The git proxy in this environment permits pushing
+  `refs/heads/*` and nothing else: a tag push and a branch delete both come back
+  HTTP 403, and the GitHub API tools available to me have no delete-branch call.
+  So all five are still on the remote. Deleting them is one command from your
+  machine:
+
+      git push origin --delete sweep/claims sweep/hours sweep/links sweep/pins sweep/search-and-menus
+
+  Before you do, note that `sweep/search-and-menus` is the one branch whose code
+  is **not** in master — it was superseded, not adopted — so if you ever want its
+  sponsored-slots implementation back, take a copy first. The other four are
+  fully represented in master.
+- **`__reftest` on the remote is mine and should be deleted.** I created it while
+  working out whether the proxy blocked all ref pushes or only tags, and then
+  could not remove it for the same reason. `git push origin --delete __reftest`.
 - `git branch -a` in a fresh clone lists only what has been fetched. Use
   `git ls-remote --heads origin` to see what is actually there — that is the
   mistake that made me report the branches missing.

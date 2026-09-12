@@ -6,9 +6,10 @@ hand, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
 **Updated 2026-09-12. Public listings: 4,377** (from 7,431 at the start).
-**Nothing changed in production on 2026-09-12** — see "The session of 2026-09-12"
-below, which built and tested the nine remaining sweeps but could reach neither
-Railway nor the open web.
+**The code from 2026-09-12 is now on `master` and therefore deployed**, but
+**no listing data was changed**: that session could reach neither Railway's
+database nor the open web, so every sweep it built is waiting on a run. See
+"The session of 2026-09-12" below.
 
 **Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
 are fine; a vape, glass, hookah or kava shop that happens to sell cigars is not in
@@ -90,8 +91,12 @@ the apply-path tests, the re-import guard and the list's 16 contract checks. Eve
 
 ## Running right now
 
+**This work is on `master` as of 2026-09-12, which means it is deployed.**
+
 **Nothing is building in parallel any more, and the branches below are merged
-and can be deleted.** Five of the six reached the remote (`sweep/closures` never
+and can be deleted** (the session that merged them could not delete them itself:
+the cloud git proxy refuses every ref push that is not a branch create or
+update). See PROGRESS.md for the one command. Five of the six reached the remote (`sweep/closures` never
 did). The 2026-09-12 session read all five and folded them into
 `claude/handoff-tasks-completion-m1aqvb`:
 
