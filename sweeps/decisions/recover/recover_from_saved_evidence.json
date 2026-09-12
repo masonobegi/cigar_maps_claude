@@ -1,0 +1,6582 @@
+{
+ "finding": "Re-reading the saved evidence recovers NOBODY, and that is arithmetic rather than a failure: the pure-cigar check hid these 2,480 listings by running siteVerdict() on this same evidence, so running it again gives the same answer. Verified: 0 contradictions, and all 639 readings that would prove a cigar shop belong to listings that were kept public.",
+ "what_recovery_needs": "New evidence. The three groups below say which kind, per listing.",
+ "generated_at": "2026-09-12T04:52:22.117Z",
+ "hidden_as_unproven": 2480,
+ "groups": {
+  "no_evidence": {
+   "count": 1933,
+   "needs": "a licence registry match (jobs/licenceSync.js) or stock from its own web shop; for the ones that do have a website, a first read",
+   "rows": [
+    {
+     "id": 57,
+     "name": "Hawaiian Holy Smokes",
+     "city": "Honolulu",
+     "state": "HI",
+     "website": "hawaiianholysmokes.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 110,
+     "name": "The Peace Pipe",
+     "city": "Mcallen",
+     "state": "TX",
+     "website": "peacepipe.trustab.org",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 216,
+     "name": "Crazy Craig's Custom Pipes",
+     "city": "Corpus Christi",
+     "state": "TX",
+     "website": "smokeshopcorpuschristi.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 219,
+     "name": "Tobacco Junction 2",
+     "city": "Corpus Christi",
+     "state": "TX",
+     "website": "tobaccojunction.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 265,
+     "name": "Guys Tobacco",
+     "city": "Bradenton",
+     "state": "FL",
+     "website": "bradentontobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 271,
+     "name": "Purple Haze Tobacco",
+     "city": "St Petersburg",
+     "state": "FL",
+     "website": "purplehazetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 339,
+     "name": "The Tobacco Hut",
+     "city": "New Port Richey",
+     "state": "FL",
+     "website": "thetobaccohut.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 344,
+     "name": "Madeira beach smoke shop",
+     "city": "Madeira Beach",
+     "state": "FL",
+     "website": "madeirabeachcigarco.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 400,
+     "name": "Tobacco Depot",
+     "city": "Clearwater",
+     "state": "FL",
+     "website": "tobacco-depot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 467,
+     "name": "Smokin Pipes Clearwater",
+     "city": "Clearwater",
+     "state": "FL",
+     "website": "smokinpipesclearwater.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 508,
+     "name": "Tobacco Depot",
+     "city": "Tampa",
+     "state": "FL",
+     "website": "tobacco-depot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 543,
+     "name": "Tobacco Depot",
+     "city": "Sun City Center",
+     "state": "FL",
+     "website": "tobacco-depot.net",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 640,
+     "name": "Ryo Tobacco",
+     "city": "Tampa",
+     "state": "FL",
+     "website": "tobaccoblends.com.au",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 665,
+     "name": "Santa Tobacco",
+     "city": "Cape Coral",
+     "state": "FL",
+     "website": "santatobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 721,
+     "name": "Tobacco Shop of Venice",
+     "city": "Venice",
+     "state": "FL",
+     "website": "tobaccoshopofvenice.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 738,
+     "name": "Pipe Dream 239",
+     "city": "North Fort Myers",
+     "state": "FL",
+     "website": "pipedreamssmokeshop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 751,
+     "name": "La Tradicion Cubana Inc",
+     "city": "Miami",
+     "state": "FL",
+     "website": "thecubanshop.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 779,
+     "name": "Pipe Dreams Tobacco Shop",
+     "city": "Miami",
+     "state": "FL",
+     "website": "pipe-dreams-tobacco-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 787,
+     "name": "Smokin’ Royalty Smoke Shop & Lounge LLC",
+     "city": "Tampa",
+     "state": "FL",
+     "website": "smokinacezvapelounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 802,
+     "name": "Pipe Dreams Tobacco Shop 2",
+     "city": "Miami",
+     "state": "FL",
+     "website": "lizclaiborne.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 873,
+     "name": "Sports Tobacco And More",
+     "city": "Miami",
+     "state": "FL",
+     "website": "tobaccoshopmiami.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 886,
+     "name": "Tobacco Depot",
+     "city": "Zephyrhills",
+     "state": "FL",
+     "website": "tobacco-depot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 903,
+     "name": "VaporizeMe Smoke & Tobacco",
+     "city": "Miami",
+     "state": "FL",
+     "website": "miamivapeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 972,
+     "name": "Florida City Lounge",
+     "city": "Florida City",
+     "state": "FL",
+     "website": "floridacitylounge.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1067,
+     "name": "North 98 Tobacco House",
+     "city": "Lakeland",
+     "state": "FL",
+     "website": "vaporhouselakeland.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1077,
+     "name": "United Tobacco Store",
+     "city": "Virginia Gardens",
+     "state": "FL",
+     "website": "thecigarsstorevirginiagardens.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1119,
+     "name": "Tobacco King",
+     "city": "Hialeah",
+     "state": "FL",
+     "website": "tobacco-king-cigar-shop.business.site",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1141,
+     "name": "Tobacco 4 Less",
+     "city": "Davie",
+     "state": "FL",
+     "website": "tobacco4lessdavie.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1163,
+     "name": "Collins Tobacco",
+     "city": "Miami Beach",
+     "state": "FL",
+     "website": "whitestoneconsultants.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1222,
+     "name": "SoBe Prime Tobacco",
+     "city": "Miami Beach",
+     "state": "FL",
+     "website": "sobeprimetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1228,
+     "name": "Flor De Gonzalez Inc",
+     "city": "Hialeah",
+     "state": "FL",
+     "website": "fdgcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1241,
+     "name": "Tobacco For Less",
+     "city": "Davie",
+     "state": "FL",
+     "website": "tobacco4lessdavie.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1388,
+     "name": "Seminole Indian Plaza Tobacco",
+     "city": "Hollywood",
+     "state": "FL",
+     "website": "seminole-indian-plaza-tobacco-shop-in-hollywood-fl.cityfos.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1429,
+     "name": "Peace Pipe",
+     "city": "Oakland Park",
+     "state": "FL",
+     "website": "peacepipeusa.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1441,
+     "name": "Lauderdale Tobacco",
+     "city": "Lauderdale-by-the-sea",
+     "state": "FL",
+     "website": "lauderdaletobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1540,
+     "name": "Tobacco Unlimited",
+     "city": "St Cloud",
+     "state": "FL",
+     "website": "e-cigssmokeshop.com/home.html",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1656,
+     "name": "Tobacco Store",
+     "city": "Palm Bay",
+     "state": "FL",
+     "website": "emersontobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1713,
+     "name": "Tobacco & More",
+     "city": "Kissimmee",
+     "state": "FL",
+     "website": "tobacco-kissimmee.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1715,
+     "name": "Tobacco Source",
+     "city": "Margate",
+     "state": "FL",
+     "website": "linktr.ee/goodvibesss2151",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1974,
+     "name": "Loxahatchee Red's Tobacco Co.",
+     "city": "Royal Palm Beach",
+     "state": "FL",
+     "website": "loxahatcheereds.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 1990,
+     "name": "Double D's Tobacco",
+     "city": "Port St Lucie",
+     "state": "FL",
+     "website": "doubledstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2066,
+     "name": "Tommy's Tobacco Shop",
+     "city": "Tucson",
+     "state": "AZ",
+     "website": "tommystobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2110,
+     "name": "Lavarock Smoke Shop",
+     "city": "Las Cruces",
+     "state": "NM",
+     "website": "LavaRockSmokeShopandHookahLounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2158,
+     "name": "Tobacco Alley of Midland",
+     "city": "Midland",
+     "state": "TX",
+     "website": "tobaccoalleymidland.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2307,
+     "name": "Empire Tobacco",
+     "city": "San Diego",
+     "state": "CA",
+     "website": "ocsmokeshops.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2327,
+     "name": "Las Vegas Smoke Shop",
+     "city": "San Diego",
+     "state": "CA",
+     "website": "redvelvethookahlounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2382,
+     "name": "Santee Tobacco Shop",
+     "city": "Santee",
+     "state": "CA",
+     "website": "santeetobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2445,
+     "name": "Tobacco House",
+     "city": "Kerrville",
+     "state": "TX",
+     "website": "dars.state.tx.us",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2739,
+     "name": "Texas Tobacco",
+     "city": "New Braunfels",
+     "state": "TX",
+     "website": "texastobaccovapor.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2862,
+     "name": "Tobacco Alley and More",
+     "city": "Springtown",
+     "state": "TX",
+     "website": "tobacco-alley.be",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 2953,
+     "name": "Bob's Tobacco House",
+     "city": "Mineral Wells",
+     "state": "TX",
+     "website": "bob-tobacco-house.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3098,
+     "name": "Tobacco Cabana",
+     "city": "Cedar Hill",
+     "state": "TX",
+     "website": "tobaccocabana.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3153,
+     "name": "Tobacco and Beyond",
+     "city": "Cedar Hill",
+     "state": "TX",
+     "website": "tobacco.org",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3283,
+     "name": "Vinetti's Restaurant",
+     "city": "Addison",
+     "state": "TX",
+     "website": "vinettistx.com/?utm_source=bing&utm_medium=websiteurl&utm_campaign=search",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3370,
+     "name": "Hachie Tobacco",
+     "city": "Waxahachie",
+     "state": "TX",
+     "website": "waxahachietobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3375,
+     "name": "Cabrillo Tobacco",
+     "city": "San Pedro",
+     "state": "CA",
+     "website": "cabrillo-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3379,
+     "name": "Tobacco and Beyond",
+     "city": "Irving",
+     "state": "TX",
+     "website": "irvingtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3416,
+     "name": "Tobacco N Beyond",
+     "city": "Desoto",
+     "state": "TX",
+     "website": "desototobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3423,
+     "name": "Smart Tobacco",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "smart-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3464,
+     "name": "Classic Tobacco",
+     "city": "Rancho Palos Verdes",
+     "state": "CA",
+     "website": "bestbuysguides.com/&popup=y",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3504,
+     "name": "HB Smoke Shop",
+     "city": "Huntington Beach",
+     "state": "CA",
+     "website": "hbcigarsandtobacco.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3554,
+     "name": "Golden Smoke Shop",
+     "city": "Costa Mesa",
+     "state": "CA",
+     "website": "goldensmokeshopvapeandcigar.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3570,
+     "name": "Purple Haze Smoke Shop",
+     "city": "Huntington Beach",
+     "state": "CA",
+     "website": "huntingtonpipesandcigars.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3578,
+     "name": "Marina Tobacco",
+     "city": "Long Beach",
+     "state": "CA",
+     "website": "marinatobaccoinc.samsbiz.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3664,
+     "name": "Mandalay Tobacco",
+     "city": "Port Hueneme",
+     "state": "CA",
+     "website": "mandalaytobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3677,
+     "name": "Tobacco Royale",
+     "city": "Calabasas",
+     "state": "CA",
+     "website": "tobaccoroyale.net",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3727,
+     "name": "Tobacco Royale",
+     "city": "Thousand Oaks",
+     "state": "CA",
+     "website": "tobaccoroyale.net",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3750,
+     "name": "Tobacco Prince",
+     "city": "Thousand Oaks",
+     "state": "CA",
+     "website": "tobacco-prince.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3796,
+     "name": "King Smoke Shop",
+     "city": "Downey",
+     "state": "CA",
+     "website": "king-smoke-shop-cigar-shop.business.site",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3802,
+     "name": "USA Tobacco",
+     "city": "Anaheim",
+     "state": "CA",
+     "website": "discountrvcalifornia.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3821,
+     "name": "Tobacco and More",
+     "city": "Santa Barbara",
+     "state": "CA",
+     "website": "tobaccoandmore2.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3842,
+     "name": "Smoke Tree Lounge",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "smoketreelounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3862,
+     "name": "Royal Tobacco",
+     "city": "Bellflower",
+     "state": "CA",
+     "website": "royal-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3863,
+     "name": "3M Tobacco",
+     "city": "Bellflower",
+     "state": "CA",
+     "website": "mytobaccostore.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3865,
+     "name": "Tobacco King",
+     "city": "Bellflower",
+     "state": "CA",
+     "website": "truetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 3956,
+     "name": "Station One Tobacco",
+     "city": "Ventura",
+     "state": "CA",
+     "website": "smoke-shop-station-one-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4017,
+     "name": "Baba Berj Tobacco Drive Through",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "smokeshophollywood.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4023,
+     "name": "CoCo ToBaCCo",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "cocotobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4092,
+     "name": "Planet Tobacco",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "percussion-planet.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4142,
+     "name": "Harry's Tobacco Shop",
+     "city": "Burbank",
+     "state": "CA",
+     "website": "harrystobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4166,
+     "name": "Covina Tobacco",
+     "city": "Covina",
+     "state": "CA",
+     "website": "covinatobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4246,
+     "name": "Cools Tobacco",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "zig-zag-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4290,
+     "name": "Fuente Fever 33",
+     "city": "Escondido",
+     "state": "CA",
+     "website": "fuentefever33.com",
+     "store_type": "cigar_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4578,
+     "name": "Tobacco buzz",
+     "city": "Tustin",
+     "state": "CA",
+     "website": "buzzshopoc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4589,
+     "name": "Pure Puffs Tobacco",
+     "city": "Denton",
+     "state": "TX",
+     "website": "purepuffstobacco.store",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4605,
+     "name": "Tobacco Palace",
+     "city": "Orange",
+     "state": "CA",
+     "website": "stmarystobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4698,
+     "name": "Tobacco One",
+     "city": "Placentia",
+     "state": "CA",
+     "website": "smokeshopplacentiaca.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4720,
+     "name": "Master Tobacco",
+     "city": "Anaheim",
+     "state": "CA",
+     "website": "mdjmastertobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4765,
+     "name": "Tobacco King",
+     "city": "Hemet",
+     "state": "CA",
+     "website": "tobaccokingca.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4798,
+     "name": "Tobacco Crush",
+     "city": "Norco",
+     "state": "CA",
+     "website": "tobaccocrush.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4800,
+     "name": "Corona Tobacco",
+     "city": "Corona",
+     "state": "CA",
+     "website": "coronatobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4815,
+     "name": "Tobacco Crush",
+     "city": "Corona",
+     "state": "CA",
+     "website": "tobaccocrush.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4841,
+     "name": "Burning Desire",
+     "city": "Corona",
+     "state": "CA",
+     "website": "burningdesirecigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4856,
+     "name": "plaza Smoke Shop",
+     "city": "Upland",
+     "state": "CA",
+     "website": "cigarplaces.com/place/ss-smoke-shop.aspx",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4863,
+     "name": "Tobacco Leaf",
+     "city": "Fontana",
+     "state": "CA",
+     "website": "mdjmastertobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4962,
+     "name": "Adams Smoke Shop",
+     "city": "Riverside",
+     "state": "CA",
+     "website": "adamscigars.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 4978,
+     "name": "Master Tobacco",
+     "city": "Chino Hills",
+     "state": "CA",
+     "website": "mdjmastertobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5028,
+     "name": "Roosters Lounge",
+     "city": "Brazoria",
+     "state": "TX",
+     "website": "roosterslounge.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5195,
+     "name": "Chickasaw Tobacco",
+     "city": "Ardmore",
+     "state": "OK",
+     "website": "chickasaw.net/Our-Nation/Find-Locations/Ardmore-II-Tobacco-Shop.aspx",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5310,
+     "name": "Absolute Tobacco",
+     "city": "Katy",
+     "state": "TX",
+     "website": "absolute-tobacco.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5334,
+     "name": "Texas Legit Tobacco",
+     "city": "Houston",
+     "state": "TX",
+     "website": "tx-legit-tobacco-cigars-cbd-kratom-delta-8-e-cig.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5487,
+     "name": "The Hotbox Lounge",
+     "city": "Texas City",
+     "state": "TX",
+     "website": "hboxlounge.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5533,
+     "name": "Margolis Fine Tobacco",
+     "city": "Brenham",
+     "state": "TX",
+     "website": "margolisfinetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5554,
+     "name": "Tobacco Inn",
+     "city": "League City",
+     "state": "TX",
+     "website": "tobaccoinn.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5565,
+     "name": "Z Tobacco's Shop & Live Bait",
+     "city": "Liberty",
+     "state": "TX",
+     "website": "frankstireshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5688,
+     "name": "Blaze Smoke Shop",
+     "city": "Lake Charles",
+     "state": "LA",
+     "website": "beautylounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5745,
+     "name": "Lone Star Tobacco",
+     "city": "Houston",
+     "state": "TX",
+     "website": "lonestartobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 5948,
+     "name": "Poche Perique Tobacco",
+     "city": "Convent",
+     "state": "LA",
+     "website": "pocheperiquetobacco1.placeweb.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6091,
+     "name": "Pandora's Box Tobacco Shop",
+     "city": "Crystal River",
+     "state": "FL",
+     "website": "pandorasboxFL.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6116,
+     "name": "Gators Tobacco",
+     "city": "Gainesville",
+     "state": "FL",
+     "website": "gator-city.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6127,
+     "name": "Pipe Dreams 3D",
+     "city": "Ocoee",
+     "state": "FL",
+     "website": "pipedreamsmecca.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6234,
+     "name": "Half Pipe",
+     "city": "Jacksonville",
+     "state": "FL",
+     "website": "halfpipejax.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6259,
+     "name": "Tobacco Paradise",
+     "city": "Orange City",
+     "state": "FL",
+     "website": "tobaccoparadise.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6306,
+     "name": "Smoke & Tobacco Unlimited",
+     "city": "Winter Springs",
+     "state": "FL",
+     "website": "smoketobaccounlimited.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6416,
+     "name": "The Big Smoke",
+     "city": "Ormond Beach",
+     "state": "FL",
+     "website": "bigsmokecigar.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6493,
+     "name": "Simply Tobacco Waveland",
+     "city": "Waveland",
+     "state": "MS",
+     "website": "simply-tobacco-gulfport.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6504,
+     "name": "Tobacco Exotica",
+     "city": "Daytona Beach",
+     "state": "FL",
+     "website": "tobaccoexotica.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6531,
+     "name": "Tobacco Palace",
+     "city": "St Augustine",
+     "state": "FL",
+     "website": "tpstaugustine.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6535,
+     "name": "Tobacco Leaf",
+     "city": "New Smyrna Beach",
+     "state": "FL",
+     "website": "tobaccoleafsmokeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6578,
+     "name": "St. Jorge Tobacco",
+     "city": "Saint Augustine",
+     "state": "FL",
+     "website": "stjorgetobaccostaug.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6586,
+     "name": "Discount Tobacco",
+     "city": "Wiggins",
+     "state": "MS",
+     "website": "fortsmithcigarettes.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6604,
+     "name": "Tobacco Shack",
+     "city": "Poplarville",
+     "state": "MS",
+     "website": "tobaccoshack.tripod.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6607,
+     "name": "The Tobacco Depot",
+     "city": "Lumberton",
+     "state": "MS",
+     "website": "thetobaccodepot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6609,
+     "name": "Long Beach Tobacco",
+     "city": "Long Beach",
+     "state": "MS",
+     "website": "longbeachmscornertstores.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6722,
+     "name": "Gulf EveryThing Tobacco",
+     "city": "Pensacola",
+     "state": "FL",
+     "website": "gulfwd.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6792,
+     "name": "Gift & Tobacco",
+     "city": "Valdosta",
+     "state": "GA",
+     "website": "giftandtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6857,
+     "name": "Tobacco Palace Of Waycross",
+     "city": "Waycross",
+     "state": "GA",
+     "website": "tobaccopalaceofwaycross.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6917,
+     "name": "Tobacco N Beyond",
+     "city": "Corsicana",
+     "state": "TX",
+     "website": "tobacco-n-beyond.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6918,
+     "name": "Chaney's Tobacco Station",
+     "city": "Corsicana",
+     "state": "TX",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6920,
+     "name": "Tobacco Palace",
+     "city": "St Marys",
+     "state": "GA",
+     "website": "tobaccopalacesaintmarys.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 6983,
+     "name": "Tobacco Gallery",
+     "city": "Dallas",
+     "state": "TX",
+     "website": "tobaccogallery.net",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7044,
+     "name": "Tobacco Shack",
+     "city": "Mesquite",
+     "state": "TX",
+     "website": "tobaccoshack.tripod.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7064,
+     "name": "Tobacco Palace",
+     "city": "Brunswick",
+     "state": "GA",
+     "website": "tobaccopalacebrunswick.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7083,
+     "name": "Tobacco N Beyond",
+     "city": "Garland",
+     "state": "TX",
+     "website": "tobacconbeyond.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7106,
+     "name": "Bethany total tobacco",
+     "city": "Bethany",
+     "state": "LA",
+     "website": "bethany-total-tobacco-llc.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7179,
+     "name": "Tobacco Store",
+     "city": "Vicksburg",
+     "state": "MS",
+     "website": "tobaccostore-tobaccoshop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7261,
+     "name": "Tobacco Store",
+     "city": "Byram",
+     "state": "MS",
+     "website": "tobaccomarket.org",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7317,
+     "name": "Tobacco Hut McKinney",
+     "city": "Mckinney",
+     "state": "TX",
+     "website": "tobaccohutmckinney.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7362,
+     "name": "Tobacco Station",
+     "city": "Magnolia",
+     "state": "AR",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7381,
+     "name": "Tobacco Station USA",
+     "city": "Hope",
+     "state": "AR",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7411,
+     "name": "Texas Tobacco",
+     "city": "Denison",
+     "state": "TX",
+     "website": "texastobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7474,
+     "name": "Discount Tobacco",
+     "city": "Malvern",
+     "state": "AR",
+     "website": "fortsmithcigarettes.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7576,
+     "name": "Cigarbar 3:23",
+     "city": "Auburn",
+     "state": "AL",
+     "website": "323cigarbar.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7647,
+     "name": "Tobacco Shop 34",
+     "city": "Newnan",
+     "state": "GA",
+     "website": "tobaccoshop34.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 7951,
+     "name": "Tobacco Palace",
+     "city": "Eastman",
+     "state": "GA",
+     "website": "tobaccopalaceeastman.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8045,
+     "name": "Exoticcigars and Whiskey shop",
+     "city": "Atlanta",
+     "state": "GA",
+     "website": "exoticcigarandwhiskeyshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8062,
+     "name": "Red Light Tobacco Charleston",
+     "city": "Charleston",
+     "state": "SC",
+     "website": "redlighttobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8163,
+     "name": "Scandinavian Tobacco Group Lane",
+     "city": "Tucker",
+     "state": "GA",
+     "website": "st-group.com/scandinavian-tobacco-group-lane-ltd",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8168,
+     "name": "Bear Creek Tobacco",
+     "city": "Tate",
+     "state": "GA",
+     "website": "stonecreekgeorgia.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8183,
+     "name": "Discount Tobacco",
+     "city": "Summerville",
+     "state": "SC",
+     "website": "fortsmithcigarettes.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8376,
+     "name": "Pops Tobacco Shop And Drive Thru",
+     "city": "Mullins",
+     "state": "SC",
+     "website": "pops-tobacco-shop.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8382,
+     "name": "Tobacco Palace",
+     "city": "Dacula",
+     "state": "GA",
+     "website": "stmarystobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8386,
+     "name": "Galaxy Tobacco",
+     "city": "Hampstead",
+     "state": "NC",
+     "website": "cigarshopinhampsteadnc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8418,
+     "name": "Burlingame Tobacconists",
+     "city": "Burlingame",
+     "state": "CA",
+     "website": "burlingametobacconists.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8429,
+     "name": "Leland Tobacco",
+     "city": "Leland",
+     "state": "NC",
+     "website": "leland-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8436,
+     "name": "K40 tobacco",
+     "city": "Wilmington",
+     "state": "NC",
+     "website": "k-tobacco-vape.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8455,
+     "name": "Silo Package & Tobacco",
+     "city": "Lavonia",
+     "state": "GA",
+     "website": "silo-package-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8608,
+     "name": "Haight Street Tobacco",
+     "city": "San Francisco",
+     "state": "CA",
+     "website": "sunbeltscanningsystems.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8652,
+     "name": "Cigarland",
+     "city": "Morgan Hill",
+     "state": "CA",
+     "website": "cigarlandcali.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8717,
+     "name": "Hi Life Smokes",
+     "city": "Salinas",
+     "state": "CA",
+     "website": "thecigarettestoresalinas.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8725,
+     "name": "Galaxy Smoke Shop",
+     "city": "Napa",
+     "state": "CA",
+     "website": "cigarshopnapaca.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8767,
+     "name": "Boatyard Tobacco",
+     "city": "Fort Bragg",
+     "state": "CA",
+     "website": null,
+     "store_type": "tobacco_shop",
+     "next": "it has no website: only a licence registry or its own web shop can speak for it"
+    },
+    {
+     "id": 8801,
+     "name": "Sammy Smoke Shop",
+     "city": "Santa Rosa",
+     "state": "CA",
+     "website": "cheaper-cigarettes-pipes.business.site",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 8823,
+     "name": "Sticks Lounge",
+     "city": "Brentwood",
+     "state": "CA",
+     "website": "stickslounge.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9012,
+     "name": "Tobacco Man",
+     "city": "Sacramento",
+     "state": "CA",
+     "website": "veerstobaccoman.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9022,
+     "name": "Pismo Tobacco",
+     "city": "Pismo Beach",
+     "state": "CA",
+     "website": "pismotobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9047,
+     "name": "Tobacco 4 Ever",
+     "city": "Roseville",
+     "state": "CA",
+     "website": "tobacco-4-ever.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9144,
+     "name": "The Old Tobacco House",
+     "city": "Fresno",
+     "state": "CA",
+     "website": "Oldtobaccomfg.bigcartel.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9148,
+     "name": "AJ Tobacco",
+     "city": "Bakersfield",
+     "state": "CA",
+     "website": "jjtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9333,
+     "name": "Tobacco Man Galt",
+     "city": "Galt",
+     "state": "CA",
+     "website": "tobaccomangalt.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9532,
+     "name": "Royal Flame Tobacco",
+     "city": "Modesto",
+     "state": "CA",
+     "website": "royalflametobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9933,
+     "name": "Fat Jack's Tobacco Shack",
+     "city": "Rainier",
+     "state": "OR",
+     "website": "fatjacks.vaderwa.us",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 9936,
+     "name": "Tobacco Store",
+     "city": "Salt Lake City",
+     "state": "UT",
+     "website": "website--4594508981107594506200-tobaccoshop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10134,
+     "name": "Pike Tobacco",
+     "city": "Seattle",
+     "state": "WA",
+     "website": "pikegrocery.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10135,
+     "name": "Tobacco Leaf",
+     "city": "Seattle",
+     "state": "WA",
+     "website": "tobaccoleafseattle.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10140,
+     "name": "Big House Tobacco",
+     "city": "Puyallup",
+     "state": "WA",
+     "website": "big-house-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10151,
+     "name": "J & M Tobacco",
+     "city": "Yelm",
+     "state": "WA",
+     "website": "jandmtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10186,
+     "name": "Vape9Lounge",
+     "city": "Portland",
+     "state": "OR",
+     "website": "vape9lounge.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10409,
+     "name": "Everett Tobacco Company",
+     "city": "Everett",
+     "state": "WA",
+     "website": "everett-tobacco-company.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10733,
+     "name": "Shelly's Kleen Tobacco",
+     "city": "Stevensville",
+     "state": "MT",
+     "website": "Shellyskleentobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 10870,
+     "name": "Amarillo Snuff",
+     "city": "Amarillo",
+     "state": "TX",
+     "website": "amarillosnuff.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11021,
+     "name": "Party Moore",
+     "city": "Moore",
+     "state": "OK",
+     "website": "partymoorestore.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11446,
+     "name": "Royal Pipes and Hookahs",
+     "city": "Denver",
+     "state": "CO",
+     "website": "royalpipesandhookah.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11593,
+     "name": "Wildhorse Tobacco",
+     "city": "Poteau",
+     "state": "OK",
+     "website": "greathillsent.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11599,
+     "name": "Tobacco Station USA",
+     "city": "Conway",
+     "state": "AR",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11745,
+     "name": "Tobacco Barn",
+     "city": "Rogers",
+     "state": "AR",
+     "website": "tobaccobarnnj.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11758,
+     "name": "Seneca-Cayuga Tobacco Company",
+     "city": "Grove",
+     "state": "OK",
+     "website": "sctribe.com/staff/seneca-cayuga-tobacco-company",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11761,
+     "name": "King Tobacco Shop #2",
+     "city": "Fort Smith",
+     "state": "AR",
+     "website": "kingtobaccoshop2.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11791,
+     "name": "Seneca Cayuga Tobacco",
+     "city": "Miami",
+     "state": "OK",
+     "website": "sctribe.com/staff/seneca-cayuga-tobacco-company",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11799,
+     "name": "Tobacco & More",
+     "city": "Benton",
+     "state": "AR",
+     "website": "website--1087897412310809101227-tobaccoshop.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11815,
+     "name": "Tobacco Shack",
+     "city": "Bryant",
+     "state": "AR",
+     "website": "tobacco-dealers.cmac.ws/tobacco-shack/343",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11902,
+     "name": "Habits tobacco shop",
+     "city": "Kensett",
+     "state": "AR",
+     "website": "Becspuffnstuff.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11903,
+     "name": "Tobacco Station USA",
+     "city": "Bald Knob",
+     "state": "AR",
+     "website": "website--131643084764647306541-tobaccoshop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11923,
+     "name": "Austin peay tobacco",
+     "city": "Memphis",
+     "state": "TN",
+     "website": "a-p-tobacco-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11929,
+     "name": "Alford Tobacco Store",
+     "city": "Cabot",
+     "state": "AR",
+     "website": "alfordtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 11952,
+     "name": "Alford Tobacco Inc",
+     "city": "Beebe",
+     "state": "AR",
+     "website": "alfordtobaccobeebe.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12066,
+     "name": "Tobacco Station USA",
+     "city": "Trumann",
+     "state": "AR",
+     "website": "finduslocal.com/.../arkansas/trumann/tobacco-station-usa",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12074,
+     "name": "Elevape Lounge",
+     "city": "Belton",
+     "state": "MO",
+     "website": "elevapelounge.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12113,
+     "name": "Mystery Tobacco Shop",
+     "city": "Memphis",
+     "state": "TN",
+     "website": "smokemystery.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12114,
+     "name": "The M Smoke And Sip",
+     "city": "Memphis",
+     "state": "TN",
+     "website": "the-m-smoke-sipp.business.site",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12483,
+     "name": "Hypnotized Tobacco",
+     "city": "Florissant",
+     "state": "MO",
+     "website": "hypnotizedsmokeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12702,
+     "name": "Tobacco King",
+     "city": "Longmont",
+     "state": "CO",
+     "website": "tobacco-king.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12806,
+     "name": "Tobacco Hut",
+     "city": "Council Bluffs",
+     "state": "IA",
+     "website": "thetobaccohut.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12817,
+     "name": "Ted's Tobacco",
+     "city": "Lincoln",
+     "state": "NE",
+     "website": "tedstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12826,
+     "name": "Tobacco Road",
+     "city": "North Platte",
+     "state": "NE",
+     "website": "tobaccoroadnp.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12862,
+     "name": "Ted's Tobacco",
+     "city": "Omaha",
+     "state": "NE",
+     "website": "tedstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 12969,
+     "name": "Tobacco Row",
+     "city": "Billings",
+     "state": "MT",
+     "website": "tobaccorow.biz",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13162,
+     "name": "Tobacco King",
+     "city": "Independence",
+     "state": "IA",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13248,
+     "name": "Tonys Tobacco Shop",
+     "city": "Rochester",
+     "state": "MN",
+     "website": "tobaccomax.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13278,
+     "name": "Tobacco King",
+     "city": "Davenport",
+     "state": "IA",
+     "website": "tobaccokingia.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13388,
+     "name": "Golden Tobacco",
+     "city": "Richfield",
+     "state": "MN",
+     "website": "golden-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13407,
+     "name": "Oxboro Tobacco",
+     "city": "Bloomington",
+     "state": "MN",
+     "website": "oxborotobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13430,
+     "name": "King Tobacco",
+     "city": "Baxter",
+     "state": "MN",
+     "website": "king-tobacco-baxter.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13435,
+     "name": "Smokies Tobacco",
+     "city": "Plymouth",
+     "state": "MN",
+     "website": "smokies-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13437,
+     "name": "Downtown Tobacco",
+     "city": "Northfield",
+     "state": "MN",
+     "website": "downtowntobaccomn.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13450,
+     "name": "Adam's Tobacco Shop",
+     "city": "Rice",
+     "state": "MN",
+     "website": "adamstobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13474,
+     "name": "Shorewood Smoke Shop",
+     "city": "Excelsior",
+     "state": "MN",
+     "website": "shorewood-cigars-and-tobacco.business.site",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13509,
+     "name": "GM Tobacco",
+     "city": "Minneapolis",
+     "state": "MN",
+     "website": "gmtobaccosupervapor.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13526,
+     "name": "Brooklyn Tobacco",
+     "city": "Brooklyn Park",
+     "state": "MN",
+     "website": "brooklyn-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13536,
+     "name": "Central Plaza Tobacco",
+     "city": "Minneapolis",
+     "state": "MN",
+     "website": "shopcentralplaza.com/visit-shops/tobacco-store",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13543,
+     "name": "Hastings Tobacco",
+     "city": "Hastings",
+     "state": "MN",
+     "website": "hastingstobaccomn.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13551,
+     "name": "Sarah's Tobacco Shop",
+     "city": "Columbia Heights",
+     "state": "MN",
+     "website": "sarahstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13557,
+     "name": "Adam's Tobacco Shop",
+     "city": "Red Wing",
+     "state": "MN",
+     "website": "adamstobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13560,
+     "name": "Twone's Tobacco",
+     "city": "Saint Paul",
+     "state": "MN",
+     "website": "twones-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13561,
+     "name": "Union Tobacco",
+     "city": "St Paul",
+     "state": "MN",
+     "website": "kellys-smoke-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13567,
+     "name": "Ham Lake Tobacco",
+     "city": "Ham Lake",
+     "state": "MN",
+     "website": "hamlaketobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13572,
+     "name": "Adam's Tobacco Shop",
+     "city": "Minneapolis",
+     "state": "MN",
+     "website": "adamstobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13588,
+     "name": "Blaine Tobacco Store",
+     "city": "Blaine",
+     "state": "MN",
+     "website": "blainetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13594,
+     "name": "Frogtown Tobacco",
+     "city": "St Paul",
+     "state": "MN",
+     "website": "frogtowntobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13605,
+     "name": "Cambridge Tobacco",
+     "city": "Cambridge",
+     "state": "MN",
+     "website": "cambridgetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13616,
+     "name": "Tobacco Tree",
+     "city": "Roseville",
+     "state": "MN",
+     "website": "tobaccotreemn.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13620,
+     "name": "K's Tobacco & Brew Too",
+     "city": "New Albany",
+     "state": "MS",
+     "website": "kstobaccoandbrew.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13679,
+     "name": "King Tobacco North Branch",
+     "city": "North Branch",
+     "state": "MN",
+     "website": "kingtobaccomn.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13692,
+     "name": "Scandia Tobacco",
+     "city": "Scandia",
+     "state": "MN",
+     "website": "scandiatobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13711,
+     "name": "Arden Hills Tobacco",
+     "city": "Arden Hills",
+     "state": "MN",
+     "website": "arden-hills-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13773,
+     "name": "The Tobacco Shop",
+     "city": "Lexington",
+     "state": "TN",
+     "website": "lexingtontobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13823,
+     "name": "Holiday Wine and Spirits",
+     "city": "Franklin",
+     "state": "TN",
+     "website": "holidaycigarsandspirits.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13849,
+     "name": "Tobacco For Less",
+     "city": "Lawrenceburg",
+     "state": "TN",
+     "website": "tobaccoforless.org",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13881,
+     "name": "Tobacco N Brew - Kwik N Easy 2",
+     "city": "Clarksville",
+     "state": "TN",
+     "website": "tobacconbrewkwikneasy2.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13919,
+     "name": "Wind River Tobacco Co.",
+     "city": "Springfield",
+     "state": "TN",
+     "website": "wrtco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13961,
+     "name": "Tobacco Road Coffee & Smoke Shop",
+     "city": "Nashville",
+     "state": "TN",
+     "website": "cigarshopnashville.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13972,
+     "name": "Tobacco Way Farms",
+     "city": "Hopkinsville",
+     "state": "KY",
+     "website": "app.sos.ky.gov",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 13980,
+     "name": "Biglove Smokes",
+     "city": "Nashville",
+     "state": "TN",
+     "website": "biglovesmokes.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14075,
+     "name": "Big Pipe'n",
+     "city": "Smyrna",
+     "state": "TN",
+     "website": "bigpipen.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14112,
+     "name": "D&J Tobacco",
+     "city": "Elizabethtown",
+     "state": "KY",
+     "website": "dltobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14151,
+     "name": "White House Tobacco and More",
+     "city": "White House",
+     "state": "TN",
+     "website": "whitehousetobaccoandmore.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14170,
+     "name": "Evergreen Tobacco",
+     "city": "Champaign",
+     "state": "IL",
+     "website": "egtprospect.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14177,
+     "name": "Tobacco Brew and Chew",
+     "city": "La Vergne",
+     "state": "TN",
+     "website": "go.nrsplus.com/TOBACCOBREWCHEW",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14198,
+     "name": "Evergreen Tobacco",
+     "city": "Champaign",
+     "state": "IL",
+     "website": "evergreen-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14201,
+     "name": "HRS Pantry - Tobacco store",
+     "city": "Ottawa",
+     "state": "IL",
+     "website": "performanceyamahaak.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14215,
+     "name": "Indy Smoke Time",
+     "city": "Normal",
+     "state": "IL",
+     "website": "normalindysmoketimevapeandcigars.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14223,
+     "name": "Bh Smooth Life Of Up",
+     "city": "University Park",
+     "state": "IL",
+     "website": "bh-smooth-life-of-up.business.site",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14365,
+     "name": "Tobacco Island",
+     "city": "Crown Point",
+     "state": "IN",
+     "website": "tobacco-island-inc.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14388,
+     "name": "TobaccoCigar",
+     "city": "Minooka",
+     "state": "IL",
+     "website": "tobaccoandcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14435,
+     "name": "Tobacco Island",
+     "city": "Schererville",
+     "state": "IN",
+     "website": "tobaccoisland3.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14468,
+     "name": "Smokablez Tobacco",
+     "city": "Plymouth",
+     "state": "IN",
+     "website": "smokablez301.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14590,
+     "name": "The Tobacco Shop",
+     "city": "Livingston",
+     "state": "TN",
+     "website": "save-a-lot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14667,
+     "name": "Tobacco Palace",
+     "city": "Rossville",
+     "state": "GA",
+     "website": "stmarystobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14734,
+     "name": "Derb E Cigs",
+     "city": "Louisville",
+     "state": "KY",
+     "website": "electroniccigaretteslouisville.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14847,
+     "name": "Oxmoor Smoke Shoppe",
+     "city": "Louisville",
+     "state": "KY",
+     "website": "oxmoorsmokeshoppe.com/cigars.shtml",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14890,
+     "name": "Tobacco Depot",
+     "city": "Blairsville",
+     "state": "GA",
+     "website": "thetobaccodepot.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14922,
+     "name": "Tobacco King",
+     "city": "Pigeon Forge",
+     "state": "TN",
+     "website": "discoverwearsvalley.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14986,
+     "name": "Tobacco King",
+     "city": "Maynardville",
+     "state": "TN",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 14997,
+     "name": "Big A Tobacco",
+     "city": "Toccoa",
+     "state": "GA",
+     "website": "big-a-liquor.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15140,
+     "name": "Low Bob's Tobacco",
+     "city": "Portland",
+     "state": "IN",
+     "website": "lowbob.com/locations",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15275,
+     "name": "Darke Pipes Emporium",
+     "city": "Greenville",
+     "state": "OH",
+     "website": "darkepipesemporium.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15286,
+     "name": "Tobacco Discounters",
+     "city": "West Chester",
+     "state": "OH",
+     "website": "tdohio.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15320,
+     "name": "Tobacco Marketplace",
+     "city": "Cincinnati",
+     "state": "OH",
+     "website": "tobaccomp.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15406,
+     "name": "Just Smokes",
+     "city": "Urbana",
+     "state": "OH",
+     "website": "royalcigars.com/Ohio/Urbana/Just-Smokes-4073.htm",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15490,
+     "name": "Egor's Tobacco & Gift Shoppe",
+     "city": "Carpentersville",
+     "state": "IL",
+     "website": "egors.net/index.html",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15491,
+     "name": "Aromas Tobacco",
+     "city": "Dekalb",
+     "state": "IL",
+     "website": "aromashookah.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15539,
+     "name": "Ogden Tobacco",
+     "city": "Downers Grove",
+     "state": "IL",
+     "website": "truetobacco.com/listings/ogden-tobacco-downers-grove-il-191",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15571,
+     "name": "Tobacco N More",
+     "city": "Oswego",
+     "state": "IL",
+     "website": "dstobacconmore.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15639,
+     "name": "Tobacco Oasis",
+     "city": "Roselle",
+     "state": "IL",
+     "website": "mycigaroasis.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15688,
+     "name": "Western Tobacco",
+     "city": "Joliet",
+     "state": "IL",
+     "website": "westerntobaccojoliet.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15693,
+     "name": "RYO Tobacco",
+     "city": "Marion",
+     "state": "OH",
+     "website": "ryotobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15723,
+     "name": "Roosevelt Tobacco",
+     "city": "Villa Park",
+     "state": "IL",
+     "website": "roosevelttobacco.com/oc/profile?g=1531391",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15750,
+     "name": "Up in Smoke",
+     "city": "Broadview",
+     "state": "IL",
+     "website": "up-in-smoke-cigars-vapessmokeshop.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15802,
+     "name": "C-Side Tobacco",
+     "city": "Countryside",
+     "state": "IL",
+     "website": "csidetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15821,
+     "name": "Worth Tobacco",
+     "city": "Worth",
+     "state": "IL",
+     "website": "wainoo.com/listing-item/worth-tobacco",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15846,
+     "name": "Legit Tobacco",
+     "city": "Worth",
+     "state": "IL",
+     "website": "legit-smokes-and-hookah-delivery.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15868,
+     "name": "Z Smoke Shop",
+     "city": "Chicago",
+     "state": "IL",
+     "website": "commercechartertwpsmokeshop.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15884,
+     "name": "Tobacco Island",
+     "city": "Oak Lawn",
+     "state": "IL",
+     "website": "tobaccoislandinc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15938,
+     "name": "Morgan Tobacco Hub",
+     "city": "Chicago",
+     "state": "IL",
+     "website": "morgantobaccohub.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 15993,
+     "name": "Habanocigarlnge",
+     "city": "Chicago",
+     "state": "IL",
+     "website": "Habanohookahandcigarlounge.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16048,
+     "name": "Us tobacco",
+     "city": "Rockford",
+     "state": "IL",
+     "website": "ustobacconmore.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16082,
+     "name": "Eagle River Tobacco Road",
+     "city": "Eagle River",
+     "state": "WI",
+     "website": "eaglerivertobaccoroad1.placeweb.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16146,
+     "name": "The Pipe Store",
+     "city": "Oshkosh",
+     "state": "WI",
+     "website": "thepipestore.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16253,
+     "name": "Vernon Tobacco",
+     "city": "Vernon Hills",
+     "state": "IL",
+     "website": "vernontabacco.t0psp0t.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16288,
+     "name": "Tobacco Deals",
+     "city": "Milwaukee",
+     "state": "WI",
+     "website": "tobaccodeals.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16322,
+     "name": "Tobacco Road",
+     "city": "Buffalo Grove",
+     "state": "IL",
+     "website": "bgtobaccoroad.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16432,
+     "name": "Monadnock Tobacco Shop",
+     "city": "Chicago",
+     "state": "IL",
+     "website": "monadnocktobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16483,
+     "name": "Tobacco Town Monroe MI",
+     "city": "Monroe",
+     "state": "MI",
+     "website": "tobaccotownllc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16523,
+     "name": "Low Bob's Tobacco",
+     "city": "Elkhart",
+     "state": "IN",
+     "website": "lowbob.com/locations",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16536,
+     "name": "Butt Hut",
+     "city": "Fremont",
+     "state": "IN",
+     "website": "royalcigars.com/Indiana/Fremont/Butt-Hut-1098.htm",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16588,
+     "name": "Pipe Dreams Tobacco",
+     "city": "Paw Paw",
+     "state": "MI",
+     "website": "pipedreamstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16596,
+     "name": "Todds Tobacco",
+     "city": "Sylvania",
+     "state": "OH",
+     "website": "sylvaniasmokeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16606,
+     "name": "Tobacco Palace",
+     "city": "Taylor",
+     "state": "MI",
+     "website": "shoptobaccopalace.com/location",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16669,
+     "name": "585 Tobacco",
+     "city": "Lincoln Park",
+     "state": "MI",
+     "website": "585-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16692,
+     "name": "Elite Tobacco Shop",
+     "city": "Caledonia",
+     "state": "MI",
+     "website": "elite-tobacco-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16788,
+     "name": "Rob's Tobacco",
+     "city": "Livonia",
+     "state": "MI",
+     "website": "townhousecigar.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16796,
+     "name": "Indian River Tobacco Traders",
+     "city": "Wyoming",
+     "state": "MI",
+     "website": "indianrivertobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16878,
+     "name": "Ryan Tobacco",
+     "city": "Warren",
+     "state": "MI",
+     "website": "ryandentalgroup.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16891,
+     "name": "Puff Puff Tobacco",
+     "city": "East Lansing",
+     "state": "MI",
+     "website": "puff-puff-smoke-shop-vaporizer-store.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16913,
+     "name": "Woodstock Tobacco",
+     "city": "Westland",
+     "state": "MI",
+     "website": "woodstocktobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16940,
+     "name": "GRC Bar & Lounge",
+     "city": "Grand Rapids",
+     "state": "MI",
+     "website": "grandrivercigar.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16982,
+     "name": "Indian River Tobacco",
+     "city": "Newaygo",
+     "state": "MI",
+     "website": "indianrivertobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 16986,
+     "name": "Tobacco Outfitters",
+     "city": "Solon Twp",
+     "state": "MI",
+     "website": "tobaccooutfitters.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17048,
+     "name": "Puff Puff Tobacco",
+     "city": "Owosso",
+     "state": "MI",
+     "website": "puffpufftobacco.com/pages/locations",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17066,
+     "name": "22Cigars",
+     "city": "Flint",
+     "state": "MI",
+     "website": "22cigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17102,
+     "name": "Cigarfellas",
+     "city": "Davison",
+     "state": "MI",
+     "website": "cigarfellascigarlounge.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17115,
+     "name": "A1 Tobacco",
+     "city": "Madison Heights",
+     "state": "MI",
+     "website": "a1-tobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17165,
+     "name": "Billy's Tobacco",
+     "city": "Midland",
+     "state": "MI",
+     "website": "billystobacco.com/products",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17217,
+     "name": "dixie tobacco",
+     "city": "Waterford",
+     "state": "MI",
+     "website": "dixie-tobacco-waterford.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17283,
+     "name": "House of Tobacco",
+     "city": "Grand Blanc",
+     "state": "MI",
+     "website": "houseoftobaccointl.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17298,
+     "name": "It's Tobacco 2",
+     "city": "Greer",
+     "state": "SC",
+     "website": "itstobacco.com/sample-page",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17345,
+     "name": "Wild Bill's Tobacco",
+     "city": "Rogers City",
+     "state": "MI",
+     "website": "wildbillstobacco.com/locations/wild-bills-of-rogers-city",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17380,
+     "name": "Tobacco House",
+     "city": "Cherryville",
+     "state": "NC",
+     "website": "dandb.com/.../thetobaccohouse-cherryville-nc-19241437.html",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17412,
+     "name": "5 Star Tobacco",
+     "city": "Charlotte",
+     "state": "NC",
+     "website": "tobaccoshopcharlotte.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17448,
+     "name": "Charlotte Tobacco",
+     "city": "Indian Trail",
+     "state": "NC",
+     "website": "twitter.com/charlottetobacc",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17492,
+     "name": "5 Star Tobacco #2",
+     "city": "Wingate",
+     "state": "NC",
+     "website": "wingatetobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17493,
+     "name": "Monroe Tobacco 4",
+     "city": "Monroe",
+     "state": "NC",
+     "website": "monroetobqcco4.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17512,
+     "name": "Bahama Mamas Company, Llc",
+     "city": "Charlotte",
+     "state": "NC",
+     "website": "bahamamamascigar.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17527,
+     "name": "Habutts Tobacco",
+     "city": "Troutman",
+     "state": "NC",
+     "website": "troutmantobaccovape.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17529,
+     "name": "Tobacco & More",
+     "city": "South Portsmouth",
+     "state": "KY",
+     "website": "tobaccoandmore52.business.site/?m=true",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17553,
+     "name": "The Perfect Smoke",
+     "city": "Salisbury",
+     "state": "NC",
+     "website": "theperfectsmoke.webs.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17600,
+     "name": "Tobacco Barn",
+     "city": "Morganton",
+     "state": "NC",
+     "website": "tobaccobarnnc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17626,
+     "name": "Pipe It Up",
+     "city": "Charlotte",
+     "state": "NC",
+     "website": "blistlyfe.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17629,
+     "name": "King Cut Rate Tobacco",
+     "city": "Barboursville",
+     "state": "WV",
+     "website": "groupon.com/biz/huntington-wv/king-cut-rate-tobacco",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17694,
+     "name": "Tobacco Discounters",
+     "city": "Columbus",
+     "state": "OH",
+     "website": "tdohio.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17778,
+     "name": "Layla's Smoke Shop Columbus",
+     "city": "Columbus",
+     "state": "OH",
+     "website": "laylashookahlounge.com",
+     "store_type": "smoke_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17855,
+     "name": "Boone Tobacco Shop and Gift",
+     "city": "Boone",
+     "state": "NC",
+     "website": "boonetobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17880,
+     "name": "Tar Heel Tobacco",
+     "city": "Winston-salem",
+     "state": "NC",
+     "website": "tarheeltobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17896,
+     "name": "Vinton Tobacco Town",
+     "city": "Vinton",
+     "state": "VA",
+     "website": "vinton-tobacco-town.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17916,
+     "name": "Hanes mall tobacco &more",
+     "city": "Winston-salem",
+     "state": "NC",
+     "website": "website-509674973784673455997-tobaccoshop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17918,
+     "name": "River Ridge Tobacco Shop",
+     "city": "Clemmons",
+     "state": "NC",
+     "website": "riverridgetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17945,
+     "name": "Wild Tobacco Shop Greensboro",
+     "city": "Greensboro",
+     "state": "NC",
+     "website": "wild-tobacco-shop-greensboro.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17966,
+     "name": "Tobacco Store",
+     "city": "Laurinburg",
+     "state": "NC",
+     "website": "mo2candyandtobacco.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 17989,
+     "name": "H and M Tobacco Shop",
+     "city": "Morgantown",
+     "state": "WV",
+     "website": "hm-tobacco-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18041,
+     "name": "Tobacco & More",
+     "city": "Apex",
+     "state": "NC",
+     "website": "TobaccoNMore.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18059,
+     "name": "Tobacconists of Cary",
+     "city": "Cary",
+     "state": "NC",
+     "website": "tobacconistsofcary.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18063,
+     "name": "C & J Tobacco Shop",
+     "city": "Garner",
+     "state": "NC",
+     "website": "tobaccovapebakr.wixsite.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18131,
+     "name": "Ez Pass Tobacco and Drive Thru",
+     "city": "Dunn",
+     "state": "NC",
+     "website": "ez-pass-tobacco-drive-thru.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18142,
+     "name": "Tobacco And Hops",
+     "city": "Goldsboro",
+     "state": "NC",
+     "website": "tobaccoandhops.com",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18144,
+     "name": "Tobacco Barn",
+     "city": "Raleigh",
+     "state": "NC",
+     "website": "king-tobacco-vape-hookah-lounge.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18194,
+     "name": "Carytown Tobacco",
+     "city": "Charlottesville",
+     "state": "VA",
+     "website": "carytowntobacco.com/glass-art-waterpipes",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18212,
+     "name": "Wind River Tobacco",
+     "city": "Wilson",
+     "state": "NC",
+     "website": "ecryo.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18215,
+     "name": "252 Tobacco Shoppe",
+     "city": "Wilson",
+     "state": "NC",
+     "website": "252tobaccoshoppe.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18252,
+     "name": "Tobacco Station",
+     "city": "Rocky Mount",
+     "state": "NC",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18261,
+     "name": "Circle 7 Tobacco",
+     "city": "Hillsborough",
+     "state": "NC",
+     "website": "circle-7-tobacco-and-vape-and-kratom.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18273,
+     "name": "Zaza Tobacco Of Goldsboro",
+     "city": "Goldsboro",
+     "state": "NC",
+     "website": "zaza-tobacco-of-goldsboro.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18277,
+     "name": "Blueridge Tobacco & Candle",
+     "city": "South Boston",
+     "state": "VA",
+     "website": "blueridgetobaccoandcandle.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18280,
+     "name": "Tobacco and Vaper Station",
+     "city": "Goldsboro",
+     "state": "NC",
+     "website": "tobaccostation.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18289,
+     "name": "Nash Tobacco Shop Inc",
+     "city": "Nashville",
+     "state": "NC",
+     "website": "smoke-em-up-smoke-shop.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18293,
+     "name": "Carytown Tobacco",
+     "city": "Richmond",
+     "state": "VA",
+     "website": "carytowntobaccoeparham.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18314,
+     "name": "Rj Tobacco",
+     "city": "Raleigh",
+     "state": "NC",
+     "website": "rjtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18333,
+     "name": "Alex's Tobacco",
+     "city": "Fishersville",
+     "state": "VA",
+     "website": "alexstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18352,
+     "name": "Carytown Tobacco",
+     "city": "Richmond",
+     "state": "VA",
+     "website": "carytowntobaccowcary.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18364,
+     "name": "Carytown Tobacco",
+     "city": "Mechanicsville",
+     "state": "VA",
+     "website": "carytowntobaccomechanicsville.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18371,
+     "name": "Tobacco King",
+     "city": "Harrisonburg",
+     "state": "VA",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18400,
+     "name": "Tobacco Hut",
+     "city": "Fredericksburg",
+     "state": "VA",
+     "website": "thvdistro.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18421,
+     "name": "Arkan Tobacco",
+     "city": "Jacksonville",
+     "state": "NC",
+     "website": "arkan-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18427,
+     "name": "Northwood Tobacco Shop",
+     "city": "Jacksonville",
+     "state": "NC",
+     "website": "bellacasacigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18433,
+     "name": "Tobacco 4 Less",
+     "city": "Charlottesville",
+     "state": "VA",
+     "website": "tobacco4lesscville.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18435,
+     "name": "Tobacco Country Usa",
+     "city": "Jacksonville",
+     "state": "NC",
+     "website": "godfathercigars.net",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18448,
+     "name": "Prince .Hubert Tobacco",
+     "city": "Hubert",
+     "state": "NC",
+     "website": "hubert-tobacco.business.site/?utm_source=gmb&utm_medium=referral",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18454,
+     "name": "Good Times Tobacco",
+     "city": "Bristow",
+     "state": "VA",
+     "website": "goodtimestobacco.us",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18465,
+     "name": "Carytown Tobacco",
+     "city": "Charlottesville",
+     "state": "VA",
+     "website": "carytowntobaccolong.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18512,
+     "name": "Tobacco Hut Leesburg",
+     "city": "Leesburg",
+     "state": "VA",
+     "website": "tobaccohutvapeleesburg.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18522,
+     "name": "Tobacco Lux Chantilly",
+     "city": "Chantilly",
+     "state": "VA",
+     "website": "tobaccolux.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18531,
+     "name": "Tobacco King",
+     "city": "Dale City",
+     "state": "VA",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18533,
+     "name": "Stafford Tobacco LLC",
+     "city": "Stafford",
+     "state": "VA",
+     "website": "staffordtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18550,
+     "name": "Tobacco And More",
+     "city": "New Market",
+     "state": "VA",
+     "website": "tobaccoandmoreonline.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18561,
+     "name": "Tobacco Road",
+     "city": "Culpeper",
+     "state": "VA",
+     "website": "culpepercigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18589,
+     "name": "The Smoking Head Llc",
+     "city": "Charles Town",
+     "state": "WV",
+     "website": "thesmokinghead.net",
+     "store_type": "cigar_lounge",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18592,
+     "name": "Willie's Tobacco Accessories",
+     "city": "Frederick",
+     "state": "MD",
+     "website": "WilliesSmokeShop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18634,
+     "name": "Star Tobacco",
+     "city": "Fairfax",
+     "state": "VA",
+     "website": "startobaccova.com/home",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18670,
+     "name": "Tobacco Times 2",
+     "city": "Frederick",
+     "state": "MD",
+     "website": "tobaccotimes2.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18683,
+     "name": "Tobacco King",
+     "city": "Woodbridge",
+     "state": "VA",
+     "website": "ordertobaccokingva.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18696,
+     "name": "Tobacco Spot",
+     "city": "Woodbridge",
+     "state": "VA",
+     "website": "tobaccospotva.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18698,
+     "name": "Old Bridge Tobacco King",
+     "city": "Woodbridge",
+     "state": "VA",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18715,
+     "name": "Cigara Tobacco Store",
+     "city": "Fairfax",
+     "state": "VA",
+     "website": "Cigarainc.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18723,
+     "name": "Tobacco colony",
+     "city": "Alexandria",
+     "state": "VA",
+     "website": "tobaccocolony.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18728,
+     "name": "Tobacco Garden",
+     "city": "Woodbridge",
+     "state": "VA",
+     "website": "octopusgardengiftshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18730,
+     "name": "Wb Tobacco",
+     "city": "Woodbridge",
+     "state": "VA",
+     "website": "wb-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18731,
+     "name": "Cloudz Tobacco",
+     "city": "Bryans Road",
+     "state": "MD",
+     "website": "cloudz-tobacco.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18816,
+     "name": "Tobacco King",
+     "city": "Washington",
+     "state": "DC",
+     "website": "ordertobaccoking.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18821,
+     "name": "Tobacco Discounters",
+     "city": "Columbus",
+     "state": "OH",
+     "website": "wix.com/gracelandtd/tobacco-discounters-graceland",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18824,
+     "name": "Center For Tobacco Prod Fda",
+     "city": "Rockville",
+     "state": "MD",
+     "website": "fda.gov",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18853,
+     "name": "Arnold's Carry Out",
+     "city": "Willard",
+     "state": "OH",
+     "website": "Arnoldspremiumcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18921,
+     "name": "Cheap Tobacco",
+     "city": "Middleburg Heights",
+     "state": "OH",
+     "website": "cheaptobaccomiddleburgheights.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 18948,
+     "name": "Good Ole Tobacco Llc",
+     "city": "Canton",
+     "state": "OH",
+     "website": "good-ole-tobacco-llc.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19095,
+     "name": "Tightwad Tobacco",
+     "city": "New Brighton",
+     "state": "PA",
+     "website": "tightwadtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19144,
+     "name": "Wild Bill's Tobacco",
+     "city": "Salem",
+     "state": "OH",
+     "website": "cheaptobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19147,
+     "name": "Puff And Snuff",
+     "city": "New Castle",
+     "state": "PA",
+     "website": "puffandsnuff.business.site",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19265,
+     "name": "Huff N Puff Tobacco",
+     "city": "Austintown",
+     "state": "OH",
+     "website": "austintownvapeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19319,
+     "name": "Discount Tobacco",
+     "city": "Mentor",
+     "state": "OH",
+     "website": "fortsmithcigarettes.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19340,
+     "name": "Wild Bill's Tobacco",
+     "city": "Roseville",
+     "state": "MI",
+     "website": "wildbillstobacco.com/locations/wild-bills-of-roseville-2",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19371,
+     "name": "Tobacco King",
+     "city": "Erie",
+     "state": "PA",
+     "website": "tobaccokings.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    },
+    {
+     "id": 19381,
+     "name": "Wild Price Tobacco",
+     "city": "Kimball Twp",
+     "state": "MI",
+     "website": "wildpricetobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "its website was never read"
+    }
+   ]
+  },
+  "unreadable": {
+   "count": 84,
+   "needs": "a re-crawl with the browser-rendered pass; the first pass rescued 60 listings this way",
+   "rows": [
+    {
+     "id": 16,
+     "name": "Tobacco Shop",
+     "city": "Hilo",
+     "state": "HI",
+     "website": "fujipub.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 104,
+     "name": "Peace Pipe",
+     "city": "Mission",
+     "state": "TX",
+     "website": "mapquest.com/us/texas/business-mission/peace-pipe...",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 354,
+     "name": "Sabor A Cuba Inc",
+     "city": "Tarpon Springs",
+     "state": "FL",
+     "website": "saboracubainc.com",
+     "store_type": "cigar_lounge",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 1366,
+     "name": "The Drip Smoke Shop",
+     "city": "Davie",
+     "state": "FL",
+     "website": "bellagiocigars.com.com",
+     "store_type": "smoke_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 2010,
+     "name": "Cactus Spirits & Fine Tobacco",
+     "city": "Sierra Vista",
+     "state": "AZ",
+     "website": "cactusspiritsandfinetobacco.lbu.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 2381,
+     "name": "Lake Murray Tobacco Company",
+     "city": "La Mesa",
+     "state": "CA",
+     "website": "yelp.com/biz/lake-murray-tobacco-company-la-mesa",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3054,
+     "name": "Tobacco Junction",
+     "city": "Temple",
+     "state": "TX",
+     "website": "tjcigar.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3095,
+     "name": "CigarScore Lounge",
+     "city": "Midlothian",
+     "state": "TX",
+     "website": "CigarScoreLounge.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3386,
+     "name": "Tobacco Lane",
+     "city": "Arlington",
+     "state": "TX",
+     "website": "tobaccolanearlington.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3403,
+     "name": "Lime Star Tobacco",
+     "city": "Torrance",
+     "state": "CA",
+     "website": "limestartobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3698,
+     "name": "Tobacco post",
+     "city": "Hacienda Heights",
+     "state": "CA",
+     "website": "tobaccopost.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3732,
+     "name": "Tobacco hut",
+     "city": "Thousand Oaks",
+     "state": "CA",
+     "website": "tobaccohutonline.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 3942,
+     "name": "Noho Tobacco",
+     "city": "North Hollywood",
+     "state": "CA",
+     "website": "fastfixphonerepair.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 4194,
+     "name": "Vip Tobacco",
+     "city": "Pasadena",
+     "state": "CA",
+     "website": "vipappliancerepair.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 4507,
+     "name": "Cannibal's Pipes and More",
+     "city": "Mesa",
+     "state": "AZ",
+     "website": "cannibalssmokeshop.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 4543,
+     "name": "Off Tha Wall Tobacco Pipes and Accessories",
+     "city": "Roswell",
+     "state": "NM",
+     "website": "offthawall.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 5777,
+     "name": "Tobacco Barn",
+     "city": "Lufkin",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-5",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 5785,
+     "name": "Tobacco Barn",
+     "city": "Sulphur",
+     "state": "LA",
+     "website": "brookshirebrothers.com/store-location/store-47",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 6167,
+     "name": "Puff's Tobacco Llc",
+     "city": "Mount Dora",
+     "state": "FL",
+     "website": "puffstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 6995,
+     "name": "Tobacco Palace of Savannah",
+     "city": "Savannah",
+     "state": "GA",
+     "website": "yelp.com/biz/tobacco-palace-of-savannah-savannah",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 7098,
+     "name": "Tobacco Hut",
+     "city": "Ennis",
+     "state": "TX",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 7120,
+     "name": "Tobacco Box",
+     "city": "Rockwall",
+     "state": "TX",
+     "website": "Tobaccoboxcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 7138,
+     "name": "Tobacco Box",
+     "city": "Rowlett",
+     "state": "TX",
+     "website": "Tobaccoboxcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 8566,
+     "name": "Tobacco Barn",
+     "city": "San Francisco",
+     "state": "CA",
+     "website": "tobacco-barn.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 8895,
+     "name": "Tobacco Shop",
+     "city": "Wheatland",
+     "state": "CA",
+     "website": "fujipub.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 9049,
+     "name": "Tobacco Shop",
+     "city": "Lincoln",
+     "state": "CA",
+     "website": "fujipub.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 10156,
+     "name": "Choice Tobacco",
+     "city": "Seattle",
+     "state": "WA",
+     "website": "yelp.com/biz/choice-tobacco-seattle",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 10196,
+     "name": "Pipe Palace",
+     "city": "Seattle",
+     "state": "WA",
+     "website": "yelp.com/biz/pipe-palace-seattle-2",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 10202,
+     "name": "BJ's II Tobacco Co",
+     "city": "Fife",
+     "state": "WA",
+     "website": "bjstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 11179,
+     "name": "Tobacco Hut",
+     "city": "Mcalester",
+     "state": "OK",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 11642,
+     "name": "Wichita Tobacco & Candy Company",
+     "city": "Wichita",
+     "state": "KS",
+     "website": "wichitadelano.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 11935,
+     "name": "American Snuff Co.",
+     "city": "Memphis",
+     "state": "TN",
+     "website": "americansnuff.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12076,
+     "name": "Tobacco Lane",
+     "city": "Cape Girardeau",
+     "state": "MO",
+     "website": "tobaccolanecape.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12174,
+     "name": "Puff N Snuff",
+     "city": "Eldon",
+     "state": "MO",
+     "website": "puffnsnuff.lbu.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12277,
+     "name": "NIGHT OWL TOBACCO",
+     "city": "St. Louis",
+     "state": "MO",
+     "website": "nightowlstl.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12281,
+     "name": "Night Owl Tobacco",
+     "city": "Fenton",
+     "state": "MO",
+     "website": "nightowlstl.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12797,
+     "name": "Tobacco Hut",
+     "city": "Omaha",
+     "state": "NE",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 12850,
+     "name": "Tobacco Hut",
+     "city": "Sioux City",
+     "state": "IA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 13108,
+     "name": "Tobacco Hut",
+     "city": "Des Moines",
+     "state": "IA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 13257,
+     "name": "Sterling Tobacco",
+     "city": "Sterling",
+     "state": "IL",
+     "website": "stores.ebay.com/bargainsjustahead",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 13508,
+     "name": "Go Get It Tobacco",
+     "city": "St Paul",
+     "state": "MN",
+     "website": "gogetittobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 13687,
+     "name": "Tobacco Post",
+     "city": "Newbern",
+     "state": "TN",
+     "website": "tobaccopost.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 13884,
+     "name": "Tobacco Patch",
+     "city": "Hopkinsville",
+     "state": "KY",
+     "website": "ww1.tobaccopatch.com/?subid1=0578cbc4-deeb-11e9-bb87-6aba3f785e5c",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 14617,
+     "name": "Low Bob's Tobacco",
+     "city": "Kokomo",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 14618,
+     "name": "Pipe One",
+     "city": "Chattanooga",
+     "state": "TN",
+     "website": "pipeone.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 14691,
+     "name": "Low Bobs Tobacco",
+     "city": "Warsaw",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 14837,
+     "name": "J Shepherd",
+     "city": "Louisville",
+     "state": "KY",
+     "website": "wwwfacebook.com/jshepherdcigars",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 15029,
+     "name": "Tobacco Barn Desert Sun",
+     "city": "Mt Vernon",
+     "state": "KY",
+     "website": "mapquest.com/.../tobacco-barn-desert-sun-356794527",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 15034,
+     "name": "G & B Tobacco",
+     "city": "Gatlinburg",
+     "state": "TN",
+     "website": "gatlinburlier.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 15112,
+     "name": "Low Bob's Tobacco",
+     "city": "Anderson",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 15223,
+     "name": "Low Bob's Tobacco Town",
+     "city": "Muncie",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 15836,
+     "name": "Smokers Expo",
+     "city": "Homer Glen",
+     "state": "IL",
+     "website": "expowholesale.net",
+     "store_type": "cigar_lounge",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 16025,
+     "name": "Tobacco Hut",
+     "city": "Huntley",
+     "state": "IL",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 16428,
+     "name": "Low Bob's Tobacco",
+     "city": "Goshen",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 16465,
+     "name": "Low Bobs Tobacco",
+     "city": "Granger",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 16532,
+     "name": "Low Bob's Tobacco",
+     "city": "Elkhart",
+     "state": "IN",
+     "website": "lowbob.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 17079,
+     "name": "Sweet Fire Tobacco",
+     "city": "Houghton Lake",
+     "state": "MI",
+     "website": "wildwildwesttobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 17209,
+     "name": "The Pipe Depot",
+     "city": "Lapeer",
+     "state": "MI",
+     "website": "thepipedepot.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 17646,
+     "name": "D & J Tobacco",
+     "city": "Louisa",
+     "state": "KY",
+     "website": "djtobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18224,
+     "name": "Tobacco Hut",
+     "city": "Chester",
+     "state": "VA",
+     "website": "tobaccohut.biz/contactus.html",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18228,
+     "name": "American Tobacco Exchange",
+     "city": "Wilson",
+     "state": "NC",
+     "website": "tobaccograding.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18304,
+     "name": "Tobacco Shop",
+     "city": "Kinston",
+     "state": "NC",
+     "website": "fujipub.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18376,
+     "name": "Tobacco Hut",
+     "city": "Fredericksburg",
+     "state": "VA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18409,
+     "name": "Tobacco Hut",
+     "city": "Chester",
+     "state": "VA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18505,
+     "name": "Puff N Snuff",
+     "city": "Chambersburg",
+     "state": "PA",
+     "website": "puffnsnuff.lbu.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18510,
+     "name": "Tobacco Hut",
+     "city": "Colonial Heights",
+     "state": "VA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18568,
+     "name": "Tobacco Hut",
+     "city": "Ashburn",
+     "state": "VA",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18590,
+     "name": "Tobacco Hut Purceville",
+     "city": "Purcellville",
+     "state": "VA",
+     "website": "tobaccohut.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18646,
+     "name": "Star Tobacco",
+     "city": "Fairfax",
+     "state": "VA",
+     "website": "startobaccova.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 18666,
+     "name": "Tobacco Hut Gettysburg",
+     "city": "Gettysburg",
+     "state": "PA",
+     "website": "tobaccohut.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 19202,
+     "name": "Gramm Works",
+     "city": "Bethel Park",
+     "state": "PA",
+     "website": "grammworks.com/about-us.aspx",
+     "store_type": "cigar_lounge",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 20244,
+     "name": "Tobacco Barrel #305",
+     "city": "Dundalk",
+     "state": "MD",
+     "website": "vendlease.net",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 20246,
+     "name": "Oakleigh Beach Tobacco",
+     "city": "Dundalk",
+     "state": "MD",
+     "website": "oakleighbeachcigar.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 20524,
+     "name": "Wooden Indian Tobacco Shop",
+     "city": "Havertown",
+     "state": "PA",
+     "website": "woodenindiantobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 20549,
+     "name": "Total Tobacco",
+     "city": "Newtown Square",
+     "state": "PA",
+     "website": "delawarecigars.net",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 20934,
+     "name": "Tobacco Junction and Variety",
+     "city": "Atlantic City",
+     "state": "NJ",
+     "website": "tjvac.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 21360,
+     "name": "Puff Tobacco Products",
+     "city": "Shenandoah",
+     "state": "PA",
+     "website": "puff.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 22031,
+     "name": "Jacobs Tobacco Company",
+     "city": "Akwesasne",
+     "state": "NY",
+     "website": "jacobstobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 22113,
+     "name": "Mr Tobacco 2",
+     "city": "East Northport",
+     "state": "NY",
+     "website": "yelp.com/biz/mr-tobacco-shop-ii-east-northport",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 22610,
+     "name": "Smoke & Ashes Tobacco Company",
+     "city": "Hanson",
+     "state": "MA",
+     "website": "smokeandashestobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 34228,
+     "name": "Wild Wild West Tobacco",
+     "city": "Newaygo",
+     "state": "MI",
+     "website": "wildwildwesttobacco.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 34385,
+     "name": "Tobacco Hut",
+     "city": "Simpsonville",
+     "state": "SC",
+     "website": "tobaccohut.biz",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 37566,
+     "name": "TexCigars",
+     "city": "Drums",
+     "state": "PA",
+     "website": "texcigars.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    },
+    {
+     "id": 42425,
+     "name": "Tobacco Junction",
+     "city": "Gilmer",
+     "state": "TX",
+     "website": "tobaccojunction.com",
+     "store_type": "tobacco_shop",
+     "next": "re-crawl, including the browser-rendered pass"
+    }
+   ]
+  },
+  "read_and_refused": {
+   "count": 463,
+   "needs": "nothing. Their own sites were read and do not say cigars. These stay hidden, correctly.",
+   "rows": [
+    {
+     "id": 138,
+     "name": "Pow Wow Tobacco Accessories and Novelties",
+     "city": "Mcallen",
+     "state": "TX",
+     "website": "powwowsmokeshop.com/web/Home.html",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 143,
+     "name": "Good Times Tobacco",
+     "city": "Edinburg",
+     "state": "TX",
+     "website": "growingoldgettingstrong.blogspot.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 158,
+     "name": "The Peace PIPE",
+     "city": "Weslaco",
+     "state": "TX",
+     "website": "findsmokeshop.com/texas/weslaco/the-peace-pipe",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 17,
+     "verdict": "its site is mostly another trade (17 such words against 0 cigar words)"
+    },
+    {
+     "id": 277,
+     "name": "One Love Tobacco and Gifts",
+     "city": "St Pete Beach",
+     "state": "FL",
+     "website": "1lovesmoke.shop",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 26,
+     "verdict": "its site is mostly another trade (26 such words against 0 cigar words)"
+    },
+    {
+     "id": 866,
+     "name": "High Tide Tobacco & Gifts",
+     "city": "Miami",
+     "state": "FL",
+     "website": "hightide420.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 872,
+     "name": "Tobacco Breeze",
+     "city": "Miami",
+     "state": "FL",
+     "website": "tobaccobreeze.wordpress.com",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 6,
+     "verdict": "its site is mostly another trade (6 such words against 5 cigar words)"
+    },
+    {
+     "id": 921,
+     "name": "CheapCigars4me",
+     "city": "Miami",
+     "state": "FL",
+     "website": "cheapcigars4me.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 1225,
+     "name": "Major Leaf Products",
+     "city": "Miami",
+     "state": "FL",
+     "website": "majorleafproducts.com/pages/contact-us",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 1372,
+     "name": "Payless Tobacco Source",
+     "city": "Davie",
+     "state": "FL",
+     "website": "paylesstobaccosource.com",
+     "store_type": "tobacco_shop",
+     "cigar": 7,
+     "other": 9,
+     "verdict": "its site is mostly another trade (9 such words against 7 cigar words)"
+    },
+    {
+     "id": 1413,
+     "name": "The Treasure Chest Tobacco Shop",
+     "city": "Fort Myers",
+     "state": "FL",
+     "website": "thetreasurechestfl.com",
+     "store_type": "tobacco_shop",
+     "cigar": 4,
+     "other": 25,
+     "verdict": "its site is mostly another trade (25 such words against 4 cigar words)"
+    },
+    {
+     "id": 1417,
+     "name": "Tobacco Town",
+     "city": "Hallandale Beach",
+     "state": "FL",
+     "website": "tobaccotown2500.homestead.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 1461,
+     "name": "Zaleaf",
+     "city": "Hollywood",
+     "state": "FL",
+     "website": "zaleaf.com",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 66,
+     "verdict": "its site is mostly another trade (66 such words against 0 cigar words)"
+    },
+    {
+     "id": 1716,
+     "name": "State of Florida Alcoholic Beverages & Tobacco Division",
+     "city": "Margate",
+     "state": "FL",
+     "website": "myfloridalicense.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 1853,
+     "name": "Marley's Tobacco Too",
+     "city": "Boca Raton",
+     "state": "FL",
+     "website": "marleystobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 1914,
+     "name": "Marley's Tobacco & More",
+     "city": "West Palm Beach",
+     "state": "FL",
+     "website": "marleystobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2194,
+     "name": "Basin Candy & Tobacco Co",
+     "city": "Midland",
+     "state": "TX",
+     "website": "basincandy.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2279,
+     "name": "Cig's & Gar's",
+     "city": "San Diego",
+     "state": "CA",
+     "website": "cigsandgarslounge.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2458,
+     "name": "Alpine Tobacco Company",
+     "city": "Alpine",
+     "state": "CA",
+     "website": "yelp.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2780,
+     "name": "Tobacco Island",
+     "city": "Gatesville",
+     "state": "TX",
+     "website": "azlyrics.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2864,
+     "name": "Star Tobacco Shop",
+     "city": "Springtown",
+     "state": "TX",
+     "website": "startobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 2997,
+     "name": "Tobacco Barn",
+     "city": "Lorena",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-63",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 3006,
+     "name": "Easys Tobacco",
+     "city": "Fort Worth",
+     "state": "TX",
+     "website": "easysmokeshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3015,
+     "name": "Lee's Candy & Tobacco company",
+     "city": "Haltom City",
+     "state": "TX",
+     "website": "leeswholesale.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 7,
+     "verdict": "its site is mostly another trade (7 such words against 2 cigar words)"
+    },
+    {
+     "id": 3042,
+     "name": "Tobacco Barn",
+     "city": "Cameron",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-46",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 3150,
+     "name": "LoneStar Smoke&Tobacco",
+     "city": "Duncanville",
+     "state": "TX",
+     "website": "instagram.com/lonestarsmoketobacco?utm_source=qr",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3256,
+     "name": "Tobacco N Beyond",
+     "city": "Duncanville",
+     "state": "TX",
+     "website": "tobacco-n-beyond-tx.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 0,
+     "verdict": "its site says too little about cigars (2 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3377,
+     "name": "Smokin Harbor Tobacco",
+     "city": "San Pedro",
+     "state": "CA",
+     "website": "smokinharbortobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3415,
+     "name": "Tobacco Heights",
+     "city": "Glenn Heights",
+     "state": "TX",
+     "website": "tobaccoheights.wixsite.com/tobaccoheights",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 1,
+     "verdict": "its site is mostly another trade (1 such words against 0 cigar words)"
+    },
+    {
+     "id": 3429,
+     "name": "Stackhouse Tobacco",
+     "city": "Lancaster",
+     "state": "TX",
+     "website": "nrsgo.com/stackhouse_tobacco",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 3,
+     "verdict": "its site is mostly another trade (3 such words against 0 cigar words)"
+    },
+    {
+     "id": 3449,
+     "name": "Lincoln Tobacco Shop",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "4-frames.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3483,
+     "name": "Tobacco Outpost",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "yelp.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3498,
+     "name": "Cubano Room",
+     "city": "Newport Beach",
+     "state": "CA",
+     "website": "cubanoroom.com",
+     "store_type": "cigar_lounge",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3591,
+     "name": "L A Tobacco",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "lataco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3623,
+     "name": "Empire Tobacco",
+     "city": "Huntington Beach",
+     "state": "CA",
+     "website": "empiretobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 4,
+     "other": 0,
+     "verdict": "its site says too little about cigars (4 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3624,
+     "name": "The Pipe King",
+     "city": "Orange",
+     "state": "CA",
+     "website": "pipeking.com.au",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3653,
+     "name": "Dream Tobacco",
+     "city": "Anaheim",
+     "state": "CA",
+     "website": "dreamforth.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3656,
+     "name": "Starbuzz Tobacco",
+     "city": "Anaheim",
+     "state": "CA",
+     "website": "starbuzztobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 1 cigar words)"
+    },
+    {
+     "id": 3660,
+     "name": "M&M Tobacco",
+     "city": "La Habra",
+     "state": "CA",
+     "website": "bobcat-synthesizer-w8wt.squarespace.com/config",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3674,
+     "name": "Tobacco Revolution",
+     "city": "Whittier",
+     "state": "CA",
+     "website": "TOBACCOREVOLUTION.COM",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 11,
+     "verdict": "its site is mostly another trade (11 such words against 0 cigar words)"
+    },
+    {
+     "id": 3680,
+     "name": "Aagera Tobacco",
+     "city": "Anaheim",
+     "state": "CA",
+     "website": "ageratobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 10,
+     "verdict": "its site is mostly another trade (10 such words against 0 cigar words)"
+    },
+    {
+     "id": 3707,
+     "name": "Starbuzz Tobacco",
+     "city": "Stanton",
+     "state": "CA",
+     "website": "starbuzztobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 1 cigar words)"
+    },
+    {
+     "id": 3720,
+     "name": "Spikes Lounge",
+     "city": "Commerce",
+     "state": "CA",
+     "website": "spikes-hobby-lounge.square.site",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3747,
+     "name": "B&M Tobacco",
+     "city": "Bellflower",
+     "state": "CA",
+     "website": "bmtobacco.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3756,
+     "name": "Kaboom Smoke Shop",
+     "city": "Montebello",
+     "state": "CA",
+     "website": "cigarettesforless.com",
+     "store_type": "smoke_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3768,
+     "name": "B & M Tobacco",
+     "city": "Long Beach",
+     "state": "CA",
+     "website": "bmtobacco.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 3808,
+     "name": "Starbuzz Tobacco, Inc.",
+     "city": "Brea",
+     "state": "CA",
+     "website": "starbuzztobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 1 cigar words)"
+    },
+    {
+     "id": 3909,
+     "name": "Tobacco Motowear",
+     "city": "Valley Village",
+     "state": "CA",
+     "website": "tobaccomotorwear.com/shop",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4025,
+     "name": "Amg Tobacco",
+     "city": "North Hollywood",
+     "state": "CA",
+     "website": "amgtobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4089,
+     "name": "Los Feliz Smoke Shop",
+     "city": "Los Angeles",
+     "state": "CA",
+     "website": "hillhurstcigarslosfeliz.com",
+     "store_type": "smoke_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4155,
+     "name": "House Of Tobacco",
+     "city": "Glendale",
+     "state": "CA",
+     "website": "glendaletobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 0,
+     "verdict": "its site says too little about cigars (2 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4213,
+     "name": "Glenvape & Tobacco",
+     "city": "Burbank",
+     "state": "CA",
+     "website": "glenvape.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 51,
+     "verdict": "its site is mostly another trade (51 such words against 0 cigar words)"
+    },
+    {
+     "id": 4305,
+     "name": "Arizona Complete Candy & Tobacco",
+     "city": "Glendale",
+     "state": "AZ",
+     "website": "arizonacomplete.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4326,
+     "name": "Arizona Tobacco",
+     "city": "Phoenix",
+     "state": "AZ",
+     "website": "arizonatrellis.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4351,
+     "name": "Tobacco House",
+     "city": "Lake Dallas",
+     "state": "TX",
+     "website": "tobaccohousecigars.com",
+     "store_type": "tobacco_shop",
+     "cigar": 13,
+     "other": 25,
+     "verdict": "its site is mostly another trade (25 such words against 13 cigar words)"
+    },
+    {
+     "id": 4423,
+     "name": "Tangiers Tobacco",
+     "city": "Phoenix",
+     "state": "AZ",
+     "website": "tangierstobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4752,
+     "name": "Pipes N Knives",
+     "city": "Lake Elsinore",
+     "state": "CA",
+     "website": "pipesnknives.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4824,
+     "name": "Smokey Phelan Smoke Shop",
+     "city": "Phelan",
+     "state": "CA",
+     "website": "facebook.com/SMOKEYPHELAN",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 1,
+     "verdict": "its site is mostly another trade (1 such words against 0 cigar words)"
+    },
+    {
+     "id": 4842,
+     "name": "Tobacco Expo",
+     "city": "Corona",
+     "state": "CA",
+     "website": "tobacco-expo.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4876,
+     "name": "The Pipe King",
+     "city": "Chino",
+     "state": "CA",
+     "website": "instagram.com/thepipeking.chino",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4898,
+     "name": "Mission Tobacco Lounge",
+     "city": "Riverside",
+     "state": "CA",
+     "website": "go2mtl.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 4914,
+     "name": "Rodeo Tobacco",
+     "city": "Riverside",
+     "state": "CA",
+     "website": "royaltobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 59,
+     "other": 92,
+     "verdict": "its site is mostly another trade (92 such words against 59 cigar words)"
+    },
+    {
+     "id": 4929,
+     "name": "ABC Tobacco",
+     "city": "Ontario",
+     "state": "CA",
+     "website": "findsmokeshop.com/california/ontario/abc-tobacco",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 19,
+     "verdict": "its site is mostly another trade (19 such words against 0 cigar words)"
+    },
+    {
+     "id": 5089,
+     "name": "Tobacco And Gifts",
+     "city": "Moreno Valley",
+     "state": "CA",
+     "website": "morenovalleymall.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5196,
+     "name": "Ardmore Tobacco Shop",
+     "city": "Ardmore",
+     "state": "OK",
+     "website": "chickasaw.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5249,
+     "name": "North America Innovation Tobacco Group",
+     "city": "Houston",
+     "state": "TX",
+     "website": "northamericatobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5284,
+     "name": "Sweet lips",
+     "city": "Houston",
+     "state": "TX",
+     "website": "sweetlipscigars.com",
+     "store_type": "tobacco_shop",
+     "cigar": 3,
+     "other": 0,
+     "verdict": "its site says too little about cigars (3 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5339,
+     "name": "Cigs For Less",
+     "city": "Pasadena",
+     "state": "TX",
+     "website": "cigarettesforless.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5398,
+     "name": "Tobacco Spot",
+     "city": "Pasadena",
+     "state": "TX",
+     "website": "texastobaccoshops.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 0,
+     "verdict": "its site says too little about cigars (2 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5536,
+     "name": "Tobacco Barn",
+     "city": "Hempstead",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-61",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5563,
+     "name": "Tobacco Barn",
+     "city": "Dayton",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-43",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5673,
+     "name": "Tobacco Barn",
+     "city": "Coldspring",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-72",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5675,
+     "name": "Tobacco Barn",
+     "city": "Livingston",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-21",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5683,
+     "name": "Tobacco Barn",
+     "city": "Brenham",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-11",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5714,
+     "name": "Tobacco Barn",
+     "city": "Onalaska",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-71",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5716,
+     "name": "Tobacco Barn",
+     "city": "Trinity",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-23",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5737,
+     "name": "Young's Tobacco & Propane",
+     "city": "Port Neches",
+     "state": "TX",
+     "website": "youngstx.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 5743,
+     "name": "Tobacco Barn",
+     "city": "Jacksonville",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-17",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5775,
+     "name": "Tobacco Barn",
+     "city": "Rusk",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-22",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5778,
+     "name": "Tobacco Barn",
+     "city": "Lufkin",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-25",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5851,
+     "name": "Tobacco Barn",
+     "city": "Fairfield",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-10",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5871,
+     "name": "Tobacco Barn",
+     "city": "Montgomery",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-73",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5874,
+     "name": "Tobacco Barn",
+     "city": "Magnolia",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-48",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5878,
+     "name": "Tobacco Barn",
+     "city": "Center",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-32",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 5879,
+     "name": "Tobacco Barn",
+     "city": "Kountze",
+     "state": "TX",
+     "website": "brookshirebrothers.com/store-location/store-36",
+     "store_type": "tobacco_shop",
+     "cigar": 5,
+     "other": 4,
+     "verdict": "its site says too little about cigars (5 cigar words, 4 from other trades)"
+    },
+    {
+     "id": 6011,
+     "name": "Tobacco Tavern",
+     "city": "Ville Platte",
+     "state": "LA",
+     "website": "tobaccotavern.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6048,
+     "name": "Mo For Less Tobacco",
+     "city": "Harahan",
+     "state": "LA",
+     "website": "plus.google.com/111103550109033234810/about?gl=us&hl=en",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6089,
+     "name": "Pandora's Box Tobacco Shop",
+     "city": "Beverly Hills",
+     "state": "FL",
+     "website": "facebook.com/pandorasboxfl",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 8,
+     "verdict": "its site is mostly another trade (8 such words against 0 cigar words)"
+    },
+    {
+     "id": 6099,
+     "name": "Pandora's Box Tobacco Shop",
+     "city": "Inverness",
+     "state": "FL",
+     "website": "instagram.com/pandorasboxFL",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6243,
+     "name": "Mr. Tobacco Drive Thru",
+     "city": "Lake City",
+     "state": "FL",
+     "website": "smokeshoplakecity.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6256,
+     "name": "Johnny Rotten's Tobacco & Smoking Accessories",
+     "city": "Orange City",
+     "state": "FL",
+     "website": "johnnyrottensmokeshop.start.page",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 10,
+     "verdict": "its site is mostly another trade (10 such words against 0 cigar words)"
+    },
+    {
+     "id": 6310,
+     "name": "Pipe Dreams",
+     "city": "Casselberry",
+     "state": "FL",
+     "website": "pipe-dreams-fl-4.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 3,
+     "other": 0,
+     "verdict": "its site says too little about cigars (3 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6333,
+     "name": "Louisiana Tobacco Control Initiative",
+     "city": "New Orleans",
+     "state": "LA",
+     "website": "latci.org",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6395,
+     "name": "Smoking Pirates Llc",
+     "city": "Lake Mary",
+     "state": "FL",
+     "website": "smokingpirate.org",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6458,
+     "name": "Simply Tobacco Club",
+     "city": "Gulfport",
+     "state": "MS",
+     "website": "simplytobaccoclub.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6466,
+     "name": "Pipe Dreams",
+     "city": "Sanford",
+     "state": "FL",
+     "website": "pipedreams.shop",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 7,
+     "verdict": "its site is mostly another trade (7 such words against 0 cigar words)"
+    },
+    {
+     "id": 6534,
+     "name": "Blunt Wrap Usa, Inc.",
+     "city": "Mandeville",
+     "state": "LA",
+     "website": "phatmouthcigars.com",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6656,
+     "name": "Smokers Depot",
+     "city": "St Augustine",
+     "state": "FL",
+     "website": "smokersdepotonline.com",
+     "store_type": "cigar_lounge",
+     "cigar": 1,
+     "other": 11,
+     "verdict": "its site is mostly another trade (11 such words against 1 cigar words)"
+    },
+    {
+     "id": 6777,
+     "name": "Mini T's Tobacco",
+     "city": "Abbeville",
+     "state": "AL",
+     "website": "wiregrasstobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6781,
+     "name": "Tobacco Shop",
+     "city": "Dothan",
+     "state": "AL",
+     "website": "wiregrasstobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6795,
+     "name": "Rollin EZ Tobacco",
+     "city": "Fort Walton Beach",
+     "state": "FL",
+     "website": "rollinez.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 8,
+     "verdict": "its site is mostly another trade (8 such words against 0 cigar words)"
+    },
+    {
+     "id": 6800,
+     "name": "Tobacco Shop",
+     "city": "Dothan",
+     "state": "AL",
+     "website": "WiregrassTobaccoShop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6906,
+     "name": "Tobacco N Beyond Greenville",
+     "city": "Dallas",
+     "state": "TX",
+     "website": "tnbdallas.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6931,
+     "name": "Chaney's Tobacco Station",
+     "city": "Terrell",
+     "state": "TX",
+     "website": "chaneystores.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6948,
+     "name": "Chaney's Tobacco Station",
+     "city": "Athens",
+     "state": "TX",
+     "website": "chaneystores.com/vape-station.html",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6956,
+     "name": "Ye Ole Tobacco Shop",
+     "city": "Savannah",
+     "state": "GA",
+     "website": "yeoletobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 6977,
+     "name": "Chaney's Tobacco Station",
+     "city": "Gun Barrel City",
+     "state": "TX",
+     "website": "chaneystores.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7053,
+     "name": "Tobacco Row",
+     "city": "Plano",
+     "state": "TX",
+     "website": "thetobaccorow.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7061,
+     "name": "Groveside Tobacco Gallery",
+     "city": "Dallas",
+     "state": "TX",
+     "website": "rubessteaks.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7167,
+     "name": "TOBACCO HUT ALLEN",
+     "city": "Allen",
+     "state": "TX",
+     "website": "tobaccohutallen.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7248,
+     "name": "Prime Xo",
+     "city": "Shreveport",
+     "state": "LA",
+     "website": "primexollc.com",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7358,
+     "name": "ErasCigar",
+     "city": "Prosper",
+     "state": "TX",
+     "website": "erascigar.com",
+     "store_type": "tobacco_shop",
+     "cigar": 3,
+     "other": 0,
+     "verdict": "its site says too little about cigars (3 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7389,
+     "name": "Chickasaw Tobacco Shop",
+     "city": "Madill",
+     "state": "OK",
+     "website": "chickasaw.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7409,
+     "name": "Tobacco Shop",
+     "city": "Denison",
+     "state": "TX",
+     "website": "instagram.com/tobacco.shop.denison",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 1,
+     "verdict": "its site is mostly another trade (1 such words against 0 cigar words)"
+    },
+    {
+     "id": 7430,
+     "name": "Cloud9 & Red River Tobacco",
+     "city": "Durant",
+     "state": "OK",
+     "website": "cLouD9Durant.com",
+     "store_type": "tobacco_shop",
+     "cigar": 9,
+     "other": 17,
+     "verdict": "its site is mostly another trade (17 such words against 9 cigar words)"
+    },
+    {
+     "id": 7452,
+     "name": "Chickasaw Tobacco Shop",
+     "city": "Tishomingo",
+     "state": "OK",
+     "website": "chickasaw.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7454,
+     "name": "Z and Z Tobacco and Spirits",
+     "city": "Auburn",
+     "state": "AL",
+     "website": "zztobaccospirits.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7468,
+     "name": "Woodbury Tobacco and Beverage",
+     "city": "Woodbury",
+     "state": "GA",
+     "website": "woodbury-package-store.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 1,
+     "verdict": "its site says too little about cigars (1 cigar words, 1 from other trades)"
+    },
+    {
+     "id": 7609,
+     "name": "Mutiny Tobacco",
+     "city": "Birmingham",
+     "state": "AL",
+     "website": "classic13tattoo.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7634,
+     "name": "Tobacco kingdom",
+     "city": "Gardendale",
+     "state": "AL",
+     "website": "instagram.com/tobacco.kingdom",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 7920,
+     "name": "Michael's Coffee & Tobacco",
+     "city": "Vidalia",
+     "state": "GA",
+     "website": "michael-s-coffee-tobacco.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 1,
+     "verdict": "its site says too little about cigars (1 cigar words, 1 from other trades)"
+    },
+    {
+     "id": 7937,
+     "name": "Tobacco Shop",
+     "city": "Walterboro",
+     "state": "SC",
+     "website": "cigarleaf.com",
+     "store_type": "tobacco_shop",
+     "cigar": 4,
+     "other": 0,
+     "verdict": "its site says too little about cigars (4 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8025,
+     "name": "Modern Age Tobacco Shop",
+     "city": "Hephzibah",
+     "state": "GA",
+     "website": "modern-age-tobacco-shop.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 1,
+     "verdict": "its site says too little about cigars (1 cigar words, 1 from other trades)"
+    },
+    {
+     "id": 8080,
+     "name": "Ye Ole Tobacco Shop",
+     "city": "Savannah",
+     "state": "GA",
+     "website": "yeoletobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8233,
+     "name": "Royal Tobacco",
+     "city": "Chamblee",
+     "state": "GA",
+     "website": "royaltobaccollc.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 12,
+     "verdict": "its site is mostly another trade (12 such words against 0 cigar words)"
+    },
+    {
+     "id": 8282,
+     "name": "Five Points Tobacco",
+     "city": "Columbia",
+     "state": "SC",
+     "website": "fivepointscolumbia.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8319,
+     "name": "Tobacco Shack",
+     "city": "Sugar Hill",
+     "state": "GA",
+     "website": "tinyurl.com/tobaccoshack",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8432,
+     "name": "Taylors Tobacco",
+     "city": "Bishopville",
+     "state": "SC",
+     "website": "taylorsmarket.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8616,
+     "name": "Pipe Dreams",
+     "city": "San Francisco",
+     "state": "CA",
+     "website": "pipesinthecity.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8671,
+     "name": "Tobacco On Sale",
+     "city": "Newark",
+     "state": "CA",
+     "website": "tobaccoonsale.company.site",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8747,
+     "name": "Bear River Tobacco Traders",
+     "city": "Loleta",
+     "state": "CA",
+     "website": "bearriverrancheria.org",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8766,
+     "name": "Harbor Tobacco",
+     "city": "Brookings",
+     "state": "OR",
+     "website": "harborinnmotel.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8874,
+     "name": "CLEAR CREEK Tobacco Company",
+     "city": "Chico",
+     "state": "CA",
+     "website": "mechoopdaenterprises.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8884,
+     "name": "Tobacco Cartel Inc",
+     "city": "West Sacramento",
+     "state": "CA",
+     "website": "tobaccocartel.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8885,
+     "name": "Dragon Tobacco",
+     "city": "Chico",
+     "state": "CA",
+     "website": "dragontobaccoca.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 7,
+     "verdict": "its site is mostly another trade (7 such words against 0 cigar words)"
+    },
+    {
+     "id": 8905,
+     "name": "Hi Five Tobacco",
+     "city": "Chico",
+     "state": "CA",
+     "website": "hi-five-tobacco.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 0,
+     "verdict": "its site says too little about cigars (2 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8912,
+     "name": "Just Good Tobacco",
+     "city": "Fairfield",
+     "state": "CA",
+     "website": "justgoodtobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8955,
+     "name": "Tobacco Man",
+     "city": "Elk Grove",
+     "state": "CA",
+     "website": "fanaticgolf.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 8994,
+     "name": "Discount Tobacco Store",
+     "city": "Redding",
+     "state": "CA",
+     "website": "discount-cigarettes.org",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9116,
+     "name": "MC Tobacco",
+     "city": "Bakersfield",
+     "state": "CA",
+     "website": "bankofoklahoma.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9209,
+     "name": "RJ Smoke Shop",
+     "city": "Las Vegas",
+     "state": "NV",
+     "website": "discountcigarettesbox.com",
+     "store_type": "smoke_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9619,
+     "name": "The Palm Smoke Shop",
+     "city": "Auburn",
+     "state": "CA",
+     "website": "cigarettesforless.com",
+     "store_type": "smoke_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9654,
+     "name": "Main Street Tobacco and Gift",
+     "city": "Colfax",
+     "state": "CA",
+     "website": "mainstreetpizza.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9784,
+     "name": "Tobacco Joes.",
+     "city": "Ogden",
+     "state": "UT",
+     "website": "tobacco-joes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9835,
+     "name": "Tobacco Barn",
+     "city": "Ogden",
+     "state": "UT",
+     "website": "instagram.com/tobaccobarn",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 9860,
+     "name": "House of Pipes",
+     "city": "Woodburn",
+     "state": "OR",
+     "website": "houseofpipes.com/locations/woodburn-mt-hood-avenue",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 2 cigar words)"
+    },
+    {
+     "id": 9872,
+     "name": "House of Pipes",
+     "city": "Portland",
+     "state": "OR",
+     "website": "houseofpipes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 2 cigar words)"
+    },
+    {
+     "id": 10044,
+     "name": "House of Pipes",
+     "city": "Portland",
+     "state": "OR",
+     "website": "houseofpipes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 2 cigar words)"
+    },
+    {
+     "id": 10113,
+     "name": "House of Pipes",
+     "city": "Portland",
+     "state": "OR",
+     "website": "houseofpipes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 2 cigar words)"
+    },
+    {
+     "id": 10185,
+     "name": "House Of Pipes",
+     "city": "Portland",
+     "state": "OR",
+     "website": "houseofpipes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 2,
+     "other": 24,
+     "verdict": "its site is mostly another trade (24 such words against 2 cigar words)"
+    },
+    {
+     "id": 10338,
+     "name": "260 Tobacco & Fine Spirits",
+     "city": "Ferndale",
+     "state": "WA",
+     "website": "260-tobacco-and-fine-spirits.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10355,
+     "name": "Tobacco Patch",
+     "city": "Kirkland",
+     "state": "WA",
+     "website": "tobaccopatch.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10463,
+     "name": "King Mountain Tobacco Co Inc",
+     "city": "White Swan",
+     "state": "WA",
+     "website": "kingmountaintobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10467,
+     "name": "Tobacco Joe",
+     "city": "Redmond",
+     "state": "OR",
+     "website": "instagram.com/guysmokeshop?igsh=cmgzejdibnp1Z3Q2&utm_source=qr",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10490,
+     "name": "Tobacco Connection",
+     "city": "Nampa",
+     "state": "ID",
+     "website": "tbcollc.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10519,
+     "name": "Tobacco Connection",
+     "city": "Nampa",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10535,
+     "name": "Tobacco Patch",
+     "city": "Bellevue",
+     "state": "WA",
+     "website": "tobaccopatch.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10541,
+     "name": "Tobacco Connection",
+     "city": "Nampa",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10575,
+     "name": "Tobacco Connection",
+     "city": "Caldwell",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10581,
+     "name": "Tobacco Connection",
+     "city": "Boise",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10587,
+     "name": "Tobacco Connection",
+     "city": "Boise",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10589,
+     "name": "Tobacco Connection",
+     "city": "Boise",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10595,
+     "name": "Tobacco Connection",
+     "city": "Jerome",
+     "state": "ID",
+     "website": "tbcollc.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10610,
+     "name": "Tobacco Connection",
+     "city": "Caldwell",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10633,
+     "name": "Tobacco Connection",
+     "city": "Boise",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10635,
+     "name": "Tobacco Connection",
+     "city": "Mountain Home",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10670,
+     "name": "Tobacco Connection",
+     "city": "Boise",
+     "state": "ID",
+     "website": "tbcollc.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10726,
+     "name": "Tobacco Connection",
+     "city": "Garden City",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10775,
+     "name": "Tobacco Connection",
+     "city": "Chubbuck",
+     "state": "ID",
+     "website": "tobaccoconnection.net",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 2,
+     "verdict": "its site is mostly another trade (2 such words against 1 cigar words)"
+    },
+    {
+     "id": 10780,
+     "name": "Tobacco Connection",
+     "city": "Pocatello",
+     "state": "ID",
+     "website": "tbcollc.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10948,
+     "name": "Bubble Lounge",
+     "city": "Peralta",
+     "state": "NM",
+     "website": "bubblelounge.com",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 10967,
+     "name": "Tobacco Town",
+     "city": "Albuquerque",
+     "state": "NM",
+     "website": "plus.google.com/u/0/b/115835630864369531888/115835630864369531888/about/p/pub",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11447,
+     "name": "Colorado Tobacco Education",
+     "city": "Aurora",
+     "state": "CO",
+     "website": "cdphe.colorado.gov/apcd",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11570,
+     "name": "Willy and Billy Tobacco Shack",
+     "city": "Tahlequah",
+     "state": "OK",
+     "website": "willy-billy-s-tobacco-shack.hub.biz",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11608,
+     "name": "Cherokee Tobacco Sales",
+     "city": "Sallisaw",
+     "state": "OK",
+     "website": "cherokee.org",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11671,
+     "name": "Maumelle Tobacco Super Store",
+     "city": "Maumelle",
+     "state": "AR",
+     "website": "tobaccosuper.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11756,
+     "name": "Black Crown Social",
+     "city": "Rogers",
+     "state": "AR",
+     "website": "blackcrownsocial.com",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11788,
+     "name": "Owney Maddens Lounge",
+     "city": "Hot Springs",
+     "state": "AR",
+     "website": "owneymaddenslounge.wixsite.com/home",
+     "store_type": "cigar_lounge",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11807,
+     "name": "Southern Rock Tobacco Shop",
+     "city": "Yellville",
+     "state": "AR",
+     "website": "southernrocktobaccoshop.com",
+     "store_type": "tobacco_shop",
+     "cigar": 7,
+     "other": 18,
+     "verdict": "its site is mostly another trade (18 such words against 7 cigar words)"
+    },
+    {
+     "id": 11883,
+     "name": "Ash and Anvil",
+     "city": "Gardner",
+     "state": "KS",
+     "website": "linktr.ee/ashandanvilcigars",
+     "store_type": "cigar_lounge",
+     "cigar": 3,
+     "other": 0,
+     "verdict": "its site says too little about cigars (3 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11895,
+     "name": "Tobacco Dock",
+     "city": "Dyersburg",
+     "state": "TN",
+     "website": "microman.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11934,
+     "name": "Hollywood Tobacco",
+     "city": "Olive Branch",
+     "state": "MS",
+     "website": "instagram.com/hollywoodtobacco2026?igsh=NGJzYjA5Nmo0azls",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 11968,
+     "name": "The G Spot",
+     "city": "Memphis",
+     "state": "TN",
+     "website": "thegspotinc.ca",
+     "store_type": "cigar_lounge",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12020,
+     "name": "Tobacco Station Mountain Grove",
+     "city": "Mountain Grove",
+     "state": "MO",
+     "website": "facebook.com/profile.php?id=61565676894873",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12097,
+     "name": "Sadie's Spirits & Tobacco",
+     "city": "Knob Noster",
+     "state": "MO",
+     "website": "facebook.com/sadiesspirits",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12118,
+     "name": "Tobacco Station Usa",
+     "city": "Lonoke",
+     "state": "AR",
+     "website": "tobaccosuper.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12237,
+     "name": "The National Tobacco Alliance Inc.",
+     "city": "Kansas City",
+     "state": "MO",
+     "website": "collectpipes.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12309,
+     "name": "Mule Tobacco Barn",
+     "city": "Rolla",
+     "state": "MO",
+     "website": "smokers4u.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12615,
+     "name": "Jerri's Tobacco Shop & Fine Wines",
+     "city": "Denver",
+     "state": "CO",
+     "website": "DenverCigars.com",
+     "store_type": "tobacco_shop",
+     "cigar": 1,
+     "other": 0,
+     "verdict": "its site says too little about cigars (1 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12657,
+     "name": "Rocky Mountain Pipe Dreams",
+     "city": "Lakewood",
+     "state": "CO",
+     "website": "rockymountainpipedreams.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 14,
+     "verdict": "its site is mostly another trade (14 such words against 0 cigar words)"
+    },
+    {
+     "id": 12837,
+     "name": "Tobacco Shack",
+     "city": "Lincoln",
+     "state": "NE",
+     "website": "discountcitylincoln.com",
+     "store_type": "tobacco_shop",
+     "cigar": 3,
+     "other": 0,
+     "verdict": "its site says too little about cigars (3 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12885,
+     "name": "Tobacco & Phones 4 Less",
+     "city": "Omaha",
+     "state": "NE",
+     "website": "megasaverstores.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12897,
+     "name": "Cornhusker Bottle & Tobacco",
+     "city": "Lincoln",
+     "state": "NE",
+     "website": "titlecore.net",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 12998,
+     "name": "Marshall Tobacco",
+     "city": "Marshall",
+     "state": "MN",
+     "website": "marshallindependent.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13014,
+     "name": "Sally Tobacco",
+     "city": "Willmar",
+     "state": "MN",
+     "website": "sallytobacco.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13104,
+     "name": "Fire Palace (Fireworks, Tobacco, Gaming, and much more)",
+     "city": "Unionville",
+     "state": "MO",
+     "website": "firepalace.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13148,
+     "name": "Fire Palace (Fireworks, Tobacco, Gaming, and much more)",
+     "city": "Lancaster",
+     "state": "MO",
+     "website": "firepalace.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13307,
+     "name": "Austin Tobacco",
+     "city": "Austin",
+     "state": "MN",
+     "website": "instagram.com/4tobacco_use_only",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13314,
+     "name": "Washington Spirits & Tobacco",
+     "city": "Washington",
+     "state": "IA",
+     "website": "instagram.com/washington52353",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    },
+    {
+     "id": 13403,
+     "name": "Hideaway Tobacco St. Cloud",
+     "city": "Waite Park",
+     "state": "MN",
+     "website": "thehideawayonline.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 1,
+     "verdict": "its site is mostly another trade (1 such words against 0 cigar words)"
+    },
+    {
+     "id": 13418,
+     "name": "Tobacco Direct",
+     "city": "Springfield",
+     "state": "IL",
+     "website": "tobaccodirect.com",
+     "store_type": "tobacco_shop",
+     "cigar": 0,
+     "other": 0,
+     "verdict": "its site says too little about cigars (0 cigar words, 0 from other trades)"
+    }
+   ]
+  }
+ }
+}
