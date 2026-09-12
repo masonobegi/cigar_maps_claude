@@ -21,7 +21,8 @@ const { asyncRoute } = db;
 
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
+const { appUrl } = require('../utils/appUrl');
+const APP_URL = appUrl();
 
 /**
  * Prices are per store per month. Cigar shops run thinner margins than the

@@ -15,7 +15,8 @@ const { writeFields } = require('../utils/storeEdits');
 const { mapStores } = require('../utils/storeMap');
 const { PENDING_STATUS } = require('../jobs/linkCheck');
 
-const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
+const { appUrl } = require('../utils/appUrl');
+const APP_URL = appUrl();
 
 async function geocode(address, city, state) {
   const q = [address, city, state].filter(Boolean).join(', ');

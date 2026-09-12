@@ -4,7 +4,8 @@ const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { sendMail } = require('../utils/email');
 
-const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
+const { appUrl } = require('../utils/appUrl');
+const APP_URL = appUrl();
 
 // ── Community posts ──────────────────────────────────────────────────────────
 

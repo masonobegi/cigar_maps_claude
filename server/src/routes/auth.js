@@ -8,7 +8,8 @@ const { requireAuth, JWT_SECRET } = require('../middleware/auth');
 const { sendMail } = require('../utils/email');
 const { asyncRoute } = db;
 
-const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
+const { appUrl } = require('../utils/appUrl');
+const APP_URL = appUrl();
 
 // Sending mail to an address someone else typed is the abusable part, so the
 // two endpoints that do it are limited harder than the rest of the API.

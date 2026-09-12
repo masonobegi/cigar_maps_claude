@@ -1,7 +1,8 @@
 const db = require('../database/db');
 const { sendMail } = require('./email');
 
-const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
+const { appUrl } = require('./appUrl');
+const APP_URL = appUrl();
 
 function httpError(status, message) {
   const e = new Error(message);

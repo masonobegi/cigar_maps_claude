@@ -42,7 +42,7 @@ const DAILY_CAP = 40;
 const FOLLOWUP_DAYS = 7;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const APP_URL = () => (process.env.APP_URL || 'https://cigarbuddy.com').replace(/\/+$/, '');
+const { appUrl: APP_URL } = require('../utils/appUrl');
 const FROM_NAME = process.env.OUTREACH_FROM_NAME || 'Mason';
 const POSTAL = process.env.OUTREACH_POSTAL_ADDRESS || '';
 
