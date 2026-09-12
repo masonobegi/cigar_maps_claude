@@ -29,12 +29,20 @@
  * server name so certificate validation still works. SMTP_FAMILY=6 opts back
  * out, for a host that really is IPv6-only.
  *
+ * And then that became ETIMEDOUT on 465, and on 587 as well — which is not a
+ * provider problem and no provider will fix it. This host does not route
+ * outbound SMTP at all, because a platform that does becomes a spam relay
+ * within a week. So mail leaves over HTTPS instead (utils/mailHttp.js:
+ * RESEND_API_KEY or POSTMARK_TOKEN), and the SMTP path below stays for
+ * anywhere that does allow it.
+ *
  *   node src/utils/email.js selftest
  */
 'use strict';
 
 const dns = require('dns').promises;
 const nodemailer = require('nodemailer');
+const { sendHttpMail, httpProvider } = require('./mailHttp');
 
 /**
  * The transport this environment describes, or null when it describes none.
@@ -125,10 +133,19 @@ function getTransport() {
  * that do not care about delivery can fire and forget.
  */
 async function sendMail({ to, subject, text, html, replyTo }) {
+  // HTTPS first, when a provider key is set. This host does not route outbound
+  // SMTP at all, so on Railway the HTTP path is the only one that can work; the
+  // SMTP path stays for anywhere that does.
+  if (httpProvider()) {
+    const r = await sendHttpMail({ from: fromAddress(), to, subject, text, html, replyTo });
+    if (r.ok) return r;
+    console.error(`[email] send failed: ${r.why}`);
+    return false;
+  }
   const transporter = await getTransport();
   if (!transporter) return false;
   return transporter.sendMail({ from: fromAddress(), to, subject, text, html, replyTo })
-    .catch(err => { console.error('[email] send failed:', err.message); return false; });
+    .catch(err => { console.error(`[email] send failed: ${err.message}`); return false; });
 }
 
 /**
@@ -140,7 +157,7 @@ async function sendMail({ to, subject, text, html, replyTo }) {
  * something that could not happen. The routes pass this on so the copy can
  * tell a visitor to check back instead.
  */
-const mailConfigured = () => !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+const mailConfigured = () => !!(httpProvider() || (process.env.SMTP_USER && process.env.SMTP_PASS));
 
 /** Network failures and credential failures need different answers. */
 function describeSmtpError(err) {
@@ -161,6 +178,11 @@ function describeSmtpError(err) {
  * reads. This is the check that found the IPv6 problem.
  */
 async function verifyTransport({ log = console.log } = {}) {
+  const provider = httpProvider();
+  if (provider) {
+    log(`[email] ready via ${provider} over HTTPS, sending as ${fromAddress()}`);
+    return true;
+  }
   const transporter = await getTransport();
   if (!transporter) {
     log('[email] no SMTP credentials: nothing can be sent, and the claim flow will say so');
