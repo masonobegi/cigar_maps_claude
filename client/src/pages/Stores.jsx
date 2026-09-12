@@ -42,6 +42,9 @@ export default function Stores() {
   const [cities, setCities] = useState([]);
   const [q, setQ] = useState(searchParams.get('q') || '');
   const [city, setCity] = useState(searchParams.get('city') || '');
+  // A chip knows which state its town is in, so "Washington, DC" no longer
+  // returns shops in Michigan, Missouri and Pennsylvania.
+  const [cityState, setCityState] = useState(searchParams.get('state') || '');
   const [openNow, setOpenNow] = useState(searchParams.get('open_now') === '1');
   const [hasLounge, setHasLounge] = useState(false);
   const [hasHumidor, setHasHumidor] = useState(false);
@@ -105,7 +108,10 @@ export default function Stores() {
   useEffect(() => {
     setLoading(true);
     const p = filterParams();
-    if (city && !userLocation) p.city = city;
+    if (city && !userLocation) {
+      p.city = city;
+      if (cityState) p.state = cityState;
+    }
     if (userLocation?.lat) { p.lat = userLocation.lat; p.lng = userLocation.lng; p.radius = radius; }
     api.searchStores(p).then(setStores).finally(() => setLoading(false));
   }, [q, city, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly, userLocation, radius]);
@@ -178,7 +184,7 @@ export default function Stores() {
   }
 
   function clearFilters() {
-    setQ(''); setCity(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false);
+    setQ(''); setCity(''); setCityState(''); setOpenNow(false); setHasLounge(false); setHasHumidor(false);
     setTypes([]); setHasInventory(false); setClaimedOnly(false);
     setSearchParams({});
   }
@@ -272,7 +278,7 @@ export default function Stores() {
         {!userLocation && (
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: MUTED }} />
-            <input value={city} onChange={e => setCity(e.target.value)} placeholder="City" className="input pl-9 py-2.5 w-36" list="store-cities" />
+            <input value={city} onChange={e => { setCity(e.target.value); setCityState(''); }} placeholder="City" className="input pl-9 py-2.5 w-36" list="store-cities" />
             <datalist id="store-cities">{cities.map(c => <option key={`${c.city}-${c.state}`} value={c.city} />)}</datalist>
           </div>
         )}
@@ -327,7 +333,7 @@ export default function Stores() {
       {!q && !city && cities.length > 0 && (
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
           {cities.map(c => (
-            <button key={`${c.city}-${c.state}`} onClick={() => setCity(c.city)}
+            <button key={`${c.city}-${c.state}`} onClick={() => { setCity(c.city); setCityState(c.state); }}
               className="text-xs whitespace-nowrap px-3 py-1.5 rounded-full flex-shrink-0 transition-colors"
               style={{ backgroundColor: '#2E2820', color: LABEL, border: `1px solid ${BORDER}` }}>
               {c.city}, {c.state}

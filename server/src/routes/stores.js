@@ -63,11 +63,20 @@ router.get('/', asyncRoute(async (req, res) => {
   let where = ['s.visible = 1'];
   const params = [];
 
+  // Names are compared with the punctuation people leave out: apostrophes and
+  // periods dropped, "&" read as "and", accents folded. Otherwise "wild bills"
+  // misses every one of Wild Bill's 215 listings.
+  const fold = value => `replace(translate(lower(${value}), '''’.,-', ''), '&', 'and')`;
+  const folded = text => String(text).toLowerCase().replace(/['’.,-]/g, '').replace(/&/g, 'and');
+
   if (q) {
-    where.push('(s.name ILIKE ? OR s.description ILIKE ? OR s.city ILIKE ?)');
-    params.push(`%${q}%`, `%${q}%`, `%${q}%`);
+    where.push(`(${fold('s.name')} LIKE ? OR s.description ILIKE ? OR ${fold('s.city')} LIKE ?)`);
+    params.push(`%${folded(q)}%`, `%${q}%`, `%${folded(q)}%`);
   }
-  if (city) { where.push('s.city ILIKE ?'); params.push(`%${city}%`); }
+  // A city chip carries its state, and matches the town itself: "Washington, DC"
+  // used to return shops in Michigan, Missouri and Pennsylvania.
+  if (city && state) { where.push(`${fold('s.city')} = ?`); params.push(folded(city)); }
+  else if (city) { where.push(`${fold('s.city')} LIKE ?`); params.push(`%${folded(city)}%`); }
   if (state) { where.push('s.state = ?'); params.push(String(state).toUpperCase()); }
   if (has_lounge === '1') { where.push('s.has_lounge = 1'); }
   if (has_walk_in_humidor === '1') { where.push('s.has_walk_in_humidor = 1'); }
