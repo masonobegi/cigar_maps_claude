@@ -8,6 +8,12 @@ import BackButton from '../components/BackButton';
 import { StoreThumb, hasLounge, hoursConfirmed, unconfirmedShop } from '../components/StoreCard';
 import { getStoreStatus } from '../utils/hours';
 
+// Matches citySlug() in server/src/utils/places.js. Three lines rather than a
+// round trip; the server is what resolves the slug, so a mismatch shows up as a
+// 404 on the place page rather than as a wrong page.
+const citySlug = (city, state) => `${String(city || '').toLowerCase().replace(/['’]/g, '')
+  .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${String(state || '').toLowerCase()}`;
+
 const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const NAVY  = '#E8DDD0';
 const LABEL = '#B0A090';
@@ -954,6 +960,18 @@ export default function StoreProfile() {
                   <MapPin className="w-3.5 h-3.5" />
                   {[store.address, store.city, store.state].filter(Boolean).join(', ')}
                 </span>
+              )}
+              {/* The other shops in this town. A link a person wants anyway, and
+                  the path a crawler takes from one page of the directory to the
+                  rest of it. */}
+              {store.city && store.state && (
+                <Link to={`/cigar-shops/${citySlug(store.city, store.state)}`}
+                  className="flex items-center gap-1 transition-colors"
+                  style={{ color: MUTED }}
+                  onMouseEnter={e => e.currentTarget.style.color = AMBER}
+                  onMouseLeave={e => e.currentTarget.style.color = MUTED}>
+                  More cigar shops in {store.city}
+                </Link>
               )}
               {store.phone && (
                 <a href={`tel:${store.phone}`} className="flex items-center gap-1 transition-colors"

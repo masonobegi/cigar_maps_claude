@@ -8,6 +8,7 @@ import Search from './pages/Search';
 import CigarDetail from './pages/CigarDetail';
 import StoreProfile from './pages/StoreProfile';
 import Stores from './pages/Stores';
+import CigarShops from './pages/CigarShops';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -49,6 +50,8 @@ function AnimatedRoutes() {
       <Route path="/search" element={<Search />} />
       <Route path="/cigars/:id" element={<CigarDetail />} />
       <Route path="/stores" element={<Stores />} />
+      <Route path="/cigar-shops" element={<CigarShops />} />
+      <Route path="/cigar-shops/:slug" element={<CigarShops />} />
       <Route path="/stores/:id" element={<StoreProfile />} />
       <Route path="/deals" element={<Deals />} />
       <Route path="/login" element={<Login />} />

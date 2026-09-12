@@ -22,6 +22,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { listPlaces, parsePlaceSlug, shopsInPlace, stateName, stateSlug } = require('./places');
 
 const DAYS = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' };
 
@@ -117,9 +118,64 @@ function storeDescription(store) {
   return `${store.name} is a cigar shop${where ? ` in ${where}` : ''}${has}.${hours} Address, phone and directions on CigarBuddy.`;
 }
 
+/**
+ * A city or state page: an ItemList of the shops on it, and a breadcrumb, which
+ * is what gets a search result to show "CigarBuddy › Florida › Tampa" rather
+ * than a bare URL.
+ */
+function placeJsonLd(place, shops, url, base) {
+  const list = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Cigar shops in ${place.name}`,
+    numberOfItems: shops.length,
+    itemListElement: shops.slice(0, 50).map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${base}/stores/${s.id}`,
+      name: s.name,
+    })),
+  };
+  const crumbs = [{ name: 'Cigar shops', url: `${base}/cigar-shops` }];
+  if (place.kind === 'city') crumbs.push({ name: place.state_name, url: `${base}/cigar-shops/${place.state_slug}` });
+  crumbs.push({ name: place.name, url });
+  return [list, {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })),
+  }];
+}
+
+/** The sentence under a place page in a search result. */
+function placeDescription(place, shops) {
+  const withHours = shops.filter(s => s.hours_source === 'website').length;
+  const lounges = shops.filter(s => Number(s.has_lounge) === 1).length;
+  const bits = [`${shops.length} cigar shop${shops.length === 1 ? '' : 's'} in ${place.name}`];
+  if (withHours) bits.push(`${withHours} with opening hours read from the shop's own website`);
+  if (lounges) bits.push(`${lounges} with a lounge`);
+  return `${bits.join(', ')}. Addresses, phone numbers and what each one carries.`;
+}
+
 /** Everything the head needs for one page. */
-function metaFor({ pathname, store = null, base }) {
+function metaFor({ pathname, store = null, place = null, shops = [], base }) {
   const url = `${base}${pathname}`;
+  if (place) {
+    return {
+      title: `Cigar shops in ${place.name} — ${shops.length} of them | ${SITE_NAME}`,
+      description: placeDescription(place, shops),
+      canonical: url,
+      image: (shops.find(s => s.web_image_url) || {}).web_image_url || null,
+      jsonld: placeJsonLd(place, shops, url, base),
+      robots: null,
+    };
+  }
+  if (pathname === '/cigar-shops') {
+    return {
+      title: `Cigar shops by city and state | ${SITE_NAME}`,
+      description: 'Every city and state in the directory, with the number of cigar shops in each.',
+      canonical: url, image: null, jsonld: null, robots: null,
+    };
+  }
   if (store) {
     const where = [store.city, store.state].filter(Boolean).join(', ');
     return {
@@ -183,7 +239,9 @@ function render(template, meta) {
     tags.push(`<meta name="twitter:image" content="${esc(meta.image)}">`);
   }
   if (meta.robots) tags.push(`<meta name="robots" content="${esc(meta.robots)}">`);
-  if (meta.jsonld) tags.push(`<script type="application/ld+json">${escJson(meta.jsonld)}</script>`);
+  for (const block of [].concat(meta.jsonld || [])) {
+    tags.push(`<script type="application/ld+json">${escJson(block)}</script>`);
+  }
 
   return html.replace(/<\/head>/i, `${tags.join('\n    ')}\n  </head>`);
 }
@@ -272,13 +330,22 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
       res.status(500).type('text/plain').send('sitemap unavailable');
     }
   });
-  app.get('/sitemap-main.xml', (req, res) => {
+  app.get('/sitemap-main.xml', async (req, res) => {
     const base = baseOf(req);
-    res.type('application/xml').send(sitemapXml([
+    const entries = [
       urlEntry(`${base}/`, null, '1.0'),
       urlEntry(`${base}/stores`, null, '0.9'),
+      urlEntry(`${base}/cigar-shops`, null, '0.9'),
       urlEntry(`${base}/deals`, null, '0.5'),
-    ]));
+    ];
+    try {
+      const places = await listPlaces(db);
+      for (const st of places.states) entries.push(urlEntry(`${base}/cigar-shops/${st.slug}`, null, '0.8'));
+      for (const c of places.cities) entries.push(urlEntry(`${base}/cigar-shops/${c.slug}`, null, '0.9'));
+    } catch (err) {
+      log(`[seo] place pages left out of the sitemap: ${err.message}`);
+    }
+    res.type('application/xml').send(sitemapXml(entries));
   });
   app.get('/sitemap-stores-:page.xml', async (req, res) => {
     try {
@@ -297,19 +364,35 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
     if (html === null) return res.status(404).send(`index.html not found at: ${indexPath}`);
 
     const base = baseOf(req);
-    let store = null;
+    let store = null, place = null, shops = [];
     const m = /^\/stores\/(\d+)\b/.exec(req.path);
     if (m) {
       store = await db.get(`SELECT id, name, address, city, state, zip, phone, website, lat, lng,
         hours, hours_source, has_lounge, has_walk_in_humidor, web_image_url
         FROM stores WHERE id = ? AND visible = 1`, [Number(m[1])]).catch(() => null);
     }
-    res.type('html').send(render(html, metaFor({ pathname: req.path, store, base })));
+    const pm = /^\/cigar-shops\/([a-z0-9-]+)\/?$/i.exec(req.path);
+    if (pm) {
+      try {
+        const places = await listPlaces(db);
+        const found = parsePlaceSlug(pm[1], places);
+        if (found) {
+          shops = await shopsInPlace(db, found, { limit: 200 });
+          place = {
+            ...found,
+            name: found.kind === 'city' ? `${found.city}, ${found.state}` : stateName(found.state),
+            state_name: stateName(found.state),
+            state_slug: stateSlug(found.state),
+          };
+        }
+      } catch (err) { log(`[seo] place page failed: ${err.message}`); }
+    }
+    res.type('html').send(render(html, metaFor({ pathname: req.path, store, place, shops, base })));
   });
 }
 
-module.exports = { mount, metaFor, render, storeJsonLd, storeDescription, hoursSpec, esc, escJson,
-  sitemapXml, sitemapIndexXml, robotsTxt, urlEntry, selftest };
+module.exports = { mount, metaFor, render, storeJsonLd, storeDescription, placeJsonLd, placeDescription,
+  hoursSpec, esc, escJson, sitemapXml, sitemapIndexXml, robotsTxt, urlEntry, selftest };
 
 // ── self-test ───────────────────────────────────────────────────────────────
 function selftest() {
@@ -369,6 +452,23 @@ function selftest() {
   ok(metaFor({ pathname: '/store-dashboard', base }).robots === 'noindex, follow', 'a dashboard is noindex');
   ok(metaFor({ pathname: '/stores', base }).robots === null, 'the directory itself is indexable');
   ok(metaFor({ pathname: '/', base }).canonical === 'https://cigarbuddy.com/', 'the homepage canonical keeps its slash');
+
+  // Place pages: the ones somebody actually searches for.
+  const tampa = { kind: 'city', city: 'Tampa', state: 'FL', name: 'Tampa, FL', state_name: 'Florida', state_slug: 'florida' };
+  const shops = [shop, { ...shop, id: 224, name: 'Black Leaf Cigar and Wine Lounge', hours_source: 'map', has_lounge: 1 }];
+  const cityMeta = metaFor({ pathname: '/cigar-shops/tampa-fl', place: tampa, shops, base });
+  ok(cityMeta.title === 'Cigar shops in Tampa, FL — 2 of them | CigarBuddy', 'a city page is titled by its place and its count', cityMeta.title);
+  ok(/1 with opening hours read from the shop/.test(cityMeta.description),
+    'and counts only the hours we can stand behind', cityMeta.description);
+  ok(cityMeta.jsonld.length === 2 && cityMeta.jsonld[0]['@type'] === 'ItemList'
+    && cityMeta.jsonld[1]['@type'] === 'BreadcrumbList', 'it carries a list and a breadcrumb', cityMeta.jsonld.map(b => b['@type']));
+  ok(cityMeta.jsonld[0].itemListElement[0].url === 'https://cigarbuddy.com/stores/223',
+    'the list points at the shops, which is how a crawler reaches them');
+  ok(cityMeta.jsonld[1].itemListElement.length === 3
+    && cityMeta.jsonld[1].itemListElement[1].name === 'Florida', 'the breadcrumb runs through the state');
+  const bothBlocks = render(template, cityMeta);
+  ok((bothBlocks.match(/application\/ld\+json/g) || []).length === 2, 'and both blocks reach the page',
+    (bothBlocks.match(/application\/ld\+json/g) || []).length);
 
   // robots.txt and the sitemaps.
   const robots = robotsTxt(base);

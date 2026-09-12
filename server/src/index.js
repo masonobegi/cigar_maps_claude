@@ -44,6 +44,7 @@ app.use('/api', require('./routes/menus'));
 app.use('/api', require('./routes/links'));
 app.use('/api', require('./routes/closures'));
 app.use('/api/billing', require('./routes/billing'));
+app.use('/api/places', require('./routes/places'));
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' }));
 

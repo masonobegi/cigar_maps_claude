@@ -129,6 +129,10 @@ export const api = {
   markNotificationRead: (id) => request(`/notifications/${id}/read`, { method: 'POST' }),
   markAllNotificationsRead: () => request('/notifications/mark-all-read', { method: 'POST' }),
 
+  // Place pages: the shops in one city or one state
+  getPlaces: () => request('/places'),
+  getPlace: (slug) => request(`/places/${encodeURIComponent(slug)}`),
+
   // Deals
   getDeals: () => request('/deals'),
 
