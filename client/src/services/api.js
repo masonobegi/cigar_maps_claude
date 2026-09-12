@@ -192,6 +192,13 @@ export const api = {
   adminRejectClaim: (id, notes) => request(`/admin/claims/${id}/reject`, { method: 'POST', body: JSON.stringify({ admin_notes: notes }) }),
   adminGetListings: (p = {}) => request(`/admin/listings?${new URLSearchParams(p)}`),
   adminSetListing: (id, b) => request(`/admin/stores/${id}/visible`, { method: 'PATCH', body: JSON.stringify(b) }),
+  // Take a claim back. There was no way to undo an approval: a claim granted
+  // to the wrong person left that account in control of the listing for good,
+  // and the only alternative was deleting the row.
+  adminUnclaimStore: (id, reason) => request(`/admin/stores/${id}/unclaim`, { method: 'POST', body: JSON.stringify({ reason }) }),
+  // Correct a listing's phone or website by hand, rather than only being able
+  // to blank a dead link.
+  adminSetContact: (id, b) => request(`/admin/stores/${id}/contact`, { method: 'PATCH', body: JSON.stringify(b) }),
   adminGetReports: (status) => request(`/admin/reports${status ? `?status=${status}` : ''}`),
   adminUpdateReport: (id, b) => request(`/admin/reports/${id}`, { method: 'PATCH', body: JSON.stringify(b) }),
   adminGetUsers: () => request('/admin/users'),

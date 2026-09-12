@@ -54,7 +54,9 @@ function VerificationQueue({ onAction }) {
   return (
     <div>
       <div className="flex gap-2 mb-4">
-        {['pending', 'approved', 'rejected'].map(s => (
+        {/* 'revoked' is what a claim becomes when staff take it back. Without
+            it here those claims exist and cannot be seen. */}
+        {['pending', 'approved', 'rejected', 'revoked'].map(s => (
           <button key={s} onClick={() => { setFilter(s); setLoading(true); api.adminGetVerifications(s).then(setRequests).finally(() => setLoading(false)); }}
             className={`text-sm px-4 py-1.5 rounded-full capitalize transition-all ${filter === s ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>
             {s}
@@ -466,7 +468,9 @@ function ClaimsQueue({ onAction }) {
   return (
     <div>
       <div className="flex gap-2 mb-4">
-        {['pending', 'approved', 'rejected'].map(s => (
+        {/* 'revoked' is what a claim becomes when staff take it back. Without
+            it here those claims exist and cannot be seen. */}
+        {['pending', 'approved', 'rejected', 'revoked'].map(s => (
           <button key={s} onClick={() => setFilter(s)}
             className={`text-sm px-4 py-1.5 rounded-full capitalize transition-all ${filter === s ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>{s}</button>
         ))}
@@ -499,6 +503,77 @@ function ClaimsQueue({ onAction }) {
                     <p className="text-stone-600 mt-1">{c.method} · {new Date(c.created_at).toLocaleString()}{c.admin_notes ? ` · ${c.admin_notes}` : ''}</p>
                   </div>
                 </div>
+
+                {/* What this decision actually rests on.
+                    Approving a claim hands somebody control of a listing, and
+                    the card used to carry the claimant and the address and
+                    nothing else — so a staff member could approve a claim on a
+                    listing we had already hidden as a duplicate, or one whose
+                    proof is an email at a domain forty listings share, with
+                    nothing on screen to tell them. */}
+                <div className="mt-3 pt-3 border-t border-stone-800 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                  {c.needs_manual_review && (
+                    <span className="text-amber-400 font-medium w-full">
+                      A person has to decide this one:{' '}
+                      {[
+                        !c.store_visible && 'the listing is not on the public map',
+                        c.storefront === 'duplicate' && 'it duplicates another listing',
+                        (c.storefront === 'closed' || c.operating_status === 'permanently_closed') && 'we have it as closed',
+                      ].filter(Boolean).join('; ')}
+                      {(c.storefront_reason || c.closed_reason) && ` — ${c.storefront_reason || c.closed_reason}`}
+                    </span>
+                  )}
+                  <span className={c.store_visible ? 'text-stone-500' : 'text-amber-400'}>
+                    {c.store_visible ? 'On the map' : 'Hidden'}
+                    {c.storefront && c.storefront !== 'yes' ? ` (${c.storefront})` : ''}
+                  </span>
+                  {c.store_website && (
+                    <span className={c.website_status && !['ok', 'blocked', 'checking'].includes(c.website_status) ? 'text-red-400' : 'text-stone-500'}>
+                      Website: {c.website_status || 'never checked'}
+                      {c.website_final_url && domainOf(c.website_final_url) !== domainOf(c.store_website)
+                        ? ` → ${domainOf(c.website_final_url)}` : ''}
+                    </span>
+                  )}
+                  {c.domain && (
+                    <span className={Number(c.listings_sharing_domain) > 3 ? 'text-amber-400' : 'text-stone-500'}>
+                      {c.domain}
+                      {Number(c.listings_sharing_domain) > 0
+                        ? ` · shared with ${c.listings_sharing_domain} other listing${Number(c.listings_sharing_domain) === 1 ? '' : 's'}`
+                        : ' · this listing only'}
+                    </span>
+                  )}
+                  {c.domain_registered_at && (
+                    <span className="text-stone-500">
+                      Domain registered {new Date(c.domain_registered_at).toLocaleDateString()}
+                    </span>
+                  )}
+                  {Array.isArray(c.proof_reasons) && c.proof_reasons.length > 0 && (
+                    <span className="text-stone-400 w-full">
+                      Gate: {c.proof_reasons.map(r => (typeof r === 'string' ? r : r.code || r.reason || JSON.stringify(r))).join('; ')}
+                    </span>
+                  )}
+                </div>
+                {/* Taking a claim back. Approving one used to be final: the
+                    only way to undo it was to delete the listing, which throws
+                    away a real shop to correct a mistake about who runs it.
+                    The listing keeps its data and its place on the map and
+                    loses its owner, its claimed flag and its verified badge,
+                    because all three were statements about that account. */}
+                {c.status === 'approved' && (
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    <input value={notes[c.id] || ''} onChange={e => setNotes(n => ({ ...n, [c.id]: e.target.value }))}
+                      placeholder="Why is this being taken back?" className="input py-1.5 text-xs flex-1 min-w-[160px]" />
+                    <button disabled={busy === c.id}
+                      onClick={() => {
+                        if (!window.confirm(`Take ${c.store_name} back from ${c.user_email}? The listing stays as it is; the owner loses control of it.`)) return;
+                        act(c.id, () => api.adminUnclaimStore(c.store_id, notes[c.id]),
+                          'Claim taken back. The listing is unclaimed and no longer verified.');
+                      }}
+                      className="text-xs px-3 py-1.5 rounded-lg border border-amber-700 text-amber-400 hover:bg-amber-900/20 disabled:opacity-50 flex items-center gap-1">
+                      <X className="w-3.5 h-3.5" /> Unclaim
+                    </button>
+                  </div>
+                )}
                 {c.status === 'pending' && (
                   <div className="flex items-center gap-2 mt-3 flex-wrap">
                     <input value={notes[c.id] || ''} onChange={e => setNotes(n => ({ ...n, [c.id]: e.target.value }))} placeholder="Note (optional)" className="input py-1.5 text-xs flex-1 min-w-[160px]" />
@@ -526,17 +601,30 @@ function ListingsQueue({ onAction }) {
   const [q, setQ] = useState('');
   const [state, setState] = useState('');
   const [rows, setRows] = useState([]);
+  const [total, setTotal] = useState(null);
+  const [storefront, setStorefront] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const LIMIT = 200;
   function load() {
     setLoading(true);
-    const p = { visible, limit: 200 };
+    const p = { visible, limit: LIMIT };
     if (q) p.q = q;
     if (state) p.state = state;
-    if (visible === '0') p.min_conf = '0.25';
-    api.adminGetListings(p).then(setRows).finally(() => setLoading(false));
+    if (storefront) p.storefront = storefront;
+    if (visible === '0' && !storefront) p.min_conf = '0.25';
+    api.adminGetListings(p)
+      // The endpoint answers with its true total now, because a page of 200
+      // was being read as "these are all of them". The array form is still
+      // accepted so a cached client does not break.
+      .then(r => {
+        const items = Array.isArray(r) ? r : (r.items || []);
+        setRows(items);
+        setTotal(Array.isArray(r) ? null : r.total ?? null);
+      })
+      .finally(() => setLoading(false));
   }
-  useEffect(load, [visible, state]);
+  useEffect(load, [visible, state, storefront]);
 
   async function setListing(id, patch, msg) {
     await api.adminSetListing(id, patch);
@@ -547,8 +635,9 @@ function ListingsQueue({ onAction }) {
   return (
     <div>
       <p className="text-xs text-stone-500 mb-3">
-        Listings are imported from OpenStreetMap and scored by how likely they are a real cigar shop. Anything under 0.5 is hidden from the public map.
-        Borderline ones (0.25 to 0.5) show here so you can unhide the good ones.
+        Listings come from Overture Maps and OpenStreetMap and are scored by how likely they are a real cigar shop.
+        Anything under 0.5 is hidden from the public map. Borderline ones (0.25 to 0.5) show here so you can unhide the good ones.
+        Use the reason filter to review the listings a sweep hid for a specific reason instead.
       </p>
       <div className="flex gap-2 mb-4 flex-wrap items-center">
         {[['0', 'Hidden (review)'], ['1', 'Public']].map(([v, l]) => (
@@ -556,11 +645,27 @@ function ListingsQueue({ onAction }) {
             className={`text-sm px-4 py-1.5 rounded-full transition-all ${visible === v ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}>{l}</button>
         ))}
         <input value={state} onChange={e => setState(e.target.value.toUpperCase().slice(0, 2))} placeholder="State" className="input py-1.5 text-xs w-20" />
+        {/* Why a hidden listing is hidden. Without this the only way to review
+            every row a sweep called a duplicate was to page through the lot. */}
+        <select value={storefront} onChange={e => setStorefront(e.target.value)} className="input py-1.5 text-xs">
+          <option value="">Any reason</option>
+          {['closed', 'duplicate', 'moved', 'not_retail', 'online_only', 'unproven', 'yes'].map(v => (
+            <option key={v} value={v}>{v.replace(/_/g, ' ')}</option>
+          ))}
+        </select>
         <form onSubmit={e => { e.preventDefault(); load(); }} className="flex gap-2">
           <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name or city" className="input py-1.5 text-xs w-48" />
           <button type="submit" className="btn-secondary text-xs px-3 py-1.5"><Search className="w-3.5 h-3.5" /></button>
         </form>
       </div>
+      {/* How many there actually are. A page of 200 read as "these are all of
+          them", which is the same mistake the map made with its 1,000 pins. */}
+      {!loading && total !== null && (
+        <p className="text-xs text-stone-500 mb-2">
+          {total.toLocaleString()} listing{total === 1 ? '' : 's'} match
+          {rows.length < total ? `, showing the first ${rows.length}` : ''}.
+        </p>
+      )}
       {loading ? <div className="card h-24 skeleton" /> : rows.length === 0 ? (
         <p className="text-stone-500 text-sm text-center py-10">Nothing here.</p>
       ) : (

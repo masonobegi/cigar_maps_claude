@@ -5,7 +5,7 @@ const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { createInventorySheet } = require('../utils/googleSheets');
 const { openStatus, timeZoneFor } = require('../utils/storeHours');
-const { sendMail } = require('../utils/email');
+const { sendMail, mailConfigured } = require('../utils/email');
 // publicStore is shared with the list so the two can never disagree about
 // which columns are operational and which are the public's.
 const { listStores, publicStore } = require('../utils/storeList');
@@ -683,6 +683,15 @@ router.post('/:id/inventory-requests', requireAuth, asyncRoute(async (req, res) 
   const { cigar_id, cigar_name_free, message } = req.body;
   if (!cigar_id && !cigar_name_free) return res.status(400).json({ error: 'Specify a cigar or enter a name' });
 
+  // A listing off the public map is one we cannot show is a cigar shop, open,
+  // at the address we hold. Taking a request for it would be collecting
+  // somebody's hope that a shut shop will order them a cigar.
+  const store = await db.get('SELECT id, visible, name FROM stores WHERE id = ?', [req.params.id]);
+  if (!store) return res.status(404).json({ error: 'Store not found' });
+  if (!store.visible) {
+    return res.status(409).json({ error: 'This listing is not on the public map, so we cannot pass a request on.' });
+  }
+
   const result = await db.run(`
     INSERT INTO inventory_requests (user_id, store_id, cigar_id, cigar_name_free, message)
     VALUES (?, ?, ?, ?, ?) RETURNING id
@@ -878,11 +887,15 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
     if (sent === false) {
       await db.run("UPDATE store_claims SET method = 'manual', code_hash = NULL, code_expires_at = NULL WHERE id = ?", [claimId]);
       notifyAdminOfClaim(store, req.user, email, contact_phone, message);
-      return res.json({ id: claimId, method: 'manual', status: 'pending', email_hint: null });
+      // notify says whether an email can actually reach them, so the page can
+      // promise one or tell them to check back rather than guess.
+      return res.json({ id: claimId, method: 'manual', status: 'pending', email_hint: null,
+        notify: mailConfigured() ? 'email' : 'none' });
     }
   } else if (canEmailVerify) {
     // Cooldown: the previous code is still valid.
-    return res.json({ id: claimId, method, status: 'code_sent', resent: false, email_hint: maskEmail(email) });
+    return res.json({ id: claimId, method, status: 'code_sent', resent: false, email_hint: maskEmail(email),
+      notify: mailConfigured() ? 'email' : 'none' });
   } else {
     notifyAdminOfClaim(store, req.user, email, contact_phone, message);
   }

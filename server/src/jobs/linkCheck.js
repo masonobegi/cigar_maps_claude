@@ -605,7 +605,14 @@ function socialNetwork(url) {
 
 function destinationKind(url) {
   let host = '';
-  try { host = new URL(url).hostname.toLowerCase(); } catch { return 'site'; }
+  // The scheme is added if it is missing. Without this, new URL() threw on
+  // every value in the stores.website column — they are stored bare, as
+  // "facebook.com/KUSH.Smoke.Emporium" — and the catch below answered 'site'
+  // for all of them. On today's data that was 23,972 links called ordinary
+  // sites, 2,366 of which are a Facebook page, a Linktree, a Google listing
+  // or an ordering platform rather than the shop's own site.
+  try { host = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(url) ? url : `https://${url}`).hostname.toLowerCase(); }
+  catch { return 'site'; }
   if (hostMatches(host, SOCIAL_HOSTS)) return 'social';
   if (hostMatches(host, PLATFORM_HOSTS)) return 'platform';
   if (hostMatches(host, PARK_HOSTS)) return 'parking';
@@ -902,6 +909,16 @@ function selftest() {
   ok(socialNetwork('https://tampasweethearts.com') === null, 'a shop on its own domain has no network');
   ok(socialNetwork('https://notfacebook.com') === null, 'the name has to be the domain, not a substring');
   ok(socialNetwork('') === null && socialNetwork('::::') === null, 'junk is not a network');
+  // The column stores bare hosts, so destinationKind has to read them. It used
+  // to answer 'site' for every one of them, because new URL() threw.
+  ok(destinationKind('facebook.com/KUSH.Smoke.Emporium') === 'social',
+    'a stored website with no scheme is still classified');
+  ok(destinationKind('https://facebook.com/x') === 'social', 'and so is one with a scheme');
+  ok(destinationKind('m.facebook.com/x') === 'social', 'including the mobile host');
+  ok(destinationKind('linktr.ee/shop') === 'social' || destinationKind('linktr.ee/shop') === 'platform',
+    'a link hub is not the shop\u2019s own site');
+  ok(destinationKind('tampasweethearts.com') === 'site', 'a shop on its own domain is a site');
+  ok(destinationKind('not a url at all') === 'site', 'and junk falls back to a site rather than throwing');
   ok(PENDING_STATUS === 'checking' && STATUSES.includes(PENDING_STATUS), 'the pending verdict is a status');
   ok(!DEAD_STATUSES.includes(PENDING_STATUS),
     'a link we have not looked at yet is not a dead link: it is unknown, and the two get different copy');

@@ -21,4 +21,15 @@ async function sendMail({ to, subject, text, html }) {
     .catch(err => { console.error('[email] send failed:', err.message); return false; });
 }
 
-module.exports = { sendMail };
+/**
+ * Can this deployment actually send mail?
+ *
+ * Without SMTP credentials sendMail is a no-op that resolves, which is right
+ * for the caller — a claim must not fail because the mailer is not set up —
+ * but it means every page promising "we will email you" was promising
+ * something that could not happen. The routes pass this on so the copy can
+ * tell a visitor to check back instead.
+ */
+const mailConfigured = () => !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+
+module.exports = { sendMail, mailConfigured };

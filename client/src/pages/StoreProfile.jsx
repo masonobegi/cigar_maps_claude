@@ -347,6 +347,8 @@ function ClaimModal({ store, user, onClose, onClaimed, onPending }) {
   const [step, setStep] = useState('form');
   const [code, setCode] = useState('');
   const [emailHint, setEmailHint] = useState('');
+  // 'email' or 'none', from the server: whether an email can actually reach them.
+  const [notify, setNotify] = useState('email');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -355,6 +357,7 @@ function ClaimModal({ store, user, onClose, onClaimed, onPending }) {
     e.preventDefault(); setBusy(true); setError('');
     try {
       const r = await api.claimStore(store.id, form);
+      if (r.notify) setNotify(r.notify);
       if (r.status === 'code_sent') { setEmailHint(r.email_hint); setStep('code'); }
       else { setStep('pending'); onPending(r); }
     } catch (err) { setError(err.message); } finally { setBusy(false); }
@@ -422,7 +425,18 @@ function ClaimModal({ store, user, onClose, onClaimed, onPending }) {
         <div className="text-center py-2">
           <Clock className="w-8 h-8 mx-auto mb-2" style={{ color: AMBER }} />
           <p className="text-sm font-medium mb-1" style={{ color: NAVY }}>Claim submitted</p>
-          <p className="text-xs mb-4" style={{ color: MUTED }}>We will review it within one to two business days and email you. Your store dashboard unlocks automatically once approved.</p>
+          {/* Only promise an email when the deployment can actually send one.
+              Without SMTP credentials the mailer is a no-op that resolves —
+              right for the claim, which must not fail over a missing mailer,
+              but it meant this line promised something that could not
+              happen. The server says which it is. */}
+          <p className="text-xs mb-4" style={{ color: MUTED }}>
+            We will review it within one to two business days
+            {notify === 'email'
+              ? ' and email you.'
+              : '. Check back on this page — we cannot email you yet, so this is where the answer will appear.'}
+            {' '}Your store dashboard unlocks automatically once approved.
+          </p>
           <button onClick={onClose} className="btn-secondary">Done</button>
         </div>
       )}
@@ -451,6 +465,70 @@ const REPORT_REASONS = [
 // likely to have first-hand knowledge of, so it gets its own panel above the
 // rest instead of being the first line of a radio list.
 const OTHER_REPORT_REASONS = REPORT_REASONS.filter(r => r.value !== 'closed');
+
+/**
+ * "Ask this shop to carry a cigar."
+ *
+ * The Request button has been on every profile for months with nothing behind
+ * it: it set a piece of state that nothing rendered, so a customer pressed it
+ * and the page did nothing at all. The endpoint and the table were both
+ * already there.
+ *
+ * On an unclaimed listing the request cannot reach anybody yet, so the dialog
+ * says so rather than implying a shop is reading it. It is still worth
+ * collecting: a list of people asking for a particular cigar at a particular
+ * shop is the most useful thing we can put in front of that shop when we ask
+ * it to claim its listing. Between hiding the tile and being straight about
+ * where the message goes, being straight keeps the signal and costs nothing.
+ */
+function RequestModal({ store, onClose, onDone }) {
+  const [cigar, setCigar] = useState('');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const unclaimed = !store.claimed;
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!cigar.trim()) { setError('Which cigar are you after?'); return; }
+    setBusy(true); setError('');
+    try {
+      await api.submitInventoryRequest(store.id, { cigar_name_free: cigar.trim(), message: message.trim() || null });
+      onDone();
+    } catch (err) {
+      setError(err.message || 'We could not send that just now. Try again in a moment.');
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <Modal title={`Request a cigar at ${store.name}`} onClose={onClose}>
+      <form onSubmit={submit}>
+        <label className="block text-xs mb-1" style={{ color: LABEL }}>Which cigar?</label>
+        <input value={cigar} onChange={e => setCigar(e.target.value)} autoFocus
+          placeholder="Brand and line, e.g. Padron 1964 Exclusivo"
+          className="w-full mb-3 px-3 py-2 rounded-lg text-sm"
+          style={{ backgroundColor: '#241C12', border: `1px solid ${BORDER}`, color: NAVY }} />
+
+        <label className="block text-xs mb-1" style={{ color: LABEL }}>Anything else? (optional)</label>
+        <textarea value={message} onChange={e => setMessage(e.target.value)} rows={3}
+          placeholder="Size, how many, when you would collect"
+          className="w-full mb-3 px-3 py-2 rounded-lg text-sm"
+          style={{ backgroundColor: '#241C12', border: `1px solid ${BORDER}`, color: NAVY }} />
+
+        <p className="text-xs mb-4 leading-relaxed" style={{ color: MUTED }}>
+          {unclaimed
+            ? 'Nobody at this shop has claimed its listing yet, so this will not reach them today. We keep these requests and show them to the shop when it joins — it is the best argument there is for a shop to get involved.'
+            : 'This goes to the shop, which can mark it as sorted once they have it in.'}
+        </p>
+
+        {error && <p className="text-xs mb-3" style={{ color: '#F87171' }}>{error}</p>}
+        <button type="submit" disabled={busy} className="btn-primary w-full">
+          {busy ? 'Sending...' : 'Send request'}
+        </button>
+      </form>
+    </Modal>
+  );
+}
 
 function ReportModal({ store, onClose, onDone, onClosed }) {
   const [reason, setReason] = useState('wrong_info');
@@ -809,6 +887,16 @@ export default function StoreProfile() {
             setData(d => d && ({ ...d, my_claim: { id: claim?.id, status: 'pending', method: claim?.method || 'manual' } }));
           }} />
       )}
+      {requestModal && (
+        <RequestModal store={store} onClose={() => setRequestModal(false)}
+          onDone={() => {
+            setRequestModal(false);
+            toast(store.claimed
+              ? 'Sent. The shop will see it on their dashboard.'
+              : 'Noted. We will pass it on when this shop claims its listing.');
+          }} />
+      )}
+
       {reportModal && (
         <ReportModal store={store} onClose={() => setReportModal(false)}
           onDone={() => { setReportModal(false); toast('Thanks, we will take a look.'); }}
@@ -929,8 +1017,14 @@ export default function StoreProfile() {
           </div>
         )}
 
-        {/* Notification prefs */}
-        {following && (
+        {/* Notification prefs. Only on a claimed listing: every one of these is
+            "notify me when this shop posts", and nobody can post on a listing
+            with no owner. Four switches that can never fire is worse than no
+            switches — a follower turns them all on and concludes we are
+            broken, rather than that the shop has not joined yet. Following
+            itself still works: it is how somebody hears when the shop does
+            claim the listing. */}
+        {following && store.claimed ? (
           <div className="mx-5 mb-4 rounded-xl p-3" style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
             <p className="text-xs mb-2" style={{ color: MUTED }}>Notify me when this store posts:</p>
             <div className="flex flex-wrap gap-4">
@@ -947,7 +1041,14 @@ export default function StoreProfile() {
               ))}
             </div>
           </div>
-        )}
+        ) : following ? (
+          <div className="mx-5 mb-4 rounded-xl p-3" style={{ backgroundColor: BG_ALT, border: `1px solid ${BORDER}` }}>
+            <p className="text-xs" style={{ color: MUTED }}>
+              You are following this shop. Nobody here has claimed the listing yet, so there is
+              nothing for it to post — we will let you know when that changes.
+            </p>
+          </div>
+        ) : null}
 
         {/* Quick contact bar */}
         <div className="flex" style={{ borderTop: `1px solid ${BORDER}` }}>
