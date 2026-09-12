@@ -7,6 +7,10 @@ fresh read.
 
 Updated 2026-09-11.
 
+**Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
+are fine; a glass, vape, hookah or kava shop that happens to sell cigars is not in
+this directory, whatever it carries.
+
 ## Done
 
 | # | Sweep | What changed in production |
@@ -17,6 +21,7 @@ Updated 2026-09-11.
 | 5 | Stock counts | 741 cigar lines no longer count stock at hidden shops; no more $0.00 prices; 2,790 rows marked out of stock |
 | 15 | Search text | Apostrophes and "&" folded ("wild bills" 2 → 215 matches); city chips carry their state |
 | 16 | Duplicates | Matching by door, not name: 42 plain merges applied, 28 clusters left for review |
+| 8 | Non-shop purge, with Mason's scope rule: cigar and pipe shops only | 160 hidden — 110 vape, hookah, kava, glass and novelty shops, 16 makers and leaf companies, 14 lounges on wheels, 4 rolling services, 4 humidor catalogues, 2 cigarette outlets, 2 anti-smoking bodies, a plumber, 3 pins on an ATF office and an RV resort. The classifier scores the same way, so a refresh does not bring them back |
 
 ## Still to do
 
@@ -24,7 +29,7 @@ In the order I plan to work through them.
 
 | # | Sweep | Size |
 |---|-------|------|
-| 8 | Non-shop purge (makers, landmarks, government, trails, event services) plus the classifier fixes that let them in | 150–250 public listings |
+| 8b | **Pure cigar check on the evidence.** Names that say neither vape nor cigar ("Smoke Shop", "XYZ Tobacco", corner shops) judged by reading each shop's own site: cigars and pipe tobacco as the main trade, or out | ~3,000 to check, ~450 expected out |
 | 4 | Moved shops still at the old address | ~173 candidates, ~18 confirmed |
 | 9 | Pins more than 1 km from their address, wrong states, foreign records | 100–130 pins |
 | 7, 19 | Taken-over, parked and redirected links; links to the wrong business | ~318 links, 14 gambling thumbnails |
@@ -45,11 +50,10 @@ In the order I plan to work through them.
 
 - 28 duplicate clusters (`decisions/duplicates_review.json`).
 - 8 listings whose pin does not fit the state they claim (`decisions/timezones_held.json`); the pin sweep settles these.
+- 2 listings with no phone and no website whose names read as somebody's back garden (`decisions/nonshops_review.json`).
 
 ## Decisions Mason still owes
 
-- Are head shops, vape shops, hookah lounges and pipe-only shops in scope? Until
-  this is answered they stay listed, and only plain non-shops are hidden.
 - A Google Places key and budget, for the closures and hours no free source settles.
 
 ## Working rules
