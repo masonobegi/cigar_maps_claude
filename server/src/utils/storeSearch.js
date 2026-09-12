@@ -21,10 +21,22 @@ const PAGE_SIZE = 60;
  * How many listings we are willing to measure in one request. Past this the
  * answer is "narrow your search" rather than a quietly shortened list — the
  * whole point of this sweep is that a truncated list is worse than an honest
- * refusal. At 100 miles from Philadelphia the candidate set is 743, so the
- * ceiling is nearly an order of magnitude clear of today's worst case.
+ * refusal.
+ *
+ * The number has to clear the WHOLE directory, not just the worst radius
+ * search. A list with no location — the home page, the autocomplete, the review
+ * picker — has no radius to bound it and is simply the directory, paged. Sized
+ * at 5,000 it cleared the worst radius search (763 listings within 100 miles of
+ * Philadelphia) by a wide margin and then refused the nationwide list outright,
+ * because the directory has 7,904 public rows. The recall monitor's contract
+ * check caught it.
+ *
+ * The candidate rows are eight small columns and the page is hydrated
+ * separately, so the cost of a large set is a linear pass in JavaScript, not a
+ * large response. 50,000 covers every listing in the directory, hidden ones
+ * included, with room to grow.
  */
-const CANDIDATE_CEILING = 5000;
+const CANDIDATE_CEILING = 50000;
 
 /**
  * Hours somebody stands behind. Map hours are not in this set: about half the
