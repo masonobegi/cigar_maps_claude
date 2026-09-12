@@ -11,8 +11,9 @@
 const db = require('../database/db');
 const { openStatus, timeZoneFor } = require('../utils/storeHours');
 const {
-  PAGE_SIZE, CANDIDATE_CEILING, BOUNDARY_EPS_MI,
+  PAGE_SIZE, CANDIDATE_CEILING, BOUNDARY_EPS_MI, SPONSORED_SLOTS,
   distanceSql, boundingBox, buildFilters, normalizeRadius, hoursAreConfirmed,
+  applySponsored,
 } = require('./storeSearch');
 
 // Columns that exist for operations, not for the public: sheet URLs are
@@ -78,7 +79,10 @@ async function listStores(query = {}, now = new Date()) {
   // Pass one: the candidate set, uncapped, with just the columns needed to
   // measure distance and judge "open now". No joins, so no GROUP BY over the
   // inventory x follows x ratings product.
-  const candidateCols = ['s.id', 's.lat', 's.lng', 's.hours', 's.hours_source', 's.timezone', 's.state', 's.name'];
+  const candidateCols = ['s.id', 's.lat', 's.lng', 's.hours', 's.hours_source', 's.timezone', 's.state', 's.name',
+    // Paid placement is decided over the whole candidate set, so the two
+    // columns it rests on are read here rather than in a second query.
+    's.plan', 's.featured_until'];
   let order;
   if (hasPoint) {
     const dist = distanceSql('s.lat', 's.lng');
@@ -146,6 +150,17 @@ async function listStores(query = {}, now = new Date()) {
   }
 
   const total = rows.length;
+
+  // Paid placement, applied to the whole ordered set before it is paged, so a
+  // lifted row appears exactly once and paging stays consistent. It reorders
+  // and never removes: `total` above is already final.
+  //
+  // Only a search the customer bounded geographically — a radius around a
+  // point, or a named city — can carry a sponsored slot. A nationwide list
+  // carries none, because "top placement in your city" cannot honestly mean
+  // "top of a national list". See the reasoning in utils/storeSearch.js.
+  const bounded = hasPoint || !!(query.city && query.state);
+  rows = applySponsored(rows, { bounded, now });
   const page = rows.slice(offset, offset + pageSize);
 
   // Pass two: the full row, plus ratings and inventory, for this page only.
@@ -182,6 +197,11 @@ async function listStores(query = {}, now = new Date()) {
         avg_rating: +parseFloat(s.avg_rating).toFixed(1),
         distance_mi: r.distance_mi === undefined || r.distance_mi === null
           ? null : Math.round(Number(r.distance_mi) * 10) / 10,
+        // Set only on a row a shop paid to lift, so the card can say so. A
+        // sponsored slot that is not labelled is not one we are willing to
+        // sell.
+        sponsored: r.sponsored === true,
+        sponsored_plan: r.sponsored ? r.sponsored_plan : null,
       };
     }).filter(Boolean);
   }
@@ -197,6 +217,10 @@ async function listStores(query = {}, now = new Date()) {
     // How many shops in range we cannot say are open, so the client can say so
     // instead of leaving an "Open now" search looking empty for no reason.
     unconfirmed_hours_nearby: noConfirmedHours,
+    // How many of the rows above are paid placement. Zero for a nationwide
+    // list, and never more than SPONSORED_SLOTS.
+    sponsored_count: hydrated.filter(x => x.sponsored).length,
+    sponsored_slots: bounded ? SPONSORED_SLOTS : 0,
     too_many: false,
   };
 }

@@ -24,7 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const {
-  haversine, matchesFilters, hoursAreConfirmed, CANDIDATE_CEILING, RADIUS_MAX_MI,
+  haversine, matchesFilters, hoursAreConfirmed, CANDIDATE_CEILING, RADIUS_MAX_MI, distanceSql,
 } = require('../utils/storeSearch');
 
 /**
@@ -200,11 +200,30 @@ async function run(opts = {}) {
         const truthIds = new Set(truth.map(t => t.id));
         const extra = live.filter(s => !truthIds.has(s.id));
 
-        // Distance must never go backwards down the list, across page joins too.
+        // Distance must never go backwards down the list, across page joins
+        // too — below the sponsored rows, which are lifted on purpose and are
+        // the one thing allowed to sit out of order. A paid slot must not be
+        // able to hide a broken sort, so the check resumes immediately after
+        // them rather than being skipped wherever `sponsored` appears.
+        const paid = live.filter(s => s.sponsored).length;
+        const natural = live.slice(paid);
         let ordered = true;
-        for (let i = 1; i < live.length; i++) {
-          const a = live[i - 1].distance_mi, b = live[i].distance_mi;
+        for (let i = 1; i < natural.length; i++) {
+          const a = natural[i - 1].distance_mi, b = natural[i].distance_mi;
           if (a !== null && b !== null && b + 0.051 < a) ordered = false;
+        }
+        // Sponsorship reorders and never removes, so the truth set is the test
+        // of that: a lift can never cost a customer a result. Checked here
+        // rather than trusted, because it is the property the whole design
+        // rests on.
+        if (paid > 2) {
+          report.failures.push({ label, why: `${paid} rows are sponsored; at most 2 may be`, count: paid });
+        }
+        if (paid && live.slice(0, paid).some(s => !s.sponsored)) {
+          report.failures.push({ label, why: 'a sponsored row is not at the head of the list' });
+        }
+        if (live.some(s => s.sponsored && !s.sponsored_plan)) {
+          report.failures.push({ label, why: 'a sponsored row carries no plan, so the client cannot label it' });
         }
 
         got += live.length - extra.length;
@@ -358,7 +377,38 @@ async function contract() {
   ok(JSON.stringify(national.stores.map(s => s.id)) === JSON.stringify(expected.map(r => r.id)),
     'a list with no location is ordered exactly as before');
 
-  // 9. Past the ceiling the answer is a refusal, never a shortened list. No
+  // 9. Paid placement, end to end against the database: a lift reorders and
+  //    never removes, it is labelled, and a nationwide list carries none.
+  const paidShop = await db.get(`SELECT id, name FROM stores WHERE visible = 1 AND lat IS NOT NULL
+    ORDER BY ${distanceSql('lat', 'lng', '?', '?')} LIMIT 1 OFFSET 20`, [chiLat, chiLat, chiLng]);
+  if (paidShop) {
+    const before = await fetchAllPages(listStores, { lat: chiLat, lng: chiLng, radius: '25' }, now);
+    await db.run(`UPDATE stores SET plan = 'partner', featured_until = NOW() + INTERVAL '30 days' WHERE id = ?`, [paidShop.id]);
+    try {
+      const after = await fetchAllPages(listStores, { lat: chiLat, lng: chiLng, radius: '25' }, now);
+      const sameSet = JSON.stringify(before.rows.map(r => r.id).sort((a, b) => a - b))
+        === JSON.stringify(after.rows.map(r => r.id).sort((a, b) => a - b));
+      ok(sameSet, 'a sponsored lift changes the order and not the set',
+        { before: before.rows.length, after: after.rows.length });
+      ok(after.meta.total === before.meta.total, 'and not the total either',
+        { before: before.meta.total, after: after.meta.total });
+      ok(after.rows[0] && after.rows[0].id === paidShop.id,
+        `the paying shop (#${paidShop.id}, 21st by distance) is lifted to the top`,
+        after.rows[0] && after.rows[0].id);
+      ok(after.rows[0] && after.rows[0].sponsored === true && after.rows[0].sponsored_plan === 'partner',
+        'and is labelled, with its plan');
+      ok(after.rows.filter(r => r.sponsored).length === 1, 'exactly one row is sponsored');
+      ok(after.rows.slice(1).every(r => !r.sponsored), 'and it is the only one');
+      const national = await listStores({ limit: '20' }, now);
+      ok(national.sponsored_count === 0 && national.sponsored_slots === 0,
+        'a list with no location sells no placement at all',
+        { count: national.sponsored_count, slots: national.sponsored_slots });
+    } finally {
+      await db.run(`UPDATE stores SET plan = NULL, featured_until = NULL WHERE id = ?`, [paidShop.id]);
+    }
+  }
+
+  // 10. Past the ceiling the answer is a refusal, never a shortened list. No
   //    real search reaches it, so the ceiling is lowered under the list's feet
   //    to prove the refusal path works at all — an untested refusal is how a
   //    ceiling quietly becomes a second silent truncation.

@@ -94,10 +94,10 @@ still need the real database.
 ### Self-tests
 
 Baseline, before any change: 5 suites, 135 assertions.
-Now: **18 suites, 563 assertions, 0 failures**, plus the apply-path tests, the
+Now: **18 suites, 587 assertions, 0 failures**, plus the apply-path tests, the
 10-assertion re-import guard, the 16 contract checks and a live server boot.
 
-    hoursParser      79    storeHours       35    storeSearch      41
+    hoursParser      79    storeHours       35    storeSearch      65
     publicSuffix     35    rdap              8    claimGate        59
     dedupeListings   14    pureCigarCheck   10    hoursSweep       43
     recallMonitor    14    geocodePins      54    linkCheck        26
@@ -105,7 +105,7 @@ Now: **18 suites, 563 assertions, 0 failures**, plus the apply-path tests, the
     closureCheck     16    licenceSync      31    recoverHidden    26
 
 Plus, against a real database: `geocodePins applytest` 7, `reimportTest` 10,
-and the list contract's 16.
+and the list contract's 23.
 
 ---
 
@@ -122,7 +122,7 @@ Measured on the imported directory, not a fixture:
 
 - **Recall 89.96% before, 100.00% after**, 1,984 cases, no failures.
   91.0% → 100% at 50 miles; 70.5% → 100% at 100.
-- 16 of 16 contract checks: the radius cap, the ceiling refusal (forced, by
+- 23 of 23 contract checks: the radius cap, paid placement, the ceiling refusal (forced, by
   lowering the ceiling under the list), paging with no repeats or gaps, two
   shops on one spot, a shop on the radius line, open-now on confirmed hours
   only, hidden rows, and the no-location order unchanged.
@@ -141,6 +141,14 @@ ceiling is 50,000 now.
 **Deliberately not done.** The neutral no-location order is a separate sweep in
 `plan.json` and owes Mason a decision, so a visitor with no location gets
 exactly the order they got before.
+
+**Paid placement, decided 2026-09-12.** Mason asked for the judgement call
+rather than the question, so it is built: two labelled sponsored slots at the
+head of a bounded search, Featured reaching 15 miles and Partner 50, nothing at
+all on a nationwide list. It reorders and never removes — the contract check
+proves that against the database by making a real shop a Partner, comparing the
+result sets, and putting it back. Full reasoning in `SWEEPS.md`; three constants
+in `utils/storeSearch.js` change it, and slots = 0 turns it off.
 
 ### 5.2 Pins, states and foreign rows — code done
 

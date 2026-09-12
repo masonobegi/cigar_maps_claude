@@ -119,6 +119,18 @@ export default function StoreCard({ store }) {
       <StoreThumb store={store} />
 
       <div className="min-w-0 flex-1 flex flex-col">
+        {/*
+          A shop paid to sit at the top of this list, so the card says so.
+          Deliberately above the name and in muted grey rather than the amber
+          every other badge uses: a disclosure is not a feature, and a
+          disclosure a reader has to hunt for is not one at all. The server
+          only ever marks a row it lifted, never one that earned its place.
+        */}
+        {store.sponsored && (
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-0.5"
+            style={{ color: MUTED }}>Sponsored</p>
+        )}
+
         <div className="flex items-start gap-1.5">
           <h2 className="font-semibold leading-snug line-clamp-2" style={{ color: TEXT }}>{store.name}</h2>
           {store.verified === 1 && <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#4ADE80' }} aria-label="Verified" />}

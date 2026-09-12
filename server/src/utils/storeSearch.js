@@ -38,6 +38,105 @@ const PAGE_SIZE = 60;
  */
 const CANDIDATE_CEILING = 50000;
 
+// ── Paid placement ──────────────────────────────────────────────────────────
+//
+// billing.js sells Featured at $49 for "top placement in your city and on the
+// map" and Partner at $149 for "top placement across your whole metro". Until
+// now `is_featured` was simply the first sort key, which meant one Featured
+// shop would have sat on top of every list in the country — the opposite of
+// what "in your city" says — and in a location search the distance sort
+// overrode it entirely, so the thing being sold did not happen at all.
+//
+// The reading taken here, and the reasoning, because somebody will want to
+// change it:
+//
+//  1. A sponsored slot NEVER removes or displaces a result. It lifts a row that
+//     already matched the search to the top of the list; the set and the total
+//     are identical either way. Search recall is the one thing this codebase has
+//     just spent a whole sweep fixing, and no amount of money should be able to
+//     undo it.
+//  2. It is labelled. Undisclosed paid placement is deceptive, and a directory
+//     that quietly sells its result order is worth less than one that does not.
+//     The client shows "Sponsored" on the row.
+//  3. It only happens inside what the customer actually searched — a radius
+//     around a point, or a named city. A paid shop is never inserted into a
+//     town nobody searched. That is what makes "top placement in your city" an
+//     honest promise rather than spam.
+//  4. Featured and Partner differ by REACH, not just by precedence, because
+//     that is what the two plans describe: "your city" against "your whole
+//     metro". A Featured shop can take a slot when the search is near it; a
+//     Partner shop can take one across the metro.
+//  5. Two slots, first page only. The plans promise a shop comes up first, not
+//     that it owns the page. A list that is half advertising is not a directory.
+//  6. A list with no location gets NO sponsored slots at all. "Top placement in
+//     your city" cannot mean "top of a nationwide list", and that contradiction
+//     is exactly what the audit asked to have settled.
+//
+// The map is deliberately untouched: a viewport returns every pin in it, so
+// there is no order to sell. "On the map" is honoured by the badge a paid shop
+// already carries, not by moving pins.
+
+/** How many rows at the top of the first page may be sponsored. */
+const SPONSORED_SLOTS = 2;
+
+/** "Your city" — how far a Featured shop's placement reaches, in miles. */
+const FEATURED_REACH_MI = 15;
+
+/** "Your whole metro" — the same for Partner. */
+const PARTNER_REACH_MI = 50;
+
+/** 2 for Partner, 1 for Featured, 0 for anyone not paying today. */
+function sponsorRank(row, now = new Date()) {
+  const until = row.featured_until ? new Date(row.featured_until) : null;
+  if (!until || !(until.getTime() > now.getTime())) return 0;
+  return row.plan === 'partner' ? 2 : row.plan === 'featured' ? 1 : 0;
+}
+
+/**
+ * Reorder one already-filtered, already-sorted list so that up to
+ * SPONSORED_SLOTS paying shops sit at the front.
+ *
+ * Pure, and deliberately a reordering: every row that went in comes out, which
+ * is what lets the recall monitor assert that sponsorship cannot cost a
+ * customer a result. `bounded` is false for a nationwide list, and then this
+ * does nothing at all.
+ *
+ * Returns a new array; the input is not mutated. Sponsored rows are tagged
+ * `sponsored` and `sponsored_plan` so the client can label them and so the
+ * monitor can tell a paid lift from a broken sort.
+ */
+function applySponsored(rows, { bounded = false, now = new Date(), slots = SPONSORED_SLOTS } = {}) {
+  if (!bounded || !Array.isArray(rows) || rows.length < 2) return rows;
+
+  const eligible = [];
+  for (const r of rows) {
+    const rank = sponsorRank(r, now);
+    if (!rank) continue;
+    // Reach. A row with no distance (a city search) is inside its own city by
+    // definition — that is what the customer asked for.
+    const reach = rank === 2 ? PARTNER_REACH_MI : FEATURED_REACH_MI;
+    const d = r.distance_mi === null || r.distance_mi === undefined ? null : Number(r.distance_mi);
+    if (d !== null && d > reach) continue;
+    eligible.push({ row: r, rank, d });
+  }
+  if (!eligible.length) return rows;
+
+  // Partner first, then the nearer shop, then the lower id so the order never
+  // wobbles between two identical requests.
+  eligible.sort((a, b) => (b.rank - a.rank)
+    || ((a.d ?? Infinity) - (b.d ?? Infinity))
+    || (a.row.id - b.row.id));
+
+  const lifted = eligible.slice(0, Math.max(0, slots));
+  if (!lifted.length) return rows;
+  const liftedIds = new Set(lifted.map(x => x.row.id));
+
+  return [
+    ...lifted.map(x => ({ ...x.row, sponsored: true, sponsored_plan: x.rank === 2 ? 'partner' : 'featured' })),
+    ...rows.filter(r => !liftedIds.has(r.id)),
+  ];
+}
+
 /**
  * Hours somebody stands behind. Map hours are not in this set: about half the
  * ones we could check against a shop's own site were wrong on some day, so an
@@ -174,6 +273,7 @@ function hoursAreConfirmed(source) {
 
 module.exports = {
   RADIUS_MAX_MI, PAGE_SIZE, CANDIDATE_CEILING, CONFIRMED_HOURS_SOURCES, BOUNDARY_EPS_MI,
+  SPONSORED_SLOTS, FEATURED_REACH_MI, PARTNER_REACH_MI, sponsorRank, applySponsored,
   haversine, distanceSql, boundingBox, fold, folded, buildFilters, matchesFilters,
   normalizeRadius, hoursAreConfirmed,
 };
@@ -247,6 +347,91 @@ if (require.main === module) {
 
   ok(hoursAreConfirmed('website') && hoursAreConfirmed('chain'), 'website and chain hours are confirmed');
   ok(!hoursAreConfirmed('osm') && !hoursAreConfirmed(null), 'map hours and no hours are not confirmed');
+
+  // ── paid placement ─────────────────────────────────────────────────────────
+  const NOW = new Date('2026-09-12T00:00:00Z');
+  const LIVE = '2026-12-01T00:00:00Z';      // still paying
+  const LAPSED = '2026-01-01T00:00:00Z';    // stopped paying
+  const row = (id, d, extra = {}) => ({ id, distance_mi: d, ...extra });
+  const list = [
+    row(1, 0.5), row(2, 1.0), row(3, 2.0), row(4, 3.0), row(5, 4.0),
+  ];
+  const order = rs => rs.map(r => r.id);
+
+  // The property that matters more than any other: a sponsored slot reorders,
+  // it never removes. No amount of money can cost a customer a result.
+  const withPaid = [...list];
+  withPaid[3] = row(4, 3.0, { plan: 'partner', featured_until: LIVE });
+  const done = applySponsored(withPaid, { bounded: true, now: NOW });
+  ok(done.length === withPaid.length, 'a sponsored lift keeps every row', { was: withPaid.length, now: done.length });
+  ok(new Set(order(done)).size === done.length, 'and never duplicates one');
+  ok(JSON.stringify(order(done).slice().sort()) === JSON.stringify(order(withPaid).slice().sort()),
+    'and the set is identical either way', order(done));
+  ok(order(done)[0] === 4 && done[0].sponsored === true && done[0].sponsored_plan === 'partner',
+    'the paying shop is lifted to the top and labelled', order(done));
+  ok(order(done).slice(1).join() === '1,2,3,5', 'and everything else keeps its distance order', order(done));
+  ok(done.slice(1).every(r => !r.sponsored), 'only the lifted row is labelled');
+  ok(withPaid[3].sponsored === undefined, 'and the input is not mutated');
+
+  // A nationwide list buys nothing. "Top placement in your city" cannot mean
+  // "top of a national list".
+  ok(applySponsored(withPaid, { bounded: false, now: NOW }) === withPaid,
+    'a list with no location gets no sponsored slots');
+
+  // Reach is what separates the two plans.
+  const farFeatured = [row(1, 0.5), row(2, 30, { plan: 'featured', featured_until: LIVE })];
+  ok(order(applySponsored(farFeatured, { bounded: true, now: NOW }))[0] === 1,
+    'a Featured shop 30 miles away does not take a slot — "your city" is 15 miles');
+  const nearFeatured = [row(1, 0.5), row(2, 10, { plan: 'featured', featured_until: LIVE })];
+  ok(order(applySponsored(nearFeatured, { bounded: true, now: NOW }))[0] === 2,
+    'and at 10 miles it does');
+  const farPartner = [row(1, 0.5), row(2, 30, { plan: 'partner', featured_until: LIVE })];
+  ok(order(applySponsored(farPartner, { bounded: true, now: NOW }))[0] === 2,
+    'a Partner shop at 30 miles does — "your whole metro" is 50');
+  const tooFarPartner = [row(1, 0.5), row(2, 80, { plan: 'partner', featured_until: LIVE })];
+  ok(order(applySponsored(tooFarPartner, { bounded: true, now: NOW }))[0] === 1,
+    'but not at 80 miles');
+
+  // Partner outranks Featured, and distance breaks a tie between equals.
+  const both = [
+    row(1, 0.5), row(2, 5, { plan: 'featured', featured_until: LIVE }),
+    row(3, 8, { plan: 'partner', featured_until: LIVE }),
+  ];
+  ok(order(applySponsored(both, { bounded: true, now: NOW })).join() === '3,2,1',
+    'Partner takes the first slot, Featured the second', order(applySponsored(both, { bounded: true, now: NOW })));
+  const twoPartners = [
+    row(1, 0.5), row(2, 9, { plan: 'partner', featured_until: LIVE }),
+    row(3, 4, { plan: 'partner', featured_until: LIVE }),
+  ];
+  ok(order(applySponsored(twoPartners, { bounded: true, now: NOW }))[0] === 3,
+    'and between two Partners the nearer one goes first');
+
+  // Only two slots, however many shops are paying.
+  const fivePaying = [1, 2, 3, 4, 5].map(i => row(i, i, { plan: 'partner', featured_until: LIVE }));
+  const capped = applySponsored(fivePaying, { bounded: true, now: NOW });
+  ok(capped.filter(r => r.sponsored).length === SPONSORED_SLOTS,
+    `at most ${SPONSORED_SLOTS} rows are ever sponsored`, capped.filter(r => r.sponsored).length);
+
+  // A subscription that lapsed buys nothing.
+  const lapsed = [row(1, 5), row(2, 0.5, { plan: 'partner', featured_until: LAPSED })];
+  ok(order(applySponsored(lapsed, { bounded: true, now: NOW })).join() === '1,2',
+    'a lapsed subscription buys no placement — and the shop keeps its natural position', order(applySponsored(lapsed, { bounded: true, now: NOW })));
+  ok(sponsorRank({ plan: 'partner', featured_until: LAPSED }, NOW) === 0, 'a lapsed Partner ranks zero');
+  ok(sponsorRank({ plan: 'partner', featured_until: LIVE }, NOW) === 2, 'a live Partner ranks two');
+  ok(sponsorRank({ plan: 'featured', featured_until: LIVE }, NOW) === 1, 'a live Featured ranks one');
+  ok(sponsorRank({ plan: 'free', featured_until: LIVE }, NOW) === 0, 'a free plan ranks zero whatever the date says');
+  ok(sponsorRank({}, NOW) === 0, 'and so does a shop with no plan at all');
+
+  // A city search has no distances, and every match is in the city by
+  // definition — which is exactly what "top placement in your city" sells.
+  const cityRows = [row(1, null), row(2, null, { plan: 'featured', featured_until: LIVE })];
+  ok(order(applySponsored(cityRows, { bounded: true, now: NOW }))[0] === 2,
+    'in a city search a paying shop in that city takes the slot');
+
+  // Nothing to reorder.
+  ok(applySponsored([], { bounded: true }).length === 0, 'an empty list survives');
+  ok(order(applySponsored(list, { bounded: true, now: NOW })).join() === '1,2,3,4,5',
+    'a list where nobody pays is untouched');
 
   console.log(`\nstoreSearch self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

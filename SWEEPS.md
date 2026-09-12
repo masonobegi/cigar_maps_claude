@@ -157,16 +157,56 @@ reading the output is the work, not an optional extra.
   rotating national sample, or IP geolocation. Until then the home page, the
   navbar autocomplete and the review picker keep showing the same alphabetical
   slice.
-- **How paid placement should appear in a search.** `sweep/search-and-menus`
-  worked out a shape — at most three sponsored slots at the top of a radius the
-  customer chose, never a town they did not search, Partner above Featured — and
-  it is deliberately not implemented, because what the plans promise and what
-  the distance sort does are still contradictory and that is a decision, not a
-  bug. It is ready to build the moment it is settled.
+- ~~How paid placement should appear in a search.~~ **Decided and built** —
+  Mason asked for a judgement call rather than a question. See "Paid placement"
+  below. Override it by changing three numbers in `utils/storeSearch.js`.
 - **Whether about two-thirds of claims may need a person.** The claim safety
   gate keeps the self-serve shortcut for roughly 1,537 of 4,533 eligible
   listings; the rest wait for staff. It never rejects a claim, and it tells the
   claimant why.
+
+## Paid placement, as decided on 2026-09-12
+
+`billing.js` sells Featured at $49 for "top placement in your city and on the
+map" and Partner at $149 for "top placement across your whole metro". Neither
+happened. `is_featured` was the first sort key, so one Featured shop would have
+sat on top of every list in the country — the opposite of "in your city" — and
+in a location search the distance sort overrode it entirely, so the thing being
+sold did not occur at all.
+
+The rules now, and the reasoning, because a later session will want to argue
+with them:
+
+1. **A sponsored slot reorders and never removes.** It lifts a row that already
+   matched the search; the set and the total are identical either way. The
+   recall monitor asserts this against the database, because it is the property
+   everything else rests on: no amount of money can cost a customer a result.
+2. **It is labelled.** The card says "Sponsored" above the shop's name, in
+   muted grey rather than the amber every other badge uses — a disclosure is
+   not a feature, and one a reader has to hunt for is not a disclosure.
+3. **Only inside what the customer searched** — a radius around a point, or a
+   named city. A paid shop is never inserted into a town nobody searched.
+4. **Featured and Partner differ by reach**, because that is what the two plans
+   describe: Featured carries 15 miles ("your city"), Partner 50 ("your whole
+   metro"). Partner outranks Featured; between equals the nearer shop wins,
+   then the lower id, so the order never wobbles.
+5. **Two slots, and the first page only.** The plans promise a shop comes up
+   first, not that it owns the page.
+6. **A list with no location sells nothing.** "Top placement in your city"
+   cannot honestly mean "top of a nationwide list". That contradiction is what
+   the audit asked to have settled, and this is the settlement.
+
+The map is untouched: a viewport returns every pin in it, so there is no order
+to sell. "On the map" is honoured by the badge a paid shop already carries.
+
+To change any of it: `SPONSORED_SLOTS`, `FEATURED_REACH_MI` and
+`PARTNER_REACH_MI` in `server/src/utils/storeSearch.js`. Setting the slots to 0
+turns paid placement off without removing anything else.
+
+**Still owed on this:** whether the prices and the reach match what Mason wants
+to sell, and — if a shop is ever refused a slot it thinks it paid for — what the
+dashboard should tell it. The `store_views` table already records impressions,
+so reporting "you appeared in N searches" is possible but not built.
 
 ## Working rules
 
