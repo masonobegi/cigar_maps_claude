@@ -174,6 +174,14 @@ async function start() {
     console.error('[links] could not start the link checker:', err.message);
   }
 
+  // Tell shops their page exists, a few a day. Off unless OUTREACH_AUTO=1:
+  // a job that writes to strangers must never start because somebody deployed.
+  try {
+    require("./jobs/outreach").runOnStartup();
+  } catch (err) {
+    console.error("[outreach] could not schedule:", err.message);
+  }
+
   // Keep the public directory to the listings every fact of which is backed:
   // a shop whose hours get read tomorrow appears, one whose domain lapses goes.
   try {

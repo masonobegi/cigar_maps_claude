@@ -314,7 +314,52 @@ async function report({ log = console.log } = {}) {
   return { ...r, claimed: claimed.n };
 }
 
-module.exports = { find, findOne, draft, send, followup, report, compose, composeFollowup,
+/**
+ * Send it without anybody running anything.
+ *
+ * The daily command was still a chore, and a chore done by hand is a chore that
+ * stops in week two. The server already holds the credentials and the database,
+ * so it can do the round itself: queue the city, send the day's few, pick up
+ * anything a week old.
+ *
+ * Off unless asked for, because a job that writes to strangers should never
+ * start because somebody deployed:
+ *
+ *   OUTREACH_AUTO=1            turn it on at all
+ *   OUTREACH_CITY=tampa-fl     the place to work through; unset means everywhere
+ *   OUTREACH_DAILY=10          how many a day, capped at DAILY_CAP regardless
+ *
+ * Start at ten. A domain with no sending history that begins with forty a day
+ * is a domain whose mail goes to spam, and the shops you most want are the ones
+ * you would burn.
+ */
+function runOnStartup({ log = console.log } = {}) {
+  if (process.env.OUTREACH_AUTO !== '1') return;
+  if (!mailConfigured()) {
+    log('[outreach] OUTREACH_AUTO is on but no SMTP credentials are set, so nothing can be sent');
+    return;
+  }
+  const perDay = Math.min(Number(process.env.OUTREACH_DAILY) || 10, DAILY_CAP);
+  const city = process.env.OUTREACH_CITY || null;
+
+  const round = async () => {
+    try {
+      await draft({ city, log });
+      await send({ limit: perDay, log });
+      await followup({ limit: perDay, log });
+    } catch (err) {
+      log(`[outreach] round failed: ${err.message}`);
+    }
+  };
+
+  // Not at boot: a deploy would then send a round, and three deploys in an hour
+  // would send three. Once an hour it asks whether a day has passed, and send()
+  // is what actually refuses to exceed the cap.
+  setTimeout(() => { round(); setInterval(round, 60 * 60 * 1000); }, 15 * 60 * 1000);
+  log(`[outreach] automatic: up to ${perDay} a day${city ? ` in ${city}` : ''}, within the ${DAILY_CAP} cap`);
+}
+
+module.exports = { find, findOne, draft, send, followup, report, runOnStartup, compose, composeFollowup,
   emailsFrom, unsubToken, NOT_THE_SHOP, DAILY_CAP, selftest };
 
 // ── self-test ───────────────────────────────────────────────────────────────
@@ -354,6 +399,9 @@ function selftest() {
   ok(t.length === 24 && t !== unsubToken(224), 'the unsubscribe token is per shop and not a store id');
 
   ok(DAILY_CAP <= 50, 'the daily cap stays small enough that a new domain survives it', DAILY_CAP);
+  ok(Math.min(Number('1000') || 10, DAILY_CAP) === DAILY_CAP,
+    'OUTREACH_DAILY cannot raise the cap, only lower it');
+  ok(Math.min(Number(undefined) || 10, DAILY_CAP) === 10, 'and unset means ten, not the cap');
 
   console.log(`\noutreach self-test: ${pass} passed, ${fail} failed`);
   return fail === 0;
