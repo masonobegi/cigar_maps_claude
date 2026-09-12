@@ -5,3 +5,11 @@ reading 654 shop websites for a contact address
   200/654 read, 100 with an address
   250/654 read, 129 with an address
   300/654 read, 158 with an address
+  350/654 read, 190 with an address
+  400/654 read, 228 with an address
+  450/654 read, 252 with an address
+  500/654 read, 279 with an address
+  550/654 read, 305 with an address
+  600/654 read, 335 with an address
+  650/654 read, 358 with an address
+done: 360 shops publish an address we can write to, 294 do not

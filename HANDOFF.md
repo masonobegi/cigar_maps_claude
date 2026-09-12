@@ -70,7 +70,7 @@ all lists somebody has to read.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| 1 | [Traffic and shops, not data](#1-traffic-and-shops-not-data) | 0 claimed shops and 0 indexable pages. The directory is no longer the constraint |
+| 1 | [Three environment variables, then one command a day](#1-three-environment-variables-then-one-command-a-day) | Everything automatable is automated; what is left needs a card and a password |
 | 2 | [The pins nobody could settle](#2-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
 | 3 | [Licence moves](#3-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
 | 4 | [The four manual registries](#4-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
@@ -79,26 +79,54 @@ all lists somebody has to read.
 
 ---
 
-## 1. Traffic and shops, not data
+## 1. Three environment variables, then one command a day
 
-The directory is in better shape than the business around it. Measured on
-2026-09-12: **0 shops have claimed a listing, 3 users, 0 reviews**, and **no page
-can be indexed** — all 4,363 shop pages serve one `<title>`, one description and
-a canonical tag pointing at the homepage, which tells Google every URL is a copy
-of the root. There is no sitemap, no robots.txt (the catch-all answers both with
-HTML), no structured data, and no analytics. **SMTP is unset in production**, so
-the claim flow cannot send its verification code and no shop can claim anything.
+**Everything that could be automated has been.** What is left needs a card and a
+password, and takes an afternoon.
 
-The plan of record, with the numbers behind it:
-<https://claude.ai/code/artifact/0a2e8a69-b35b-4e97-a855-e845a314c83d>
+### What you have to do by hand, once
 
-In short: set SMTP, a real domain and analytics this week; then per-page
-metadata, LocalBusiness JSON-LD, a real sitemap and city landing pages; then fix
-the 68 Tampa listings by hand and walk into ten of them. Do not sell the $49 and
-$149 placements until a city page brings real traffic.
+| | What | Why it blocks everything behind it |
+|---|---|---|
+| 1 | **Buy a domain, point it at Railway, set `APP_URL`** | Every canonical, sitemap entry and outreach link reads `APP_URL`. Change it later and you throw away whatever the indexing has earned |
+| 2 | **Set `SMTP_USER` and `SMTP_PASS`** | No email leaves the server, so no shop can claim a listing and no outreach can send. Use a transactional sender (Resend, Postmark) on the new domain rather than Gmail, which throttles. Also set `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry |
+| 3 | **Add analytics and Search Console** | Otherwise none of the rest can be measured. `store_views` already records every shop page view; what is missing is search impressions and indexed-page counts |
 
-**More data sweeps are not the constraint.** What remains below is honest
-tidying, and none of it changes the business.
+The old Gmail password in this repository's history is burned — rotate it
+whatever you decide.
+
+### What runs itself now
+
+| Job | What it does | When |
+|---|---|---|
+| `utils/seo.js` | Per-page title, description, canonical, LocalBusiness JSON-LD, robots.txt, sitemap index | Every request; sitemap rebuilt hourly |
+| `utils/places.js` + `/cigar-shops/:slug` | A page per state and per city with two or more shops, with an ItemList and a breadcrumb | Live, cached 10 minutes |
+| `jobs/verifiedSet.js` | Recomputes the verified set both ways: a shop whose hours get read appears, one whose domain lapses goes | 10 minutes after boot, then daily |
+| `jobs/outreach.js find` | Reads each shop's own site for the address it publishes | On demand; already run — **360 of 656 shops publish one** |
+| `jobs/linkCheck`, `webMenu`, `closureCheck` | Links, menus and closures | On boot, then on their own timers |
+
+### The one command a day
+
+```bash
+node src/jobs/outreach.js draft --city tampa-fl      # queue a city, once
+node src/jobs/outreach.js send  --limit 20           # every morning
+node src/jobs/outreach.js followup                   # picks up anything 7 days old
+node src/jobs/outreach.js report                     # sent, replied, claimed
+```
+
+`send` refuses to exceed 40 in any 24 hours and paces two seconds apart, because
+a new domain sending six hundred at once is a new domain in a spam folder. Every
+message carries a one-click unsubscribe (`/api/outreach/unsubscribe`, signed per
+shop) and is never sent twice to the same listing.
+
+**What is deliberately not automated: the reply.** A shop that answers gets a
+person. That is the entire value of the channel.
+
+### What to expect, and when
+
+Indexing is slow: pages start appearing in two to six weeks, rankings build over
+months. Nothing below will feel like it is working for a fortnight. The leading
+indicator is *impressions* in Search Console, which moves well before clicks do.
 
 ## 2. The pins nobody could settle
 

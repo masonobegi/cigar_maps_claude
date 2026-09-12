@@ -245,6 +245,41 @@ shop, "Lake Orion's premier cigar bar bringing its humidor online" — and all s
 were merged. `dedupeListings.mergeAutomatic` now runs after every import, on the
 auto tier only; review-tier clusters still wait for a person.
 
+### The test run, and the machinery around it
+
+**4,363 → 656 public listings**, at Mason's word: only listings every fact of
+which is backed. A listing is public when the pure-cigar check kept it, its
+website is live and still its own, its hours were read off that website, and its
+door is backed by a licence, by its own site printing that street, or by both
+geocoders landing on it. 3,707 are held as `unverified`, each naming what is
+missing; one statement restores them.
+
+`jobs/verifiedSet.js` now recomputes that set daily in both directions, so it
+stays true rather than having been true once. The address backing moved onto the
+row (`stores.address_backed_by`) so the server can read it without the evidence
+files, which live only in this repository.
+
+### What a search engine sees, which was nothing
+
+Every page served one title, one description and a canonical pointing at the
+homepage — an instruction saying each URL is a copy of the root. `utils/seo.js`
+now writes the head per route, shop pages carry LocalBusiness JSON-LD with the
+hours read off the shop's own site, and `/cigar-shops/tampa-fl` and
+`/cigar-shops/florida` exist: a page per state and per city holding two or more
+shops, each with an ItemList and a breadcrumb. 140 place pages and 656 shop
+pages are in the sitemap.
+
+The first sitemap shipped empty — it asked for a column the table does not have,
+caught the error and served zero URLs, which tells a crawler the site has no
+pages. The same silent-cap shape as the licence fetch stopping at 50,000 rows.
+
+### Telling the shops, without typing
+
+`jobs/outreach.js` reads each shop's own website for the address it publishes:
+**360 of the 656 publish one**. It queues a city, sends at a capped pace, nudges
+once after seven days, and records what came of it. Every message carries a
+signed one-click unsubscribe. The reply is not automated and should not be.
+
 ### Still open
 
 - **25 pin rows** where a geocoder answered with a different address, in
