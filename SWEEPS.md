@@ -5,7 +5,7 @@ ranked"). Numbers below are that plan's ranks. Each sweep is built, dry-run,
 reviewed, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
-Updated 2026-09-11.
+Updated 2026-09-11. Public listings: 4,750.
 
 **Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
 are fine; a glass, vape, hookah or kava shop that happens to sell cigars is not in
@@ -21,6 +21,7 @@ this directory, whatever it carries.
 | 5 | Stock counts | 741 cigar lines no longer count stock at hidden shops; no more $0.00 prices; 2,790 rows marked out of stock |
 | 15 | Search text | Apostrophes and "&" folded ("wild bills" 2 → 215 matches); city chips carry their state |
 | 16 | Duplicates | Matching by door, not name: 42 plain merges applied, 28 clusters left for review |
+| 8b | Pure cigar check: every listing must prove itself | 7,230 public → 4,750. 4,114 proven by name or stock, 636 by their own site, 2,480 hidden as unproven with the reason kept. A browser pass rescued 60 whose sites are built in JavaScript |
 | 8 | Non-shop purge, with Mason's scope rule: cigar and pipe shops only | 160 hidden — 110 vape, hookah, kava, glass and novelty shops, 16 makers and leaf companies, 14 lounges on wheels, 4 rolling services, 4 humidor catalogues, 2 cigarette outlets, 2 anti-smoking bodies, a plumber, 3 pins on an ATF office and an RV resort. The classifier scores the same way, so a refresh does not bring them back |
 
 ## Still to do
@@ -29,7 +30,6 @@ In the order I plan to work through them.
 
 | # | Sweep | Size |
 |---|-------|------|
-| 8b | **Pure cigar check on the evidence.** Names that say neither vape nor cigar ("Smoke Shop", "XYZ Tobacco", corner shops) judged by reading each shop's own site: cigars and pipe tobacco as the main trade, or out | ~3,000 to check, ~450 expected out |
 | 4 | Moved shops still at the old address | ~173 candidates, ~18 confirmed |
 | 9 | Pins more than 1 km from their address, wrong states, foreign records | 100–130 pins |
 | 7, 19 | Taken-over, parked and redirected links; links to the wrong business | ~318 links, 14 gambling thumbnails |
@@ -59,6 +59,6 @@ In the order I plan to work through them.
 ## Working rules
 
 - Read-only dry run, review the output by hand, then apply the saved file.
-- Never hide a real shop to catch a stale one; anything uncertain goes to a review list.
+- When in doubt, the listing stays off the map: a shop we cannot show is a cigar shop is hidden as "unproven", never deleted, and returns when evidence arrives.
 - Claimed and staff-edited listings are never touched by a sweep.
 - Every hide is reversible and carries its reason.
