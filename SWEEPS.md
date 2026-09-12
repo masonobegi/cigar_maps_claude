@@ -5,7 +5,7 @@ ranked"). Numbers below are that plan's ranks. Each sweep is built, dry-run,
 reviewed, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
-Updated 2026-09-11. Public listings: 4,750.
+Updated 2026-09-11. Public listings: 4,429.
 
 **Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
 are fine; a glass, vape, hookah or kava shop that happens to sell cigars is not in
@@ -21,6 +21,7 @@ this directory, whatever it carries.
 | 5 | Stock counts | 741 cigar lines no longer count stock at hidden shops; no more $0.00 prices; 2,790 rows marked out of stock |
 | 15 | Search text | Apostrophes and "&" folded ("wild bills" 2 → 215 matches); city chips carry their state |
 | 16 | Duplicates | Matching by door, not name: 42 plain merges applied, 28 clusters left for review |
+| 8c | Outlet chains judged on their own sites | 321 hidden: Wild Bill's (198), Sweet Fire (61), Cheap Tobacco (32), The Tobacco Shoppe (21) and 9 tobacco counters inside Brookshire Brothers grocery stores. Cigarette, vape and grocery chains with a cigar shelf, reversible by chain |
 | 8b | Pure cigar check: every listing must prove itself | 7,230 public → 4,750. 4,114 proven by name or stock, 636 by their own site, 2,480 hidden as unproven with the reason kept. A browser pass rescued 60 whose sites are built in JavaScript |
 | 8 | Non-shop purge, with Mason's scope rule: cigar and pipe shops only | 160 hidden — 110 vape, hookah, kava, glass and novelty shops, 16 makers and leaf companies, 14 lounges on wheels, 4 rolling services, 4 humidor catalogues, 2 cigarette outlets, 2 anti-smoking bodies, a plumber, 3 pins on an ATF office and an RV resort. The classifier scores the same way, so a refresh does not bring them back |
 
