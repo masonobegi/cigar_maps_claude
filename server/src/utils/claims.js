@@ -23,6 +23,19 @@ async function approveClaim(claimId, { verify = false, adminNotes = null } = {})
   const store = await db.get('SELECT * FROM stores WHERE id = ?', [claim.store_id]);
   if (!store) throw httpError(404, 'Store not found');
   if (store.claimed || store.user_id) throw httpError(409, 'Store is already claimed');
+  // A listing that duplicates another must never be claimed: approving it puts
+  // a second pin on the map for one shop, and the owner then maintains the
+  // wrong one. The canonical listing's id is in storefront_reason.
+  if (store.storefront === 'duplicate') {
+    throw httpError(409, `That listing duplicates another one${store.storefront_reason ? ` — ${store.storefront_reason}` : ''}. Claim the original instead.`);
+  }
+  // Self-serve never un-hides a listing. Staff hid #10022 Broadway Cigar
+  // Company after confirming it closed; approving a claim on it would have put
+  // it back on the map with a green verified check. Reopening is its own
+  // decision, through /admin/closures/:id/reopen, with its reason recorded.
+  if (!store.visible && !verify) {
+    throw httpError(409, 'That listing is not on the public map. A member of staff has to review it before it can be claimed.');
+  }
 
   const already = await db.get('SELECT id FROM stores WHERE user_id = ?', [claim.user_id]);
   if (already) throw httpError(409, 'That account already manages another store');

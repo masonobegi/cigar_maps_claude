@@ -512,6 +512,14 @@ const MIGRATIONS = [
   // stock and says why. Never deleted: the shop may well still carry it, and a
   // deleted row loses the price and the history with it.
   { name: '099_inventory_stale_marker', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS stale_reason TEXT' },
+
+  // Why a claim could not take the self-serve shortcut, kept on the claim so
+  // staff see the same reasons the claimant was given.
+  { name: '100_store_claims_proof_reasons', sql: 'ALTER TABLE store_claims ADD COLUMN IF NOT EXISTS proof_reasons TEXT' },
+  // One email-verified claim per address. Without this, one mailbox could hold
+  // an instant claim on every listing that happens to share its domain.
+  { name: '101_store_claims_one_email_verified', sql: `CREATE UNIQUE INDEX IF NOT EXISTS idx_store_claims_email_verified
+      ON store_claims (lower(contact_email)) WHERE method = 'email' AND status = 'approved'` },
 ];
 
 async function runMigrations() {

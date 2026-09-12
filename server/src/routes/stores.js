@@ -714,6 +714,8 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { approveClaim, emailMatchesWebsite } = require('../utils/claims');
+const { claimVerdict } = require('../utils/claimProof');
+const { checkWebsite } = require('../jobs/linkCheck');
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'mason.obegi@gmail.com';
 
@@ -746,8 +748,39 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
   const { contact_email, contact_phone, message } = req.body || {};
   const email = (contact_email || req.user.email || '').trim().toLowerCase();
 
-  const canEmailVerify = !!process.env.SMTP_USER && emailMatchesWebsite(email, store.website);
+  // The safety gate. A claim hands over control of a listing, and the only
+  // thing standing between a stranger and one is whether they can read email at
+  // a domain the national directory supplied and nobody verified. About 1,150
+  // eligible listings have a domain that is dead — and roughly seventy per cent
+  // of those are not registered at all, so anyone could buy one for ten dollars
+  // and claim the shop.
+  //
+  // Nothing here refuses the claim. It only decides whether the self-serve
+  // shortcut is available; everything else waits for a person, and the reasons
+  // are kept on the claim so staff and the claimant see the same list.
+  let proof = { verdict: 'manual', reasons: ['the shortcut is unavailable'] };
+  if (process.env.SMTP_USER && emailMatchesWebsite(email, store.website)) {
+    const siblings = await db.get(
+      `SELECT COUNT(*)::int AS n FROM stores
+       WHERE visible = 1 AND website IS NOT NULL
+         AND lower(regexp_replace(regexp_replace(website, '^[a-z]+://', ''), '^www\\.', '')) LIKE ?`,
+      [`${String(store.website).toLowerCase().replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0]}%`]);
+    // A live re-check, because a status written weeks ago says nothing about a
+    // domain that changed hands yesterday.
+    let live = null;
+    try { live = await checkWebsite(store.website, store); } catch { /* an unreadable site goes to staff anyway */ }
+    proof = claimVerdict(store, {
+      email,
+      contactEmail: email,
+      emailVerified: req.user.email_verified === 1 || req.user.email_verified === true,
+      siblingsOnDomain: Number(siblings?.n) || 1,
+      liveStatus: live ? live.status : store.website_status,
+      finalUrl: live ? live.final_url : store.website_final_url,
+    });
+  }
+  const canEmailVerify = proof.verdict === 'instant';
   const method = canEmailVerify ? 'email' : 'manual';
+  const proofReasons = proof.reasons.length ? JSON.stringify(proof.reasons) : null;
 
   // Don't let a resend loop mail the shop's inbox repeatedly: within the
   // cooldown, keep the code that is already in flight.
@@ -765,19 +798,19 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
   if (pending) {
     if (sendCode) {
       await db.run(
-        'UPDATE store_claims SET method = ?, contact_email = ?, contact_phone = ?, message = ?, code_hash = ?, code_expires_at = ?, code_sent_at = NOW(), attempts = 0 WHERE id = ?',
-        [method, email, contact_phone || null, message || null, codeHash, expires, pending.id]);
+        'UPDATE store_claims SET method = ?, contact_email = ?, contact_phone = ?, message = ?, code_hash = ?, code_expires_at = ?, code_sent_at = NOW(), attempts = 0, proof_reasons = ? WHERE id = ?',
+        [method, email, contact_phone || null, message || null, codeHash, expires, proofReasons, pending.id]);
     } else {
       await db.run(
-        'UPDATE store_claims SET method = ?, contact_email = ?, contact_phone = ?, message = ? WHERE id = ?',
-        [method, email, contact_phone || null, message || null, pending.id]);
+        'UPDATE store_claims SET method = ?, contact_email = ?, contact_phone = ?, message = ?, proof_reasons = ? WHERE id = ?',
+        [method, email, contact_phone || null, message || null, proofReasons, pending.id]);
     }
     claimId = pending.id;
   } else {
     const r = await db.run(`
-      INSERT INTO store_claims (store_id, user_id, method, contact_email, contact_phone, message, code_hash, code_expires_at, code_sent_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ${sendCode ? 'NOW()' : 'NULL'}) RETURNING id
-    `, [store.id, req.user.id, method, email, contact_phone || null, message || null, codeHash, expires]);
+      INSERT INTO store_claims (store_id, user_id, method, contact_email, contact_phone, message, code_hash, code_expires_at, code_sent_at, proof_reasons)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ${sendCode ? 'NOW()' : 'NULL'}, ?) RETURNING id
+    `, [store.id, req.user.id, method, email, contact_phone || null, message || null, codeHash, expires, proofReasons]);
     claimId = r.lastInsertRowid;
   }
 
@@ -802,7 +835,14 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
     notifyAdminOfClaim(store, req.user, email, contact_phone, message);
   }
 
-  res.json({ id: claimId, method, status: canEmailVerify ? 'code_sent' : 'pending', email_hint: canEmailVerify ? maskEmail(email) : null });
+  res.json({
+    id: claimId, method,
+    status: canEmailVerify ? 'code_sent' : 'pending',
+    email_hint: canEmailVerify ? maskEmail(email) : null,
+    // Tell the claimant why the shortcut was not available, so a real owner
+    // knows what proof to send instead of being left guessing.
+    review_reasons: canEmailVerify ? null : proof.reasons,
+  });
 }));
 
 function maskEmail(email) {
