@@ -19,6 +19,23 @@ export function hasLounge(store) {
   return store.has_lounge === 1 || store.store_type === 'cigar_lounge';
 }
 
+/**
+ * Only hours somebody stands behind earn an Open or Closed badge: read off the
+ * shop's own website, given by its owner, taken from its chain's store list, or
+ * set by staff. Map hours are shown as what they are — about half the ones we
+ * could check against a shop's own site were wrong on some day, and a green
+ * "Open now" on top of that sends a customer to a locked door.
+ */
+const CONFIRMED_HOURS = new Set(['website', 'owner', 'staff', 'chain']);
+export function hoursConfirmed(store) {
+  return CONFIRMED_HOURS.has(store.hours_source);
+}
+
+/** A shop we could not confirm is still trading says so, quietly. */
+export function unconfirmedShop(store) {
+  return store.operating_status === 'likely_closed';
+}
+
 /** A steady colour per shop, so a monogram reads as that shop's, not a blank. */
 function tint(name) {
   let h = 0;
@@ -73,8 +90,12 @@ function whereLine(store) {
  * One line about today. Open: when it closes, and the day's hours. Closed:
  * when it next opens. Unknown: say so plainly, never guess "closed".
  */
-function HoursLine({ status, today }) {
+function HoursLine({ status, today, confirmed }) {
   const pretty = s => String(s || '').replace('-', '–');
+  if (!confirmed) {
+    if (!today) return <span style={{ color: '#7A6D60' }}>Hours not listed</span>;
+    return <span>Today {pretty(today)}<span style={{ color: '#7A6D60' }}> · from map data, not confirmed</span></span>;
+  }
   if (status.isOpen === true) {
     return <span>{status.label}{today ? <span style={{ color: MUTED }}> · {pretty(today)}</span> : null}</span>;
   }
@@ -87,6 +108,8 @@ export default function StoreCard({ store }) {
   const status = store.open_status || getStoreStatus(store.hours);
   const today = status.today || store.today_hours;
   const lounge = hasLounge(store);
+  const confirmed = hoursConfirmed(store);
+  const unsure = unconfirmedShop(store);
 
   return (
     <Link to={`/stores/${store.id}`}
@@ -110,10 +133,10 @@ export default function StoreCard({ store }) {
         </p>
 
         <div className="flex items-center flex-wrap gap-1.5 mt-2">
-          {status.isOpen === true && (
+          {confirmed && !unsure && status.isOpen === true && (
             <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={OPEN}>Open now</span>
           )}
-          {status.isOpen === false && (
+          {confirmed && !unsure && status.isOpen === false && (
             <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={CLOSED}>Closed</span>
           )}
           {lounge && (
@@ -121,10 +144,16 @@ export default function StoreCard({ store }) {
           )}
         </div>
 
-        <p className="text-xs mt-1.5 flex items-center gap-1" style={{ color: status.isOpen ? '#9FD9B0' : MUTED }}>
+        <p className="text-xs mt-1.5 flex items-center gap-1" style={{ color: confirmed && status.isOpen ? '#9FD9B0' : MUTED }}>
           <Clock className="w-3 h-3 flex-shrink-0" />
-          <HoursLine status={status} today={today} />
+          <HoursLine status={status} today={today} confirmed={confirmed} />
         </p>
+
+        {unsure && (
+          <p className="text-xs mt-1" style={{ color: '#7A6D60' }}>
+            We couldn't confirm this shop is still open. Call or check before you go.
+          </p>
+        )}
       </div>
     </Link>
   );

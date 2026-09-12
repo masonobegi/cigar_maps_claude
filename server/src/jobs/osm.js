@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const { parseOpeningHoursString, fillClosedPerSpec } = require('../utils/hoursParser');
+const { parseOpeningHoursString } = require('../utils/hoursParser');
 
 const https = require('https');
 
@@ -189,7 +189,10 @@ function convertOpeningHours(raw) {
   // The shared parser reads the grammar mappers actually write (commas for
   // semicolons, "24:00", "Mo-We,Sa", typos like "10:00-07:00") where the old
   // code below gave up on 24 real shops. The old path stays as a fallback.
-  const parsed = fillClosedPerSpec(parseOpeningHoursString(raw));
+  // A day the mapper left out is a day nobody recorded, not a day the shop
+  // shuts: Merced showed "Sunday Closed" while the shop opens 9 to 7. The
+  // spec reads an unlisted day as closed, and mappers do not write to spec.
+  const parsed = parseOpeningHoursString(raw);
   if (parsed && Object.values(parsed).some(v => v !== 'Closed')) return parsed;
   const s = raw.trim();
   if (/^24\s*\/\s*7$/.test(s)) {

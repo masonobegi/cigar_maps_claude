@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import BackButton from '../components/BackButton';
-import { StoreThumb, hasLounge } from '../components/StoreCard';
+import { StoreThumb, hasLounge, hoursConfirmed, unconfirmedShop } from '../components/StoreCard';
 import { getStoreStatus } from '../utils/hours';
 
 const DAYS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -681,7 +681,11 @@ export default function StoreProfile() {
   // Open or closed on the shop's own clock, worked out by the server. This used
   // the visitor's clock, so a Tucson shop looked at from Miami was three hours off.
   const openNow = store.open_status || getStoreStatus(hours);
-  const isOpen = openNow.isOpen;
+  // Map hours are shown as map hours: about half of the ones we could check
+  // against a shop's own site were wrong on some day, so they earn no badge.
+  const hoursAreConfirmed = hoursConfirmed(store);
+  const cannotConfirmOpen = unconfirmedShop(store);
+  const isOpen = hoursAreConfirmed && !cannotConfirmOpen ? openNow.isOpen : null;
   const today = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
     new Date(new Date().toLocaleString('en-US', { timeZone: store.timezone || undefined })).getDay()];
   const todayHours = openNow.today || hours[today];
@@ -774,11 +778,19 @@ export default function StoreProfile() {
                   style={{ backgroundColor: '#3A2E0A', color: '#F5C542', border: '1px solid #6B5314' }}>Lounge</span>
               )}
               <span className="text-sm" style={{ color: isOpen ? '#9FD9B0' : MUTED }}>
-                {openNow.label
+                {hoursAreConfirmed && openNow.label
                   ? <>{openNow.label}{isOpen && todayHours ? <span style={{ color: MUTED }}> · today {String(todayHours).replace('-', '–')}</span> : null}</>
-                  : todayHours ? `Today ${String(todayHours).replace('-', '–')}` : 'Hours not listed yet'}
+                  : todayHours
+                    ? <>Today {String(todayHours).replace('-', '–')}{hoursAreConfirmed ? null : <span style={{ color: '#7A6D60' }}> · from map data, not confirmed</span>}</>
+                    : 'Hours not listed yet'}
               </span>
             </div>
+
+            {cannotConfirmOpen && (
+              <p className="text-sm mb-2" style={{ color: '#A8998A' }}>
+                We couldn't confirm this shop is still open. Call or check before you go.
+              </p>
+            )}
 
             {/* Address / phone / website */}
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-2" style={{ color: MUTED }}>

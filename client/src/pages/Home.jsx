@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Store, ArrowRight, MapPin, CheckCircle, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
-import { StoreThumb, hasLounge } from '../components/StoreCard';
+import { StoreThumb, hasLounge, hoursConfirmed, unconfirmedShop } from '../components/StoreCard';
 import { useAuth } from '../context/AuthContext';
 import CigarCard from '../components/CigarCard';
 
@@ -43,7 +43,7 @@ function StoreRow({ store }) {
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
           <span className="font-medium text-sm" style={{ color: TEXT }}>{store.name}</span>
           {store.verified === 1 && <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />}
-          <OpenBadge isOpen={store.is_open} />
+          <OpenBadge isOpen={hoursConfirmed(store) && !unconfirmedShop(store) ? store.is_open : null} />
           {hasLounge(store) && (
             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: '#3A2E0A', color: '#F5C542', border: '1px solid #6B5314' }}>Lounge</span>
