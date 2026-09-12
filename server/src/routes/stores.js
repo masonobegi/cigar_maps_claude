@@ -713,9 +713,8 @@ router.post('/:id/sync-sheet', requireAuth, asyncRoute(async (req, res) => {
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
-const { approveClaim, emailMatchesWebsite } = require('../utils/claims');
-const { claimVerdict } = require('../utils/claimProof');
-const { checkWebsite } = require('../jobs/linkCheck');
+const { approveClaim } = require('../utils/claims');
+const claimGate = require('../utils/claimGate');
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'mason.obegi@gmail.com';
 
@@ -758,27 +757,16 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
   // Nothing here refuses the claim. It only decides whether the self-serve
   // shortcut is available; everything else waits for a person, and the reasons
   // are kept on the claim so staff and the claimant see the same list.
-  let proof = { verdict: 'manual', reasons: ['the shortcut is unavailable'] };
-  if (process.env.SMTP_USER && emailMatchesWebsite(email, store.website)) {
-    const siblings = await db.get(
-      `SELECT COUNT(*)::int AS n FROM stores
-       WHERE visible = 1 AND website IS NOT NULL
-         AND lower(regexp_replace(regexp_replace(website, '^[a-z]+://', ''), '^www\\.', '')) LIKE ?`,
-      [`${String(store.website).toLowerCase().replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0]}%`]);
-    // A live re-check, because a status written weeks ago says nothing about a
-    // domain that changed hands yesterday.
-    let live = null;
-    try { live = await checkWebsite(store.website, store); } catch { /* an unreadable site goes to staff anyway */ }
-    proof = claimVerdict(store, {
-      email,
-      contactEmail: email,
-      emailVerified: req.user.email_verified === 1 || req.user.email_verified === true,
-      siblingsOnDomain: Number(siblings?.n) || 1,
-      liveStatus: live ? live.status : store.website_status,
-      finalUrl: live ? live.final_url : store.website_final_url,
-    });
+  //
+  // utils/claimGate.js gathers the facts — a live link check, the page, how many
+  // listings share the domain, what RDAP says about it — and then judges them
+  // with a pure function, which is what lets its self-test replay all 25 of the
+  // audit's live examples.
+  let proof = { instant: false, reasons: [{ code: 'smtp_off', label: 'claim emails are not switched on' }] };
+  if (process.env.SMTP_USER) {
+    proof = await claimGate.gate(store, req.user, email);
   }
-  const canEmailVerify = proof.verdict === 'instant';
+  const canEmailVerify = proof.instant;
   const method = canEmailVerify ? 'email' : 'manual';
   const proofReasons = proof.reasons.length ? JSON.stringify(proof.reasons) : null;
 
@@ -840,7 +828,8 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
     status: canEmailVerify ? 'code_sent' : 'pending',
     email_hint: canEmailVerify ? maskEmail(email) : null,
     // Tell the claimant why the shortcut was not available, so a real owner
-    // knows what proof to send instead of being left guessing.
+    // knows what proof to send instead of being left guessing. Each reason
+    // carries a code as well as a sentence, so staff can group them.
     review_reasons: canEmailVerify ? null : proof.reasons,
   });
 }));

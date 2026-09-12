@@ -520,6 +520,18 @@ const MIGRATIONS = [
   // an instant claim on every listing that happens to share its domain.
   { name: '101_store_claims_one_email_verified', sql: `CREATE UNIQUE INDEX IF NOT EXISTS idx_store_claims_email_verified
       ON store_claims (lower(contact_email)) WHERE method = 'email' AND status = 'approved'` },
+
+  // What a domain registry says about a domain, cached. The claim gate asks
+  // RDAP whether the website's domain is registered at all and when — a dead
+  // listing's domain is usually for sale, and about 480 listings could be taken
+  // over by anyone willing to spend ten dollars. Cached because a retried claim
+  // and the staff claim card must not each cost a lookup.
+  { name: '102_domain_facts', sql: `CREATE TABLE IF NOT EXISTS domain_facts (
+      domain TEXT PRIMARY KEY,
+      rdap_status TEXT,
+      registered_at TIMESTAMP,
+      checked_at TIMESTAMP DEFAULT NOW()
+    )` },
 ];
 
 async function runMigrations() {
