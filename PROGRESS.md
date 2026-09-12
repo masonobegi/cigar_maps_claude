@@ -35,8 +35,8 @@ No task is marked done on the strength of an apply that did not happen.
 
 | # | Task | State |
 |---|------|-------|
-| 1 | 5.1 Search completeness | starting |
-| 2 | 5.2 Pins, states and foreign rows | not started |
+| 1 | 5.1 Search completeness | **code done, tested, committed** — applying is not a step this task has |
+| 2 | 5.2 Pins, states and foreign rows | starting |
 | 3 | 5.3 Hijacked links and thumbnails | not started |
 | 4 | 5.4 Finish the amenity crawl | not started |
 | 5 | 5.5 Re-audit the hours we publish | not started |
@@ -50,3 +50,24 @@ No task is marked done on the strength of an apply that did not happen.
 - **Prep.** Extracted the evidence archive, installed both workspaces, ran the
   five self-tests named in the handoff. All green. Established that production
   is unreachable from here and recorded it above rather than guessing at it.
+
+- **5.1 Search completeness — done.** `utils/storeSearch.js` (filters, SQL
+  haversine, the radius contract) and `utils/storeList.js` (the list itself) are
+  new; `routes/stores.js` is a two-line wrapper over the latter, so
+  `jobs/recallMonitor.js` replays the real code path instead of a copy.
+  - Recall on the fixture: **72.9% at 50 mi / 58.4% at 100 mi before,
+    100.00% (81,537/81,537) over 1,984 cases after, no failures.**
+  - 19 contract checks pass: radius cap, ceiling refusal (forced, by lowering
+    the ceiling under the list), paging with no repeats or gaps, two shops on
+    one spot, a shop on the radius line, open-now on confirmed hours only,
+    hidden rows, and the no-location order unchanged.
+  - The client shows the real total, a Show more button, and how many nearby
+    shops have no hours we can confirm.
+  - **Deliberately not done:** the neutral no-location order is a separate
+    sweep in `plan.json` and owes Mason a decision, so a visitor with no
+    location still gets exactly the order they got before.
+  - **Blocked on production:** the guardrail skim of the first 30 cards for the
+    eight affected metros. `sweeps/scripts/metro_diff.js` does it and is proven
+    to run; it needs the real directory to say anything about real shops.
+  - The CRLF trap in HANDOFF section 6 does not apply here: every file in this
+    clone is LF. It will still apply on the Windows machine.
