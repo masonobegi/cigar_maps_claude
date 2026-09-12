@@ -41,7 +41,9 @@ const { URL } = require('url');
 const db = require('../database/db');
 const { writeFields } = require('../utils/storeEdits');
 
-const UA = 'CigarBuddy/1.0 (+https://cigarmapsclaude-production.up.railway.app; link check)';
+// The contact URL a site owner sees in their logs has to name a site that
+// answers, which is whatever APP_URL says rather than a host baked in here.
+const UA = `CigarBuddy/1.0 (+${require('../utils/appUrl').appUrl()}; link check)`;
 const TIMEOUT_MS = 10000;
 const MAX_REDIRECTS = 4;
 const MAX_BODY = 256 * 1024;      // 256 KB, the hard cap on anything we read

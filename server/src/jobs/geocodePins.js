@@ -45,7 +45,9 @@ const { writeFields } = require('../utils/storeEdits');
 const { timeZoneFor } = require('../utils/storeHours');
 const { loadStates } = require('./geo');
 
-const UA = 'CigarBuddy/1.0 (+https://cigarmapsclaude-production.up.railway.app; pin check)';
+// The contact URL a site owner sees in their logs has to name a site that
+// answers, which is whatever APP_URL says rather than a host baked in here.
+const UA = `CigarBuddy/1.0 (+${require('../utils/appUrl').appUrl()}; pin check)`;
 const CENSUS_URL = 'https://geocoding.geo.census.gov/geocoder/locations/addressbatch';
 const CENSUS_BENCHMARK = 'Public_AR_Current';
 const CENSUS_BATCH = 2500;              // the API takes 10k, but a smaller file comes back sooner

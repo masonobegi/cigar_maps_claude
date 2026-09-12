@@ -23,6 +23,7 @@
 const fs = require('fs');
 const path = require('path');
 const { listPlaces, parsePlaceSlug, shopsInPlace, stateName, stateSlug } = require('./places');
+const { appUrl } = require('./appUrl');
 
 const DAYS = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' };
 
@@ -327,7 +328,12 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
     if (template === null && fs.existsSync(indexPath)) template = fs.readFileSync(indexPath, 'utf8');
     return template;
   };
-  const baseOf = req => (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
+  // appUrl() when APP_URL is set, so a scheme-less value still produces a real
+  // URL; otherwise the host that was actually asked, so the canonical always
+  // matches the domain the page was fetched from.
+  const baseOf = req => (process.env.APP_URL
+    ? appUrl()
+    : `${req.protocol}://${req.get('host')}`.replace(/\/+$/, ''));
 
   app.get('/robots.txt', (req, res) => {
     res.type('text/plain').send(robotsTxt(baseOf(req)));

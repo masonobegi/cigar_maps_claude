@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./utils/loadEnv');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -115,7 +115,13 @@ app.use('/uploads', express.static(storage.LOCAL_DIR, {
 const clientDist = path.join(__dirname, '../../client/dist');
 console.log(`[static] clientDist path: ${clientDist}`);
 console.log(`[static] clientDist exists: ${fs.existsSync(clientDist)}`);
-app.use(express.static(clientDist));
+// index: false matters. Without it this middleware answers "/" with
+// client/dist/index.html straight off disk, before the head-rewriter below ever
+// runs — so the homepage kept the build's canonical (pointing at the Railway
+// host whatever APP_URL says) and got neither the search-console verification
+// tag nor analytics. Which is exactly the page a search console fetches to
+// verify ownership. Every other asset is still served from here.
+app.use(express.static(clientDist, { index: false }));
 
 // robots.txt, the sitemaps, and an index.html whose head is true for the URL
 // that asked for it. This replaces the catch-all that used to send one file for

@@ -909,6 +909,10 @@ router.post('/:id/claim', requireAuth, claimLimiter, asyncRoute(async (req, res)
     // knows what proof to send instead of being left guessing. Each reason
     // carries a code as well as a sentence, so staff can group them.
     review_reasons: canEmailVerify ? null : proof.reasons,
+    // And whether an email can reach them at all. Without this the page says
+    // "we will email you" on a deployment that cannot send, which is a promise
+    // nobody can keep — the other two exits from this route already say so.
+    notify: mailConfigured() ? 'email' : 'none',
   });
 }));
 
