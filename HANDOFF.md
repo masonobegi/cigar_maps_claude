@@ -1,105 +1,182 @@
 # Handoff: instructions for the next session
 
-**You are picking up a programme of data sweeps on CigarBuddy where all the code
-is written and tested, and almost none of it has been run against production.
-This file is your work order. Read it, then start at "Your next task".**
+**Every sweep in this programme has now been run against production.** What is
+left is judgement work on lists a person has to read, plus two things blocked on
+data this repository does not hold. This file is your work order. Read it, then
+start at "Your next task".
 
-Written 2026-09-12, and revised later the same day after a second pass that
-finished every remaining sweep that needs no credentials and no money. It
-replaces the handoff of 2026-09-11 (`git show 94bcfd2:HANDOFF.md`). Work stopped
-cleanly: nothing is half-applied, and production is in a consistent state.
+Written 2026-09-12, revised twice the same day: once by a cloud session that had
+no credentials and built the jobs, and once by the session that ran them all.
+The version before this one (`git show 00b2d75:HANDOFF.md`) described eight
+tasks waiting to be run; they are done, and what running them changed is
+recorded in `SWEEPS.md` under "The session of 2026-09-12 (evening)".
 
-**What changed in the revision:** the first version of this file listed the
-code-only sweeps from `sweeps/plan.json` as still to do. They are done and
-pushed. The tasks below are now, with two named exceptions in task 8, exactly
-the work that cannot be done without credentials or an open network — so if you
-have those, everything here is available to you, and if you do not, there is
-very little left that this repository can honestly progress.
+**Production, 2026-09-12 evening: 4,363 public listings.** 930 with hours (783
+from the shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404
+with a walk-in humidor, 216 stamped by a current tobacco licence, and no public
+listing linking to a gambling or parking page.
 
 ---
 
 ## The one thing to understand before anything else
 
-The session before you had **no Railway credentials and no outbound network
-beyond the package registries**. So it did the half of the work that does not
-need them — every job, every rule, every test — and could not do the other half.
+**Reading the output is the work.** Every job in `server/src/jobs/` is written,
+tested and deployed, and each one still had something wrong with it that only
+showed up when somebody read what it produced against real listings. Seven such
+faults were found and fixed in one evening — including three jobs whose central
+rule was not running at all:
 
-**That means: the code is ahead of the data.** Nine sweeps are built and tested
-on `master` and therefore deployed, but **not one listing in production has been
-touched by them.** Your job is mostly to run them.
+- `linkCheck` had `pageIdentity`, `namesShop` and `looksHijacked` written and
+  tested, and **never called them**. Every gambling takeover on the map read as
+  a working link, and the self-test passed.
+- `recoverHidden` proposed bringing back 320 outlet-chain listings, each
+  "proved" by the chain's own website — the page that took it off the map.
+- `thumbCheck` counted any two shops sharing the word "cigars" as one business,
+  which made its shared-image check nearly inert.
+
+So: **run a job, then read fifty of its rows by hand before applying anything.**
+The dry run is not the check; your reading is. Every false positive found this
+way is written into a self-test so it cannot come back.
 
 Check what you have before you plan anything:
 
 ```bash
 railway whoami                 # or: echo "$RAILWAY_TOKEN"
 curl -sS -o /dev/null -w '%{http_code}\n' https://geocoding.geo.census.gov/
+node sweeps/scripts/selftest_all.js          # expect 880 assertions, 0 failed
 ```
 
-- **Both work** → you can do everything below. Start at task 1.
-- **Railway but no open web** → you can apply the decision files that already
-  exist (task 1) but not produce new ones.
-- **Neither** → say so plainly rather than guessing. Two sessions have now run
-  in that position and between them finished every sweep in `sweeps/plan.json`
-  that code alone can finish; `PROGRESS.md` records both. What is left needs
-  what you do not have. Read task 8 for the only two code-only items still
-  open, and do not invent work to look busy.
+**Running a job against production.** `sweeps/scripts/prod.js` requires its
+target, so a job's own `require.main` block never fires and its subcommands are
+unreachable. Use `prodrun.js`, which starts the job as a real child process with
+`DATABASE_URL` pointed at the public proxy:
+
+```bash
+railway run --service Postgres node sweeps/scripts/prodrun.js src/jobs/<job>.js <subcommand> [args]
+# paths inside the job's arguments are relative to server/, so: --out ../sweeps/decisions/x.json
+```
+
+`prod.js` is still the right wrapper for a one-off script of your own:
+
+```bash
+railway run --service Postgres node sweeps/scripts/prod.js <absolute path to your script>
+```
 
 ## Your next task
 
-In this order. The first is the only one that changes what a customer sees today.
+In this order. None of these changes what a customer sees by itself — they are
+all lists somebody has to read.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| 1 | [Apply the hours decisions](#1-apply-the-hours-decisions) | 50 schedules are read, reviewed and waiting. This is finished work sitting in a file |
-| 2 | [Re-check every website](#2-re-check-every-website) | Every `ok` in the table predates four new verdicts, so ~318 dead links are still rendered as live ones |
-| 3 | [Thumbnails](#3-thumbnails) | 14 cards show a picture from a gambling site. Depends on task 2 |
-| 4 | [Pins](#4-pins) | ~100-130 public pins are more than 1 km from their own address |
-| 5 | [Finish the amenity crawl](#5-finish-the-amenity-crawl) | 1,095 sites unread, 65 with evidence cut short by a bug since fixed |
-| 6 | [Licence registries](#6-licence-registries) | The strongest free evidence that a shop exists. Feeds task 7 |
-| 7 | [Recover hidden shops](#7-recover-hidden-shops) | ~75 real shops are hidden. Useless until 2, 5 and 6 have run |
-| 8 | [The rest](#8-the-rest) | Two code-only items deliberately left, with reasons, plus the menu scanner's first real pass |
+| 1 | [The 963 category-only badges](#1-the-963-category-only-badges) | The largest remaining claim on the map that rests on nothing a person has checked |
+| 2 | [The pin review list](#2-the-pin-review-list) | 59 rows, and 16 of them need no move at all |
+| 3 | [Licence renames and moves](#3-licence-renames-and-moves) | 57 shops trading under another name, 146 licensed at another address |
+| 4 | [The four manual registries](#4-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
+| 5 | [The Overture dedupe change](#5-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
+| 6 | [Watch the menu scanner](#6-watch-the-menu-scanner) | It has never had a real 24 hours |
 
-**Before task 1, fifteen minutes:**
+---
 
-1. `git log --oneline -25`, then read `PROGRESS.md` (what the last session did
-   and why) and `SWEEPS.md` (the running production log).
-2. `tar -xzf sweeps/evidence.tar.gz -C sweeps/` — the crawls behind everything.
-3. `npm ci --prefix server && npm ci --prefix client`
-4. **Run every self-test and confirm 613 pass before you change anything:**
+## 1. The 963 category-only badges
 
-   ```bash
-   cd server
-   for f in src/utils/hoursParser.js src/utils/storeHours.js src/utils/storeSearch.js \
-            src/utils/publicSuffix.js src/utils/rdap.js src/utils/claimGate.js; do node $f; done
-   for j in dedupeListings pureCigarCheck hoursSweep recallMonitor geocodePins linkCheck \
-            thumbCheck siteFacts webMenu closureCheck licenceSync recoverHidden; do
-     PGLITE_DIR=/tmp/st node src/jobs/$j.js selftest; done
-   ```
+**What they are.** 963 public listings carry a lounge or walk-in-humidor badge
+that came from a map category — Overture's `cigar_bar`, mostly — and nothing
+else. The amenity crawl read 2,408 shop websites and could put a sentence behind
+344 lounges and 331 humidors; these are the ones it could not.
 
-5. Build a real local database to try things against — **this is the trick the
-   last session found and it is worth knowing:**
+They are listed under `categoryOnly` in
+`sweeps/decisions/site-facts/decisions.json`, with what the map said and what
+the site did say.
 
-   ```bash
-   cd server && PGLITE_DIR=/tmp/cb node src/index.js     # then Ctrl-C once it says "running on"
-   ```
+**The decision to make.** A badge with no sentence behind it is a claim we
+cannot support. Three honest options, in the order they cost:
 
-   That imports the bundled directory file: **42,928 listings, 7,904 public** —
-   close to the pre-sweep production state. Every job and the recall monitor can
-   be run against `PGLITE_DIR=/tmp/cb` with no credentials at all. **Its ids are
-   not production's**, so the saved evidence files cannot be joined to it.
+1. Clear them. A shop with a lounge loses its badge until its site says so.
+2. Keep them, and mark them in the UI as coming from map data, the way
+   unconfirmed hours already are.
+3. Read them — 963 rows is perhaps four hours of work with the crawl's text in
+   front of you.
 
-**How every task is done, without exception:**
+**This is Mason's call**, and it is in `SWEEPS.md` under "Decisions Mason still
+owes". Do not clear 963 badges on your own initiative.
 
+## 2. The pin review list
+
+59 rows in `sweeps/decisions/pins/pins_review.json`, each with the reasons it
+was held. **Sixteen say "Nominatim agrees with the pin we already have"** — for
+those the Census was wrong and there is nothing to do but mark them settled.
+The rest are a geocoder disagreement, a highway address, or a non-exact match.
+
+To apply any you decide to move, write `"verdict": "move"` on the row and:
+
+```bash
+railway run --service Postgres node sweeps/scripts/prodrun.js src/jobs/geocodePins.js apply --from ../sweeps/decisions/pins/<file>.json --confirm
 ```
-dry run  ->  decisions file  ->  read it by hand  ->  remove the false
-positives  ->  apply the saved file  ->  update SWEEPS.md  ->  commit
-```
 
-Never apply a fresh read. Every sweep so far produced false positives on its
-first run, and the last session found eleven in one sitting by reading its own
-output. Finding them is the work, not an optional extra.
+**Guardrails are unchanged.** A highway address is excluded outright: the
+geocoders are wrong about 40% of the time there. **Puro Estilo in Bethlehem,
+Pennsylvania is not foreign** whatever its name or its Israeli mobile suggests.
 
-## 1. The owner's rules, which outrank anything else
+## 3. Licence renames and moves
+
+`sweeps/decisions/licences.json` holds two lists the apply step deliberately
+does not touch:
+
+- **renamed (57)** — the current licence at this door is under another trading
+  name. Some are only the legal entity ("E&A Cigars" → "E & A CIGARS LLC") and
+  mean nothing; others are a real rebrand ("TJ's Cigar Lounge" → "TOBACCO
+  JUNCTION"). `stores.name_aliases` exists to hold the old name, and search
+  already reads it.
+- **moved (146)** — the licence for this business is at a different address.
+  Cross-check against `sweeps/decisions/pins/pins_review.json` before believing
+  either one.
+
+**A lapse is never a hide.** 202 listings have no current licence; 54 were noted
+for staff and none were hidden. A self-test asserts there is no verdict in that
+job that hides a listing. Keep it that way.
+
+## 4. The four manual registries
+
+`licenceSync fetch` prints the URL for each. Save the file into
+`sweeps/decisions/licences/` under the name it asks for (`fl.csv`, `ca.csv`,
+`pa.csv`, `wa.csv`), then re-run `match`. Between them they cover roughly 2,100
+listings that four registries cannot currently speak for.
+
+The four that work are NYC (6,699 licences), New York State (22,091), Texas
+(59,603) and Chicago (59,414). **Their dataset ids move**: all four broke
+between the day they were written and the day they were first run. If one
+answers 400 or 404, find the new id rather than dropping the registry —
+`sweeps/scripts/socrata_find.js` searches a Socrata domain by keyword, and
+`socrata_peek.js` prints one row so the column names can be read.
+
+## 5. The Overture dedupe change
+
+Unchanged and still blocked. `sweeps/plan.json` (duplicates, items 2 and 3) asks
+`buildDirectory` to let one Overture record absorb *every* OSM record of the
+same shop rather than stopping at the first (the `!t.osm_id` guard), emit an
+`also_osm_ids` list, and have the importer hide any older OSM row those ids
+name. Both are small changes. Neither can be made here, because
+`server/data/overture_raw.json` is gitignored and a rebuild without it produces
+an OSM-only file — which is how the directory got destroyed once already.
+
+Get the Overture extract, then make the change, then rebuild and diff the record
+count before importing anything.
+
+The other half of this — merging the twins that already exist — is done and
+wired up: `dedupeListings.mergeAutomatic` runs after every import on the auto
+tier only. Its first production run merged six doors, all six genuinely one shop
+listed twice.
+
+## 6. Watch the menu scanner
+
+Still true, and still worth a look: its back-off and staleness ordering are
+deployed and a 30-day replay proves every shop gets reached, but it has only
+ever run against a model. Watch the first real 24 hours.
+
+---
+
+## Reference: the owner's rules, which outrank anything else
 
 1. **Pure cigar and pipe-tobacco shops only.** Cigarettes on the side are fine; a
    vape, glass, hookah or kava shop that happens to sell cigars is not in this
@@ -119,7 +196,7 @@ money or publishing unproven listings. Two calls were made on that basis on
 `SWEEPS.md` with the reasoning and the constants to change. **Still his, not
 yours:** a Google Places budget, and whether any outlet chain comes back.
 
-## 2. What this project is, and where it stands
+## Reference: what this project is, and where it stands
 
 CigarBuddy is a cigar-shop finder: an Express + Postgres API in `server/`, a
 React/Vite client in `client/`, deployed on Railway (**a push to `master`
@@ -129,11 +206,15 @@ moved, wrong pins, wrong hours and dead links.
 
 Production today:
 
-- **4,377 public listings**, from 7,431 at the start. About 38,000 further rows
+- **4,363 public listings**, from 7,431 at the start. About 38,560 further rows
   are hidden, each with a verdict and a reason.
-- 782 show hours read from the shop's own website; the rest show map hours
-  labelled "not confirmed", or nothing.
-- 968 have a thumbnail; 1,813 carry a Lounge badge, many on thin evidence.
+- 930 hold hours; 783 of those were read from the shop's own website. The rest
+  show map hours labelled "not confirmed", or nothing.
+- 806 have a thumbnail, after 159 were taken down as too small, banner-shaped,
+  blank, dead or somebody else's. 2,149 carry a Lounge badge and 404 a walk-in
+  humidor — 675 of those now rest on a sentence from the shop's own site, and
+  963 still rest on a map category alone (task 1 above).
+- 216 are stamped by a current tobacco licence at the door.
 - Verdicts the importer honours, so a data refresh cannot undo them:
   `not_retail`, `online_only`, `closed`, `duplicate`, `moved`, `unproven`, and
   any `operating_status = 'permanently_closed'`.
@@ -144,8 +225,10 @@ counts excluding hidden shops, search text folding, duplicate merging, the
 non-shop purge, the pure-cigar check, outlet chains, and moved shops.
 `SWEEPS.md` has the numbers for each.
 
-**Deployed as code on 2026-09-12, not yet run against data:** everything in the
-task list above.
+**Run against production on 2026-09-12 (evening):** all eight tasks of the
+previous handoff — hours, links, thumbnails, pins, amenities, licences,
+recovery and duplicates. `SWEEPS.md` has the numbers and the seven rules that
+reading the output corrected.
 
 **Live for customers right now, because it is pure code.** Each of these is a
 sweep from `sweeps/plan.json` whose sources are code only; each was measured
@@ -187,7 +270,7 @@ public), never against the synthetic fixture:
 - **The Request button did nothing** — it set React state that nothing rendered.
 - **The no-location list and paid placement** — see `SWEEPS.md`.
 
-## 3. Reaching production, and working locally
+## Reference: reaching production, and working locally
 
 From `server/`:
 
@@ -221,7 +304,7 @@ Headless Chrome is needed only for sites built in JavaScript
 the location). Where it is unavailable, skip the render passes and say so —
 never hide a shop for having a JavaScript site.
 
-## 4. What is in the repository
+## Reference: what is in the repository
 
 - **`PROGRESS.md`** — the 2026-09-12 session's own log: what it did, what it got
   wrong and corrected, and every number it measured. Read it before arguing with
@@ -288,221 +371,7 @@ in section 5.
 
 ---
 
-## The tasks
-
-### 1. Apply the hours decisions
-
-**State.** Done and waiting. The rules were tightened, scored against all 174
-reviewer verdicts (**96.5% → 97.9%**, above the 97.3% floor), and the output was
-read row by row. Six parser defects and five decide-time refusals are already
-deployed.
-
-**Do this.** From `sweeps/decisions/hours/`:
-
-1. `hours_clear.json` — **42** schedules the rules no longer stand behind.
-2. `hours_replace.json` — **8** read differently from the same evidence.
-3. `hours_hold.json` — **16**. Nothing to do: their sites did not answer on the
-   day of the crawl, so the hours we hold still stand. Listed only so nobody
-   mistakes them for refusals.
-4. `hours_chain_rerun.json` — **8. Do not apply as it stands.** The offline
-   harness knows ~1,250 of the ~4,000 listings with a website, so it undercounts
-   how many share a site and handed six Spring Street Cigars branches one page's
-   hours. Re-run `hoursSweep.decide` against the real stores table first.
-5. `hours_recoverable.json` — **292** listings with no hours whose saved pages
-   hold a readable block. **Only 56 are real**; the rest were refused for
-   reasons that still hold (a chain page tied to no address, a site that never
-   names the shop) and their blocks belong to somebody else. Start with
-   `standing_refusal: false`.
-
-**Guardrails.** Re-score with `node sweeps/scripts/hours_offline.js score` after
-any rule change: **accuracy must not fall below 97.3%**. House of Cigar and
-Anthony's name sibling towns and are correct — all ten listings must keep their
-exact hours.
-
-**Done when** the clear and replace files are applied, the chain rows are
-re-decided against production, and `SWEEPS.md` has the numbers.
-
-### 2. Re-check every website
-
-**Why first among the crawls.** `linkCheck` gained four verdicts — `elsewhere`,
-`hijacked`, `parked`, `store_unavailable` — that did not exist when the current
-statuses were written. **Every `ok` in the table predates them.** About 318
-public links end on a different domain than the one stored; lapsed shop domains
-now serve gambling and for-sale pages.
-
-```bash
-cd server && node src/jobs/linkCheck.js --all
-```
-
-**Guardrails.** A real rebrand must keep its link: a phone number, a street
-address, or the distinctive part of the name on the destination passes it. A
-taken-over own-domain is a **weak** closure signal for staff and never an
-automatic hide — a live shop was once hidden because a closure reader followed a
-redirect to a political blog.
-
-**Done when** no public listing links to a gambling or parking page.
-
-### 3. Thumbnails
-
-Depends on task 2, because a thumbnail's verdict reads the website's.
-
-```bash
-node src/jobs/thumbCheck.js read   --out sweeps/decisions/thumbs.jsonl
-node src/jobs/thumbCheck.js decide --from sweeps/decisions/thumbs.jsonl --out sweeps/decisions/thumbs.json
-# read it, then:
-node src/jobs/thumbCheck.js apply  --from sweeps/decisions/thumbs.json --confirm
-```
-
-**Be honest about its limit:** it cannot look at the picture. A photograph of the
-wrong shop reads as a perfectly good image and only a person will catch it.
-
-**Done when** no card shows an image from a gambling or parking page.
-
-### 4. Pins
-
-```bash
-node src/jobs/geocodePins.js geocode   --out sweeps/decisions/pins_census.jsonl
-node src/jobs/geocodePins.js nominatim --geo sweeps/decisions/pins_census.jsonl --out sweeps/decisions/pins_nomi.jsonl
-node src/jobs/geocodePins.js decide    --geo … --nomi … --out sweeps/decisions/pins.json
-node src/jobs/geocodePins.js apply     --from sweeps/decisions/pins.json --confirm
-```
-
-Both steps cache to `server/data/geocode-cache`, so an interrupted run resumes.
-Nominatim is one request a second by their policy — the full pass takes hours.
-
-**Guardrails.** A pin moves automatically only when all of: an ordinary street
-address, both geocoders within 250 m of each other, both more than 1 km from our
-pin, a move under 50 km, and the address backed by the shop's own site. Highway
-addresses are excluded outright — the geocoders are wrong about 40% of the time
-there. Named cases: Tobacco Junction of Marshall (404 km off), Amsterdam Tobacco
-House (252 km, so it goes to review, not an automatic move), Black Jack's Cigar
-Lounge (El Paso, listed in New London CT). **Puro Estilo in Bethlehem,
-Pennsylvania is not foreign** whatever its name or its Israeli mobile suggests.
-
-**Done when** the auto tier is applied, the review list is written, and the 8
-rows in `timezones_held.json` are settled. Three of those are public and are
-state errors with the pin right; the other five are hidden, so no customer sees
-their clock.
-
-### 5. Finish the amenity crawl
-
-1,343 of 2,438 sites are read. Of those verdicts, **653 rest on a plain
-statement, 7 are false positives, and 65 had their evidence cut short** by a
-`quote()` bug that kept 200 characters of the matching line instead of the
-matching sentence. That is fixed; the 65 need re-reading.
-
-```bash
-node src/jobs/siteFacts.js read   --out sweeps/decisions/site-facts/facts.jsonl --redo-truncated
-node src/jobs/siteFacts.js decide --from … --out sweeps/decisions/site-facts/decisions.json
-node src/jobs/siteFacts.js apply  --from … --confirm
-```
-
-**Guardrails.** A badge rests on a sentence, and the sentence must be in the
-shop's own voice: Padre Island Cigar Company's page says it *does not have a
-lounge* and then recommends somebody else's. Three sites share an owner
-biography about a lounge he once worked in. Read the `refused` and `reread`
-lists, not just the counts.
-
-**Done when** every badge on the public map has either a sentence behind it or a
-map category a person has accepted. `decide` produces that last list
-(`categoryOnly`) — about 2,017 of them on the pre-sweep directory.
-
-### 6. Licence registries
-
-Eight free registries (NYC, New York State, Texas, Florida, California,
-Pennsylvania, Chicago, Washington) covering about 2,850 listings. Four of the
-eight are an API; the other four publish a file you save into the fetch
-directory by hand — `licenceSync.js` tells you which and where.
-
-```bash
-node src/jobs/licenceSync.js fetch --out sweeps/decisions/licences/
-node src/jobs/licenceSync.js match --from sweeps/decisions/licences/ --out sweeps/decisions/licences.json
-```
-
-**Guardrails.** **A lapse is a staff flag and nothing else** — the audit measured
-"lapsed licence means closed" at roughly a coin flip, and a self-test asserts
-there is no verdict in the job that hides a listing. Sixty days of publishing lag
-are allowed. **Stogies, BlackHouse and Manhattan Tobacco are open** and are never
-flagged. NYC smoke shops are exempt from lapse flags entirely, because the city
-caps licences and runs a waiting list.
-
-**Done when** the four queues exist and a person has reviewed the first batch.
-
-### 7. Recover hidden shops
-
-The pure-cigar check hid 2,480 listings as "unproven". Re-reading the saved
-evidence recovers **nobody**, and that is arithmetic rather than a failure: the
-check hid them by running `siteVerdict()` on that same evidence. Verified — zero
-contradictions, and all 639 saved readings that would prove a cigar shop belong
-to listings that were kept public.
-
-So recovery needs **new** evidence, and `sweeps/decisions/recover/` says which
-kind per listing:
-
-| | |
-|---:|---|
-| 1,933 | no site evidence at all — a licence match (task 6) or web-shop stock |
-| 84 | site could not be read — a re-crawl with the browser-rendered pass |
-| 463 | site was read and does not say cigars — correctly hidden, leave them |
-
-```bash
-node src/jobs/recoverHidden.js propose --licences sweeps/decisions/licences.json --out sweeps/decisions/recover.json
-```
-
-**Guardrail, and it is rule 2:** a listing comes back only on something you can
-quote. A name is never enough — a name is what put 2,480 listings in this pile.
-
-### 8. The rest
-
-**Two items here are code-only and were deliberately left.** Everything else in
-this file is blocked on credentials or a network; these two are judgement calls
-that wanted a human's eye first, and the reasoning is given so you can overrule
-it rather than rediscover it.
-
-- **Review one `dedupeListings` auto-tier output before letting it run
-  unattended.** `sweeps/plan.json` (duplicates, sweep 5, item 4) asks for the
-  same-door merge's auto tier to run after every import. It is not wired up.
-  The matcher changed materially in this session — six pairs moved from auto to
-  review, eight new clusters appeared — and a job that hides listings on every
-  deploy should not be the first thing to exercise a matcher nobody has
-  eyeballed. Do this: run `node src/jobs/dedupeListings.js --out plan.json`
-  against production, read the 73 auto rows, and if they are right, call
-  `apply` from `runStartupImport`. Not before.
-- **The other half of "stop re-creating duplicates" needs the Overture source.**
-  Items 2 and 3 of that sweep want `buildDirectory` to let one Overture record
-  absorb *every* OSM record of the same shop rather than stopping at the first
-  (the `!t.osm_id` guard), emitting an `also_osm_ids` list, and the importer to
-  hide any older OSM row those ids name. Both are small changes. Neither could
-  be made here, because `server/data/overture_raw.json` is not in the repository
-  (it is gitignored) and without it a directory rebuild produces an OSM-only
-  file. Writing code for a build I could not run — or worse, running it — is how
-  the directory got destroyed once already this session. Get the Overture
-  extract, then make the change, then rebuild and diff the record count.
-
-The rest of this section is unchanged and still true:
-
-- **The menu scanner has never had a real pass.** Its back-off and staleness
-  ordering are deployed and a 30-day replay proves every shop gets reached
-  (against 3,940 of 4,000 untouched under the old order), but it has only ever
-  run against a model. Watch the first real 24 hours.
-- **The autocomplete and the review-form store picker still ignore the saved
-  location** (audit items (e) and (f)). Neither is wrong now that the
-  no-location order is neutral; both would be better.
-- **Stale former names** come out of `licenceSync` as its `renamed` and `moved`
-  lists — that is the overlap the old handoff predicted. `stores.name_aliases`
-  now exists to hold them, and search already reads it, so that sweep has
-  somewhere to write.
-- **Chain branches** shrank to almost nothing when the tobacco-outlet chains came
-  off the map.
-- **A fresh database has no confirmed hours at all.** The import leaves
-  `hours_source` NULL, so on a newly built copy `open_now` correctly returns
-  zero and the list reports `unconfirmed_hours_nearby: 7904`. That is the
-  honest rule working, not a bug — map hours earn no Open badge. Task 1 is what
-  changes it.
-
----
-
-## 5. Traps, so you do not hit them again
+## Reference: traps, so you do not hit them again
 
 - **`git branch -a` lies in a fresh clone.** It lists only what has been fetched.
   The 2026-09-12 session reported five branches as missing on that basis and had
@@ -514,9 +383,16 @@ The rest of this section is unchanged and still true:
   Bash hides the carriage return, so a scripted multi-line replacement silently
   matches nothing. A Linux clone normalises them, so this trap is Windows-only.
   Check with node, and write back with the file's own endings.
-- **Heredocs eat backslashes.** A bash heredoc collapsed doubled backslashes and
-  wrote a real newline into a regex, corrupting two files. Use the editor tools
-  for anything containing a backslash, then run `node --check`.
+- **A helper that is never called passes every test.** `linkCheck` had three
+  identity checks, twenty assertions covering them, and no call site. Test the
+  wiring, not only the rule: `judgePage` exists as one pure function so that
+  the path from a downloaded page to a verdict is itself asserted.
+- **Heredocs eat backslashes, and the damage is invisible.** A quoted bash
+  heredoc turned `\b` into a real backspace byte (0x08) inside two regexes on
+  2026-09-12, which silently disabled both: the file parses, the tests pass,
+  and the rule never matches anything. Use the editor tools for anything
+  containing a backslash, then `node --check` AND scan for control bytes:
+  `grep -rlnP "\x08" server/src client/src sweeps/scripts`.
 - **`db.run` uses `?` placeholders.** An apostrophe inside a SQL string literal
   broke a statement mid-run; pass values as parameters.
 - **The menu scanner runs on the server every 6 hours** and writes `inventory`,
@@ -555,7 +431,7 @@ The rest of this section is unchanged and still true:
   directory (`node src/index.js` does it with no credentials) and say which of
   the two any number came from.
 
-## 6. What to ask Mason
+## Reference: what to ask Mason
 
 ### One command for him to run
 
@@ -601,7 +477,99 @@ which branch. Nothing in the repository depends on any of them.
   - The dead domain is **no longer named** in the unclaimed banner, since the
     page has already withheld the link.
 
-## 7. Keep the log
+## Reference: keep the log
+
+After each task: update `SWEEPS.md` with what changed in production and the
+numbers, and commit. If you stop part-way, say in `SWEEPS.md` exactly where you
+are, as this file does. **The next session should never have to reconstruct it** —
+and should never have to guess whether a number describes production, a local
+copy, or a fixture. Say which.
+\x08' server/src client/src sweeps/scripts`.
+- **`db.run` uses `?` placeholders.** An apostrophe inside a SQL string literal
+  broke a statement mid-run; pass values as parameters.
+- **The menu scanner runs on the server every 6 hours** and writes `inventory`,
+  which has no unique key: never run a manual menu sync at the same time.
+- **The import only runs when the directory file changes,** so a bug in it stays
+  invisible until the next data refresh. `node src/jobs/reimportTest.js` is what
+  catches it — run it after touching `importStores.js`.
+- **Do not trust one geocoder or one time-zone library.** A rounded grid put
+  Kellogg, Idaho in Mountain time and Williston, North Dakota in the wrong zone.
+  And a prefix test for a foreign clock cannot see that `America/Toronto` is
+  Canadian — that bug was found and fixed on 2026-09-12.
+- **A test that has never been run is not a test.** All five `sweep/*` branches
+  shipped with tests that had never executed, and running them found five real
+  bugs — one of which would have left the automatic pin move dead on arrival.
+- **Never run a file to find out whether it is a test.** The first version of
+  `sweeps/scripts/selftest_all.js` did `node <file> selftest` over everything in
+  `jobs/` and `utils/`. Most jobs ignore an argument they do not recognise and
+  get on with their work, so that run did not test `buildDirectory.js` — it
+  *ran* it, and `buildDirectory` rebuilds
+  `server/src/data/store_directory.json.gz` in place. With no network reachable
+  it wrote what it could, and the 3.7 MB national directory of 42,928 listings
+  became a 310 KB stub. It was restored with `git checkout` and verified against
+  HEAD's checksum, but only because it is committed. The script now reads each
+  file's source and launches nothing that does not declare the handler. If you
+  add a runner of any kind, make it do the same.
+- **PGlite allows one connection.** Opening a scratch database with `node -e`
+  while the server holds the same `PGLITE_DIR` aborts the second process with
+  `Aborted()`. Stop the server, or check through the API.
+- **`new URL()` throws on a bare host,** and the `stores.website` column stores
+  bare hosts. Three functions had a `try/catch` that quietly returned a
+  plausible default for all 23,972 of them. If you parse a URL from that
+  column, add the scheme first.
+- **The synthetic fixture is too small to catch ceiling bugs.** `CANDIDATE_CEILING`
+  was set to 5,000 against a 3,636-row fixture and broke the nationwide list at
+  7,904 public rows. Measure against a database built from the committed
+  directory (`node src/index.js` does it with no credentials) and say which of
+  the two any number came from.
+
+## Reference: what to ask Mason
+
+### One command for him to run
+
+The five `sweep/*` branches are merged and the work is on `master`. They cannot
+be deleted from a cloud session — the git proxy refuses any ref push that is not
+a branch create or update, so a delete comes back HTTP 403, and the GitHub tools
+available here have no delete-branch call. From a normal machine:
+
+```bash
+git push origin --delete sweep/claims sweep/hours sweep/links sweep/pins \
+  sweep/search-and-menus __reftest
+```
+
+`__reftest` is litter from diagnosing that limitation. **Before running it:**
+`sweep/search-and-menus` is the only one of the five whose code is *not* in
+`master` — it was superseded rather than adopted, so that deletion is the one
+that actually loses a version. `PROGRESS.md` has the table of what came from
+which branch. Nothing in the repository depends on any of them.
+
+### The rest
+
+- **A Google Places API key and budget**, for the closures and hours no free
+  source settles. Everything so far was done without paid data. This is the only
+  item on this list that is genuinely blocked on him.
+- **Whether any outlet chain should come back:** Wild Bill's (198 listings),
+  Sweet Fire (61), Cheap Tobacco (32), The Tobacco Shoppe (21). Each is one
+  command. Rule 4 makes this his call, not a session's.
+- **Whether the paid-placement prices and reach match what he wants to sell** —
+  $49 for 15 miles, $149 for 50. The mechanism is built and documented; the
+  numbers are commercial.
+- **Not questions any more:** paid placement's shape and the no-location order,
+  decided on 2026-09-12 at his request. Plus, decided in the revision because he
+  asked for judgement rather than questions, each written up in `SWEEPS.md` with
+  what to change to reverse it:
+  - Requests on unclaimed listings are **collected**, and the dialog says they
+    cannot reach the shop yet, rather than the tile being hidden.
+  - A website nobody has checked stays a **live link**; only an address somebody
+    has just changed is withheld, under a new `checking` verdict. Rendering
+    unchecked as unclickable would have emptied the website line on 5,214 of the
+    5,214 public listings that have one.
+  - Which owner edits go live instantly: hours, phone and website, each with its
+    checks re-run; an address change re-geocodes and recomputes the time zone.
+  - The dead domain is **no longer named** in the unclaimed banner, since the
+    page has already withheld the link.
+
+## Reference: keep the log
 
 After each task: update `SWEEPS.md` with what changed in production and the
 numbers, and commit. If you stop part-way, say in `SWEEPS.md` exactly where you

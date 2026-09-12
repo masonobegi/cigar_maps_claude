@@ -5,11 +5,11 @@ ranked"); numbers below are its ranks. Every sweep is built, dry-run, reviewed b
 hand, then applied from the reviewed file. Nothing is applied straight from a
 fresh read.
 
-**Updated 2026-09-12. Public listings: 4,377** (from 7,431 at the start).
-**The code from 2026-09-12 is now on `master` and therefore deployed**, but
-**no listing data was changed**: that session could reach neither Railway's
-database nor the open web, so every sweep it built is waiting on a run. See
-"The session of 2026-09-12" below.
+**Updated 2026-09-12 (evening). Public listings: 4,363** (from 7,431 at the
+start). **Every sweep the cloud session built has now been run against
+production**, and what reading the output changed is the table at the top of
+"The session of 2026-09-12 (evening)" below. What is still open is the list at
+the end of it.
 
 **Scope, set by Mason:** pure cigar and pipe-tobacco shops. Cigarettes on the side
 are fine; a vape, glass, hookah or kava shop that happens to sell cigars is not in
@@ -57,52 +57,166 @@ Yahoo pages).
 
 ## The session of 2026-09-12 (evening): the handoff, worked through
 
-This session has Railway and the open web, so it is applying what the cloud
-session built. Task order is `HANDOFF.md`'s.
+This session has Railway and the open web, so it applied what the cloud session
+built. **Every task in HANDOFF.md is done except the parts that need data this
+machine does not have**: the Overture extract, and four registries that publish
+a file by hand.
+
+**Production now: 4,363 public listings.** 930 with hours (783 read from the
+shop's own site), 806 with a thumbnail, 2,149 with a lounge badge, 404 with a
+walk-in humidor, 216 stamped by a current tobacco licence.
+
+**What reading the output changed.** Seven rules were wrong, or were not running
+at all, and every one of them was found by reading rows rather than by a test:
+
+| Job | What was wrong | What it cost |
+|-----|----------------|--------------|
+| `linkCheck` | `pageIdentity`, `namesShop` and `looksHijacked` were written, tested, and never called; no call site passed the store row | every gambling takeover on the map read as a working link — zero `elsewhere`, zero `hijacked` |
+| `linkCheck` | a redirect that left the listed domain stopped without reading where it landed | havanaonhudson.com answers 302 to a betting site and stayed 'ok' |
+| `recoverHidden` | a hide that named a chain could be undone by that chain's own website | it proposed bringing back 320 outlet listings, and nothing else |
+| `thumbCheck` | one shared image tainted every member of its group | 23 Cigaret Shopper branches would have lost their own logo |
+| `thumbCheck` | `sameBusiness` matched any two shops sharing the word "cigars" | the shared-image check was nearly inert |
+| `licenceSync` | four of eight registry URLs answered 400 or 404, and the fetch read one page | half the free evidence unreachable; Texas and Chicago silently cut at 50,000 rows |
+| `hoursParser` | a day written as two shifts became one long one | a shop published as open through an hour its door is locked |
 
 ### 1. Hours decisions — applied
 
 | File | Waiting | Applied | Notes |
 |------|---------|---------|-------|
-| `hours_clear.json` | 42 | 38 cleared | 5 had already been cleared by an earlier partial run; 1 moved to the replace file by hand |
-| `hours_replace.json` | 8 | 6 written, 1 skipped, 1 cleared | see the four hand decisions below |
+| `hours_clear.json` | 42 | 38 cleared | 5 had already gone in an earlier partial run; 1 moved to the replace file by hand |
+| `hours_replace.json` | 8 | 6 written, 1 skipped, 1 cleared | the four hand decisions are below |
 | `hours_hold.json` | 16 | — | nothing to do, as the file says |
-| `hours_chain_rerun.json` | 8 | **no change** | re-decided against the real stores table: production returns exactly the hours already stored for all eight. The offline harness had handed six Spring Street branches the Tupelo page and two Tinder Boxes another branch's |
-| `hours_recoverable.json` | 56 real | 18 written, 38 refused | most were a call centre, a warehouse or a live-chat desk, not a door |
+| `hours_chain_rerun.json` | 8 | **no change** | re-decided against the real stores table: production returns exactly the hours already stored for all eight. The offline harness had handed six Spring Street branches the Tupelo page, and two Tinder Boxes another branch's |
+| `hours_recoverable.json` | 56 real | 18 written, 38 refused | most were a call centre, a warehouse or a live-chat desk rather than a door |
 
-**Public listings with hours: 914 → 932.** Of those, 784 read from the shop's
-own website.
-
-**The four hours decided by hand, and how to reverse each:**
+**The four decided by hand, and how to reverse each:**
 
 - **#9843 Skookum Creek Cigar Lounge — cleared.** Both readings came from
   `littlecreek.com`: the old one is headed "Casino Hours", the new one reads
   like the casino's office week. The lounge inside keeps its own hours and
-  neither is it. Reverse: put back `8am-3am` Sunday–Thursday.
-- **#3032 Bright fire cigars — skipped.** The replacement came from a page
-  whose text stopped at "Fri", so taking it would have dropped Friday, Saturday
-  and Sunday. The stored week is complete and agrees with it as far as it goes.
+  neither of these is it. Reverse: put back `8am-3am` Sunday–Thursday.
+- **#3032 Bright fire cigars — skipped.** The replacement came from a page whose
+  text stopped at "Fri", so taking it would have dropped Friday, Saturday and
+  Sunday. The stored week is complete and agrees with it as far as it goes.
 - **#9541 Maine Street Cigar — written as two shifts.** The site says "Friday
   12pm-6pm & 7pm-10pm". The stored value claimed it shuts at six; the proposal
   claimed it is open through the seven o'clock break. It now reads
   `12pm-6pm, 7pm-10pm`, which needed the split-shift work below.
-- **#20766 Kay's Cigar Sensations — the season that is running.** The page
-  prints September–April beside May–August. September is now, so the first
-  column stands: Sunday 12pm-10pm, Monday 4pm-12am, Tuesday and Wednesday
-  4pm-9pm. The stored Monday was `4am-12pm` — open all morning, shut all
-  evening, the exact opposite of the truth.
+- **#20766 Kay's Cigar Sensations — the season that is running.** The page prints
+  September–April beside May–August, so September takes the first column. The
+  stored Monday was `4am-12pm`: open all morning and shut all evening, the exact
+  opposite of the truth.
 
-**Split shifts, a bug found while applying this.** A day written as two shifts
-was being stored as one long one: "Friday 12pm-6pm & 7pm-10pm" became
-`12pm-10pm`, which tells a customer the shop is open during an hour its door is
-locked. Reading only the first shift is no better — it says closed all evening.
-Both the parser and the open-now clock now keep the shifts apart
-(`hoursParser.joinShifts`, `storeHours.parseRanges`), on the server and in the
-browser fallback. Hours accuracy re-scored: **97.9%**, above the 97.3% floor.
+**Split shifts.** A day written as two shifts was being stored as one long one,
+which tells a customer the shop is open during an hour its door is locked;
+reading only the first shift says it is closed all evening. The parser and the
+open-now clock now keep the shifts apart (`hoursParser.joinShifts`,
+`storeHours.parseRanges`), on the server and in the browser fallback. Hours
+accuracy re-scored at **97.9%**, above the 97.3% floor.
 
-**One thing for a later sweep:** #7283 Calavera Leather and Cigar Co. prints
-"113 North Polk Street, Jefferson, TX" on its own site; we list it at 110 N
-Walnut St. One of the two is stale — for the pins or moved-shops pass.
+### 2. Every website re-checked — done
+
+3,337 public links in 624 seconds. **ok 2,324, dns_fail 467, not_found 163,
+blocked 139, error 55, elsewhere 51, refused 45, timeout 38, parked 32,
+hijacked 18, store_unavailable 5.** No public listing now links to a gambling or
+parking page.
+
+Three rules came out of reading those verdicts:
+
+- a shop that moves to a longer spelling of its own domain keeps its link
+  (ejcigars.com → eandjcigars.com, planetcigar.com → planetcigars.com) — but only
+  when both stems are eight characters or more and within four of each other,
+  since otherwise "google" inside "googleblog" makes a dead Currents link look
+  like a rebrand;
+- a Discord or WhatsApp invite is a social link, not a stranger's domain;
+- **#9499 Cigar Express is set to 'elsewhere' by hand.** cigarexpress.com lands
+  on klafters.com, a jeweller, and the word "express" on that page passed the
+  name test. It is the one verdict here a person overrode.
+
+### 3. Thumbnails — done
+
+965 read, **159 taken down and 806 kept**: 76 too small for a card, 45 banners
+that crop to a smear, 25 that answer 4xx, 16 that are a web page rather than a
+picture, 14 near-blank, 10 sharing one picture with unrelated shops, 5 on
+domains that are no longer the shop's, and the rest unreadable. Every URL went
+into the edit log first, so any of them can be put back.
+
+### 4. Pins — done
+
+4,194 addresses geocoded against the Census, and the 78 disagreements taken to
+Nominatim. **18 pins moved automatically** — all five gates: an ordinary street,
+an exact Census match, a house-level second opinion within 250 m, both more than
+a kilometre from our pin, and the ZIP backing the address. **One moved by hand**:
+Tobacco Junction of Marshall, 405 km out, past the automatic limit with
+everything except the pin agreeing. **Six listings hidden** whose records
+contradict themselves — Sam Hills (a Prescott address, a Gallup filing, and a
+domain now serving a Vietnamese casino), Smoky J's, Black Jack's, Mort's, an
+Alaskan ZIP on a Florida row, and a Windsor, Ontario shop filed in Michigan.
+
+**59 rows are left for a person** in `sweeps/decisions/pins/pins_review.json`.
+Sixteen of them say "Nominatim agrees with the pin we already have", which means
+no move at all: there, the Census was the one that was wrong.
+
+The three public time-zone rows are settled. Cigar Mafia's state went NY → TX
+(its address, ZIP 77002, its 281 phone and its pin are all Houston); the other
+two came off the map, having nothing in them that agrees with anything else.
+
+### 5. The amenity crawl — done
+
+1,122 more sites read, 2,408 in all. **344 lounge badges added, 4 taken off, 331
+walk-in humidors**, each resting on a sentence from the shop's own site. Reading
+them added two refusals: a question or an article headline is not a claim ("Do
+you love a fine cigar but have never visited a cigar lounge?", "THREE THINGS TO
+NEVER DO IN A CIGAR LOUNGE"), and "private club" or "lockers" only count in the
+shop's own voice, since a shop's history of the trade mentions both.
+
+**963 badges still rest on a map category**, listed under `categoryOnly` in
+`decisions/site-facts/decisions.json` for a person to accept or clear. That is
+the part of this task still open.
+
+### 6. Licence registries — four of the eight
+
+NYC 6,699, New York State 22,091, Texas 59,603, Chicago 59,414. Florida,
+California, Pennsylvania and Washington publish a file by hand; `licenceSync
+fetch` prints the URL for each.
+
+Of 732 listings in registry states: **216 verified** by a current licence at the
+door, 57 trading under another name, 146 licensed at another address, and 202
+with no current licence — of which 54 were noted for staff and **none hidden**,
+per the rule that a lapse is a coin flip.
+
+The downloads are gitignored: 27 MB of public data that `fetch` re-creates in a
+minute. The matched result, `decisions/licences.json`, is committed.
+
+### 7. Recovering hidden shops — nobody, and that is the answer
+
+Every one of the 320 proposals was a branch of an outlet chain, "proved" by the
+chain's own website — the page that took it off the map in the first place: 197
+Wild Bill's, 61 Sweet Fire, 32 Cheap Tobacco, 21 The Tobacco Shoppe and 9
+tobacco counters inside Brookshire Brothers groceries. The job can no longer
+argue with a hide that names a chain, and now proposes nobody. Recovery needs
+new evidence: a licence match in a state we can reach, or stock read from a
+shop's own web shop.
+
+### 8. Duplicates — the auto tier is wired up
+
+Read against production first, as the handoff asked. Six doors carried more than
+one listing: four plain enough to merge on their own, two for review. All six
+turned out to be one shop listed twice — O Cigar Company is O Cigar Bar's web
+shop, "Lake Orion's premier cigar bar bringing its humidor online" — and all six
+were merged. `dedupeListings.mergeAutomatic` now runs after every import, on the
+auto tier only; review-tier clusters still wait for a person.
+
+### Still open
+
+- **963 category-only amenity badges**, for a person to accept or clear.
+- **59 pin rows** for review, plus 57 licence renames and 146 licence moves as
+  lists.
+- **The Overture-dependent dedupe change**, still blocked: `overture_raw.json`
+  is not in the repository, and a rebuild without it produces an OSM-only file.
+- **Four registries** that publish a file by hand rather than an API.
+- **The menu scanner's first real 24 hours**, still worth watching.
+
 
 ## The session of 2026-09-12: nine sweeps built, none applied
 
