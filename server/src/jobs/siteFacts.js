@@ -401,7 +401,15 @@ if (require.main === module && process.argv[2] !== 'selftest') {
     if (argv[0] === 'read') await read({ out: arg('--out'), redoTruncated: argv.includes('--redo-truncated') });
     else if (argv[0] === 'decide') await decide({ from: arg('--from'), out: arg('--out') });
     else if (argv[0] === 'apply' && argv.includes('--confirm')) await apply(arg('--from'));
-    else console.error('usage: read --out facts.jsonl | decide --from facts.jsonl --out decisions.json | apply --from decisions.json --confirm');
+    else {
+      console.error('usage: read --out facts.jsonl [--redo-truncated]');
+      console.error('       decide --from facts.jsonl --out decisions.json');
+      console.error('       apply --from decisions.json --confirm');
+      console.error('       selftest');
+      console.error('');
+      console.error('--redo-truncated re-reads the sites whose saved quote was cut before the');
+      console.error('words that matched it (65 of them in the crawl that shipped with the handoff).');
+    }
     process.exit(0);
   })().catch(err => { console.error(err); process.exit(1); });
 }
