@@ -1,0 +1,19 @@
+[links] checked 3340 websites in 624s — ok 2323, blocked 139, dns_fail 467, timeout 38, refused 45, not_found 163, error 55, parked 32, elsewhere 55, hijacked 18, store_unavailable 5
+{
+  "checked": 3340,
+  "counts": {
+    "ok": 2323,
+    "blocked": 139,
+    "checking": 0,
+    "dns_fail": 467,
+    "timeout": 38,
+    "refused": 45,
+    "not_found": 163,
+    "error": 55,
+    "parked": 32,
+    "elsewhere": 55,
+    "hijacked": 18,
+    "store_unavailable": 5
+  },
+  "seconds": 624
+}

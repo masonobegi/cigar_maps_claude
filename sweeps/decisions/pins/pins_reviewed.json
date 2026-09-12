@@ -1,0 +1,43 @@
+[
+ {
+  "id": 2979,
+  "name": "Tobacco Junction Of Marshall",
+  "address": "1303 E Grand Ave",
+  "city": "Marshall",
+  "state": "TX",
+  "zip": "75670",
+  "phone": "(903) 935-1030",
+  "website": "tobaccojunction.net",
+  "from": {
+   "lat": 31.898838,
+   "lng": -98.587921
+  },
+  "to": {
+   "lat": 32.548524500571,
+   "lng": -94.355100744377
+  },
+  "move_km": 404.64,
+  "census": {
+   "type": "Exact",
+   "matched": "1303 E GRAND AVE, MARSHALL, TX, 75670",
+   "zip": "75670"
+  },
+  "nominatim": {
+   "lat": 32.5484646,
+   "lng": -94.3652652,
+   "level": "road",
+   "display": "East Grand Avenue, Marshall, Harrison County, Texas, 75671, United States"
+  },
+  "backed_by": "the geocoder's ZIP",
+  "timezone": {
+   "from": "America/Chicago",
+   "to": "America/Chicago"
+  },
+  "reason": "read on 2026-09-12: the Census matches 1303 E Grand Ave, Marshall TX 75670 exactly, Nominatim puts East Grand Avenue in Marshall 900 m away, the 903 phone is East Texas and the ZIP agrees. The pin stood 405 km west near Comanche \u2014 past the automatic limit, which is why it waited for a person",
+  "holds": [
+   "Nominatim answered at road level, not a house number",
+   "the move is 405 km, past the 50 km limit \u2014 a record that wrong is wrong about more than its pin"
+  ],
+  "verdict": "move"
+ }
+]

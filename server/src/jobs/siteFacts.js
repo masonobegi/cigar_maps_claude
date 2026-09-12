@@ -76,7 +76,7 @@ function sentences(text) {
  * "We do not have a lounge." A regex that only looks for the word finds this
  * and reads it backwards.
  */
-const NEGATED = /\b(do(es)?\s+not\s+have|do\s?n[o']t\s+have|is\s+not\s+a|are\s+not\s+a|no\s+(cigar\s+|smoking\s+|indoor\s+)?(lounge|humidor|seating)|not\s+a\s+(cigar\s+)?lounge|without\s+a\s+(lounge|humidor)|we\s+have\s+no\b|unfortunately[^.]*\b(lounge|humidor)|coming\s+soon|closed\s+(our|the)\s+lounge)/i;
+const NEGATED = /\b(do(es)?\s+not\s+have|do\s?n[o']t\s+have|is\s+not\s+a|are\s+not\s+a|no\s+(cigar\s+|smoking\s+|indoor\s+)?(lounge|humidor|seating)|not\s+a\s+(cigar\s+)?lounge|without\s+a\s+(lounge|humidor)|we\s+have\s+no\b|unfortunately[^.]*\b(lounge|humidor)|coming\s+soon|closed\s+(our|the)\s+lounge|no\s+membership\s+(is\s+)?(required|needed)|membership\s+(is\s+)?not\s+required|no\s+(annual\s+)?dues)/i;
 
 /**
  * Somebody else's lounge. Shop biographies are full of them: "took a retail job
@@ -85,6 +85,25 @@ const NEGATED = /\b(do(es)?\s+not\s+have|do\s?n[o']t\s+have|is\s+not\s+a|are\s+n
  * has one.
  */
 const THIRD_PARTY = /\b(we\s+recommend|recommend(ed)?\s+(you|visiting)|took\s+a\s+(retail\s+)?job|worked?\s+(at|in|for)\s+a|working\s+(at|in)\s+a|opening\s+of\s+[\u2018\u2019'"]|his\s+career|her\s+career|their\s+career|before\s+joining|previously\s+(at|owned)|visit\s+our\s+friends|sister\s+(store|shop|location)|franchise\s+opportunit)/i;
+
+/**
+ * Not a claim about this shop: a question put to the reader, or an article
+ * headline about lounges in general. "Do you love to smoke a fine cigar but
+ * have never visited a cigar lounge?" and "THREE THINGS TO NEVER DO IN A CIGAR
+ * LOUNGE" both name a lounge and neither says this shop has one.
+ */
+const NOT_A_CLAIM = /\?\s*$|^\s*(do|does|did|have|has|are|is|can|could|would|will|why|what|when|where|how)\b[^.!]*\?|\b(things?\s+to\s+(never|always)|guide\s+to|what\s+is\s+a|why\s+you\s+should)\b/i;
+
+/**
+ * The weaker half of the members test. "Private club", "lockers" and "dues"
+ * turn up in prose that is not about this shop at all — Rts Cigars writes that
+ * "the lounge descends from the Cuban tobacconist counter, the private club
+ * smoking room, and the neighbourhood shop", which is a history of the trade.
+ * So those three only count in the shop's own voice; "members only" and
+ * "membership is required" stand on their own.
+ */
+const MEMBERS_WEAK = /\b(private\s+club|personal\s+lockers?|locker\s+(rental|program)|annual\s+dues)\b/i;
+const OWN_VOICE = /\b(our|we|us|your|you|join|book|reserve|enquire|inquire|sign\s+up)\b/i;
 
 /**
  * A verdict has to rest on a sentence that says this shop has the thing, in its
@@ -98,6 +117,10 @@ function plainStatement(quoted, re) {
     if (!re.test(sentence)) continue;
     if (NEGATED.test(sentence)) continue;
     if (THIRD_PARTY.test(sentence)) continue;
+    if (NOT_A_CLAIM.test(sentence)) continue;
+    // "private club", "lockers", "dues": only in the shop's own voice.
+    if (re === MEMBERS && MEMBERS_WEAK.test(sentence) && !/(members?\s*(-|\s)?only|membership)/i.test(sentence)
+        && !OWN_VOICE.test(sentence)) continue;
     return sentence.slice(0, 200);
   }
   return null;
@@ -360,6 +383,24 @@ function selftest() {
   ok(sentences('Cigar Lounge \u2014 open late').length === 2, 'and on an em dash, which pages use as a full stop');
   ok(sentences('').length === 0, 'and nothing splits into nothing');
   ok(plainStatement('Cigar Lounge', LOUNGE) === 'Cigar Lounge', 'a quote with no sentence break is judged whole');
+  // A question and a headline both name a lounge without claiming one. Both
+  // were in the first real run's output: Destination Cigars asking "have you
+  // never visited a cigar lounge?" and His and Hers Cigars' article "THREE
+  // THINGS TO NEVER DO IN A CIGAR LOUNGE".
+  ok(!plainStatement('Do you love a fine cigar but have never visited a cigar lounge?', LOUNGE),
+    'a question put to the reader is not a claim about this shop');
+  ok(!plainStatement('THREE THINGS TO NEVER DO IN A CIGAR LOUNGE', LOUNGE),
+    'nor is an article headline about lounges in general');
+  ok(!plainStatement('No membership required just bring your appreciation for the finer things.', MEMBERS),
+    '"no membership required" is not a members-only shop');
+  ok(!plainStatement('The lounge descends from the Cuban tobacconist counter, the private club smoking room, and the neighborhood shop.', MEMBERS),
+    'a history of the trade that mentions a private club is not this shop’s membership');
+  ok(plainStatement('Members of our private club have their own lockers.', MEMBERS),
+    'but the same words in the shop’s own voice still count');
+  ok(plainStatement('Membership is required only for access to the exclusive back lounge.', MEMBERS),
+    'and "membership is required" stands on its own');
+  ok(plainStatement('Enjoy your smoke in our well appointed smoking lounge.', LOUNGE),
+    'but a plain statement still passes');
   ok(plainStatement(null, LOUNGE) === null, 'and a missing quote is null, not a crash');
 
   // "Coming soon" is a promise, not a lounge.

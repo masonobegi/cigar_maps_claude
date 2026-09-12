@@ -206,6 +206,9 @@ const SOCIAL_HOSTS = [
   'facebook.com', 'fb.me', 'fb.com', 'instagram.com', 'twitter.com', 'x.com',
   'tiktok.com', 'youtube.com', 'youtu.be', 'linkedin.com', 'linktr.ee',
   'pinterest.com', 'snapchat.com', 'threads.net',
+  // A lounge whose web presence is a Discord invite: discord.gg redirects to
+  // discord.com, which read as a stranger's domain and took the link away.
+  'discord.gg', 'discord.com', 'whatsapp.com', 'wa.me', 't.me',
 ];
 
 // Not a shop's site and not a social profile either: a directory entry, a map
@@ -498,6 +501,20 @@ function namesShop(store, id, finalUrl) {
   const initials = String(store.name || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/)
     .filter(w => w && !['the', 'and', 'of', 'at', 'by'].includes(w)).map(w => w[0]).join('');
   if (initials.length >= 2 && stem.startsWith(initials) && /^(cigars?|tobacco|smokes?|lounge|shop|co)?$/.test(stem.slice(initials.length))) return 'name';
+
+  // The same domain, spelled out: ejcigars.com moves to eandjcigars.com,
+  // cigarshouse.net to thecigarshouse.com. A shop whose name is all trade
+  // words has no distinctive token to match — "E&J Cigars" reduces to nothing,
+  // because the initials are too short to stand alone and "cigars" says
+  // nothing — so without this its own new address reads as a stranger's.
+  const bare = d => String(d || '').replace(/\.[a-z.]+$/, '').replace(/[^a-z0-9]/g, '')
+    .replace(/^(?:the|a)/, '').replace(/and/g, '');
+  // Both stems have to be long enough to mean something and close enough in
+  // length to be the same name: 'google' sits inside 'googleblog', and a
+  // Currents link redirecting to a Google blog post is not a shop's rebrand.
+  const from = bare(listed), to = bare(final);
+  if (from && to && from.length >= 8 && to.length >= 8 && Math.abs(from.length - to.length) <= 4
+      && (from.includes(to) || to.includes(from))) return 'domain';
 
   const phone = String(store.phone || '').replace(/[^0-9]/g, '').slice(-10);
   if (phone.length === 10 && id.digits.includes(phone)) return 'phone';
@@ -996,6 +1013,14 @@ function selftest() {
   const stranger = '<html><title>Prescott Plumbing Supply</title><body>Fittings and valves since 1974.</body></html>';
   ok(judgePage(samhill, samhill.website, 'https://prescottplumbing.com/', stranger).status === 'elsewhere',
     'a redirect to a stranger’s site is elsewhere');
+  const ej = { name: 'E&J Cigars', city: 'Stuart', phone: '(772) 221-8770', address: '2401 SE Federal Hwy', website: 'ejcigars.com' };
+  const ejPage = '<html><title>E &amp; J Cigars | Stuart Cigar Shop</title><body>Age verification. Home. Shop.</body></html>';
+  ok(judgePage(ej, ej.website, 'https://eandjcigars.com/', ejPage) === null,
+    'a shop moving to a longer spelling of its own domain keeps its link, though its name is all trade words');
+  const currents = { name: 'Hillside Cigar Shop', city: 'Hillside', phone: '', address: '', website: 'currents.google.com/xyz' };
+  const blogPost = '<html><title>Google Workspace Updates: an update on Currents</title><body>Products. For Admins.</body></html>';
+  ok(judgePage(currents, currents.website, 'https://workspaceupdates.googleblog.com/x.html', blogPost).status === 'elsewhere',
+    'and "google" inside "googleblog" is not a rebrand: a platform link that died is still elsewhere');
   ok(judgePage(samhill, samhill.website, 'https://facebook.com/samhillcigars', stranger) === null,
     'but a social page is judged in the UI, not taken away here');
   ok(judgePage(null, 'x.com', 'https://x.com/', ownPage) === null,
