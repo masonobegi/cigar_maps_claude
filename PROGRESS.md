@@ -18,7 +18,7 @@ leaves an accurate picture rather than a reconstruction.
 | **Railway CLI / `RAILWAY_TOKEN`** | **Absent. No production database.** |
 | **Outbound network** | **Package registries only.** The egress proxy answers 403 to every other host |
 | `server/data/` snapshot | Absent — gitignored, so the clone did not carry it |
-| The five `sweep/*` branches | Absent. They were local to the desktop machine; only `master` and this branch exist on the remote |
+| The five `sweep/*` branches | **On the remote, and now read.** I first reported them absent — see the correction below |
 
 **What that means, task by task.** Per HANDOFF section 3 ("If you cannot reach
 Railway, do not guess"), nothing was applied to production. On top of that,
@@ -30,6 +30,37 @@ So the shape of this session's work is: **every job written and tested; every
 dry run that the saved evidence supports, run; nothing applied.** Where a number
 below describes real listings it says so; where it describes a test fixture it
 says that too.
+
+### A correction, and what came of it
+
+I first reported the five `sweep/*` branches as absent, on the strength of
+`git branch -a`. That lists only what the clone had fetched. `git ls-remote`
+shows all five on the remote, exactly where HANDOFF section 4 said they were,
+and reading their diffs was an instruction I had missed. They are read now, and
+four of the five changed what shipped:
+
+| Branch | Verdict |
+|--------|---------|
+| `sweep/claims` | **Adopted whole.** The real Public Suffix List (10,342 rules), a working RDAP client with a cache, and a better design — `gatherFacts()` impure, `judge()` pure. My `claimProof.js` had a hand-curated 140-suffix subset and no RDAP client at all, and is gone |
+| `sweep/pins` | **Adopted whole.** A disk cache for both geocoders, four steps instead of one, fuller ZIP and area-code tables |
+| `sweep/links` | **Adopted whole.** It strips `<script>` and `<style>` before matching and reads a page's identity from its title, og tags, JSON-LD and image alt text. Mine matched raw HTML, so a gambling word in a tracking script could have branded a real shop hijacked |
+| `sweep/hours` | **One rule taken.** A day of under two hours of trading is dropped — the case it cites is a whole weekend printed as midnight-to-1am, which no odd-one-out rule can catch. Its other rule drops a genuine 8pm-4am weekend, so mine was kept there |
+| `sweep/search-and-menus` | **Nothing taken.** It carries `CANDIDATE_CEILING = 5000`, which is the bug I found and fixed; its recall monitor has 11 assertions to my 14 plus 16 contract checks; and its menu half was never started |
+
+Every one of them was committed as "stopped part-way and not tested", and that
+was true — running their tests found **five real bugs** in code that had never
+been executed:
+
+- `claimGate` had four unfinished test fixtures (the gate itself was sound).
+- `geocodePins.streetKey` did not fold the street type, so "518 Bradley St" and
+  "518 Bradley Street" read as different streets — and `siteBacksAddress` is a
+  *required* condition for an automatic pin move, so the automatic tier would
+  have been dead on arrival.
+- `geocodePins.foreignVerdict` tested for a foreign clock with `/^(America|Pacific)\//`,
+  which cannot see that `America/Toronto` is Canadian.
+- `linkCheck.namesShop` required a short name token to stand alone, so "Mike's
+  Cigar Room" could not match its own page title "Mikes Cigars".
+- `sweep/links` had no self-test at all, which is how that survived.
 
 ### One thing that turned out better than expected
 
@@ -63,15 +94,18 @@ still need the real database.
 ### Self-tests
 
 Baseline, before any change: 5 suites, 135 assertions.
-Now: **16 suites, 502 assertions, 0 failures**, plus the 10-assertion re-import
-guard and a live server boot.
+Now: **18 suites, 563 assertions, 0 failures**, plus the apply-path tests, the
+10-assertion re-import guard, the 16 contract checks and a live server boot.
 
-    hoursParser      76    storeHours       35    storeSearch      41
-    claimProof       44    dedupeListings   14    pureCigarCheck   10
-    hoursSweep       43    recallMonitor    14    geocodePins      47
-    linkCheck        33    thumbCheck       27    siteFacts        30
-    webMenu          15    closureCheck     16    licenceSync      31
-    recoverHidden    26    reimportTest     10
+    hoursParser      79    storeHours       35    storeSearch      41
+    publicSuffix     35    rdap              8    claimGate        59
+    dedupeListings   14    pureCigarCheck   10    hoursSweep       43
+    recallMonitor    14    geocodePins      54    linkCheck        26
+    thumbCheck       27    siteFacts        30    webMenu          15
+    closureCheck     16    licenceSync      31    recoverHidden    26
+
+Plus, against a real database: `geocodePins applytest` 7, `reimportTest` 10,
+and the list contract's 16.
 
 ---
 
@@ -224,9 +258,9 @@ flagged; New York City is exempt from lapse flags entirely.
 
 ### 5.8 Claim safety gate — done
 
-`utils/claimProof.js`. The shortcut needs all of: a live re-check saying `ok`;
-the listed URL, the final URL and the email on one registrable domain under a
-public suffix list; a domain that is not free mail, a shortener, a directory, a
+`utils/claimGate.js`, adopted from `sweep/claims`. The shortcut needs all of: a live re-check saying `ok`;
+the listed URL, the final URL and the email on one registrable domain under the
+real Public Suffix List (10,342 rules, vendored at version 2026-09-08); a domain that is not free mail, a shortener, a directory, a
 hosting platform, a government or a foreign country; exactly one public listing
 on it; a page naming the shop; RDAP showing it registered a year ago and not
 since import; and a verified email matching the account.
@@ -237,7 +271,8 @@ returned to the claimant so a real owner knows what proof to send.
 - **All 25 live examples from the audit are tests.** The five sampled good
   domains pass; the four dead domains, the four gambling and for-sale redirects,
   the twelve two-label, free-mail, locality and institutional cases, and the
-  shared domains are all refused. 44 assertions.
+  shared domains are all refused. 59 assertions, plus 35 for the suffix list and
+  8 for the RDAP client.
 - `approveClaim` gains two guards, both checked against a real database: a
   duplicate listing can never be claimed, and self-serve never un-hides one.
 
@@ -294,6 +329,14 @@ Nothing needs new code.
 
 ## Notes for whoever picks this up
 
+- **The `sweep/*` branches are merged into this branch's work and can be
+  deleted.** Nothing useful is left on them: `sweep/claims`, `sweep/pins` and
+  `sweep/links` were adopted whole, `sweep/hours` contributed its span rule, and
+  `sweep/search-and-menus` was superseded. Check this file's correction table
+  before deleting, so the record of what came from where survives.
+- `git branch -a` in a fresh clone lists only what has been fetched. Use
+  `git ls-remote --heads origin` to see what is actually there — that is the
+  mistake that made me report the branches missing.
 - The CRLF trap in HANDOFF section 6 does not apply in a Linux clone — every
   file here is LF. It will still apply on the Windows machine.
 - `node src/index.js` builds a realistic 42,928-listing database from the

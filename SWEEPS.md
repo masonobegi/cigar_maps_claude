@@ -64,13 +64,13 @@ is code, tests and decision files. `PROGRESS.md` is its full log.
 | Task | What exists now | What it still needs |
 |------|-----------------|---------------------|
 | Search completeness | `utils/storeSearch.js`, `utils/storeList.js`, a rewritten list route, `jobs/recallMonitor.js`. Recall **89.96% to 100.00%** over 1,984 cases, measured on the bundled directory (7,904 public) | a deploy, and the metro skim read by a person |
-| Pins and foreign rows | `jobs/geocodePins.js`, 47 + 9 assertions | the Census and Nominatim crawl |
-| Hijacked links | four new linkCheck verdicts, `jobs/thumbCheck.js`, 33 + 27 assertions | `linkCheck --all` and the thumbnail read |
+| Pins and foreign rows | `jobs/geocodePins.js` from `sweep/pins`, with a resumable cache; 54 + 7 assertions | the Census and Nominatim crawl |
+| Hijacked links | `jobs/linkCheck.js` from `sweep/links` with four new verdicts, plus `jobs/thumbCheck.js`; 26 + 27 assertions | `linkCheck --all` and the thumbnail read |
 | Amenity crawl | the 1,343 saved sites re-read at the sentence: **653 sound, 7 false positives, 65 cut short by a bug in `quote()`** | the remaining 1,095 sites |
 | Hours re-audit | six parser fixes, four refusals, a stricter name test. Accuracy **96.5% to 97.9%** | the decision files applied |
 | Menu scanner | back-off, staleness ordering, stock expiry, shared-feed ownership. A 30-day replay reaches every shop; the old order left 3,940 of 4,000 untouched | a deploy |
 | Closures and licences | five closureCheck changes, `jobs/licenceSync.js`, 16 + 31 assertions | the registry downloads |
-| Claim safety gate | `utils/claimProof.js`, all 25 of the audit's live examples as tests | SMTP, then a deploy |
+| Claim safety gate | `utils/claimGate.js` from `sweep/claims`, with the real Public Suffix List and an RDAP client; all 25 of the audit's live examples as tests | SMTP, then a deploy |
 | Recovering hidden shops | `jobs/recoverHidden.js`. Re-reading the saved evidence recovers nobody, which is arithmetic: the same function on the same evidence | new evidence — see below |
 
 **Decision files waiting to be applied**, all read row by row:
@@ -85,16 +85,28 @@ is code, tests and decision files. `PROGRESS.md` is its full log.
   new evidence could bring each one back: 1,933 need a licence match or
   web-shop stock, 84 need a re-crawl, 463 are correctly hidden.
 
-**Self-tests across the server: 502 assertions in 16 suites, all passing**, plus
-the re-import guard. Every job in `server/src/jobs/` answers to `selftest`.
+**Self-tests across the server: 563 assertions in 18 suites, all passing**, plus
+the apply-path tests, the re-import guard and the list's 16 contract checks. Every job in `server/src/jobs/` answers to `selftest`.
 
 ## Running right now
 
-**Nothing is building in parallel any more.** The six branches below were local
-to the desktop machine and did not reach the remote; the session of 2026-09-12
-rebuilt all of that work from the handoff and the saved evidence, on the single
-branch `claude/handoff-tasks-completion-m1aqvb`. The table is kept for the
-record of what each stream was for.
+**Nothing is building in parallel any more, and the branches below are merged
+and can be deleted.** Five of the six reached the remote (`sweep/closures` never
+did). The 2026-09-12 session read all five and folded them into
+`claude/handoff-tasks-completion-m1aqvb`:
+
+| Branch | What happened to it |
+|--------|---------------------|
+| `sweep/claims` | **Adopted whole** — the real Public Suffix List, an RDAP client, a better gate design |
+| `sweep/pins` | **Adopted whole** — a resumable geocode cache and fuller reference tables |
+| `sweep/links` | **Adopted whole** — it reads the visible page instead of raw HTML |
+| `sweep/hours` | **One rule taken** — a day under two hours of trading is not a day |
+| `sweep/search-and-menus` | **Superseded** — it carried the 5,000-row ceiling bug, and its menu half was never started |
+
+All five were committed as "not tested", and running their tests found five real
+bugs that had never been executed — the worst being a street-type comparison
+that would have left the automatic pin move dead on arrival. The table below is
+kept for the record of what each stream was for.
 
 | Branch | Sweeps | What it produces |
 |--------|--------|------------------|
@@ -140,6 +152,12 @@ reading the output is the work, not an optional extra.
   rotating national sample, or IP geolocation. Until then the home page, the
   navbar autocomplete and the review picker keep showing the same alphabetical
   slice.
+- **How paid placement should appear in a search.** `sweep/search-and-menus`
+  worked out a shape — at most three sponsored slots at the top of a radius the
+  customer chose, never a town they did not search, Partner above Featured — and
+  it is deliberately not implemented, because what the plans promise and what
+  the distance sort does are still contradictory and that is a decision, not a
+  bug. It is ready to build the moment it is settled.
 - **Whether about two-thirds of claims may need a person.** The claim safety
   gate keeps the self-serve shortcut for roughly 1,537 of 4,533 eligible
   listings; the rest wait for staff. It never rejects a claim, and it tells the
