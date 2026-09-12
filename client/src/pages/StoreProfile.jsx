@@ -934,9 +934,9 @@ export default function StoreProfile() {
               )}
               <span className="text-sm" style={{ color: isOpen ? '#9FD9B0' : MUTED }}>
                 {hoursAreConfirmed && openNow.label
-                  ? <>{openNow.label}{isOpen && todayHours ? <span style={{ color: MUTED }}> · today {String(todayHours).replace('-', '–')}</span> : null}</>
+                  ? <>{openNow.label}{isOpen && todayHours ? <span style={{ color: MUTED }}> · today {String(todayHours).replace(/-/g, '–')}</span> : null}</>
                   : todayHours
-                    ? <>Today {String(todayHours).replace('-', '–')}{hoursAreConfirmed ? null : <span style={{ color: '#7A6D60' }}> · from map data, not confirmed</span>}</>
+                    ? <>Today {String(todayHours).replace(/-/g, '–')}{hoursAreConfirmed ? null : <span style={{ color: '#7A6D60' }}> · from map data, not confirmed</span>}</>
                     : 'Hours not listed yet'}
               </span>
             </div>

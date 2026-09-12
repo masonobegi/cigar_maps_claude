@@ -120,16 +120,32 @@ function nowIn(timeZone, at = new Date()) {
   return { day: DAY_NAMES.indexOf(get('weekday')), minutes: Number(get('hour')) * 60 + Number(get('minute')) };
 }
 
-/** "10am-7pm" → { open: 600, close: 1140 }. Only the first range of a split day. */
-function parseRange(str) {
-  const m = String(str || '').match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
-  if (!m) return null;
+const RANGE = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/ig;
+
+/**
+ * Every range in a day, in the order written.
+ * "12pm-6pm, 7pm-10pm" → [{open: 720, close: 1080}, {open: 1140, close: 1320}].
+ *
+ * Shops that shut between a day trade and an evening lounge write both. Reading
+ * only the first says they are closed all evening; reading first-open to
+ * last-close says they are open through a locked hour. So keep them apart.
+ */
+function parseRanges(str) {
   const toMin = (h, mm, ap) => {
     let hh = Number(h) % 12;
     if (ap.toLowerCase() === 'pm') hh += 12;
     return hh * 60 + Number(mm || 0);
   };
-  return { open: toMin(m[1], m[2], m[3]), close: toMin(m[4], m[5], m[6]) };
+  const out = [];
+  for (const m of String(str || '').matchAll(RANGE)) {
+    out.push({ open: toMin(m[1], m[2], m[3]), close: toMin(m[4], m[5], m[6]) });
+  }
+  return out;
+}
+
+/** "10am-7pm" → { open: 600, close: 1140 }. The first range of a split day. */
+function parseRange(str) {
+  return parseRanges(str)[0] || null;
 }
 
 const fmt = mins => {
@@ -184,17 +200,24 @@ function openStatus(hoursInput, timeZone, at = new Date()) {
 
   if (/^closed$/i.test(todayStr.trim())) return { isOpen: false, label: nextOpening() || 'Closed today', today: todayStr };
 
-  const r = parseRange(todayStr);
-  if (!r) return { isOpen: null, label: null, today: todayStr };
-  if (r.open === r.close) return { isOpen: true, label: 'Open 24 hours', today: todayStr };
-  const overnight = r.close < r.open;
-  if (minutes < r.open) {
-    const wait = r.open - minutes;
-    return { isOpen: false, label: wait <= 60 ? `Opens in ${wait}m` : `Opens at ${fmt(r.open)}`, today: todayStr };
+  const ranges = parseRanges(todayStr);
+  if (!ranges.length) return { isOpen: null, label: null, today: todayStr };
+  if (ranges[0].open === ranges[0].close) return { isOpen: true, label: 'Open 24 hours', today: todayStr };
+
+  // Open now, in any of today's shifts.
+  for (const r of ranges) {
+    const overnight = r.close < r.open;
+    if (minutes < r.open) continue;
+    if (overnight || minutes < r.close) {
+      const left = overnight ? r.close + 1440 - minutes : r.close - minutes;
+      return { isOpen: true, label: left <= 45 ? `Closes in ${left}m` : `Open until ${fmt(r.close)}`, today: todayStr };
+    }
   }
-  if (overnight || minutes < r.close) {
-    const left = overnight ? r.close + 1440 - minutes : r.close - minutes;
-    return { isOpen: true, label: left <= 45 ? `Closes in ${left}m` : `Open until ${fmt(r.close)}`, today: todayStr };
+  // Shut for now, but a later shift today still opens.
+  const later = ranges.find(r => minutes < r.open);
+  if (later) {
+    const wait = later.open - minutes;
+    return { isOpen: false, label: wait <= 60 ? `Opens in ${wait}m` : `Opens at ${fmt(later.open)}`, today: todayStr };
   }
   return { isOpen: false, label: nextOpening() || 'Closed now', today: todayStr };
 }
@@ -261,6 +284,18 @@ if (require.main === module) {
   ok(s.isOpen === true && s.label === 'Open 24 hours', 'open 24 hours', s);
   s = openStatus('{"Thu":"10am-7pm"}', 'America/Phoenix', at);
   ok(s.isOpen === true, 'hours as stored JSON text', s);
+
+  // A split shift: a day trade, a break, an evening lounge. 2:30pm Tucson.
+  const split = { Thu: '12pm-2pm, 5pm-10pm' };
+  s = openStatus(split, 'America/Phoenix', at);
+  ok(s.isOpen === false && s.label === 'Opens at 5pm', 'inside the break, the evening shift is what opens next', s);
+  s = openStatus({ Thu: '12pm-3pm, 5pm-10pm' }, 'America/Phoenix', at);
+  ok(s.isOpen === true && s.label === 'Closes in 30m', 'the first shift is still running', s);
+  s = openStatus({ Thu: '9am-11am, 1pm-9pm' }, 'America/Phoenix', at);
+  ok(s.isOpen === true && s.label === 'Open until 9pm', 'the second shift has started', s);
+  s = openStatus({ Thu: '9am-11am, 12pm-1pm', Fri: '10am-6pm' }, 'America/Phoenix', at);
+  ok(s.isOpen === false && s.label === 'Opens tomorrow at 10am', 'both shifts done for the day', s);
+  ok(parseRange('12pm-6pm, 7pm-10pm').close === 1080, 'parseRange still reads only the first shift', parseRange('12pm-6pm, 7pm-10pm'));
 
   console.log(`\nstoreHours self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

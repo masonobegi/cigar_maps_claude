@@ -55,6 +55,55 @@ thumbnails for 1,427 listings, Bitcoin ATM listings hidden, and five wrong-site
 hours cleared (a grout company, a county government, a petrol station, two
 Yahoo pages).
 
+## The session of 2026-09-12 (evening): the handoff, worked through
+
+This session has Railway and the open web, so it is applying what the cloud
+session built. Task order is `HANDOFF.md`'s.
+
+### 1. Hours decisions — applied
+
+| File | Waiting | Applied | Notes |
+|------|---------|---------|-------|
+| `hours_clear.json` | 42 | 38 cleared | 5 had already been cleared by an earlier partial run; 1 moved to the replace file by hand |
+| `hours_replace.json` | 8 | 6 written, 1 skipped, 1 cleared | see the four hand decisions below |
+| `hours_hold.json` | 16 | — | nothing to do, as the file says |
+| `hours_chain_rerun.json` | 8 | **no change** | re-decided against the real stores table: production returns exactly the hours already stored for all eight. The offline harness had handed six Spring Street branches the Tupelo page and two Tinder Boxes another branch's |
+| `hours_recoverable.json` | 56 real | 18 written, 38 refused | most were a call centre, a warehouse or a live-chat desk, not a door |
+
+**Public listings with hours: 914 → 932.** Of those, 784 read from the shop's
+own website.
+
+**The four hours decided by hand, and how to reverse each:**
+
+- **#9843 Skookum Creek Cigar Lounge — cleared.** Both readings came from
+  `littlecreek.com`: the old one is headed "Casino Hours", the new one reads
+  like the casino's office week. The lounge inside keeps its own hours and
+  neither is it. Reverse: put back `8am-3am` Sunday–Thursday.
+- **#3032 Bright fire cigars — skipped.** The replacement came from a page
+  whose text stopped at "Fri", so taking it would have dropped Friday, Saturday
+  and Sunday. The stored week is complete and agrees with it as far as it goes.
+- **#9541 Maine Street Cigar — written as two shifts.** The site says "Friday
+  12pm-6pm & 7pm-10pm". The stored value claimed it shuts at six; the proposal
+  claimed it is open through the seven o'clock break. It now reads
+  `12pm-6pm, 7pm-10pm`, which needed the split-shift work below.
+- **#20766 Kay's Cigar Sensations — the season that is running.** The page
+  prints September–April beside May–August. September is now, so the first
+  column stands: Sunday 12pm-10pm, Monday 4pm-12am, Tuesday and Wednesday
+  4pm-9pm. The stored Monday was `4am-12pm` — open all morning, shut all
+  evening, the exact opposite of the truth.
+
+**Split shifts, a bug found while applying this.** A day written as two shifts
+was being stored as one long one: "Friday 12pm-6pm & 7pm-10pm" became
+`12pm-10pm`, which tells a customer the shop is open during an hour its door is
+locked. Reading only the first shift is no better — it says closed all evening.
+Both the parser and the open-now clock now keep the shifts apart
+(`hoursParser.joinShifts`, `storeHours.parseRanges`), on the server and in the
+browser fallback. Hours accuracy re-scored: **97.9%**, above the 97.3% floor.
+
+**One thing for a later sweep:** #7283 Calavera Leather and Cigar Co. prints
+"113 North Polk Street, Jefferson, TX" on its own site; we list it at 110 N
+Walnut St. One of the two is stale — for the pins or moved-shops pass.
+
 ## The session of 2026-09-12: nine sweeps built, none applied
 
 A cloud session worked through every task in `HANDOFF.md` section 5. It had no

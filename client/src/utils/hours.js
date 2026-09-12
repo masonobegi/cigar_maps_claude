@@ -1,7 +1,11 @@
-export function parseHoursString(str) {
-  if (!str || str === 'Closed') return null;
-  const match = str.match(/(\d+)(?::(\d+))?(am|pm)\s*[-–]\s*(\d+)(?::(\d+))?(am|pm)/i);
-  if (!match) return null;
+const RANGE = /(\d+)(?::(\d+))?(am|pm)\s*[-–]\s*(\d+)(?::(\d+))?(am|pm)/ig;
+
+// A day can be written as more than one shift: "12pm-6pm, 7pm-10pm" is a shop
+// that shuts for an hour in between. Reading only the first says it is closed
+// all evening; reading first-open to last-close says it is open through the
+// break. So read them all, in order.
+export function parseHoursRanges(str) {
+  if (!str || str === 'Closed') return [];
   const toMins = (h, m, ap) => {
     let hour = parseInt(h);
     const min = parseInt(m || 0);
@@ -9,10 +13,15 @@ export function parseHoursString(str) {
     if (ap.toLowerCase() === 'am' && hour === 12) hour = 0;
     return hour * 60 + min;
   };
-  return {
-    open: toMins(match[1], match[2], match[3]),
-    close: toMins(match[4], match[5], match[6]),
-  };
+  const out = [];
+  for (const m of String(str).matchAll(RANGE)) {
+    out.push({ open: toMins(m[1], m[2], m[3]), close: toMins(m[4], m[5], m[6]) });
+  }
+  return out;
+}
+
+export function parseHoursString(str) {
+  return parseHoursRanges(str)[0] || null;
 }
 
 export function getStoreStatus(hours) {
@@ -50,38 +59,36 @@ export function getStoreStatus(hours) {
     return { isOpen: false, label: 'Closed today', todayHours: todayStr };
   }
 
-  const parsed = parseHoursString(todayStr);
-  if (!parsed) return { isOpen: null, label: todayStr, todayHours: todayStr };
+  const shifts = parseHoursRanges(todayStr);
+  if (!shifts.length) return { isOpen: null, label: todayStr, todayHours: todayStr };
 
-  // Closing after midnight ("11am-2am") gives a close time at or before open.
-  if (parsed.close <= parsed.open) {
-    if (nowMins >= parsed.open || nowMins < parsed.close) {
-      return { isOpen: true, label: `Open until ${formatTime(parsed.close)}`, todayHours: todayStr };
+  for (const parsed of shifts) {
+    // Closing after midnight ("11am-2am") gives a close time at or before open.
+    if (parsed.close <= parsed.open) {
+      if (nowMins >= parsed.open || nowMins < parsed.close) {
+        return { isOpen: true, label: `Open until ${formatTime(parsed.close)}`, todayHours: todayStr };
+      }
+      continue;
     }
-    const minsUntil = parsed.open - nowMins;
-    return {
-      isOpen: false,
-      label: minsUntil < 60 ? `Opens in ${minsUntil}m` : `Opens at ${formatTime(parsed.open)}`,
-      todayHours: todayStr,
-    };
+    if (nowMins >= parsed.open && nowMins < parsed.close) {
+      const minsLeft = parsed.close - nowMins;
+      const label = minsLeft <= 30
+        ? `Closes in ${minsLeft}m`
+        : minsLeft <= 90
+        ? `Closes in ${Math.round(minsLeft / 30) * 30}m`
+        : `Open until ${formatTime(parsed.close)}`;
+      return { isOpen: true, label, todayHours: todayStr };
+    }
   }
 
-  if (nowMins < parsed.open) {
-    const minsUntil = parsed.open - nowMins;
+  // Shut now; a shift later today still opens.
+  const later = shifts.find(r => nowMins < r.open);
+  if (later) {
+    const minsUntil = later.open - nowMins;
     const label = minsUntil < 60
       ? `Opens in ${minsUntil}m`
-      : `Opens at ${formatTime(parsed.open)}`;
+      : `Opens at ${formatTime(later.open)}`;
     return { isOpen: false, label, todayHours: todayStr };
-  }
-
-  if (nowMins < parsed.close) {
-    const minsLeft = parsed.close - nowMins;
-    const label = minsLeft <= 30
-      ? `Closes in ${minsLeft}m`
-      : minsLeft <= 90
-      ? `Closes in ${Math.round(minsLeft / 30) * 30}m`
-      : `Open until ${formatTime(parsed.close)}`;
-    return { isOpen: true, label, todayHours: todayStr };
   }
 
   return { isOpen: false, label: 'Closed now', todayHours: todayStr };

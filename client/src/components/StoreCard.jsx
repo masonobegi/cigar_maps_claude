@@ -104,7 +104,8 @@ function whereLine(store) {
  * when it next opens. Unknown: say so plainly, never guess "closed".
  */
 function HoursLine({ status, today, confirmed }) {
-  const pretty = s => String(s || '').replace('-', '–');
+  // Every hyphen: a day can be written as two shifts ("12pm-6pm, 7pm-10pm").
+  const pretty = s => String(s || '').replace(/-/g, '–');
   if (!confirmed) {
     if (!today) return <span style={{ color: '#7A6D60' }}>Hours not listed</span>;
     return <span>Today {pretty(today)}<span style={{ color: '#7A6D60' }}> · from map data, not confirmed</span></span>;

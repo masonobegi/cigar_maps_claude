@@ -121,7 +121,7 @@ function osmDays(spec) {
   return [...out];
 }
 
-/** Times in a rule; split shifts ("10:00-14:00,16:00-20:00") span first open to last close. */
+/** Times in a rule. Split shifts ("10:00-14:00,16:00-20:00") are kept apart. */
 function osmRange(times) {
   if (/^(off|closed)$/i.test(times.trim())) return 'Closed';
   let pairs = times.split(',').map(p => p.split('-').map(isoMinutes));
@@ -132,8 +132,30 @@ function osmRange(times) {
   // twenty-six hour day, published as two hours.
   if (pairs.length > 1 && pairs[0][0] === 0 && pairs[0][1] > 0 && pairs[0][1] <= 240) pairs = pairs.slice(1);
   if (!pairs.length) return null;
-  const open = pairs[0][0], close = pairs[pairs.length - 1][1];
-  return sane(open, close);
+  return joinShifts(pairs.map(([o, c]) => ({ open: o, close: c })))
+    || sane(pairs[0][0], pairs[pairs.length - 1][1]);
+}
+
+/**
+ * Shifts of one day written out: "10am-2pm, 4pm-8pm".
+ *
+ * A shop that shuts for the afternoon says so, and spanning the break — first
+ * opening to last close — publishes it as open through a locked hour. Each
+ * shift has to stand on its own and start after the one before it; anything
+ * else (overlapping, out of order, a shift sane() will not have) returns null
+ * so the caller can fall back to the spanning reading.
+ */
+function joinShifts(pairs) {
+  if (pairs.length < 2 || pairs.length > 3) return null;
+  const parts = [];
+  for (let i = 0; i < pairs.length; i++) {
+    const { open, close } = pairs[i];
+    if (i > 0 && !(open >= pairs[i - 1].close && pairs[i - 1].close > pairs[i - 1].open)) return null;
+    const value = sane(open, close);
+    if (!value || value === '12am-12am') return null;
+    parts.push(value);
+  }
+  return parts.join(', ');
 }
 
 function parseOpeningHoursString(input) {
@@ -360,12 +382,18 @@ function parseTextHours(lines) {
       const before = line.slice(cursor, ev.at);
       if (ev.kind === 'range' && lastShift && !textDays(before).length && SHIFT_SEPARATOR.test(before)) {
         const second = inferEndpoints(ev.m[1], ev.m[2], ev.m[3], ev.m[4], ev.m[5], ev.m[6]);
-        const merged = second ? sane(lastShift.open, second.close) : null;
+        // Both shifts kept apart when they can be, so the break between them is
+        // not published as trading; otherwise the old reading, first opening to
+        // last close, which at least does not lose the evening.
+        const both = second && joinShifts([...lastShift.shifts, second]);
+        const merged = both || (second ? sane(lastShift.open, second.close) : null);
         if (merged) {
           // Overwrite rather than assign: the same day already holds the first
           // shift, and assign() would call the pair a conflict and refuse both.
           for (const d of lastShift.days) out[DAYS[d]] = merged;
-          lastShift = { days: lastShift.days, open: lastShift.open };
+          lastShift = both
+            ? { days: lastShift.days, open: lastShift.open, shifts: [...lastShift.shifts, second] }
+            : { days: lastShift.days, open: lastShift.open, shifts: [{ open: lastShift.open, close: second.close }] };
           cursor = ev.end;
           continue;
         }
@@ -416,7 +444,7 @@ function parseTextHours(lines) {
       if (value) {
         for (const d of days) assign(d, value);
         rules++;
-        lastShift = ends ? { days, open: ends.open } : null;
+        lastShift = ends ? { days, open: ends.open, shifts: [ends] } : null;
       } else {
         lastShift = null;
       }
@@ -437,14 +465,24 @@ function parseTextHours(lines) {
   return Object.keys(out).length ? { hours: order(out), rules, conflicts } : null;
 }
 
-/** Minutes of trading in "10am-7pm", wrapping past midnight. null if unreadable. */
+/**
+ * Minutes of trading in "10am-7pm", wrapping past midnight. A day written as
+ * shifts ("12pm-2pm, 5pm-10pm") counts the shifts, not the break between them.
+ * null if unreadable.
+ */
 function daySpan(value) {
-  const m = /^(\d{1,2})(?::(\d{2}))?(am|pm)-(\d{1,2})(?::(\d{2}))?(am|pm)$/.exec(String(value || ''));
-  if (!m) return null;
-  const at = (h, mm, ap) => ((Number(h) % 12) + (ap === 'pm' ? 12 : 0)) * 60 + Number(mm || 0);
-  const open = at(m[1], m[2], m[3]), close = at(m[4], m[5], m[6]);
-  if (open === close) return 0;                      // open round the clock
-  return close > open ? close - open : close + 1440 - open;
+  const parts = String(value || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!parts.length) return null;
+  let total = 0;
+  for (const part of parts) {
+    const m = /^(\d{1,2})(?::(\d{2}))?(am|pm)-(\d{1,2})(?::(\d{2}))?(am|pm)$/.exec(part);
+    if (!m) return null;
+    const at = (h, mm, ap) => ((Number(h) % 12) + (ap === 'pm' ? 12 : 0)) * 60 + Number(mm || 0);
+    const open = at(m[1], m[2], m[3]), close = at(m[4], m[5], m[6]);
+    if (open === close) return 0;                    // open round the clock
+    total += close > open ? close - open : close + 1440 - open;
+  }
+  return total;
 }
 
 /** The opening time of "10am-7pm", in minutes, or null for Closed and oddities. */
@@ -563,7 +601,7 @@ if (require.main === module) {
   ok(h && Object.keys(h).length === 7 && h.Thu === '9am-9pm', 'schema.org array (Anthony\'s Campbell)', h);
   ok(eq(parseOpeningHoursString('24/7'), { Mon: '12am-12am', Tue: '12am-12am', Wed: '12am-12am', Thu: '12am-12am', Fri: '12am-12am', Sat: '12am-12am', Sun: '12am-12am' }), '24/7');
   h = parseOpeningHoursString('Mo-Fr 10:00-14:00,16:00-20:00');
-  ok(h && h.Mon === '10am-8pm', 'a split shift spans first open to last close', h);
+  ok(h && h.Mon === '10am-2pm, 4pm-8pm', 'a split shift keeps its shifts apart', h);
 
   console.log('\nunlisted days, per the OpenStreetMap convention:');
   h = fillClosedPerSpec(parseOpeningHoursString('Mo-Sa 10:00-19:00'));
@@ -685,9 +723,9 @@ if (require.main === module) {
   //    open until ten at night was published as shutting at two in the
   //    afternoon.
   r = parseTextHours(['Mon-Fri 11am-2pm, 5pm-10pm']);
-  ok(r && r.hours.Mon === '11am-10pm' && r.hours.Fri === '11am-10pm', 'a day written as two shifts runs from the first opening to the last close', r && r.hours);
+  ok(r && r.hours.Mon === '11am-2pm, 5pm-10pm' && r.hours.Fri === '11am-2pm, 5pm-10pm', 'a day written as two shifts keeps both, so the afternoon break is not trading', r && r.hours);
   r = parseTextHours(['Sat 12pm-3pm and 6pm-11pm']);
-  ok(r && r.hours.Sat === '12pm-11pm', '"and" joins two shifts as well as a comma', r && r.hours);
+  ok(r && r.hours.Sat === '12pm-3pm, 6pm-11pm', '"and" joins two shifts as well as a comma', r && r.hours);
   r = parseTextHours(['Mon 11am-2pm phone orders 5pm-10pm']);
   ok(r && r.hours.Mon === '11am-2pm', 'but words between two ranges mean they are not one day', r && r.hours);
 
