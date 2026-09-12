@@ -64,6 +64,12 @@ export default function Stores() {
   const [mapLoading, setMapLoading] = useState(false);
   const [mapBbox, setMapBbox] = useState(null);
   const mapReq = useRef({ timer: null, seq: 0 });
+  // What the server says about the whole result, not just the page we hold:
+  // how many shops match, whether more are waiting, how many of them have no
+  // hours anyone stands behind, and whether the search was too wide to measure.
+  const [listMeta, setListMeta] = useState({ total: null, next: null, unconfirmed: 0, tooMany: false, message: null });
+  const [loadingMore, setLoadingMore] = useState(false);
+  const listReq = useRef(0);
 
   // Panning only records where we are. The fetch lives in the effect below so
   // that changing a filter refreshes the map even when it never moves.
@@ -105,16 +111,64 @@ export default function Stores() {
   // wherever the browser last saw you — the list stays nationwide until you
   // press Near Me or type a place.
 
-  useEffect(() => {
-    setLoading(true);
+  // The parameters for the list, without the paging offset.
+  function listParams() {
     const p = filterParams();
     if (city && !userLocation) {
       p.city = city;
       if (cityState) p.state = cityState;
     }
     if (userLocation?.lat) { p.lat = userLocation.lat; p.lng = userLocation.lng; p.radius = radius; }
-    api.searchStores(p).then(setStores).finally(() => setLoading(false));
+    return p;
+  }
+
+  useEffect(() => {
+    const seq = ++listReq.current;
+    setLoading(true);
+    api.searchStorePage(listParams())
+      .then(r => {
+        if (seq !== listReq.current) return;
+        setStores(r.stores || []);
+        setListMeta({
+          total: r.total, next: r.next_offset,
+          unconfirmed: r.unconfirmed_hours_nearby || 0,
+          tooMany: !!r.too_many, message: r.message || null,
+        });
+      })
+      .finally(() => { if (seq === listReq.current) setLoading(false); });
   }, [q, city, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly, userLocation, radius]);
+
+  // "Show more" appends the next page rather than replacing the list, so a
+  // customer never loses their place to see the shop below the fold.
+  function showMore() {
+    if (listMeta.next === null || listMeta.next === undefined || loadingMore) return;
+    const seq = listReq.current;
+    setLoadingMore(true);
+    api.searchStorePage({ ...listParams(), offset: listMeta.next })
+      .then(r => {
+        if (seq !== listReq.current) return;
+        setStores(prev => [...prev, ...(r.stores || [])]);
+        setListMeta(m => ({ ...m, next: r.next_offset }));
+      })
+      .finally(() => { if (seq === listReq.current) setLoadingMore(false); });
+  }
+
+  /**
+   * What the list says about itself. The old line counted the cards on screen
+   * and added a "+" past 300, which is how a search that had quietly dropped
+   * ninety nearby shops still read as complete.
+   */
+  function listCountLine() {
+    if (listMeta.tooMany) return listMeta.message;
+    const total = listMeta.total ?? stores.length;
+    const where = userLocation ? ` within ${radius} mi of ${userLocation.label}` : '';
+    const shown = total > stores.length ? `, showing ${stores.length}` : '';
+    const noHours = openNow && listMeta.unconfirmed
+      ? ` ${listMeta.unconfirmed} more nearby have no hours we can confirm.`
+      : '';
+    const narrow = !userLocation && !city && !q ? ' Use Near Me or pick a city to narrow it down.' : '';
+    return `${total} store${total !== 1 ? 's' : ''} found${where}${shown}.${noHours}${narrow}`;
+  }
 
   function applySearch(e) {
     e.preventDefault();
@@ -346,7 +400,7 @@ export default function Stores() {
       <p className="text-xs mb-4" style={{ color: MUTED }}>
         {viewMode === 'map'
           ? (mapLoading ? 'Loading map...' : `${(mapStores || stores).length}${(mapStores || stores).length >= 1000 ? '+' : ''} stores in view. Drag or zoom to explore.`)
-          : loading ? 'Loading...' : `${stores.length}${stores.length >= 300 ? '+' : ''} store${stores.length !== 1 ? 's' : ''} found${!userLocation && !city && !q && stores.length >= 300 ? '. Use Near Me or pick a city to narrow it down.' : ''}`}
+          : loading ? 'Loading...' : listCountLine()}
       </p>
 
       {/* Map view */}
@@ -370,12 +424,33 @@ export default function Stores() {
       ) : viewMode === 'list' && stores.length === 0 ? (
         <div className="text-center py-16">
           <Store className="w-10 h-10 mx-auto mb-3" style={{ color: '#D4CFC8' }} />
-          <p style={{ color: MUTED }}>No stores found. Try different filters.</p>
+          <p style={{ color: MUTED }}>
+            {listMeta.tooMany ? listMeta.message : 'No stores found. Try different filters.'}
+          </p>
+          {!listMeta.tooMany && openNow && listMeta.unconfirmed > 0 && (
+            <p className="text-xs mt-2" style={{ color: MUTED }}>
+              {listMeta.unconfirmed} nearby {listMeta.unconfirmed === 1 ? 'shop has' : 'shops have'} no
+              hours we can confirm, so they are not counted as open.
+            </p>
+          )}
         </div>
       ) : viewMode === 'list' ? (
-        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-          {stores.map(store => <StoreCard key={store.id} store={store} />)}
-        </div>
+        <>
+          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
+            {stores.map(store => <StoreCard key={store.id} store={store} />)}
+          </div>
+          {listMeta.next !== null && listMeta.next !== undefined && (
+            <div className="flex justify-center mt-6">
+              <button type="button" onClick={showMore} disabled={loadingMore}
+                className="text-sm px-5 py-2 rounded-full font-medium transition-colors"
+                style={{ color: AMBER, border: `1px solid ${AMBER}`, backgroundColor: '#2E2820', opacity: loadingMore ? 0.6 : 1 }}>
+                {loadingMore
+                  ? 'Loading...'
+                  : `Show more${listMeta.total ? ` (${listMeta.total - stores.length} more)` : ''}`}
+              </button>
+            </div>
+          )}
+        </>
       ) : null}
     </div>
   );

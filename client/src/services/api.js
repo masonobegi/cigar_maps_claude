@@ -58,7 +58,14 @@ export const api = {
   getFollowedCigars: () => request('/cigars/followed'),
 
   // Stores
-  searchStores: (p = {}) => request(`/stores?${new URLSearchParams(p)}`),
+  // GET /stores answers with { stores, total, next_offset, ... } so a caller can
+  // tell a short list from a complete one — the old bare array is exactly how
+  // silent truncation went unnoticed. searchStores keeps handing back the array
+  // for the callers that only want cards; searchStorePage hands back the whole
+  // answer, for the one that shows a count and a Show more button.
+  searchStorePage: (p = {}) => request(`/stores?${new URLSearchParams(p)}`),
+  searchStores: (p = {}) => request(`/stores?${new URLSearchParams(p)}`)
+    .then(r => (Array.isArray(r) ? r : r.stores || [])),
   getStoreCities: () => request('/stores/cities'),
   getDirectoryStats: () => request('/stores/stats'),
   getStore: (id) => request(`/stores/${id}`),
