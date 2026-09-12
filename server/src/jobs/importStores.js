@@ -164,7 +164,14 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // put it back on the map just because the classifier still likes its
         // name — that regression put Cigar City Brewing back among the cigar
         // shops once already.
-        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate', 'moved', 'unproven'].includes(found.storefront)
+        // 'unverified' is different from the rest: nothing is wrong with the
+        // listing, we simply cannot stand behind every fact on it yet. It is
+        // its own verdict so that recoverHidden — which may reverse 'unproven'
+        // on new evidence — never quietly puts one back on the map, and so the
+        // whole set can be restored with a single statement when the standard
+        // changes.
+        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate', 'moved', 'unproven', 'unverified']
+          .includes(found.storefront)
           || found.operating_status === 'permanently_closed';
         // Only the fields the directory still owns are refreshed. A sweep that
         // renamed a shop, moved its pin to the right door or fixed its phone

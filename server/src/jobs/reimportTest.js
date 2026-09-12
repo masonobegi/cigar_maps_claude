@@ -52,10 +52,10 @@ async function main() {
   if (first.skipped) { console.log('no directory file to import; run npm run build:directory first'); process.exit(2); }
 
   const rows = [];
-  for (let i = 0; i < 11; i++) rows.push(await pickPublic(i * 37));
+  for (let i = 0; i < 12; i++) rows.push(await pickPublic(i * 37));
   if (rows.some(r => !r)) { console.log('not enough public listings in this database'); process.exit(2); }
   const [ruledOut, ourClosure, chainClosure, renamed, movedPin, staffPhone, badgeOff, siteHours,
-    tidied, newSite, ownerAddr] = rows;
+    tidied, newSite, ownerAddr, unverified] = rows;
 
   // A sweep's verdict, without staff_edited: the importer must honour it.
   await db.run(`UPDATE stores SET visible = 0, storefront = 'not_retail', storefront_reason = 'test' WHERE id = ?`, [ruledOut.id]);
@@ -72,6 +72,13 @@ async function main() {
   await writeFields(badgeOff.id, { has_lounge: 0 }, { source: 'website', job: 'test', reason: 'its own site describes no lounge' });
   await db.run(`UPDATE stores SET hours = ?, hours_source = 'website' WHERE id = ?`,
     [JSON.stringify({ Mon: '9am-9pm', Sun: 'Closed' }), siteHours.id]);
+  // A listing held back from the verified set: nothing is wrong with the shop,
+  // we just cannot stand behind every line on its card yet. Its own verdict, so
+  // recoverHidden never reverses it — and the import has to honour it like any
+  // other, or the next deploy puts 3,707 listings back on the map.
+  await db.run(`UPDATE stores SET visible = 0, storefront = 'unverified',
+      storefront_reason = 'held back from the verified set: no hours read from its own website' WHERE id = ?`,
+    [unverified.id]);
 
   // A display name a tidy rule cleaned. The rule is display-only and has to
   // stay reversible, so source_name must still hold what the directory says.
@@ -103,6 +110,10 @@ async function main() {
   ok(f.phone === '(555) 010-9999', 'a phone staff fixed is not overwritten', f.phone);
   const g = await after(badgeOff.id);
   ok(Number(g.has_lounge) === 0, 'a lounge badge taken off after reading the site stays off', g.has_lounge);
+  const u = await after(unverified.id);
+  ok(u.visible === 0 && u.storefront === 'unverified',
+    'a listing held back as unverified stays off the map through an import', { visible: u.visible, verdict: u.storefront });
+
   const h = await after(siteHours.id);
   ok(h.hours_source === 'website' && JSON.parse(h.hours).Mon === '9am-9pm', 'hours read from the shop\'s website survive', h.hours);
 
