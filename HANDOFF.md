@@ -89,11 +89,45 @@ password, and takes an afternoon.
 | | What | Why it blocks everything behind it |
 |---|---|---|
 | 1 | **Buy a domain, point it at Railway, set `APP_URL`** | Every canonical, sitemap entry and outreach link reads `APP_URL`. Change it later and you throw away whatever the indexing has earned |
-| 2 | **Set `SMTP_USER` and `SMTP_PASS`** | No email leaves the server, so no shop can claim a listing and no outreach can send. Use a transactional sender (Resend, Postmark) on the new domain rather than Gmail, which throttles. Also set `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry |
+| 2 | **Set `RESEND_API_KEY`** (not SMTP) | Mail cannot leave over SMTP from here at all — see below. One key, and mail goes over HTTPS. Also set `MAIL_FROM` and `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry |
 | 3 | **Add analytics and Search Console** | Otherwise none of the rest can be measured. `store_views` already records every shop page view; what is missing is search impressions and indexed-page counts |
 
 The old Gmail password in this repository's history is burned — rotate it
 whatever you decide.
+
+### Mail: SMTP is not available here, and never will be
+
+`SMTP_USER` and `SMTP_PASS` were set, `/api/health/config` reported email as
+configured, and **not one message had ever left the server.** A boot check added
+on 2026-09-12 is what found it:
+
+    [email] SMTP is configured but not working:
+    cannot reach the mail server (ETIMEDOUT). This is the network, not the password.
+
+It began as `ENETUNREACH` on an IPv6 address — the container has an IPv6
+interface with no route, and nodemailer picks the family by looking at the
+interfaces. Pinning to IPv4 fixed that and produced `ETIMEDOUT` on port 465, and
+then on 587. **Railway does not route outbound SMTP at all**, which is ordinary:
+a platform that lets arbitrary code open port 25 becomes a spam relay within a
+week. No SMTP provider will work here. Resend over SMTP will not work here.
+
+So mail goes over HTTPS on 443, which is never blocked:
+
+```
+RESEND_API_KEY=re_...        # resend.com, 3,000 a month free
+# or
+POSTMARK_TOKEN=...
+MAIL_FROM=CigarBuddy <hello@yourdomain.com>
+```
+
+`utils/mailHttp.js` posts to the provider's API — no SDK, since it is one POST —
+and `utils/email.js` prefers it whenever a key is set, keeping the SMTP path for
+anywhere that allows SMTP. The boot log then says `[email] ready via resend over
+HTTPS`.
+
+**What this means for everything upstream:** the claim flow's verification codes
+have never arrived, so a shop that tried to claim a listing fell through to
+staff review without knowing why. That is fixed by the same one key.
 
 ### What runs itself now
 
@@ -102,7 +136,8 @@ whatever you decide.
 | `utils/seo.js` | Per-page title, description, canonical, LocalBusiness JSON-LD, robots.txt, sitemap index | Every request; sitemap rebuilt hourly |
 | `utils/places.js` + `/cigar-shops/:slug` | A page per state and per city with two or more shops, with an ItemList and a breadcrumb | Live, cached 10 minutes |
 | `jobs/verifiedSet.js` | Recomputes the verified set both ways: a shop whose hours get read appears, one whose domain lapses goes | 10 minutes after boot, then daily |
-| `jobs/outreach.js find` | Reads each shop's own site for the address it publishes | On demand; already run — **360 of 656 shops publish one** |
+| `jobs/outreach.js find` | Reads each shop's own site for the address it publishes | Already run |
+| `jobs/contactRoutes.js` | The same, but decoding Cloudflare-protected addresses, HTML entities and "name (at) domain" — plus contact forms, Facebook and Instagram for shops that publish no address | Already run: **416 emails, 161 contact forms, 31 Facebook, 652 phones, 0 shops with no way in** |
 | `jobs/linkCheck`, `webMenu`, `closureCheck` | Links, menus and closures | On boot, then on their own timers |
 
 ### The one command a day
