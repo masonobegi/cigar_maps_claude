@@ -250,6 +250,52 @@ Treating a dead website as a closure was dropped: 11 of 11 sampled dead-site sho
 - whether staff may publish listings backed only by a licence;
 - a Google key and budget.
 
+## Sweeps 1-16: what has shipped so far (2026-09-11)
+
+Six of the ranked sweeps are live. Each was applied from a reviewed file, and
+production was checked afterwards.
+
+1. **Make fixes stick (rank 1).** stores.field_sources records which hand wrote
+   each field and store_edits keeps every before and after (utils/storeEdits.js).
+   The import refreshes only what the directory still owns, recomputes the time
+   zone when it moves a pin or a state, and treats our own permanently_closed as
+   binding. The storefront sweep no longer overwrites a closure — it had reset
+   491 closed listings to "yes" — and the chain check writes the standard status,
+   so its 7 closures reach the queue. reimportTest.js seeds eight kinds of
+   correction, forces a re-import and checks every one survives (10 of 10).
+   Boatyard Tobacco was reopened: its closure came from a political blog that a
+   wrong website link pointed at.
+2. **Time zones (rank 2).** Longitude rules put whole towns on the wrong clock.
+   storeHours now reads the published boundaries (geo-tz; a rounded grid had
+   Kellogg and Williston wrong). 153 listings moved, 27 of them public, including
+   every shop around Chattanooga. 8 whose pin does not fit their state wait for
+   the pin sweep.
+3. **Map-only hours (rank 3).** 234 listings show hours that came from map data
+   alone, about half of them wrong on some day. They now read "from map data, not
+   confirmed" with no Open or Closed badge; only hours from the shop's own site,
+   its owner, staff or its chain earn one. A day the mapper left out is no longer
+   written as Closed: 121 listings had one invented that way.
+5. **Stock (rank 5).** The cigar list, its filters, the smoke list and the
+   recommendations counted stock at hidden listings: 741 lines were inflated and
+   240 showed stock no visible shop had. Prices ignore zero, so Don Carlos reads
+   from $8.38 rather than $0. 2,790 rows at hidden listings are marked out of
+   stock, not deleted.
+15. **Search (rank 15).** Names are compared without apostrophes, periods and
+   hyphens, with "&" read as "and": "wild bills" went from 2 matches to 215,
+   "smokin joes" from 0 to 18. A city chip carries its state and matches the town
+   exactly, so Washington DC no longer returns Michigan.
+16. **Duplicates (rank 16).** Matching now starts from the door, not an identical
+   name. 70 doors carry more than one listing; the 42 plain cases are merged
+   (hidden as duplicates, pointing at the survivor, with their empty fields
+   filled from the twin) and 28 wait for review in the decisions file.
+
+Still to do from the ranked list: 4, 6, 7, 8, 9, 10 (its server rules; the card
+caveat shipped with 3), 11, 12, 13, 14, and the later ones Mason asked for: 17,
+18, 19, 25, 26, 27 and 30.
+
+Two review lists are waiting: 28 duplicate clusters and 8 pins whose state does
+not fit.
+
 ## Still needs Mason
 
 **Rotate one password.** `W@ffle871` for mobegibusiness@gmail.com sat in this public repository's history (it predates this session). The seed no longer contains it and production now generates random passwords, but the old value is still in git history, so change it anywhere else it is used. It was also in `.claude/settings.local.json`, which was tracked in the repository until 2026-09-10 (now untracked and ignored). That file also held login commands using `admin123` and `adminpass123`, so make sure neither is a live password.
