@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Store, ArrowRight, MapPin, CheckCircle, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
+import { loadSavedLocation } from '../utils/location';
 import { StoreThumb, hasLounge, hoursConfirmed, unconfirmedShop } from '../components/StoreCard';
 import { useAuth } from '../context/AuthContext';
 import CigarCard from '../components/CigarCard';
@@ -94,6 +95,9 @@ export default function Home() {
   // page size: 300 retailers and 40 cities, not the thousands actually listed.
   const [stats, setStats] = useState(null);
   const [stores, setStores] = useState([]);
+  // The location the visitor already gave us, or null. Decides whether the
+  // retailers section can honestly call itself local.
+  const [nearby, setNearby] = useState(null);
   const [deals, setDeals] = useState([]);
   const [cities, setCities] = useState([]);
   const [searchVal, setSearchVal] = useState('');
@@ -102,7 +106,16 @@ export default function Home() {
 
   useEffect(() => {
     api.searchCigars({ limit: 8, sort: 'popular' }).then(d => { setTopCigars(d.cigars); setCigarTotal(d.total); });
-    api.searchStores().then(setStores);
+    // "Local Retailers" was neither local nor chosen: with no location it asked
+    // for the nationwide list and showed the same Tucson and Florida online
+    // sellers to every visitor in the country. The saved location is the one
+    // the visitor already gave us on the Stores page (StoreMap reads the same
+    // key), so use it when it is there and say plainly when it is not.
+    const saved = loadSavedLocation();
+    setNearby(saved || null);
+    api.searchStores(saved && saved.lat
+      ? { lat: saved.lat, lng: saved.lng, radius: 50, limit: 6 }
+      : { limit: 6 }).then(setStores);
     api.getDeals().then(setDeals);
     api.getStoreCities().then(setCities);
     api.getDirectoryStats().then(setStats).catch(() => {});
@@ -217,7 +230,7 @@ export default function Home() {
         <section className="max-w-6xl mx-auto px-6 py-12" style={{ borderTop: '1px solid #3D3428' }}>
           <SectionHeader
             eyebrow="Where to shop"
-            title="Local Retailers"
+            title={nearby ? `Retailers near ${nearby.label}` : 'Retailers across the US'}
             action={<ViewAllLink to="/stores" label="All stores" />}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10"

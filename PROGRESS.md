@@ -94,10 +94,10 @@ still need the real database.
 ### Self-tests
 
 Baseline, before any change: 5 suites, 135 assertions.
-Now: **18 suites, 587 assertions, 0 failures**, plus the apply-path tests, the
+Now: **18 suites, 613 assertions, 0 failures**, plus the apply-path tests, the
 10-assertion re-import guard, the 16 contract checks and a live server boot.
 
-    hoursParser      79    storeHours       35    storeSearch      65
+    hoursParser      79    storeHours       35    storeSearch      91
     publicSuffix     35    rdap              8    claimGate        59
     dedupeListings   14    pureCigarCheck   10    hoursSweep       43
     recallMonitor    14    geocodePins      54    linkCheck        26
@@ -105,7 +105,7 @@ Now: **18 suites, 587 assertions, 0 failures**, plus the apply-path tests, the
     closureCheck     16    licenceSync      31    recoverHidden    26
 
 Plus, against a real database: `geocodePins applytest` 7, `reimportTest` 10,
-and the list contract's 23.
+and the list contract's 28.
 
 ---
 
@@ -122,7 +122,7 @@ Measured on the imported directory, not a fixture:
 
 - **Recall 89.96% before, 100.00% after**, 1,984 cases, no failures.
   91.0% → 100% at 50 miles; 70.5% → 100% at 100.
-- 23 of 23 contract checks: the radius cap, paid placement, the ceiling refusal (forced, by
+- 28 of 28 contract checks: the radius cap, paid placement, the neutral order, the ceiling refusal (forced, by
   lowering the ceiling under the list), paging with no repeats or gaps, two
   shops on one spot, a shop on the radius line, open-now on confirmed hours
   only, hidden rows, and the no-location order unchanged.
@@ -138,9 +138,14 @@ paged. At 7,904 public listings the home page, the autocomplete and the review
 picker all came back "narrow your search". The contract check caught it; the
 ceiling is 50,000 now.
 
-**Deliberately not done.** The neutral no-location order is a separate sweep in
-`plan.json` and owes Mason a decision, so a visitor with no location gets
-exactly the order they got before.
+**The no-location order, decided 2026-09-12.** Also handed to me rather than
+asked about. It was "how many cigars are in your web feed, then alphabetically",
+which left 96% of the directory unreachable. It is a neutral sample now:
+anything that looks closed last, one listing per website ahead of the second,
+then completeness out of four, then a daily shuffle. The first page of 60 spans
+**32 states** against the audit's guardrail of ten, and it is faster than what
+it replaced. IP geolocation was ruled out — it needs a paid database and that is
+Mason's call. Full reasoning in `SWEEPS.md`.
 
 **Paid placement, decided 2026-09-12.** Mason asked for the judgement call
 rather than the question, so it is built: two labelled sponsored slots at the

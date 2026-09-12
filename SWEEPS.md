@@ -151,12 +151,10 @@ reading the output is the work, not an optional extra.
 - A Google Places key and budget, for the closures and hours no free source settles.
 - Whether any outlet chain should come back (Wild Bill's, Sweet Fire, Cheap
   Tobacco, The Tobacco Shoppe): one command each.
-- **What a visitor with no location should see.** The search sweep deliberately
-  left the no-location order exactly as it was, because changing it is its own
-  sweep in `plan.json` and needs a decision: a prompt with city chips, a
-  rotating national sample, or IP geolocation. Until then the home page, the
-  navbar autocomplete and the review picker keep showing the same alphabetical
-  slice.
+- ~~What a visitor with no location should see.~~ **Decided and built** — see
+  "What a visitor with no location sees" below. IP geolocation was ruled out
+  because it needs a paid or licensed database and spending money is Mason's
+  call, not a session's.
 - ~~How paid placement should appear in a search.~~ **Decided and built** —
   Mason asked for a judgement call rather than a question. See "Paid placement"
   below. Override it by changing three numbers in `utils/storeSearch.js`.
@@ -164,6 +162,52 @@ reading the output is the work, not an optional extra.
   gate keeps the self-serve shortcut for roughly 1,537 of 4,533 eligible
   listings; the rest wait for staff. It never rejects a claim, and it tells the
   claimant why.
+
+## What a visitor with no location sees, as decided on 2026-09-12
+
+The nationwide list was ordered by paid placement, then claimed, then verified,
+then followers, then in-stock count, then confidence, then name. With nobody
+claimed, verified or followed, that came down to **"how many cigars are in your
+web feed, then alphabetically"**: the 42 shops with a feed, then names from
+"105 Cigar Co." to "Casa Fuente Cigars", and 96% of the directory never appeared
+at all. The home page showed the same Tucson and Florida online sellers to every
+visitor in the country, under the heading "Local Retailers".
+
+The audit left three options: a prompt, a neutral sample, or IP geolocation. IP
+geolocation needs a paid or licensed database, so it is out — spending money is
+not a session's call. Between the other two, a prompt refuses to answer a
+question the customer asked, and a directory whose front page is a form is not a
+directory. So: **a neutral sample**, ordered by what makes a listing useful.
+
+Four keys, in `noLocationOrderSql()`:
+
+1. **Anything that looks closed goes last** — a dead link or a likely_closed
+   flag is the one thing that makes a card actively unhelpful.
+2. **One listing per website before the second on the same one.** Anthony's has
+   three Tucson branches on one feed, 3J's four, Miami Humidor two, Lucky two;
+   showing all of them is showing one shop four times. A listing with no website
+   counts as its own, because it shares no feed.
+3. **Completeness, 0 to 4** — a working website, known hours, a phone, a
+   picture.
+4. **A shuffle seeded by the date**, so the tail rotates daily and every listing
+   gets its turn, while any one day's order is stable enough to page and cache.
+
+Paid placement is deliberately **not** one of the keys: a shop buys the top of a
+search near it, not the top of the country.
+
+Measured on the imported directory: the first page of 60 now spans **32 states**
+(the audit's guardrail was ten), no website appears twice, nothing on it looks
+closed, and every row has at least two of the four. It is also faster than the
+order it replaced — 243 ms against 467 ms — because it drops two correlated
+subqueries.
+
+The home page's "Local Retailers" now uses the location the visitor already gave
+us and is titled "Retailers near <place>"; with no location it says "Retailers
+across the US", which is what it is.
+
+**Still owed on this:** the navbar autocomplete and the review-form store picker
+still ignore the saved location (audit items (e) and (f)). Neither is wrong now,
+both would be better.
 
 ## Paid placement, as decided on 2026-09-12
 

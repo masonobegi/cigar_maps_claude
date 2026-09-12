@@ -38,6 +38,89 @@ const PAGE_SIZE = 60;
  */
 const CANDIDATE_CEILING = 50000;
 
+// ── What a visitor with no location sees ────────────────────────────────────
+//
+// The nationwide list used to be ordered by paid placement, then claimed, then
+// verified, then follower count, then in-stock count, then classifier
+// confidence, then name. With nobody claimed, verified or followed, that came
+// down to "how many cigars are in your web feed, then alphabetically" — so the
+// list was the 42 shops with a feed, then names from "105 Cigar Co." to "Casa
+// Fuente", and 96% of the directory never appeared at all. The home page showed
+// the same Tucson and Florida online sellers to every visitor in the country.
+//
+// The audit left the choice open between a prompt, a neutral sample and IP
+// geolocation. IP geolocation needs a paid or licensed database, and spending
+// money is not this session's call, so it is out. Between the other two: a
+// prompt refuses to answer a question the customer asked, and a directory whose
+// front page is a form is not a directory. So: a neutral sample, ordered by
+// what makes a listing useful rather than by what it paid or how its name
+// begins.
+//
+//   1. A listing that looks closed goes last. A dead website or a
+//      likely_closed flag is the one thing here that makes a row actively
+//      unhelpful.
+//   2. One listing per website ahead of the second. Anthony's has three Tucson
+//      branches on one feed, 3J's four, Miami Humidor two, Lucky two; showing
+//      all of them is showing one shop four times. Listings with no website
+//      each count as their own, because they share no feed.
+//   3. Then completeness, 0 to 4: a working website, known hours, a phone, a
+//      picture. This is the closest thing to "would a customer get something
+//      out of this card".
+//   4. Then a shuffle seeded by the date, so the tail rotates daily and every
+//      listing gets its turn, while any single day's order is stable enough to
+//      cache, page through and test.
+//
+// Paid placement is deliberately NOT in this list: see the note below. A shop
+// buys the top of a search near it, not the top of the country.
+
+/**
+ * The ORDER BY for a list with no location, as SQL. Takes no parameters so it
+ * can be dropped into any query.
+ */
+function noLocationOrderSql() {
+  return `
+    -- 1. A listing that looks closed is last, whatever else it has.
+    (CASE WHEN s.operating_status = 'likely_closed' THEN 1
+          WHEN s.website IS NOT NULL AND s.website <> ''
+               AND s.website_status IN ('dns_fail','timeout','refused','not_found','error',
+                                        'parked','elsewhere','hijacked','store_unavailable','removed')
+          THEN 1 ELSE 0 END) ASC,
+    -- 2. The first listing on a website before the second on the same one.
+    ROW_NUMBER() OVER (
+      PARTITION BY CASE
+        WHEN s.website IS NULL OR s.website = '' THEN 'id:' || s.id::text
+        ELSE split_part(lower(regexp_replace(regexp_replace(s.website, '^[a-z]+://', ''), '^www\\.', '')), '/', 1)
+      END
+      ORDER BY s.claimed DESC, s.confidence DESC, s.id
+    ) ASC,
+    -- 3. Completeness: a working site, hours, a phone, a picture.
+    ((CASE WHEN s.website IS NOT NULL AND s.website <> ''
+                AND COALESCE(s.website_status, 'ok') IN ('ok','blocked') THEN 1 ELSE 0 END)
+     + (CASE WHEN s.hours IS NOT NULL AND s.hours NOT IN ('', '{}', '[]', 'null') THEN 1 ELSE 0 END)
+     + (CASE WHEN s.phone IS NOT NULL AND s.phone <> '' THEN 1 ELSE 0 END)
+     + (CASE WHEN COALESCE(s.logo_url, s.cover_url, s.web_image_url) IS NOT NULL THEN 1 ELSE 0 END)
+    ) DESC,
+    -- 4. A daily shuffle, so the tail rotates and every listing gets its turn.
+    md5(s.id::text || to_char(NOW(), 'YYYY-MM-DD')) ASC,
+    s.id ASC`;
+}
+
+/** The same completeness score in JS, for tests and for anything paging in memory. */
+function completenessScore(row) {
+  const live = row.website && ['ok', 'blocked'].includes(row.website_status || 'ok');
+  const hours = row.hours && !['', '{}', '[]', 'null'].includes(String(row.hours).trim());
+  const phone = !!row.phone;
+  const picture = !!(row.logo_url || row.cover_url || row.web_image_url);
+  return (live ? 1 : 0) + (hours ? 1 : 0) + (phone ? 1 : 0) + (picture ? 1 : 0);
+}
+
+/** Does this row look closed enough to belong at the end of a neutral list? */
+function looksUnhelpful(row) {
+  if (row.operating_status === 'likely_closed') return true;
+  return !!row.website && ['dns_fail', 'timeout', 'refused', 'not_found', 'error',
+    'parked', 'elsewhere', 'hijacked', 'store_unavailable', 'removed'].includes(row.website_status);
+}
+
 // ── Paid placement ──────────────────────────────────────────────────────────
 //
 // billing.js sells Featured at $49 for "top placement in your city and on the
@@ -274,6 +357,7 @@ function hoursAreConfirmed(source) {
 module.exports = {
   RADIUS_MAX_MI, PAGE_SIZE, CANDIDATE_CEILING, CONFIRMED_HOURS_SOURCES, BOUNDARY_EPS_MI,
   SPONSORED_SLOTS, FEATURED_REACH_MI, PARTNER_REACH_MI, sponsorRank, applySponsored,
+  noLocationOrderSql, completenessScore, looksUnhelpful,
   haversine, distanceSql, boundingBox, fold, folded, buildFilters, matchesFilters,
   normalizeRadius, hoursAreConfirmed,
 };
@@ -347,6 +431,35 @@ if (require.main === module) {
 
   ok(hoursAreConfirmed('website') && hoursAreConfirmed('chain'), 'website and chain hours are confirmed');
   ok(!hoursAreConfirmed('osm') && !hoursAreConfirmed(null), 'map hours and no hours are not confirmed');
+
+  // ── what a visitor with no location sees ───────────────────────────────────
+  const full = { website: 'x.com', website_status: 'ok', hours: '{"Mon":"9am-5pm"}', phone: '555', logo_url: 'a.png' };
+  ok(completenessScore(full) === 4, 'a listing with a site, hours, a phone and a picture scores four');
+  ok(completenessScore({}) === 0, 'and an empty one scores nothing');
+  ok(completenessScore({ ...full, website_status: 'dns_fail' }) === 3, 'a dead website does not count towards it');
+  ok(completenessScore({ ...full, website_status: 'blocked' }) === 4, 'but a site behind a firewall does');
+  ok(completenessScore({ ...full, website_status: null }) === 4, 'and so does one nobody has checked yet');
+  ok(completenessScore({ ...full, hours: '{}' }) === 3, 'empty hours are not hours');
+  ok(completenessScore({ ...full, logo_url: null, cover_url: 'b.png' }) === 4, 'a cover counts as the picture');
+  ok(completenessScore({ ...full, logo_url: null, web_image_url: 'c.png' }) === 4, 'so does one read off the shop\'s site');
+
+  ok(looksUnhelpful({ operating_status: 'likely_closed' }), 'a likely-closed listing belongs at the end');
+  ok(looksUnhelpful({ website: 'x.com', website_status: 'hijacked' }), 'so does one whose domain was taken over');
+  ok(looksUnhelpful({ website: 'x.com', website_status: 'dns_fail' }), 'and one whose domain does not resolve');
+  ok(!looksUnhelpful({ website: 'x.com', website_status: 'ok' }), 'a working listing does not');
+  ok(!looksUnhelpful({ website: null, website_status: 'dns_fail' }), 'and a listing with no website is not judged on one');
+
+  // The order has to name every column it reads, or the query fails at runtime
+  // rather than in a test.
+  const sql = noLocationOrderSql();
+  for (const col of ['operating_status', 'website_status', 'website', 'hours', 'phone',
+    'logo_url', 'cover_url', 'web_image_url', 'claimed', 'confidence']) {
+    ok(sql.includes(`s.${col}`), `the no-location order reads s.${col}`);
+  }
+  ok(/ROW_NUMBER\(\) OVER/.test(sql), 'and spreads listings that share a website');
+  ok(/md5/.test(sql) && /YYYY-MM-DD/.test(sql), 'and rotates daily rather than at random');
+  ok(!/featured_until|s\.plan\b/.test(sql),
+    'and paid placement is not one of its keys: a shop buys the top of a nearby search, not the country');
 
   // ── paid placement ─────────────────────────────────────────────────────────
   const NOW = new Date('2026-09-12T00:00:00Z');

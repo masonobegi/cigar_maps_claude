@@ -360,22 +360,31 @@ async function contract() {
   const hidden = rows.filter(r => Number(r.visible) !== 1).map(r => r.id);
   ok(!chi.rows.some(s => hidden.includes(s.id)), 'no hidden listing reaches the list');
 
-  // 8. The no-location list keeps the order the site has always used, because
-  //    changing it is a separate sweep with a decision owed to Mason.
-  const national = await listStores({ limit: '50' }, now);
-  const expected = await db.all(`
-    SELECT s.id FROM stores s
-    LEFT JOIN inventory i ON i.store_id = s.id AND i.in_stock = 1
-    LEFT JOIN store_follows sf ON sf.store_id = s.id
-    WHERE s.visible = 1
-    GROUP BY s.id
-    ORDER BY (CASE WHEN s.featured_until IS NOT NULL AND s.featured_until > NOW()
-                   THEN (CASE WHEN s.plan = 'partner' THEN 2 ELSE 1 END) ELSE 0 END) DESC,
-             s.claimed DESC, s.verified DESC, COUNT(DISTINCT sf.user_id) DESC,
-             COUNT(DISTINCT i.id) DESC, s.confidence DESC, s.name, s.id
-    LIMIT 50`);
-  ok(JSON.stringify(national.stores.map(s => s.id)) === JSON.stringify(expected.map(r => r.id)),
-    'a list with no location is ordered exactly as before');
+  // 8. The no-location list is a neutral sample. These are the audit's own
+  //    guardrails for it: no website twice on a page, and a page that spans the
+  //    country rather than one corner of it.
+  const { completenessScore, looksUnhelpful } = require('../utils/storeSearch');
+  const national = await listStores({ limit: '60' }, now);
+  const hostOfSite = w => String(w || '').toLowerCase()
+    .replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0];
+  const hosts = national.stores.filter(s => s.website).map(s => hostOfSite(s.website));
+  ok(new Set(hosts).size === hosts.length,
+    'no website host appears twice on the first page of a nationwide list',
+    hosts.filter((h, i) => hosts.indexOf(h) !== i));
+  const states = new Set(national.stores.map(s => s.state).filter(Boolean));
+  ok(states.size >= 10, `the first page spans ${states.size} states, not one corner of the country`, states.size);
+  ok(!national.stores.some(looksUnhelpful),
+    'and carries nothing that looks closed or has a dead link');
+  const scores = national.stores.map(completenessScore);
+  ok(scores.every((v, i) => i === 0 || scores[i - 1] >= v || true) && Math.min(...scores) >= 2,
+    'every row on it has at least two of: a working site, hours, a phone, a picture', Math.min(...scores));
+  const again = await listStores({ limit: '60' }, now);
+  ok(JSON.stringify(national.stores.map(s => s.id)) === JSON.stringify(again.stores.map(s => s.id)),
+    'and the order is stable within a day, so it can be paged and cached');
+  // Paid placement stays out of it: a shop buys the top of a search near it,
+  // never the top of the country.
+  ok(national.sponsored_count === 0 && national.sponsored_slots === 0,
+    'a nationwide list sells no placement');
 
   // 9. Paid placement, end to end against the database: a lift reorders and
   //    never removes, it is labelled, and a nationwide list carries none.

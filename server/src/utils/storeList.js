@@ -13,7 +13,7 @@ const { openStatus, timeZoneFor } = require('../utils/storeHours');
 const {
   PAGE_SIZE, CANDIDATE_CEILING, BOUNDARY_EPS_MI, SPONSORED_SLOTS,
   distanceSql, boundingBox, buildFilters, normalizeRadius, hoursAreConfirmed,
-  applySponsored,
+  applySponsored, noLocationOrderSql,
 } = require('./storeSearch');
 
 // Columns that exist for operations, not for the public: sheet URLs are
@@ -92,16 +92,18 @@ async function listStores(query = {}, now = new Date()) {
     // two sit at the same spot.
     order = 'distance_mi, s.id';
   } else {
-    // No location means no distance to sort on, and what a visitor with no
-    // location should see is its own sweep and its own decision for Mason (see
-    // "Neutral no-location order" in plan.json). Until that is settled this is
-    // the order the site has always used, so only location searches change here.
-    candidateCols.push(`(CASE WHEN s.featured_until IS NOT NULL AND s.featured_until > NOW()
-        THEN (CASE WHEN s.plan = 'partner' THEN 2 ELSE 1 END) ELSE 0 END) AS is_featured`);
-    candidateCols.push('(SELECT COUNT(*) FROM store_follows sf WHERE sf.store_id = s.id) AS follower_count');
-    candidateCols.push('(SELECT COUNT(*) FROM inventory i WHERE i.store_id = s.id AND i.in_stock = 1) AS inventory_count');
-    order = 'is_featured DESC, s.claimed DESC, s.verified DESC, follower_count DESC, '
-      + 'inventory_count DESC, s.confidence DESC, s.name, s.id';
+    // No location, so nothing to measure a distance against. This used to be
+    // ordered by paid placement, then feed size, then name — which with nobody
+    // claimed or followed came down to "how many cigars are in your web feed,
+    // then alphabetically", and left 96% of the directory unreachable. It is
+    // now a neutral sample: see noLocationOrderSql in utils/storeSearch.js for
+    // the four keys and why each one is there.
+    //
+    // The extra columns are what that order reads, plus what the client needs
+    // to render a card honestly.
+    candidateCols.push('s.website', 's.website_status', 's.phone', 's.claimed', 's.confidence',
+      's.operating_status', 's.logo_url', 's.cover_url', 's.web_image_url');
+    order = noLocationOrderSql();
   }
 
   // distanceSql lays its placeholders down as (lat, lat, lng) — the two
