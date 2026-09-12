@@ -484,6 +484,21 @@ const MIGRATIONS = [
   // website reading never overwrites an owner's hours and can be traced.
   { name: '091_stores_hours_source', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS hours_source TEXT' },
   { name: '092_stores_hours_checked_at', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS hours_checked_at TIMESTAMP' },
+  // Which hand last wrote each field, so an import refreshes only what the
+  // directory still owns and a sweep's correction survives. See utils/storeEdits.js.
+  { name: '093_stores_field_sources', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS field_sources TEXT' },
+  { name: '094_store_edits', sql: `CREATE TABLE IF NOT EXISTS store_edits (
+      id SERIAL PRIMARY KEY,
+      store_id INTEGER NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+      field TEXT NOT NULL,
+      before TEXT,
+      after TEXT,
+      source TEXT NOT NULL,
+      job TEXT,
+      reason TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    )` },
+  { name: '095_store_edits_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_store_edits_store ON store_edits(store_id, created_at DESC)' },
 ];
 
 async function runMigrations() {

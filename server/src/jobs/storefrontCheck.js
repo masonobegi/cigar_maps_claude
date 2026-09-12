@@ -138,10 +138,18 @@ async function sweep({ confirm = false, sample = 0, log = console.log } = {}) {
   const bySourceId = new Map(dir.stores.map(s => [`${s.source}:${s.source_id}`, s]));
 
   // Claimed shops and anything staff has already ruled on are never touched.
+  //
+  // Neither is a listing another sweep has already settled. This check reads
+  // only a name and a category, so it cannot know that a shop has shut or that
+  // it is one listing of two: Redland Cigar Co was closed from its own website
+  // and this sweep put its storefront back to "yes" six minutes later, which
+  // would have returned it to the map, open, at the next import.
   const rows = await db.all(`
     SELECT id, name, city, state, phone, website, source, source_id, visible, store_type
     FROM stores
     WHERE claimed = 0 AND COALESCE(staff_edited, 0) = 0 AND source IN ('osm', 'overture')
+      AND COALESCE(storefront, 'yes') NOT IN ('closed', 'duplicate', 'moved')
+      AND COALESCE(operating_status, 'open') NOT IN ('permanently_closed', 'likely_closed')
     ORDER BY id
   `);
   log(`examining ${rows.length} unclaimed listings`);

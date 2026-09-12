@@ -23,8 +23,31 @@ const db = require('../database/db');
 const { classify, haversineMeters, namesMatch, sleep } = require('./osm');
 const { loadDirectory, OUT_PATH: DIRECTORY_FILE } = require('./buildDirectory');
 
+const { fieldSource } = require('../utils/storeEdits');
+const { timeZoneFor } = require('../utils/storeHours');
+
 const OSM_ONLY_FILE = path.join(__dirname, '..', 'data', 'osm_stores.json');
 const VISIBLE_THRESHOLD = 0.5;
+
+/** A field nobody has corrected still belongs to the directory. */
+function ownedByDirectory(row, field) {
+  return fieldSource(row, field) === 'directory';
+}
+
+/**
+ * The zone to store when the import moves a pin or a state. Only then: a shop
+ * whose pin a sweep fixed keeps the zone that pin stands in.
+ */
+function newZone(found, incoming, keep) {
+  const movedPin = !keep('lat') && !keep('lng')
+    && (Number(incoming.lat) !== Number(found.lat) || Number(incoming.lng) !== Number(found.lng));
+  const movedState = !keep('state') && incoming.state && incoming.state !== found.state;
+  if (!movedPin && !movedState) return null;
+  const lat = keep('lat') ? found.lat : incoming.lat;
+  const lng = keep('lng') ? found.lng : incoming.lng;
+  const state = keep('state') ? found.state : incoming.state;
+  return timeZoneFor(state, lat, lng);
+}
 
 /**
  * The merged Overture + OpenStreetMap directory is the source of truth. The
@@ -50,7 +73,7 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
   const meta = await db.get("SELECT value FROM seed_meta WHERE key = 'osm_import_version'");
   if (!force && meta && meta.value === version) return { skipped: true, reason: `already imported ${version}` };
 
-  const existing = await db.all('SELECT id, name, lat, lng, source, source_id, osm_id, claimed, staff_edited, visible, store_type, storefront FROM stores');
+  const existing = await db.all('SELECT id, name, state, lat, lng, source, source_id, osm_id, claimed, staff_edited, visible, store_type, storefront, operating_status, field_sources FROM stores');
   // Directory rows are addressed by source + id. An OSM id is also indexed on
   // its own so a listing first imported from OSM is upgraded in place when a
   // later build folds it into an Overture record.
@@ -105,29 +128,48 @@ async function importStoresFromFile(filePath = null, { force = false, log = cons
         // put it back on the map just because the classifier still likes its
         // name — that regression put Cigar City Brewing back among the cigar
         // shops once already.
-        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate'].includes(found.storefront);
+        const ruledOut = ['not_retail', 'online_only', 'closed', 'duplicate', 'moved'].includes(found.storefront)
+          || found.operating_status === 'permanently_closed';
+        // Only the fields the directory still owns are refreshed. A sweep that
+        // renamed a shop, moved its pin to the right door or fixed its phone
+        // recorded itself in field_sources, and the import leaves those alone;
+        // otherwise every correction would be undone at the next refresh.
+        const keep = field => !ownedByDirectory(found, field);
         await db.run(`
           UPDATE stores SET
-            name = ?, address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),
+            name = COALESCE(?, name), address = COALESCE(?, address), city = COALESCE(?, city), state = COALESCE(?, state),
             zip = COALESCE(?, zip), phone = COALESCE(?, phone),
             -- A website staff deliberately cleared must not come back on re-import.
             website = CASE WHEN ? THEN website ELSE COALESCE(?, website) END,
-            instagram = COALESCE(?, instagram), lat = ?, lng = ?,
+            instagram = COALESCE(?, instagram), lat = COALESCE(?, lat), lng = COALESCE(?, lng),
+            timezone = COALESCE(?, timezone),
             -- Hours read off the shop's own website, or set by its owner or by
             -- staff, are fresher than map data and must survive a re-import.
             hours = CASE WHEN ? OR hours_source IN ('website', 'owner') THEN hours ELSE COALESCE(?, hours) END,
             hours_raw = ?,
             store_type = ?, confidence = ?, visible = ?,
-            operating_status = COALESCE(?, operating_status),
+            -- A shop we found shut, from its own website or its chain's, stays
+            -- shut. The source lags reality by months and still calls it open,
+            -- and believing it would put a closed shop back on the map.
+            operating_status = CASE WHEN operating_status = 'permanently_closed' THEN operating_status
+                                    ELSE COALESCE(?, operating_status) END,
             closed_reason = CASE WHEN ? THEN COALESCE(closed_reason, 'Marked permanently closed in the source data') ELSE closed_reason END,
-            has_lounge = GREATEST(COALESCE(has_lounge, 0), ?), has_walk_in_humidor = GREATEST(COALESCE(has_walk_in_humidor, 0), ?)
+            -- A badge a sweep took off after reading the shop's own site does not
+            -- come back because the map data still carries the old tag.
+            has_lounge = CASE WHEN ? THEN has_lounge ELSE GREATEST(COALESCE(has_lounge, 0), ?) END,
+            has_walk_in_humidor = CASE WHEN ? THEN has_walk_in_humidor ELSE GREATEST(COALESCE(has_walk_in_humidor, 0), ?) END
           WHERE id = ?
-        `, [s.name, s.address, s.city, s.state, s.zip, s.phone, keepStaff, s.website, s.instagram, s.lat, s.lng, keepStaff, hours, s.hours_raw,
+        `, [keep('name') ? null : s.name, keep('address') ? null : s.address, keep('city') ? null : s.city,
+            keep('state') ? null : s.state, keep('zip') ? null : s.zip, keep('phone') ? null : s.phone,
+            keepStaff || keep('website'), s.website, s.instagram,
+            keep('lat') ? null : s.lat, keep('lng') ? null : s.lng, newZone(found, s, keep),
+            keepStaff, hours, s.hours_raw,
             keepStaff ? found.store_type : store_type,
             confidence,
             keepStaff ? found.visible : ((closedAtSource || ruledOut) ? 0 : (confidence >= VISIBLE_THRESHOLD ? 1 : 0)),
             opStatus, closedAtSource,
-            s.has_lounge || 0, s.has_walk_in_humidor || 0, found.id]);
+            keep('has_lounge'), s.has_lounge || 0,
+            keep('has_walk_in_humidor'), s.has_walk_in_humidor || 0, found.id]);
         updated++;
       }
       continue;

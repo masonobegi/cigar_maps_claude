@@ -316,7 +316,7 @@ async function applyDecisions(file, { log = console.log } = {}) {
       await db.run(`
         UPDATE stores
         SET visible = 0, storefront = 'closed', storefront_reason = ?,
-            storefront_checked_at = NOW(), operating_status = 'closed',
+            storefront_checked_at = NOW(), operating_status = 'permanently_closed',
             closed_reason = ?, closure_checked_at = NOW()
         WHERE id = ?
       `, [
