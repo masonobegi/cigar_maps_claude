@@ -372,6 +372,8 @@ async function checkWebsiteForClosure(website) {
 // ── Reasons, in plain words ─────────────────────────────────────────────────
 
 const REASON_SOURCE = 'map data marks this place permanently closed';
+const REASON_MAP_ONLY = 'a map pin nobody has touched since before 2020: no phone, no website, no hours, '
+  + 'and no other directory lists anything within 150 m';
 const reasonWeb = phrase => `the shop's own website says so: "${phrase}"`;
 const reasonUnreachable = status => `no way left to contact it: website is ${status}, no phone, no opening hours`;
 
@@ -393,6 +395,41 @@ const HAS_SITE = "(website IS NOT NULL AND website <> '')";
 
 const SELECT_COLS = `id, name, city, state, website, website_status, phone, hours, hours_raw,
                      visible, claimed, operating_status, closed_reason, storefront, confidence`;
+
+/**
+ * A listing whose only "website" is a Facebook page or a Yelp profile has no
+ * website of its own. When that link dies, what died is the profile, not the
+ * shop — and a dead profile plus no phone plus no hours is exactly the shape of
+ * a shop that never had a website at all. Counting it as "no way left to
+ * contact it" flagged shops for not being on Facebook any more.
+ */
+function hasOwnWebsite(row) {
+  if (!row.website) return false;
+  const parsed = parseWebsite(row.website);
+  return !!parsed && !isThirdPartyHost(parsed.host);
+}
+
+/**
+ * How much a queue row is worth a person's attention. The queue used to be
+ * ordered by classifier confidence, which says how sure we are it is a cigar
+ * shop — nothing at all about whether it has closed.
+ */
+const SIGNAL_STRENGTH = {
+  source: 100,              // the map data itself says permanently closed
+  website: 90,              // the shop's own site says so, in words
+  licence_lapsed: 40,       // a registry that stopped listing it
+  domain_taken_over: 30,    // its domain now serves a casino or a for-sale page
+  unreachable: 20,          // no website, no phone, no hours
+  map_only: 10,             // a pin nobody has touched since before 2020
+};
+
+function evidenceScore(item) {
+  const signals = item.signals || [{ signal: item.signal }];
+  // Two weak signals are worth more than either alone, but never as much as one
+  // strong one: that is what keeps a licence lapse from hiding a trading shop.
+  const scores = signals.map(x => SIGNAL_STRENGTH[x.signal] || 5).sort((a, b) => b - a);
+  return scores[0] + scores.slice(1).reduce((sum, n) => sum + n / 2, 0);
+}
 
 function toItem(row, signal, reason, extra = {}) {
   return {
@@ -476,6 +513,9 @@ async function findClosures({ limit = 500, useWeb = false, log = console.log } =
   counts.examined += contactRows.length;
   for (const row of contactRows) {
     if (flagged.has(row.id)) continue;
+    // A dead Facebook page is not a dead shop. Without a site of its own there
+    // is nothing here that says anything about whether it is trading.
+    if (!hasOwnWebsite(row)) continue;
     likely.push(toItem(row, 'unreachable', reasonUnreachable(row.website_status)));
     flagged.add(row.id);
   }
@@ -524,14 +564,119 @@ async function findClosures({ limit = 500, useWeb = false, log = console.log } =
     checkedIds = webRows.filter(r => r._webChecked).map(r => r.id);
   }
 
+  // (d) A PIN NOBODY HAS TOUCHED. An OpenStreetMap-only listing with no phone,
+  //     no website and no hours, last edited before 2020, and no Overture
+  //     record anywhere near it, is a map artefact rather than a shop: Overture
+  //     imports from a dozen commercial sources, so a real trading shop shows up
+  //     in at least one of them. Weak on purpose — it only ever flags.
+  const mapOnlyRows = await db.all(`
+    SELECT ${SELECT_COLS}, lat, lng, last_verified_at, created_at FROM stores
+    WHERE visible = 1 AND ${TOUCHABLE}
+      AND source = 'osm' AND osm_id IS NOT NULL
+      AND ${NO_PHONE} AND ${NO_HOURS}
+      AND (website IS NULL OR website = '')
+      AND (operating_status IS NULL OR operating_status <> 'permanently_closed')
+      AND COALESCE(last_verified_at, created_at) < '2020-01-01'
+    ORDER BY confidence DESC, id
+    LIMIT ?
+  `, [take]).catch(() => []);
+  for (const row of mapOnlyRows) {
+    if (flagged.has(row.id)) continue;
+    // "No Overture record within 150 m" is the last condition, and it is a
+    // query per row rather than a join because the set is small.
+    if (row.lat === null || row.lng === null) continue;
+    const near = await db.get(`
+      SELECT 1 FROM stores o
+      WHERE o.id <> ? AND o.source <> 'osm' AND o.lat IS NOT NULL
+        AND o.lat BETWEEN ? AND ? AND o.lng BETWEEN ? AND ?
+      LIMIT 1`, [row.id,
+      Number(row.lat) - 0.00135, Number(row.lat) + 0.00135,
+      Number(row.lng) - 0.00135 / Math.max(0.2, Math.cos(Number(row.lat) * Math.PI / 180)),
+      Number(row.lng) + 0.00135 / Math.max(0.2, Math.cos(Number(row.lat) * Math.PI / 180))]);
+    if (near) continue;
+    likely.push(toItem(row, 'map_only', REASON_MAP_ONLY));
+    flagged.add(row.id);
+  }
+  counts.likely_map_only = mapOnlyRows.length ? likely.filter(l => l.signal === 'map_only').length : 0;
+
+  // (e) CLEARING A FLAG. A listing flagged likely_closed that has since gained
+  //     a phone, a working website or opening hours is trading. Nobody was
+  //     taking those flags off, so a shop that fixed its listing stayed marked
+  //     for ever.
+  const recovered = await db.all(`
+    SELECT ${SELECT_COLS} FROM stores
+    WHERE operating_status = 'likely_closed' AND ${TOUCHABLE}
+      AND ((phone IS NOT NULL AND phone <> '')
+        OR NOT (${NO_HOURS})
+        OR (website IS NOT NULL AND website <> '' AND website_status IN (${[...LIVE_STATUSES].map(() => '?').join(', ')})))
+    ORDER BY id
+    LIMIT ?
+  `, [...LIVE_STATUSES, take]).catch(() => []);
+  counts.recovered = recovered.length;
+
+  // Duplicates first: four listings at one door would otherwise become four
+  // queue rows saying the same thing, and a person would rule on the same shop
+  // four times. dedupeListings matches by door, not by name.
+  const mergedAway = await mergeDuplicatesIn([...closed, ...likely]);
+  if (mergedAway.size) {
+    for (const list of [closed, likely]) {
+      for (let i = list.length - 1; i >= 0; i--) if (mergedAway.has(list[i].id)) list.splice(i, 1);
+    }
+    counts.duplicates_folded = mergedAway.size;
+  }
+
   counts.closed = closed.length;
   counts.likely = likely.length;
+  // Strongest evidence first, so a person reads the rows worth reading. The
+  // queue used to be ordered by classifier confidence, which says how sure we
+  // are that it is a cigar shop and nothing at all about whether it has closed.
+  likely.sort((a, b) => evidenceScore(b) - evidenceScore(a) || a.id - b.id);
+  closed.sort((a, b) => evidenceScore(b) - evidenceScore(a) || a.id - b.id);
   counts.seconds = Math.round((Date.now() - t0) / 1000);
 
   log(`[closures] examined ${counts.examined} listings in ${counts.seconds}s — ` +
       `${counts.closed} closed (${counts.source_closed} source, ${counts.web_closed} website), ` +
       `${counts.likely} likely (no contact route)`);
-  return { closed, likely, counts, checkedIds };
+  return { closed, likely, recovered, counts, checkedIds };
+}
+
+/**
+ * Which of these queue rows are duplicates of another row in the same batch?
+ *
+ * A cluster of listings at one door is one shop. Flagging each of them puts the
+ * same decision in front of a person several times, and — worse — a person who
+ * confirms one and misses the others leaves the shop half on the map. The
+ * lowest id in each cluster is kept to speak for it.
+ *
+ * Matched by door, the way dedupeListings does it: the same street number and
+ * street, or pins within 60 m with names that agree.
+ */
+async function mergeDuplicatesIn(items) {
+  const folded = new Set();
+  if (items.length < 2) return folded;
+  const ids = [...new Set(items.map(i => i.id))];
+  const rows = await db.all(
+    `SELECT id, name, address, city, lat, lng FROM stores WHERE id IN (${ids.map(() => '?').join(',')})`, ids);
+  const { addressKey } = require('./chainCheck');
+  const { haversineMeters, namesMatch } = require('./osm');
+
+  const byDoor = new Map();
+  for (const r of rows.sort((a, b) => a.id - b.id)) {
+    const key = addressKey(r.address);
+    const doorKey = key ? `${key}|${String(r.city || '').toLowerCase()}` : null;
+    let keeper = doorKey ? byDoor.get(doorKey) : null;
+    if (!keeper) {
+      // No address to match on, or a new door: is there a kept row within 60 m
+      // whose name agrees?
+      keeper = rows.find(o => o.id < r.id && !folded.has(o.id)
+        && o.lat !== null && r.lat !== null
+        && haversineMeters(Number(o.lat), Number(o.lng), Number(r.lat), Number(r.lng)) <= 60
+        && namesMatch(o.name, r.name));
+    }
+    if (keeper && keeper.id !== r.id) { folded.add(r.id); continue; }
+    if (doorKey) byDoor.set(doorKey, r);
+  }
+  return folded;
 }
 
 // ── Writing it down ─────────────────────────────────────────────────────────
@@ -554,7 +699,7 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
   running = true;
   try {
     const result = found || await findClosures({ limit, useWeb, log });
-    const { closed, likely, counts, checkedIds } = result;
+    const { closed, likely, recovered = [], counts, checkedIds } = result;
 
     if (!confirm) {
       log(`\nwould hide ${closed.length}:`);
@@ -564,15 +709,30 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
       for (const c of closed.slice(0, 20)) {
         log(`  #${c.id} ${c.name} (${c.city || '?'}, ${c.state || '?'}) — ${c.reason}`);
       }
-      log(`\nwould flag ${likely.length} as likely closed (still visible):`);
+      log(`\nwould flag ${likely.length} as likely closed (still visible), strongest evidence first:`);
       for (const l of likely.slice(0, 10)) {
         log(`  #${l.id} ${l.name} (${l.city || '?'}, ${l.state || '?'}) — ${l.reason}`);
       }
+      log(`\nwould clear the flag on ${recovered.length} that have since gained a phone, hours or a working site:`);
+      for (const r of recovered.slice(0, 10)) {
+        log(`  #${r.id} ${r.name} (${r.city || '?'}, ${r.state || '?'})`);
+      }
       log('\nDry run. Nothing changed. Re-run with --confirm to apply.');
-      return { dryRun: true, counts, would_hide: closed.length, would_flag: likely.length };
+      return { dryRun: true, counts, would_hide: closed.length, would_flag: likely.length, would_clear: recovered.length };
     }
 
-    let hidden = 0, flagged = 0;
+    let hidden = 0, flagged = 0, cleared = 0;
+    // Clearing comes first: a listing that has gained a phone or hours since it
+    // was flagged is trading, and must not be re-flagged by this same run.
+    for (const r of recovered) {
+      const res = await db.run(`
+        UPDATE stores
+        SET operating_status = NULL, closed_reason = NULL, closure_checked_at = NOW()
+        WHERE id = ? AND operating_status = 'likely_closed' AND ${TOUCHABLE}
+      `, [r.id]);
+      if (res.changes) cleared++;
+    }
+    const recoveredIds = new Set(recovered.map(r => r.id));
     for (const c of closed) {
       const r = await db.run(`
         UPDATE stores
@@ -585,6 +745,7 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
       if (r.changes) hidden++;
     }
     for (const l of likely) {
+      if (recoveredIds.has(l.id)) continue;
       const r = await db.run(`
         UPDATE stores
         SET operating_status = 'likely_closed', closed_reason = ?, closure_checked_at = NOW()
@@ -603,8 +764,9 @@ async function applyClosures({ confirm = false, limit = 500, useWeb = false, log
     }
 
     const left = await db.get('SELECT COUNT(*)::int AS n FROM stores WHERE visible = 1');
-    log(`[closures] hid ${hidden}, flagged ${flagged} as likely. ${left.n} listings remain on the public map.`);
-    return { counts, hidden, flagged, remaining: Number(left.n) || 0 };
+    log(`[closures] hid ${hidden}, flagged ${flagged} as likely, cleared ${cleared} flags. `
+      + `${left.n} listings remain on the public map.`);
+    return { counts, hidden, flagged, cleared, remaining: Number(left.n) || 0 };
   } finally {
     running = false;
   }
@@ -684,11 +846,56 @@ module.exports = {
   checkWebsiteForClosure, readClosureText, visibleText,
   findClosures, applyClosures, checkStore, runStartupClosureCheck,
   reasonKey, DEAD_STATUSES, LIVE_STATUSES, TAKEN_OVER_STATUSES, reasonTakenOver,
+  hasOwnWebsite, evidenceScore, SIGNAL_STRENGTH, isThirdPartyHost, mergeDuplicatesIn, selftest,
 };
+
+// ── self-test ───────────────────────────────────────────────────────────────
+function selftest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, label, extra) => {
+    if (cond) { pass++; console.log(`  ok   ${label}`); }
+    else { fail++; console.log(`  FAIL ${label}${extra !== undefined ? ` — ${JSON.stringify(extra)}` : ''}`); }
+  };
+
+  // A platform profile is not the shop's own website. A dead Facebook page says
+  // nothing about whether the shop is trading, and flagging on it flagged shops
+  // for not being on Facebook any more.
+  ok(!hasOwnWebsite({ website: 'https://www.facebook.com/somecigarshop' }), 'a Facebook page is not a website');
+  ok(!hasOwnWebsite({ website: 'yelp.com/biz/some-cigar-shop' }), 'nor is a Yelp profile');
+  ok(!hasOwnWebsite({ website: 'https://linktr.ee/shop' }), 'nor a link tree');
+  ok(!hasOwnWebsite({ website: null }), 'and no website is no website');
+  ok(hasOwnWebsite({ website: 'anthonyscigars.com' }), "but a shop's own domain is");
+  ok(hasOwnWebsite({ website: 'https://shop.davidoff.com/us' }), 'and so is a subdomain of one');
+
+  // The queue's order. Confidence said how sure we are it is a cigar shop and
+  // nothing at all about whether it has closed.
+  const score = sig => evidenceScore({ signals: [{ signal: sig }] });
+  ok(score('source') > score('website'), 'the map data saying closed outranks the shop saying so');
+  ok(score('website') > score('licence_lapsed'), 'and the shop saying so outranks a lapsed licence');
+  ok(score('licence_lapsed') > score('unreachable'), 'which outranks having no contact route');
+  ok(score('unreachable') > score('map_only'), 'which outranks an untouched pin');
+  const two = evidenceScore({ signals: [{ signal: 'unreachable' }, { signal: 'licence_lapsed' }] });
+  ok(two > score('unreachable') && two > score('licence_lapsed'), 'two weak signals beat either alone', two);
+  ok(two < score('website'), 'but never beat one strong one — that is what keeps a lapse from hiding a trading shop', two);
+  ok(evidenceScore({ signal: 'source' }) === score('source'), 'a bare item scores the same as a one-signal one');
+
+  // The vocabulary has to agree with itself.
+  ok(TAKEN_OVER_STATUSES.every(v => DEAD_STATUSES.includes(v)), 'a taken-over domain counts as a dead link');
+  ok(!DEAD_STATUSES.includes('blocked'), 'a site behind a firewall is not a dead link');
+  ok(/gambling/.test(reasonTakenOver('hijacked')) && /for sale/.test(reasonTakenOver('parked')),
+    'and each taken-over verdict says what happened in plain words');
+
+  console.log(`\nclosureCheck self-test: ${pass} passed, ${fail} failed`);
+  return fail;
+}
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
 
-if (require.main === module) {
+if (require.main === module && process.argv[2] === 'selftest') {
+  process.exit(selftest() ? 1 : 0);
+}
+
+if (require.main === module && process.argv[2] !== 'selftest') {
   const argv = process.argv.slice(2);
   const arg = name => {
     const i = argv.indexOf(name);
