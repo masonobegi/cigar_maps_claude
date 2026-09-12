@@ -8,24 +8,40 @@
  * untrustworthy, so every stored website gets verified and only a verified
  * 'ok' is safe for the UI to treat as a link.
  *
+ * A working link is not enough, though: an audit of the 4,863 listed sites
+ * found domains that answer 200 and are no longer the shop's. puffnstuffcigars
+ * .com now redirects to gamebaidoithuong.property, havanaonhudson.com to a
+ * betting site, Paradise Cigars and Screaming Eagle to GoDaddy /lander stubs,
+ * and Shopify answers 402 for shops that stopped paying. So the checker also
+ * asks who the page belongs to, and only says 'ok' when the answer is still
+ * this shop.
+ *
  * Rules of the road:
  *  - node built-ins only (https/http/dns); no new dependencies
  *  - DNS first: most dead links never resolve at all, and that check is cheap
  *  - HEAD before GET, one identifiable User-Agent, a 10 s timeout, a 256 KB
  *    body cap, and body read only when a 200 needs to be sniffed for parking
+ *    or the chain of redirects left the domain we listed
  *  - never throw: every failure mode is a status
+ *  - a verdict only ever changes a link, never a shop's visibility
  *
  * CLI:  node src/jobs/linkCheck.js [--limit N] [--store ID] [--recheck-days N]
+ *       node src/jobs/linkCheck.js sweep  --out evidence.jsonl [--limit N]   # read-only
+ *       node src/jobs/linkCheck.js decide --from evidence.jsonl --out decisions.json
+ *       node src/jobs/linkCheck.js apply  --from decisions.json --confirm
+ *       node src/jobs/linkCheck.js selftest
  */
 'use strict';
 
+const fs = require('fs');
 const https = require('https');
 const http = require('http');
 const dns = require('dns').promises;
 const { URL } = require('url');
 const db = require('../database/db');
+const { writeFields } = require('../utils/storeEdits');
 
-const UA = 'CigarBuddy/1.0 (+https://cigarbuddy.com; link check)';
+const UA = 'CigarBuddy/1.0 (+https://cigarmapsclaude-production.up.railway.app; link check)';
 const TIMEOUT_MS = 10000;
 const MAX_REDIRECTS = 4;
 const MAX_BODY = 256 * 1024;      // 256 KB, the hard cap on anything we read
@@ -33,14 +49,36 @@ const TINY_BODY = 24 * 1024;      // a "for sale" page is small; a real shop's i
 const CONCURRENCY = 6;
 const OVERALL_BUDGET_MS = 30000;  // whole check for one store, redirects included
 
-/** Statuses this module can write. Only 'ok' means the link is usable. */
-const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked'];
+/**
+ * Statuses this module can write. Only 'ok' and 'blocked' mean the link is
+ * usable; everything else is dead and the UI shows no link at all.
+ *
+ * The last four came out of the 2026-09 link audit, where 'ok' was hiding
+ * links that had stopped being the shop's:
+ *  - 'elsewhere'        the chain of redirects ends on another registrable
+ *                       domain and nothing there names this shop
+ *  - 'hijacked'         a lapsed domain now serving a gambling site
+ *  - 'store_unavailable' Shopify's 402: the shop stopped paying, so the page
+ *                       exists but sells nothing
+ * and 'parked' now also catches registrar landers and the "Resources and
+ * Information" template, not just the for-sale wording.
+ */
+const STATUSES = ['ok', 'blocked', 'dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked',
+  'elsewhere', 'hijacked', 'store_unavailable'];
+
+/** Verdicts that mean "there is no working link here". */
+const DEAD_STATUSES = ['dns_fail', 'timeout', 'refused', 'not_found', 'error', 'parked',
+  'elsewhere', 'hijacked', 'store_unavailable'];
 
 // A site that answers but refuses to serve a robot is alive for a customer.
 // Cloudflare and similar front doors return 403 to anything that is not a
 // browser, and several real shops sit behind them, so this is its own verdict
 // and is treated as a working link.
-const BLOCKED_CODES = new Set([401, 402, 403, 407, 429, 451]);
+//
+// 402 used to be in here, which was wrong: it is what Shopify answers for a
+// shop whose subscription lapsed ("This store is unavailable"), and a person
+// with a browser sees nothing but that notice. It has its own dead verdict.
+const BLOCKED_CODES = new Set([401, 403, 407, 429, 451]);
 
 // Hosts that only ever serve a for-sale / parking page. Landing on one of these
 // means the domain is not the shop's site any more, whatever it returns.
@@ -51,7 +89,17 @@ const PARK_HOSTS = [
   'buydomains.com', 'brandbucket.com', 'squadhelp.com', 'atom.com', 'efty.com',
   'sav.com', 'uniregistry.com', 'namesilo.com', 'domainnamesales.com',
   'searchvity.com', 'fastpark.net', 'voodoo.com', 'skenzo.com', 'smartname.com',
+  // Found live in the 2026-09 audit, on shop domains that lapsed.
+  'parkingcrew.org', 'cnhv.co', 'domain-for-sale.com', 'namecheap.com',
+  'dynadot.com', 'porkbun.com', 'name.com', 'epik.com', 'domainagents.com',
+  'sedopark.net', 'parklogic.com', 'bookmyname.com', 'hostinger.com',
+  'registrar-servers.com', 'domaincontrol.com', 'expiredomains.net',
 ];
+
+// GoDaddy and a few others serve their parking page from the shop's own
+// domain, so the host says nothing — the path does. /lander is GoDaddy's
+// (Paradise Cigars, Screaming Eagle both sit on one today).
+const PARK_PATHS = /^\/(lander|park(ed|ing)?|default\.aspx|cgi-sys\/defaultwebpage\.cgi|suspendedpage\.cgi)(\/|$|\?)/i;
 
 // Hosts that serve both real sites and blank builder placeholders. Landing here
 // is not enough on its own — the body has to look like a placeholder too.
@@ -86,6 +134,71 @@ const PLACEHOLDER_PHRASES = [
   'this site is not published', 'site not published', 'account suspended',
   'this domain is not connected', 'default web page', 'welcome to nginx',
   'apache2 ubuntu default page', 'index of /',
+];
+
+// The lander template that ad networks put on expired domains: a headline of
+// "<domain> — Resources and Information", or the "first and best source for
+// all of the information you are looking for" line under a page of ad links.
+// These pages are not small, so the TINY_BODY rule above never sees them.
+const LANDER_PHRASES = [
+  'resources and information', 'is your first and best source for all of the information',
+  'we hope you find what you are searching for', 'this webpage was generated by the domain owner',
+  'the domain may be for sale', 'thank you for visiting', 'privatelabelparking',
+];
+
+// Two of these in a page's title or first 64 KB, with no cigar word anywhere,
+// means a lapsed domain has been taken over by a gambling site. The audit found
+// 24 of them: puffnstuffcigars.com → gamebaidoithuong.property (Vietnamese),
+// havanaonhudson.com → a sportsbook, and a run of Indonesian slot sites that
+// re-use old US shop domains for their backlinks.
+const GAMBLING_TERMS = [
+  'casino', 'slot gacor', 'slot online', 'situs slot', 'judi', 'judi bola', 'togel',
+  'sportsbook', 'poker online', 'taruhan', 'bandar', 'agen slot', 'daftar slot',
+  'rtp slot', 'maxwin', 'jackpot', 'baccarat', 'roulette', 'sbobet', 'pragmatic play',
+  'link alternatif', 'deposit pulsa', 'bonus new member', 'game bai', 'doi thuong',
+  'nha cai', 'ca cuoc', 'xo so', 'bookmaker', 'betting site', 'online betting',
+  'free spins', 'no deposit bonus', 'sweepstakes casino', 'bet365', 'keno online',
+];
+
+// A page that talks about cigars is the shop's, whatever else is on it. A
+// casino resort's own cigar lounge says both words, and it keeps its link.
+const CIGAR_WORDS = /\b(cigars?|cigarro|tobacco|tobacconist|humidors?|pipe tobacco|smoke ?shop|cigarette|torcedor|vitola)\b/i;
+
+// Words in a shop's name that identify nothing on their own. Same list the
+// hours sweep uses, for the same reason: "Cigar Shop" names no shop.
+const GENERIC_NAME = new Set(['cigar', 'cigars', 'tobacco', 'tobacconist', 'shop', 'shoppe', 'store', 'lounge', 'bar',
+  'club', 'co', 'company', 'inc', 'llc', 'the', 'and', 'of', 'smoke', 'smokes', 'premium', 'fine', 'humidor', 'emporium',
+  'house', 'room', 'cafe', 'at', 'by', 'de', 'la', 'el']);
+
+// Redirects that are a real business relationship, proven by hand. Without
+// these the parent company's site reads as somebody else's: Tobacco Connection
+// is run by Jackson Beverage, and Cheap Tobacco's old domain is Wild Bill's.
+const ALLOWED_REDIRECTS = {
+  'tobaccoconnection.net': 'jacksonbevco.com',
+  'cheaptobaccousa.com': 'wildbillstobacco.com',
+  'stogiepairing.com': 'stogiesftmyers.com',
+};
+
+// Platforms a shop may legitimately use as its only web presence. The link
+// stays — a Facebook page is where some shops post their hours — but the
+// destination is the platform, so it is never judged as "the shop's own site"
+// and never supplies a thumbnail or hours.
+const SOCIAL_HOSTS = [
+  'facebook.com', 'fb.me', 'fb.com', 'instagram.com', 'twitter.com', 'x.com',
+  'tiktok.com', 'youtube.com', 'youtu.be', 'linkedin.com', 'linktr.ee',
+  'pinterest.com', 'snapchat.com', 'threads.net',
+];
+
+// Not a shop's site and not a social profile either: a directory entry, a map
+// pin, a shortener, a ticket page. Nothing here belongs to the shop.
+const PLATFORM_HOSTS = [
+  'yelp.com', 'yellowpages.com', 'mapquest.com', 'tripadvisor.com', 'foursquare.com',
+  'bbb.org', 'nextdoor.com', 'hub.biz', 'hubbiz.net', 'cigarplaces.com', 'findsmokeshop.com',
+  'google.com', 'g.co', 'maps.app.goo.gl', 'goo.gl', 'share.google', 'maps.apple.com',
+  'business.site', 'plus.google.com', 'eventbrite.com', 'ticketmaster.com',
+  'indeed.com', 'ziprecruiter.com', 'doordash.com', 'ubereats.com', 'grubhub.com',
+  'square.site', 'venmo.com', 'paypal.com', 'cash.app', 'tinyurl.com', 'bit.ly',
+  'rb.gy', 'linktree.com', 'wa.me',
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -272,14 +385,148 @@ function containsPhrase(body, phrases) {
   return phrases.some(p => text.includes(p));
 }
 
+// ── Who does this page belong to? ───────────────────────────────────────────
+//
+// Following a redirect is only safe when the destination is still this shop.
+// Three things can prove that, in the order a page usually offers them: the
+// shop's distinctive name, its phone number, or its street address. Any one is
+// enough; none of them, on a different domain, is 'elsewhere'.
+
+// Suffixes where the registrable domain is three labels, not two. The
+// directory is US-only, so this is a short list kept for correctness rather
+// than for the traffic it sees.
+const MULTI_LABEL_TLDS = new Set(['co.uk', 'org.uk', 'ac.uk', 'gov.uk', 'com.au', 'net.au', 'org.au',
+  'co.nz', 'co.jp', 'ne.jp', 'or.jp', 'com.br', 'com.mx', 'com.ar', 'com.co', 'co.in', 'com.sg',
+  'com.hk', 'com.tw', 'co.kr', 'com.vn', 'co.id', 'com.my', 'com.ph', 'co.za', 'com.tr', 'co.il']);
+
+/** "example.com" from a URL, a host, or a stored "www.example.com/shop". */
+function registrableDomain(value) {
+  let h = String(value || '').trim().toLowerCase();
+  if (!h) return null;
+  h = h.replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^[^@/]*@/, '').split(/[/?#]/)[0].split(':')[0];
+  h = h.replace(/^www\./, '').replace(/\.+$/, '');
+  const parts = h.split('.').filter(Boolean);
+  if (parts.length < 2) return null;
+  const last2 = parts.slice(-2).join('.');
+  if (parts.length > 2 && MULTI_LABEL_TLDS.has(last2)) return parts.slice(-3).join('.');
+  return last2;
+}
+
+/** Visible words of a page, tags and scripts thrown away. */
+function visibleText(html) {
+  return String(html || '')
+    .replace(/<(script|style|noscript|svg|template)[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+
+/** The few things a page says about its own identity. */
+function pageIdentity(body) {
+  const html = String(body || '');
+  const pick = re => { const m = html.match(re); return m ? m[1].trim() : ''; };
+  const title = pick(/<title[^>]*>([\s\S]{0,300}?)<\/title>/i).replace(/\s+/g, ' ');
+  const siteName = pick(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']{1,200})["']/i)
+    || pick(/<meta[^>]+content=["']([^"']{1,200})["'][^>]+property=["']og:site_name["']/i);
+  const ogTitle = pick(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']{1,200})["']/i);
+  const ldNames = [];
+  for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]{0,60000}?)<\/script>/gi)) {
+    for (const n of m[1].matchAll(/"(?:name|legalName|alternateName)"\s*:\s*"([^"]{1,120})"/g)) ldNames.push(n[1]);
+  }
+  // Logo alt text: some shops put their name nowhere else on the page.
+  const alts = [...html.matchAll(/<img[^>]+alt=["']([^"']{1,120})["']/gi)].map(m => m[1]).slice(0, 40);
+  const text = visibleText(html);
+  return { title, siteName, ogTitle, ldNames, alts, text, digits: text.replace(/[^0-9]/g, '') };
+}
+
+/** The words in a shop's name that could identify it on somebody's page. */
+function nameTokens(store) {
+  const words = String(store && store.name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ')
+    .filter(w => w.length > 2 && !GENERIC_NAME.has(w));
+  // A town name says nothing: "Tobacco Den Brainerd" matched brainerdglass.net.
+  const town = new Set(String(store && store.city || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' '));
+  const own = words.filter(w => !town.has(w));
+  return own.length ? own : words;
+}
+
+const escapeRe = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Does this page belong to this shop? Returns the proof ('name', 'phone',
+ * 'address', 'allowed') or null. Deliberately generous: a false "yes" leaves a
+ * link alone, a false "no" takes a working link off a real shop's card.
+ */
+function namesShop(store, id, finalUrl) {
+  if (!store) return 'no store context';
+  const listed = registrableDomain(store.website);
+  const final = registrableDomain(finalUrl);
+  if (listed && final && ALLOWED_REDIRECTS[listed] === final) return 'allowed';
+
+  const hay = [id.title, id.siteName, id.ogTitle, id.ldNames.join(' '), id.alts.join(' ')].join(' ').toLowerCase();
+  const flat = hay.replace(/[^a-z0-9]+/g, '');
+  const stem = String(final || '').replace(/\.[a-z.]+$/, '').replace(/[^a-z0-9]/g, '');
+  const tokens = nameTokens(store);
+  // Short words ("Den", "Joe") must stand alone; inside another word they are
+  // only letters ("garden", "golden").
+  const spaced = ` ${hay.replace(/[^a-z0-9]+/g, ' ')} `;
+  if (tokens.some(w => (w.length < 5 ? spaced.includes(` ${w} `) || stem.includes(w) : flat.includes(w) || stem.includes(w)))) return 'name';
+  // A domain built from the name's initials: Tobacco Republic at trcigar.com.
+  const initials = String(store.name || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/)
+    .filter(w => w && !['the', 'and', 'of', 'at', 'by'].includes(w)).map(w => w[0]).join('');
+  if (initials.length >= 2 && stem.startsWith(initials) && /^(cigars?|tobacco|smokes?|lounge|shop|co)?$/.test(stem.slice(initials.length))) return 'name';
+
+  const phone = String(store.phone || '').replace(/[^0-9]/g, '').slice(-10);
+  if (phone.length === 10 && id.digits.includes(phone)) return 'phone';
+
+  // The street number alone is meaningless ("2024"), so it has to be followed
+  // by the street's own word: "1530 McMullen".
+  const addr = String(store.address || '').toLowerCase();
+  const num = (addr.match(/\b(\d{1,6})\b/) || [])[1];
+  const streetWord = (addr.replace(/^[\d\s-]+/, '').match(/[a-z]{4,}/) || [])[0];
+  if (num && streetWord) {
+    const re = new RegExp(`\\b${escapeRe(num)}\\b[^a-z0-9]{0,12}${escapeRe(streetWord)}`, 'i');
+    if (re.test(id.text)) return 'address';
+  }
+  return null;
+}
+
+/** Gambling terms on the page, de-duplicated. Two or more is the threshold. */
+function gamblingHits(id) {
+  const hay = `${id.title} ${id.siteName} ${id.ogTitle} ${id.text}`.toLowerCase()
+    .slice(0, 64 * 1024)
+    // Vietnamese and Indonesian takeovers are written with accents; strip them
+    // so "nhà cái" and "xổ số" match the plain terms above.
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\u0111/g, 'd');
+  return [...new Set(GAMBLING_TERMS.filter(t => hay.includes(t)))];
+}
+
+/**
+ * A gambling takeover, not a casino lounge. Three things must all be true: two
+ * or more gambling terms, no cigar or tobacco word anywhere on the page, and
+ * the shop's own name absent — a resort lounge's page says "Casino" and says
+ * its own name, and keeps its link.
+ */
+function looksHijacked(store, id) {
+  const hits = gamblingHits(id);
+  if (hits.length < 2) return null;
+  const page = `${id.title} ${id.siteName} ${id.ogTitle} ${id.ldNames.join(' ')} ${id.text}`;
+  if (CIGAR_WORDS.test(page)) return null;
+  if (store && namesShop(store, id, null)) return null;
+  return hits;
+}
+
 /**
  * Is this 200 actually a placeholder? Either it landed on a known parking host,
  * or the page is small enough to be nothing but a for-sale notice and says so.
  */
 function looksParked(finalUrl, body) {
   let host = '';
-  try { host = new URL(finalUrl).hostname.toLowerCase(); } catch {}
+  let path = '';
+  try { const u = new URL(finalUrl); host = u.hostname.toLowerCase(); path = u.pathname || ''; } catch {}
   if (hostMatches(host, PARK_HOSTS)) return true;
+  // GoDaddy parks on the shop's own domain at /lander, so the host is no help.
+  if (PARK_PATHS.test(path)) return true;
 
   const text = String(body || '');
   if (!text) return false;
@@ -289,16 +536,43 @@ function looksParked(finalUrl, body) {
     if (FOR_SALE_PATTERNS.some(re => re.test(flat))) return true;
   }
   if (hostMatches(host, PLACEHOLDER_HOSTS) && text.length <= TINY_BODY && containsPhrase(text, PLACEHOLDER_PHRASES)) return true;
+  // The ad-network lander: a full page of sponsored links, so the size rule
+  // above never catches it. Two marks of the template are needed, because a
+  // real shop's page can say "thank you for visiting" on its own.
+  const flatAll = visibleText(text);
+  const landerHits = LANDER_PHRASES.filter(p => flatAll.includes(p));
+  const title = (text.match(/<title[^>]*>([\s\S]{0,200}?)<\/title>/i) || ['', ''])[1].toLowerCase();
+  if (landerHits.length >= 2) return true;
+  if (landerHits.length >= 1 && /resources and information|for sale|^\s*[a-z0-9-]+\.[a-z]{2,}\s*$/.test(title)) return true;
   return false;
 }
 
 // ── The check ───────────────────────────────────────────────────────────────
 
 /**
+ * Which kind of address the redirects ended on: the shop's own site, a social
+ * profile, or somebody's platform. Kept on the evidence so the review can
+ * label a Facebook link rather than throw it away.
+ */
+function destinationKind(url) {
+  let host = '';
+  try { host = new URL(url).hostname.toLowerCase(); } catch { return 'site'; }
+  if (hostMatches(host, SOCIAL_HOSTS)) return 'social';
+  if (hostMatches(host, PLATFORM_HOSTS)) return 'platform';
+  if (hostMatches(host, PARK_HOSTS)) return 'parking';
+  return 'site';
+}
+
+/**
  * Decide whether a stored website actually serves a page.
  * Returns { status, code, final_url } and never throws.
+ *
+ * With a store row ({ name, city, phone, address, website }) it also asks
+ * whether the page still belongs to that shop, which is what separates a
+ * rebrand ('ok', follow the redirect) from a lapsed domain somebody else now
+ * owns ('elsewhere' / 'hijacked'). Without one it behaves as it always did.
  */
-async function checkWebsite(website) {
+async function checkWebsite(website, store = null) {
   const parsed = parseWebsite(website);
   if (!parsed) return { status: 'error', code: null, final_url: null };
   const { host, path } = parsed;
