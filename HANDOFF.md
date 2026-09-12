@@ -557,6 +557,26 @@ The rest of this section is unchanged and still true:
 
 ## 6. What to ask Mason
 
+### One command for him to run
+
+The five `sweep/*` branches are merged and the work is on `master`. They cannot
+be deleted from a cloud session — the git proxy refuses any ref push that is not
+a branch create or update, so a delete comes back HTTP 403, and the GitHub tools
+available here have no delete-branch call. From a normal machine:
+
+```bash
+git push origin --delete sweep/claims sweep/hours sweep/links sweep/pins \
+  sweep/search-and-menus __reftest
+```
+
+`__reftest` is litter from diagnosing that limitation. **Before running it:**
+`sweep/search-and-menus` is the only one of the five whose code is *not* in
+`master` — it was superseded rather than adopted, so that deletion is the one
+that actually loses a version. `PROGRESS.md` has the table of what came from
+which branch. Nothing in the repository depends on any of them.
+
+### The rest
+
 - **A Google Places API key and budget**, for the closures and hours no free
   source settles. Everything so far was done without paid data. This is the only
   item on this list that is genuinely blocked on him.
