@@ -45,8 +45,8 @@ No task is marked done on the strength of an apply that did not happen.
 | 2 | 5.2 Pins, states and foreign rows | **code done, tested** — the crawl is blocked by the network policy |
 | 3 | 5.3 Hijacked links and thumbnails | **code done, tested** — the crawl is blocked |
 | 4 | 5.4 Finish the amenity crawl | **saved crawl re-read in full; rules fixed** — the remaining 1,095 sites are blocked |
-| 5 | 5.5 Re-audit the hours we publish | starting |
-| 6 | 5.6 Menu scanner | not started |
+| 5 | 5.5 Re-audit the hours we publish | **done — 96.5% to 97.9%, decision files written** |
+| 6 | 5.6 Menu scanner | starting |
 | 7 | 5.7 Closures and licence registries | not started |
 | 8 | 5.8 Claim safety gate | not started |
 | 9 | 5.9 The smaller ones | not started |
@@ -122,3 +122,27 @@ No task is marked done on the strength of an apply that did not happen.
     listings — the one piece of this session's work that is not a fixture.
   - **Blocked:** the remaining 1,095 sites, and the add/remove lists (they need
     the stores table to know which badges exist today).
+
+- **5.5 Hours re-audit — done, and it is the task with the most real output.**
+  All the evidence was saved, so this one ran end to end.
+  - **Accuracy 96.5% before, 97.9% after**, against all 174 reviewer verdicts.
+    The floor the work order sets is 97.3%.
+  - Six parser defects fixed, each now a test. The worst was `"4 pm - 12 pm"`
+    read as `4am-12pm` — open all morning and shut all evening, the exact
+    opposite of the truth.
+  - Four decide-time refusals added, plus the two-businesses-at-one-street-
+    number case, which has no tie-breaker and is now a refusal.
+  - `mentionsShop` matches whole words now. My first version of the domain rule
+    was too strict: it refused 14 listings and **reading them by hand showed 11
+    were real shops on their own domains**. The rule was loosened to the work
+    order's actual wording; the two known bad cases (brainerdglass.net,
+    groutmasters.com) are still refused.
+  - House of Cigar and Anthony's keep their exact hours on all ten listings.
+  - Decision files in `sweeps/decisions/hours/`: 42 to clear, 8 to replace, 8
+    chain rows that need the real stores table, 16 held, 292 recoverable
+    candidates of which only 56 are real.
+  - `sweeps/scripts/hours_offline.js` replaces the harness that pointed at
+    Windows paths and a snapshot that never travelled.
+  - **Caveat, stated in the files themselves:** this harness knows ~1,250 of the
+    ~4,000 listings with a website, so it undercounts how many share a site. The
+    chain rows are wrong here for that reason and are kept apart.
