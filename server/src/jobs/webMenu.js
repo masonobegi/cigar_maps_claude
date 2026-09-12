@@ -34,6 +34,47 @@ const MAX_PAGES = 8;
 const REDETECT_DAYS = 30;
 const PAUSE_MS = 1500;
 
+/**
+ * How long to wait before looking at a shop's online store again, by what
+ * happened last time.
+ *
+ * The scan used to have no such thing. Every shop whose read failed kept
+ * menu_matcher_version NULL, which kept it permanently eligible, and the
+ * selection was ordered by placement and classifier confidence rather than by
+ * when a shop was last looked at — so the same forty shops came back every six
+ * hours, for ever. Thirty-six of the forty-three shops with a live shelf were
+ * due no re-read in the next thirty days, and no shop outside that forty was
+ * ever reached at all.
+ */
+const BACKOFF_DAYS = {
+  ok: 7,
+  // Most shops simply have no online store. Asking again tomorrow will not
+  // change that, and asking 3,000 of them daily is most of the scan's budget.
+  unsupported: 60,
+  // A site that is down today may be up next week. Give it four chances,
+  // further apart each time, then treat it like any other shop with no feed.
+  error: [3, 7, 14, 30],
+};
+
+/** Stock nobody has confirmed for this long stops being called in stock. */
+const STOCK_EXPIRY_DAYS = 21;
+
+/**
+ * A website that is dead is not worth a menu request. These are linkCheck's
+ * verdicts for a domain that does not resolve, does not answer, or is no
+ * longer the shop's at all.
+ */
+const DEAD_WEBSITE_STATUSES = ['dns_fail', 'timeout', 'refused', 'not_found', 'error',
+  'parked', 'elsewhere', 'hijacked', 'store_unavailable', 'removed'];
+
+/** When is this shop next due, given what just happened? */
+function nextCheckAfter(outcome, failCount = 0, now = new Date()) {
+  const days = outcome === 'ok' ? BACKOFF_DAYS.ok
+    : outcome === 'unsupported' ? BACKOFF_DAYS.unsupported
+      : BACKOFF_DAYS.error[Math.min(Math.max(failCount, 1) - 1, BACKOFF_DAYS.error.length - 1)];
+  return new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+}
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ── Safety: never let a stored "website" point us at our own network ────────
@@ -282,18 +323,101 @@ function needsDetect(store) {
   return store.detect_stale === true || store.detect_stale === 1;
 }
 
+/** The registrable host of a stored website, for grouping listings by feed. */
+function feedHost(website) {
+  return String(website || '').toLowerCase()
+    .replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0].replace(/:\d+$/, '');
+}
+
+/**
+ * When several listings share one website, which of them does the feed belong
+ * to? The one whose address the site names.
+ *
+ * Anthony's web shop carries 2,634 in-stock rows and is attached to three
+ * Tucson branches and not to the Phoenix one, so "in stock" at a branch really
+ * means "on the chain's web shop". A customer who drives to the branch for a
+ * box that is in a warehouse has been told something untrue.
+ *
+ * Returns the listing id that owns the feed, or null when only one listing uses
+ * this site (the ordinary case) or when the site names nobody.
+ */
+async function feedOwner(store) {
+  const host = feedHost(store.website);
+  if (!host) return null;
+  const siblings = await db.all(
+    `SELECT id, address, city FROM stores
+     WHERE visible = 1 AND COALESCE(menu_opt_out, 0) = 0 AND website IS NOT NULL
+       AND lower(regexp_replace(regexp_replace(website, '^[a-z]+://', ''), '^www\\.', '')) LIKE ?
+     ORDER BY id`, [`${host}%`]);
+  if (siblings.length <= 1) return null;
+
+  let page = null;
+  try {
+    const res = await fetchUrl('https://' + host, { accept: 'text/html' });
+    if (res && res.status < 400 && res.body) page = String(res.body).toLowerCase().replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  } catch {}
+  if (!page) return null;
+
+  const named = siblings.filter(sib => {
+    const m = /^\s*(\d+[a-z]?)\s+(.+)$/.exec(String(sib.address || '').toLowerCase());
+    if (!m) return false;
+    const streetWord = m[2].split(/\s+/).find(w => w.length > 2 && !/^(n|s|e|w|ne|nw|se|sw|north|south|east|west|ste|suite|unit|#)$/.test(w));
+    return !!streetWord && page.includes(m[1]) && page.includes(streetWord);
+  });
+  // Exactly one, or we do not know. Two branches both named on the home page is
+  // a locations list, and picking either would be a guess.
+  return named.length === 1 ? named[0].id : null;
+}
+
+/**
+ * Record that we looked, whatever came of it, and say when to look again.
+ *
+ * Every outcome goes through here. A read that failed used to leave the shop
+ * looking exactly like one that had never been tried, which is how the scan
+ * ended up walking the same forty shops for ever.
+ */
+async function recordAttempt(storeId, outcome, { status, platform, url, failCount = 0, synced = false } = {}) {
+  const next = nextCheckAfter(outcome, failCount);
+  const sets = ['menu_checked_at = NOW()', 'menu_status = ?', 'menu_next_check_at = ?', 'menu_fail_count = ?'];
+  const params = [String(status || outcome).slice(0, 120), next, outcome === 'error' ? failCount : 0];
+  if (platform !== undefined) { sets.push('menu_platform = ?'); params.push(platform); }
+  if (url !== undefined) { sets.push('menu_url = ?'); params.push(url); }
+  if (synced) { sets.push('menu_last_synced = NOW()', 'menu_matcher_version = ?'); params.push(MATCHER_VERSION); }
+  params.push(storeId);
+  await db.run(`UPDATE stores SET ${sets.join(', ')} WHERE id = ?`, params);
+  return next;
+}
+
 /**
  * syncStoreMenu(storeId, { index })
  * Reads one shop's online store and writes its source='web' inventory rows.
  */
 async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
   const store = await db.get(`
-    SELECT id, name, website, menu_url, menu_platform, menu_opt_out, menu_checked_at,
+    SELECT id, name, address, city, state, website, website_status, menu_url, menu_platform,
+      menu_opt_out, menu_checked_at, COALESCE(menu_fail_count, 0) AS menu_fail_count,
       (menu_checked_at IS NULL OR menu_checked_at < NOW() - INTERVAL '${REDETECT_DAYS} days') AS detect_stale
     FROM stores WHERE id = ?`, [storeId]);
   if (!store) return { store_id: Number(storeId), skipped: 'no such store' };
   if (Number(store.menu_opt_out) === 1) return { store_id: store.id, name: store.name, skipped: 'opted out' };
-  if (!store.website) return { store_id: store.id, name: store.name, skipped: 'no website' };
+  if (!store.website) {
+    await recordAttempt(store.id, 'unsupported', { status: 'no website' });
+    return { store_id: store.id, name: store.name, skipped: 'no website' };
+  }
+  // A domain that does not resolve, does not answer, or is not the shop's any
+  // more has no menu behind it. Asking is a wasted request every time.
+  if (DEAD_WEBSITE_STATUSES.includes(store.website_status)) {
+    await recordAttempt(store.id, 'unsupported', { status: `website ${store.website_status}` });
+    return { store_id: store.id, name: store.name, skipped: `website ${store.website_status}` };
+  }
+  // One website, several listings: the feed belongs to the branch whose address
+  // the site names, not to every branch of the chain. Anthony's web shop was
+  // counted as stock at three Tucson listings and not at the Phoenix one.
+  const owner = await feedOwner(store);
+  if (owner && owner !== store.id) {
+    await recordAttempt(store.id, 'unsupported', { status: `feed belongs to #${owner}` });
+    return { store_id: store.id, name: store.name, skipped: `shared website; the feed is listing #${owner}'s` };
+  }
 
   const idx = index || await loadIndex();
 
@@ -305,8 +429,13 @@ async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
     platform = detected.platform;
     baseUrl = detected.url;
     if (!platform) {
-      const status = 'error:' + String(detected.error || 'unreachable').slice(0, 60);
-      await db.run('UPDATE stores SET menu_checked_at = NOW(), menu_status = ? WHERE id = ?', [status, store.id]);
+      // No platform is not a failure — most shops simply have no online store.
+      // Treating it as one put thousands of shops on a three-day retry.
+      const unreachable = /unreachable|timeout|refused|dns/i.test(String(detected.error || ''));
+      const status = (unreachable ? 'error:' : 'unsupported:') + String(detected.error || 'no online store').slice(0, 60);
+      await recordAttempt(store.id, unreachable ? 'error' : 'unsupported', {
+        status, failCount: unreachable ? Number(store.menu_fail_count) + 1 : 0,
+      });
       return { store_id: store.id, name: store.name, platform: null, status, products: 0, matched: 0 };
     }
   }
@@ -322,9 +451,9 @@ async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
   };
 
   if (fetchStatus !== 'ok') {
-    await db.run(
-      'UPDATE stores SET menu_platform = ?, menu_url = ?, menu_checked_at = NOW(), menu_status = ? WHERE id = ?',
-      [platform, baseUrl, fetchStatus, store.id]);
+    await recordAttempt(store.id, 'error', {
+      status: fetchStatus, platform, url: baseUrl, failCount: Number(store.menu_fail_count) + 1,
+    });
     return summary;
   }
 
@@ -395,10 +524,7 @@ async function syncStoreMenu(storeId, { index = null, log = () => {} } = {}) {
   }
 
   summary.status = `ok:${summary.matched}/${summary.cigarlike}`;
-  await db.run(
-    `UPDATE stores SET menu_platform = ?, menu_url = ?, menu_checked_at = NOW(),
-       menu_last_synced = NOW(), menu_status = ?, menu_matcher_version = ? WHERE id = ?`,
-    [platform, baseUrl, summary.status, MATCHER_VERSION, store.id]);
+  await recordAttempt(store.id, 'ok', { status: summary.status, platform, url: baseUrl, synced: true });
 
   log(`[menu] ${store.name} (${store.id}) ${platform}: ${summary.products} products, ` +
       `${summary.cigarlike} cigar-like, ${summary.matched} matched, ` +
@@ -416,12 +542,20 @@ async function scanStale({ limit = 40, log = console.log } = {}) {
   const stores = await db.all(`
     SELECT id FROM stores
     WHERE website IS NOT NULL AND menu_opt_out = 0 AND visible = 1
-      AND (menu_checked_at IS NULL
-           OR menu_checked_at < NOW() - INTERVAL '7 days'
+      AND (website_status IS NULL OR website_status NOT IN (${DEAD_WEBSITE_STATUSES.map(() => '?').join(',')}))
+      AND (menu_next_check_at IS NULL OR menu_next_check_at <= NOW()
            OR menu_matcher_version IS DISTINCT FROM ?)
-    ORDER BY (menu_matcher_version IS DISTINCT FROM ? AND menu_last_synced IS NOT NULL) DESC,
-             claimed DESC, confidence DESC, id
-    LIMIT ?`, [MATCHER_VERSION, MATCHER_VERSION, limit]);
+    ORDER BY
+      -- A shop whose rows the current matcher has never touched is wrong now,
+      -- not merely old, so it goes first.
+      (menu_matcher_version IS DISTINCT FROM ? AND menu_last_synced IS NOT NULL) DESC,
+      -- Then shops nobody has ever looked at. Under the old order, ranked by
+      -- placement and classifier confidence, no shop outside the top forty was
+      -- ever reached at all.
+      (menu_checked_at IS NULL) DESC,
+      -- Then by how overdue, so the queue drains instead of circling.
+      menu_next_check_at NULLS FIRST, menu_checked_at NULLS FIRST, id
+    LIMIT ?`, [...DEAD_WEBSITE_STATUSES, MATCHER_VERSION, MATCHER_VERSION, limit]);
 
   if (!stores.length) { log('[menu] no stale store menus'); return { scanned: 0, matched: 0, ok: 0, errors: 0 }; }
 
@@ -439,10 +573,14 @@ async function scanStale({ limit = 40, log = console.log } = {}) {
     } catch (err) {
       totals.scanned++;
       totals.errors++;
-      // One broken site must never stop the scan.
+      // One broken site must never stop the scan — and it must still count as
+      // an attempt, or the shop comes straight back to the front of the queue.
       try {
-        await db.run('UPDATE stores SET menu_checked_at = NOW(), menu_status = ? WHERE id = ?',
-          ['error:' + String(err.message || 'failed').slice(0, 60), s.id]);
+        const row = await db.get('SELECT COALESCE(menu_fail_count, 0) AS n FROM stores WHERE id = ?', [s.id]);
+        await recordAttempt(s.id, 'error', {
+          status: 'error:' + String(err.message || 'failed').slice(0, 60),
+          failCount: (row ? Number(row.n) : 0) + 1,
+        });
       } catch {}
     }
     await sleep(PAUSE_MS);
@@ -457,21 +595,169 @@ async function scanStale({ limit = 40, log = console.log } = {}) {
 function runStartupMenuScan({ log = console.log } = {}) {
   if (process.env.DISABLE_MENU_SCAN === '1') return;
   setTimeout(() => {
-    scanStale({ limit: 40, log }).catch(err => log('[menu] scan error: ' + err.message));
-    setInterval(() => {
-      scanStale({ limit: 60, log }).catch(err => log('[menu] scan error: ' + err.message));
-    }, 6 * 60 * 60 * 1000);
+    const pass = (limit) => scanStale({ limit, log })
+      .then(() => expireStaleStock({ log }))
+      .catch(err => log('[menu] scan error: ' + err.message));
+    pass(40);
+    setInterval(() => pass(60), 6 * 60 * 60 * 1000);
     // Five minutes, not one: a cold deploy is still importing the directory
     // for the first couple of minutes, and there is no hurry here.
   }, 5 * 60 * 1000);
 }
 
+/**
+ * Stock nobody has confirmed for three weeks stops being called in stock.
+ *
+ * A web feed's rows were left standing for ever once a shop's site stopped
+ * answering, so "in stock" on a card could be a year old. The rows are marked
+ * out of stock and told why — never deleted, because the shop may well still
+ * carry the cigar and the row holds the price and the history.
+ */
+async function expireStaleStock({ days = STOCK_EXPIRY_DAYS, log = console.log } = {}) {
+  const reason = `not confirmed by the shop's website in ${days} days`;
+  const r = await db.run(`
+    UPDATE inventory SET in_stock = 0, stale_reason = ?, updated_at = NOW()
+    WHERE source = 'web' AND in_stock = 1
+      AND COALESCE(last_confirmed_at, updated_at) < NOW() - INTERVAL '${Number(days)} days'`,
+  [reason]);
+  if (r.changes) log(`[menu] ${r.changes} stock rows expired: ${reason}`);
+  return { expired: r.changes };
+}
+
 module.exports = {
   detectPlatform, fetchProducts, isCigarProduct, syncStoreMenu, scanStale,
   runStartupMenuScan, loadIndex, fetchUrl, safeUrl,
+  recordAttempt, nextCheckAfter, expireStaleStock, feedOwner, feedHost,
+  BACKOFF_DAYS, STOCK_EXPIRY_DAYS, DEAD_WEBSITE_STATUSES, replayThirtyDays, selftest,
 };
 
-if (require.main === module) {
+// ── self-test ───────────────────────────────────────────────────────────────
+
+/**
+ * Replay the next thirty days of scanning against a model of the queue, and
+ * check the two things that were broken: that a shop nobody has ever looked at
+ * gets reached, and that a shop with a live shelf gets re-read.
+ *
+ * The model is the selection rule, not the database — it is the ORDER BY and
+ * the back-off that were wrong, and a model of those can be checked without a
+ * network or a stores table.
+ */
+function replayThirtyDays({ shops, perPass = 60, passesPerDay = 4, days = 30 } = {}) {
+  const state = shops.map(s => ({ ...s, checkedAt: s.checkedAt ?? null, nextAt: s.nextAt ?? null, fails: 0, reads: 0, syncs: 0, syncHours: [] }));
+  let now = 0;                                    // hours since the replay began
+  for (let d = 0; d < days; d++) {
+    for (let p = 0; p < passesPerDay; p++) {
+      const due = state.filter(s => !s.dead && (s.nextAt === null || s.nextAt <= now || s.matcherStale));
+      due.sort((a, b) => {
+        const key = x => [
+          x.matcherStale && x.synced ? 0 : 1,
+          x.checkedAt === null ? 0 : 1,
+          x.nextAt === null ? -Infinity : x.nextAt,
+          x.checkedAt === null ? -Infinity : x.checkedAt,
+          x.id,
+        ];
+        const ka = key(a), kb = key(b);
+        for (let i = 0; i < ka.length; i++) if (ka[i] !== kb[i]) return ka[i] < kb[i] ? -1 : 1;
+        return 0;
+      });
+      for (const s of due.slice(0, perPass)) {
+        s.reads++;
+        s.checkedAt = now;
+        s.matcherStale = false;
+        if (s.outcome === 'ok') { s.syncs++; s.syncHours.push(now); s.synced = true; s.fails = 0; s.nextAt = now + BACKOFF_DAYS.ok * 24; }
+        else if (s.outcome === 'error') {
+          s.fails++;
+          s.nextAt = now + BACKOFF_DAYS.error[Math.min(s.fails - 1, BACKOFF_DAYS.error.length - 1)] * 24;
+        } else { s.fails = 0; s.nextAt = now + BACKOFF_DAYS.unsupported * 24; }
+      }
+      now += 24 / passesPerDay;
+    }
+  }
+  return state;
+}
+
+function selftest() {
+  let pass = 0, fail = 0;
+  const ok = (cond, label, extra) => {
+    if (cond) { pass++; console.log(`  ok   ${label}`); }
+    else { fail++; console.log(`  FAIL ${label}${extra !== undefined ? ` — ${JSON.stringify(extra)}` : ''}`); }
+  };
+
+  // The back-off schedule.
+  const at = (o, n) => Math.round((nextCheckAfter(o, n, new Date(0)).getTime()) / 86400000);
+  ok(at('ok', 0) === 7, 'a shop with a live feed comes back in a week');
+  ok(at('unsupported', 0) === 60, 'a shop with no online store waits two months');
+  ok(at('error', 1) === 3 && at('error', 2) === 7 && at('error', 3) === 14 && at('error', 4) === 30,
+    'errors back off 3, 7, 14 then 30 days', [at('error', 1), at('error', 2), at('error', 3), at('error', 4)]);
+  ok(at('error', 9) === 30, 'and stay at 30 however many times it fails');
+
+  ok(DEAD_WEBSITE_STATUSES.includes('hijacked') && DEAD_WEBSITE_STATUSES.includes('dns_fail'),
+    'a dead website is not asked for a menu');
+  ok(!DEAD_WEBSITE_STATUSES.includes('blocked') && !DEAD_WEBSITE_STATUSES.includes('ok'),
+    'but a site behind a firewall still is');
+
+  ok(feedHost('https://www.anthonyscigars.com/shop') === 'anthonyscigars.com', 'a feed host drops scheme, www and path');
+  ok(feedHost('anthonyscigars.com') === 'anthonyscigars.com', 'and a bare host is already one');
+
+  // ── the replay ────────────────────────────────────────────────────────────
+  // 4,000 shops, as production has: 43 with a live shelf, 200 that error, the
+  // rest with no online store. Nothing has ever been read.
+  const shops = [];
+  for (let i = 1; i <= 4000; i++) {
+    shops.push({
+      id: i,
+      outcome: i <= 43 ? 'ok' : i <= 243 ? 'error' : 'unsupported',
+      checkedAt: null, nextAt: null, synced: false, matcherStale: false,
+    });
+  }
+  const after = replayThirtyDays({ shops });
+
+  const neverRead = after.filter(s => s.reads === 0);
+  ok(neverRead.length === 0, 'every shop is reached inside thirty days', neverRead.length);
+
+  const shelves = after.filter(s => s.outcome === 'ok');
+  const reread = shelves.filter(s => s.syncs >= 2);
+  ok(reread.length === shelves.length,
+    `every one of the ${shelves.length} live shelves is re-read, not 7 of 43`,
+    { reread: reread.length, of: shelves.length });
+  // Three, not four, in the first month, and that is right: a shop nobody has
+  // ever read goes ahead of a re-read, so the one-time backlog of 4,000 shops
+  // holds the weekly cadence back while it drains. The steady state is what
+  // matters, so the replay is run for two months and the second one measured.
+  ok(shelves.every(s => s.syncs >= 2), 'at least twice even while the backlog drains', Math.min(...shelves.map(s => s.syncs)));
+  const twoMonths = replayThirtyDays({ shops, days: 60 });
+  const secondMonth = twoMonths.filter(s => s.outcome === 'ok')
+    .map(s => s.syncHours.filter(h => h >= 30 * 24).length);
+  ok(Math.min(...secondMonth) >= 4, 'and weekly once it has, four or more times in the second month', Math.min(...secondMonth));
+  const backlogGone = twoMonths.filter(s => s.reads === 0).length;
+  ok(backlogGone === 0, 'with nothing left unread');
+
+  // A failing shop must not crowd the queue.
+  const failing = after.filter(s => s.outcome === 'error');
+  ok(failing.every(s => s.reads <= 7), 'a shop that keeps failing is not retried endlessly', Math.max(...failing.map(s => s.reads)));
+
+  // The old rule, for comparison: same pool, but ordered by placement with no
+  // back-off, which is what the scan actually did.
+  const oldOrder = shops.map(s => ({ ...s, reads: 0, syncs: 0 }));
+  let passes = 0;
+  for (let d = 0; d < 30; d++) {
+    for (let p = 0; p < 4; p++) {
+      passes++;
+      for (const s of oldOrder.slice(0, 60)) { s.reads++; if (s.outcome === 'ok') s.syncs++; }
+    }
+  }
+  const oldNever = oldOrder.filter(s => s.reads === 0).length;
+  ok(oldNever === 3940, `the old order left ${oldNever} shops untouched over ${passes} passes`, oldNever);
+
+  console.log(`\nwebMenu self-test: ${pass} passed, ${fail} failed`);
+  return fail;
+}
+
+if (require.main === module && process.argv[2] === 'selftest') {
+  process.exit(selftest() ? 1 : 0);
+}
+
+if (require.main === module && process.argv[2] !== 'selftest') {
   const argv = process.argv.slice(2);
   const arg = name => {
     const i = argv.indexOf(name);

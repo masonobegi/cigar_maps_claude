@@ -1038,7 +1038,8 @@ export default function StoreProfile() {
                     )}
 
                     {web && (
-                      <p className="text-xs mt-2 flex items-center gap-1.5" style={{ color: MUTED }}>
+                      <p className="text-xs mt-2 flex items-center gap-1.5"
+                        style={{ color: isStale(item.web_checked_at) ? AMBER : MUTED }}>
                         <Globe className="w-3 h-3 flex-shrink-0" />
                         <span className="truncate">From the shop&rsquo;s site · {web}</span>
                       </p>

@@ -499,6 +499,19 @@ const MIGRATIONS = [
       created_at TIMESTAMP DEFAULT NOW()
     )` },
   { name: '095_store_edits_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_store_edits_store ON store_edits(store_id, created_at DESC)' },
+
+  // ── The menu scanner's back-off ───────────────────────────────────────────
+  // The scan used to pick the same forty shops by placement every six hours,
+  // because a failed read left menu_matcher_version NULL and the selection was
+  // ordered by confidence rather than by when a shop was last looked at. These
+  // three columns make "when is this shop next due" a thing the database knows.
+  { name: '096_stores_menu_next_check', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_next_check_at TIMESTAMP' },
+  { name: '097_stores_menu_fail_count', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS menu_fail_count INTEGER DEFAULT 0' },
+  { name: '098_stores_menu_due_idx', sql: 'CREATE INDEX IF NOT EXISTS idx_stores_menu_due ON stores(menu_next_check_at) WHERE menu_opt_out = 0' },
+  // A stock row that has not been confirmed for three weeks is marked out of
+  // stock and says why. Never deleted: the shop may well still carry it, and a
+  // deleted row loses the price and the history with it.
+  { name: '099_inventory_stale_marker', sql: 'ALTER TABLE inventory ADD COLUMN IF NOT EXISTS stale_reason TEXT' },
 ];
 
 async function runMigrations() {
