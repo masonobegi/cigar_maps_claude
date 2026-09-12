@@ -564,6 +564,13 @@ const MIGRATIONS = [
   { name: '106_stores_user_id_set_null', sql: `ALTER TABLE stores DROP CONSTRAINT IF EXISTS stores_user_id_fkey` },
   // What, outside the directory, agrees that this shop is at this address:
   // 'licence', 'its own site' or 'both geocoders'. NULL means nothing does yet.
+  // The other ways into a shop that publishes no address: its own contact
+  // form, its Facebook page, its Instagram. "No email" and "no way to reach
+  // them" are different facts and only the second is a dead end.
+  { name: '110_store_outreach_routes', sql: `ALTER TABLE store_outreach
+    ADD COLUMN IF NOT EXISTS contact_url TEXT,
+    ADD COLUMN IF NOT EXISTS facebook TEXT,
+    ADD COLUMN IF NOT EXISTS instagram TEXT` },
   { name: '109_stores_address_backed_by', sql: 'ALTER TABLE stores ADD COLUMN IF NOT EXISTS address_backed_by TEXT' },
   // Who we have written to about their own listing, and what came of it.
   // One row per shop, so a shop can never be written to twice by accident.
