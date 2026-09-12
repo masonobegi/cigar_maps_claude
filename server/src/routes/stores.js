@@ -5,6 +5,9 @@ const { requireAuth, optionalAuth } = require('../middleware/auth');
 const { asyncRoute } = db;
 const { createInventorySheet } = require('../utils/googleSheets');
 const { openStatus, timeZoneFor } = require('../utils/storeHours');
+const {
+  searchNear, readLocation, buildFilters, hoursAreConfirmed, FEATURED_SQL,
+} = require('../utils/storeSearch');
 const { sendMail } = require('../utils/email');
 
 const APP_URL = process.env.APP_URL || 'https://cigarmapsclaude-production.up.railway.app';
@@ -27,14 +30,6 @@ function publicStore(store, privileged = false) {
   return out;
 }
 
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 3958.8;
-  const toRad = d => d * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
 async function geocode(address, city, state) {
   const q = [address, city, state].filter(Boolean).join(', ');
   return new Promise((resolve) => {
@@ -54,61 +49,90 @@ async function geocode(address, city, state) {
   });
 }
 
+/**
+ * A raw store row as the public sees it: parsed tags, today's hours, and
+ * whether anybody stands behind those hours.
+ *
+ * Open or closed is worked out on each shop's own clock (utils/storeHours.js).
+ * It used the server's clock, which on Railway is UTC — seven or eight hours
+ * off for every American shop.
+ */
+function decorateStore(s, now) {
+  const tz = s.timezone || timeZoneFor(s.state, s.lat, s.lng);
+  const status = s.open_status || openStatus(s.hours, tz, now);
+  const confirmed = s.hours_confirmed !== undefined
+    ? !!s.hours_confirmed
+    : (hoursAreConfirmed(s) && status.isOpen !== null);
+  return {
+    ...publicStore(s),
+    tags: s.tags ? JSON.parse(s.tags) : [],
+    today_hours: status.today,
+    is_open: status.isOpen,
+    open_status: status,
+    // Map hours are shown as what they are and never earn an Open badge, so
+    // the card and the "Open now" filter agree with each other.
+    hours_confirmed: confirmed,
+    avg_rating: +parseFloat(s.avg_rating || 0).toFixed(1),
+  };
+}
+
 router.get('/', asyncRoute(async (req, res) => {
-  const { q, city, state, has_lounge, has_walk_in_humidor, open_now, store_type, bbox, claimed, has_inventory } = req.query;
-  const userLat = parseFloat(req.query.lat);
-  const userLng = parseFloat(req.query.lng);
-  const radiusMi = parseFloat(req.query.radius) || 50;
-  const limit = Math.min(1500, Math.max(1, parseInt(req.query.limit) || 300));
-  let where = ['s.visible = 1'];
-  const params = [];
+  const { open_now, bbox } = req.query;
+  const now = new Date();
+  // A map viewport asks a different question ("what is in this rectangle"), so
+  // a bbox still takes the list path below.
+  const place = bbox ? null : readLocation(req.query);
 
-  // Names are compared with the punctuation people leave out: apostrophes and
-  // periods dropped, "&" read as "and", accents folded. Otherwise "wild bills"
-  // misses every one of Wild Bill's 215 listings.
-  const fold = value => `replace(translate(lower(${value}), '''’.,-', ''), '&', 'and')`;
-  const folded = text => String(text).toLowerCase().replace(/['’.,-]/g, '').replace(/&/g, 'and');
+  // ── A place search ────────────────────────────────────────────────────────
+  // Complete inside the radius, nearest first, paged, with the total attached.
+  // See utils/storeSearch.js for why this no longer runs through a LIMIT 300.
+  if (place) {
+    const paged = req.query.format === 'page';
+    // An app build that predates paging expects a bare array and no total, so
+    // it keeps the limit it used to get — the nearest rows, not a random 300.
+    const query = paged ? req.query : { ...req.query, limit: req.query.limit || '300' };
+    const page = await searchNear(db, query, { now });
 
-  if (q) {
-    where.push(`(${fold('s.name')} LIKE ? OR s.description ILIKE ? OR ${fold('s.city')} LIKE ?)`);
-    params.push(`%${folded(q)}%`, `%${q}%`, `%${folded(q)}%`);
-  }
-  // A city chip carries its state, and matches the town itself: "Washington, DC"
-  // used to return shops in Michigan, Missouri and Pennsylvania.
-  if (city && state) { where.push(`${fold('s.city')} = ?`); params.push(folded(city)); }
-  else if (city) { where.push(`${fold('s.city')} LIKE ?`); params.push(`%${folded(city)}%`); }
-  if (state) { where.push('s.state = ?'); params.push(String(state).toUpperCase()); }
-  if (has_lounge === '1') { where.push('s.has_lounge = 1'); }
-  if (has_walk_in_humidor === '1') { where.push('s.has_walk_in_humidor = 1'); }
-  // store_type accepts a comma-separated list ("cigar_shop,cigar_lounge") so the
-  // type chips can multi-select.
-  if (store_type) {
-    const types = String(store_type).split(',').map(t => t.trim()).filter(Boolean);
-    if (types.length) {
-      where.push(`s.store_type IN (${types.map(() => '?').join(',')})`);
-      params.push(...types);
+    if (page.too_many) {
+      const body = {
+        stores: [], total: page.total, offset: 0, limit: 0, has_more: false,
+        radius_mi: page.radius_mi, unconfirmed_hours: page.unconfirmed_hours, too_many: true,
+        message: `${page.total.toLocaleString()} shops are within ${page.radius_mi} miles. `
+          + 'Narrow your search: choose a smaller radius, a type, or a name.',
+      };
+      return res.json(paged ? body : []);
     }
+
+    const stores = page.rows.map(s => decorateStore(s, now));
+    if (!paged) return res.json(stores);
+    return res.json({
+      stores,
+      total: page.total,
+      offset: page.offset,
+      limit: page.limit,
+      has_more: page.offset + stores.length < page.total,
+      radius_mi: page.radius_mi,
+      radius_capped: page.radius_capped,
+      // How many shops inside the circle we cannot vouch for either way. 82%
+      // of listings had no hours at all when this was measured, and "Open now"
+      // silently pretended they did not exist.
+      unconfirmed_hours: page.unconfirmed_hours,
+      too_many: false,
+    });
   }
-  if (claimed === '1') { where.push('s.claimed = 1'); }
-  // EXISTS rather than a HAVING on the aggregate: it short-circuits on the
-  // first in-stock row instead of counting every join row per store.
-  if (has_inventory === '1') {
-    where.push('EXISTS (SELECT 1 FROM inventory inv WHERE inv.store_id = s.id AND inv.in_stock = 1)');
-  }
+
+  // ── The map viewport and the nationwide list ──────────────────────────────
+  const limit = Math.min(1500, Math.max(1, parseInt(req.query.limit) || 300));
+  const { where, params } = buildFilters(req.query);
 
   // Spatial prefilter so we never scan the whole directory: an explicit map
-  // viewport (bbox=minLng,minLat,maxLng,maxLat) or a box around the radius.
+  // viewport (bbox=minLng,minLat,maxLng,maxLat).
   if (bbox) {
     const [minLng, minLat, maxLng, maxLat] = String(bbox).split(',').map(Number);
     if ([minLng, minLat, maxLng, maxLat].every(Number.isFinite)) {
       where.push('s.lat BETWEEN ? AND ? AND s.lng BETWEEN ? AND ?');
       params.push(minLat, maxLat, minLng, maxLng);
     }
-  } else if (!isNaN(userLat) && !isNaN(userLng)) {
-    const dLat = radiusMi / 69;
-    const dLng = radiusMi / (69 * Math.max(0.2, Math.cos(userLat * Math.PI / 180)));
-    where.push('s.lat BETWEEN ? AND ? AND s.lng BETWEEN ? AND ?');
-    params.push(userLat - dLat, userLat + dLat, userLng - dLng, userLng + dLng);
   }
 
   const stores = await db.all(`
@@ -119,8 +143,7 @@ router.get('/', asyncRoute(async (req, res) => {
       COUNT(DISTINCT sr.id) as rating_count,
       -- Paid placement. Shops buy the top of the list, never the right to be
       -- listed at all, so this only reorders results that already matched.
-      (CASE WHEN s.featured_until IS NOT NULL AND s.featured_until > NOW()
-            THEN (CASE WHEN s.plan = 'partner' THEN 2 ELSE 1 END) ELSE 0 END) as is_featured
+      ${FEATURED_SQL} as is_featured
     FROM stores s
     LEFT JOIN inventory i ON i.store_id = s.id AND i.in_stock = 1
     LEFT JOIN store_follows sf ON sf.store_id = s.id
@@ -131,37 +154,10 @@ router.get('/', asyncRoute(async (req, res) => {
     LIMIT ?
   `, [...params, limit]);
 
-  // Open or closed on each shop's own clock (see utils/storeHours.js). This
-  // used the server's clock, which on Railway is UTC — seven or eight hours
-  // off for every American shop.
-  const now = new Date();
-  const result = stores.map(s => {
-    const tz = s.timezone || timeZoneFor(s.state, s.lat, s.lng);
-    const status = openStatus(s.hours, tz, now);
-    return {
-      ...publicStore(s),
-      tags: s.tags ? JSON.parse(s.tags) : [],
-      today_hours: status.today,
-      is_open: status.isOpen,
-      open_status: status,
-      avg_rating: +parseFloat(s.avg_rating).toFixed(1),
-    };
-  }).filter(s => open_now === '1' ? s.is_open === true : true);
-
-  if (!isNaN(userLat) && !isNaN(userLng)) {
-    const withDist = result.map(s => ({
-      ...s,
-      distance_mi: (s.lat && s.lng) ? Math.round(haversine(userLat, userLng, s.lat, s.lng) * 10) / 10 : null,
-    }));
-    const inRange = withDist.filter(s => s.distance_mi === null || s.distance_mi <= radiusMi);
-    inRange.sort((a, b) => {
-      if (a.distance_mi === null && b.distance_mi === null) return 0;
-      if (a.distance_mi === null) return 1;
-      if (b.distance_mi === null) return -1;
-      return a.distance_mi - b.distance_mi;
-    });
-    return res.json(inRange);
-  }
+  const result = stores.map(s => decorateStore(s, now))
+    // Only hours somebody stands behind can make a shop "Open now": map hours
+    // were wrong on some day at about half the listings we could check.
+    .filter(s => open_now === '1' ? (s.hours_confirmed && s.is_open === true) : true);
 
   res.json(result);
 }));

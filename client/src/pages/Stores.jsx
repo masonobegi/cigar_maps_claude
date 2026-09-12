@@ -38,6 +38,16 @@ function Chip({ label, active, onClick }) {
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [stores, setStores] = useState([]);
+  // A place search answers with one page and the real total, so the count can
+  // say "364 shops within 50 miles" and "Show more" knows what is left. It used
+  // to say "272 stores found" because 272 was all the old query had kept.
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  // How many shops inside the circle have no hours we can point at a source
+  // for. Most listings have none, and "Open now" used to drop them silently.
+  const [unconfirmedHours, setUnconfirmedHours] = useState(0);
+  const [tooMany, setTooMany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cities, setCities] = useState([]);
   const [q, setQ] = useState(searchParams.get('q') || '');
@@ -64,6 +74,9 @@ export default function Stores() {
   const [mapLoading, setMapLoading] = useState(false);
   const [mapBbox, setMapBbox] = useState(null);
   const mapReq = useRef({ timer: null, seq: 0 });
+  // "Show more" must never staple an old page onto a list a filter has already
+  // replaced, so every list request carries a sequence number.
+  const listReq = useRef({ seq: 0 });
 
   // Panning only records where we are. The fetch lives in the effect below so
   // that changing a filter refreshes the map even when it never moves.
@@ -105,16 +118,48 @@ export default function Stores() {
   // wherever the browser last saw you — the list stays nationwide until you
   // press Near Me or type a place.
 
+  // The parameters of a place search: format=page asks for the paged answer
+  // with a total instead of the bare array every other list still returns.
+  function locationParams(offset = 0) {
+    const p = { ...filterParams(), lat: userLocation.lat, lng: userLocation.lng, radius, format: 'page' };
+    if (offset) p.offset = offset;
+    return p;
+  }
+
   useEffect(() => {
     setLoading(true);
+    const seq = ++listReq.current.seq;
     const p = filterParams();
     if (city && !userLocation) {
       p.city = city;
       if (cityState) p.state = cityState;
     }
-    if (userLocation?.lat) { p.lat = userLocation.lat; p.lng = userLocation.lng; p.radius = radius; }
-    api.searchStores(p).then(setStores).finally(() => setLoading(false));
+    if (userLocation?.lat) Object.assign(p, locationParams());
+    api.searchStores(p).then(res => {
+      if (seq !== listReq.current.seq) return;
+      if (Array.isArray(res)) {
+        setStores(res); setTotal(res.length); setHasMore(false);
+        setUnconfirmedHours(0); setTooMany(null);
+      } else {
+        setStores(res.stores || []);
+        setTotal(res.total || 0);
+        setHasMore(!!res.has_more);
+        setUnconfirmedHours(res.unconfirmed_hours || 0);
+        setTooMany(res.too_many ? res.message : null);
+      }
+    }).finally(() => { if (seq === listReq.current.seq) setLoading(false); });
   }, [q, city, openNow, hasLounge, hasHumidor, typeKey, hasInventory, claimedOnly, userLocation, radius]);
+
+  function showMore() {
+    if (!userLocation?.lat || loadingMore) return;
+    const seq = listReq.current.seq;
+    setLoadingMore(true);
+    api.searchStores(locationParams(stores.length)).then(res => {
+      if (seq !== listReq.current.seq || Array.isArray(res)) return;
+      setStores(prev => [...prev, ...(res.stores || [])]);
+      setHasMore(!!res.has_more);
+    }).finally(() => setLoadingMore(false));
+  }
 
   function applySearch(e) {
     e.preventDefault();
@@ -199,6 +244,29 @@ export default function Stores() {
 
   const activeCount = types.length + FEATURE_CHIPS.filter(f => f.active).length;
   const hasFilters = !!q || !!city || activeCount > 0;
+
+  /**
+   * What the list is, in one line. With a place it is an exact count inside an
+   * exact radius — the old page said "272 stores found" when 364 shops were
+   * within 50 miles of Midtown and the query had simply stopped counting.
+   *
+   * Under Open now it also says how many nearby shops we have no confirmed
+   * hours for, because refusing to call them open is right but pretending they
+   * do not exist is not.
+   */
+  function countLine() {
+    if (tooMany) return tooMany;
+    if (userLocation) {
+      const parts = [`${total.toLocaleString()} shop${total === 1 ? '' : 's'} within ${radius} miles`];
+      if (hasMore) parts.push(`showing the nearest ${stores.length}`);
+      if (openNow && unconfirmedHours > 0) {
+        parts.push(`${unconfirmedHours.toLocaleString()} more nearby have no confirmed hours`);
+      }
+      return parts.join(' · ');
+    }
+    const more = !city && !q && stores.length >= 300 ? '. Use Near Me or pick a city to narrow it down.' : '';
+    return `${stores.length}${stores.length >= 300 ? '+' : ''} store${stores.length !== 1 ? 's' : ''} found${more}`;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
@@ -346,7 +414,7 @@ export default function Stores() {
       <p className="text-xs mb-4" style={{ color: MUTED }}>
         {viewMode === 'map'
           ? (mapLoading ? 'Loading map...' : `${(mapStores || stores).length}${(mapStores || stores).length >= 1000 ? '+' : ''} stores in view. Drag or zoom to explore.`)
-          : loading ? 'Loading...' : `${stores.length}${stores.length >= 300 ? '+' : ''} store${stores.length !== 1 ? 's' : ''} found${!userLocation && !city && !q && stores.length >= 300 ? '. Use Near Me or pick a city to narrow it down.' : ''}`}
+          : loading ? 'Loading...' : countLine()}
       </p>
 
       {/* Map view */}
@@ -373,9 +441,19 @@ export default function Stores() {
           <p style={{ color: MUTED }}>No stores found. Try different filters.</p>
         </div>
       ) : viewMode === 'list' ? (
-        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-          {stores.map(store => <StoreCard key={store.id} store={store} />)}
-        </div>
+        <>
+          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
+            {stores.map(store => <StoreCard key={store.id} store={store} />)}
+          </div>
+          {hasMore && (
+            <div className="flex flex-col items-center gap-2 mt-6">
+              <button type="button" onClick={showMore} disabled={loadingMore}
+                className="btn-secondary px-6 py-2 text-sm disabled:opacity-60">
+                {loadingMore ? 'Loading…' : `Show more (${(total - stores.length).toLocaleString()} left)`}
+              </button>
+            </div>
+          )}
+        </>
       ) : null}
     </div>
   );
