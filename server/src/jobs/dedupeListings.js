@@ -89,8 +89,14 @@ function houseNumber(address) {
   return m ? m[1] : null;
 }
 
+// "Blvd" is not a street name: 111 Victoria Commons Blvd and 111 N Woodland
+// Blvd matched on the type word alone, and they are different doors in Deland.
+const STREET_TYPE_WORD = new Set(['st', 'ave', 'rd', 'blvd', 'dr', 'hwy', 'ln', 'pl', 'ct', 'pkwy',
+  'trl', 'cir', 'ter', 'way', 'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']);
+
 function streetWords(address) {
-  return normalizeAddress(address).split(' ').slice(1).filter(w => w && !/^\d+$/.test(w) === false || w.length > 1);
+  return normalizeAddress(address).split(' ').slice(1)
+    .filter(w => w.length > 1 && !STREET_TYPE_WORD.has(w));
 }
 
 /** Same door: the same house number on a street that agrees, or two pins 60 m apart. */
