@@ -7,9 +7,11 @@
  * every card rendered on the server was seven or eight hours off. This is the
  * one answer, given in the shop's time zone.
  *
- * Pure functions; the time zone comes from the shop's state and longitude.
+ * Pure functions; the time zone comes from the shop's own coordinates.
  */
 'use strict';
+
+const { find: zonesAtPoint } = require('geo-tz');
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -26,34 +28,77 @@ const BY_STATE = {
   AZ: 'America/Phoenix', AK: 'America/Anchorage', HI: 'Pacific/Honolulu', PR: 'America/Puerto_Rico',
 };
 
+// Every zone the United States keeps, including the ones a state shares.
+// A pin just over a border returns its neighbour's zone (Houlton, Maine sits
+// in America/Moncton), so only these count; anything else falls back to the
+// state.
+const US_ZONES = new Set([
+  EASTERN, CENTRAL, MOUNTAIN, PACIFIC, 'America/Phoenix', 'America/Detroit', 'America/Menominee',
+  'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Boise',
+  'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac',
+  'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay',
+  'America/Indiana/Tell_City', 'America/Indiana/Knox',
+  'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah',
+  'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Yakutat', 'America/Nome',
+  'America/Adak', 'America/Metlakatla', 'Pacific/Honolulu', 'America/Puerto_Rico',
+]);
+
 /**
- * States split between zones. The lines are drawn by longitude (and latitude
- * where a line runs east-west); close enough for a shop's door, which sits a
- * long way from most of these borders.
+ * The zone a pin actually stands in, from the published zone boundaries.
+ *
+ * This used to be drawn by longitude, a state at a time, and the lines are not
+ * straight: Chattanooga is Eastern while Crossville, half a degree east of it,
+ * is Central; Houghton in the Upper Peninsula is Eastern while Menominee is
+ * Central. Every shop in the Chattanooga area was therefore an hour out, and
+ * its card said "Open until 7pm" while the door was locked.
  */
-function splitState(state, lat, lng) {
-  const x = Number(lng), y = Number(lat);
-  if (!Number.isFinite(x)) return null;
-  switch (state) {
-    case 'FL': return x < -85.0 ? CENTRAL : EASTERN;                 // the western panhandle
-    case 'TN': return x < -85.1 ? CENTRAL : EASTERN;                 // East Tennessee is Eastern
-    case 'KY': return x < -86.0 ? CENTRAL : EASTERN;                 // western Kentucky is Central
-    case 'IN': return x < -86.9 && (y > 41.0 || y < 38.4) ? CENTRAL : EASTERN; // the Gary and Evansville corners
-    case 'MI': return x < -87.6 && y > 45.0 ? CENTRAL : EASTERN;     // the western Upper Peninsula
-    case 'TX': return x < -104.9 ? MOUNTAIN : CENTRAL;               // El Paso
-    case 'KS': return x < -101.1 ? MOUNTAIN : CENTRAL;
-    case 'NE': return x < -101.0 ? MOUNTAIN : CENTRAL;               // the panhandle
-    case 'SD': return x < -100.5 ? MOUNTAIN : CENTRAL;               // west river
-    case 'ND': return x < -100.8 && y < 47.3 ? MOUNTAIN : CENTRAL;   // the southwest
-    case 'ID': return y > 45.5 ? PACIFIC : MOUNTAIN;                 // the panhandle
-    case 'OR': return x > -117.6 ? MOUNTAIN : PACIFIC;               // Malheur County
-    default: return null;
-  }
+function zoneAt(lat, lng) {
+  const y = Number(lat), x = Number(lng);
+  if (!Number.isFinite(y) || !Number.isFinite(x)) return null;
+  let zones = [];
+  try { zones = zonesAtPoint(y, x) || []; } catch { return null; }
+  return zones.find(z => US_ZONES.has(z)) || null;
 }
 
 function timeZoneFor(state, lat, lng) {
   const s = String(state || '').toUpperCase();
-  return splitState(s, lat, lng) || BY_STATE[s] || splitState(s, lat, lng) || fallbackByLongitude(lng) || EASTERN;
+  return zoneAt(lat, lng) || BY_STATE[s] || fallbackByLongitude(lng) || EASTERN;
+}
+
+/**
+ * The zones each state keeps, so a pin can be checked against the address it
+ * claims. A Georgia listing whose pin lands in Central time is a pin sitting in
+ * Alabama, not a Georgia shop on Central time. Alabama carries Eastern because
+ * Phenix City works to Columbus, Georgia's clock.
+ */
+const INDIANA = ['America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac',
+  'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay',
+  'America/Indiana/Tell_City', 'America/Indiana/Knox'];
+const DAKOTA = ['America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah'];
+const ZONES_IN_STATE = {
+  CT: [EASTERN], DC: [EASTERN], DE: [EASTERN], GA: [EASTERN], MA: [EASTERN], MD: [EASTERN], ME: [EASTERN],
+  NC: [EASTERN], NH: [EASTERN], NJ: [EASTERN], NY: [EASTERN], OH: [EASTERN], PA: [EASTERN], RI: [EASTERN],
+  SC: [EASTERN], VA: [EASTERN], VT: [EASTERN], WV: [EASTERN],
+  AR: [CENTRAL], IA: [CENTRAL], IL: [CENTRAL], LA: [CENTRAL], MN: [CENTRAL], MO: [CENTRAL], MS: [CENTRAL],
+  OK: [CENTRAL], WI: [CENTRAL],
+  AL: [CENTRAL, EASTERN], FL: [EASTERN, CENTRAL], TN: [EASTERN, CENTRAL],
+  KY: [EASTERN, CENTRAL, 'America/Kentucky/Louisville', 'America/Kentucky/Monticello'],
+  MI: [EASTERN, 'America/Detroit', CENTRAL, 'America/Menominee'],
+  IN: [EASTERN, CENTRAL, ...INDIANA],
+  KS: [CENTRAL, MOUNTAIN], NE: [CENTRAL, MOUNTAIN], SD: [CENTRAL, MOUNTAIN], TX: [CENTRAL, MOUNTAIN],
+  ND: [CENTRAL, MOUNTAIN, ...DAKOTA],
+  CO: [MOUNTAIN], MT: [MOUNTAIN], NM: [MOUNTAIN], UT: [MOUNTAIN], WY: [MOUNTAIN],
+  ID: [MOUNTAIN, 'America/Boise', PACIFIC], OR: [PACIFIC, MOUNTAIN, 'America/Boise'],
+  NV: [PACIFIC, MOUNTAIN], AZ: ['America/Phoenix', MOUNTAIN],
+  CA: [PACIFIC], WA: [PACIFIC],
+  AK: ['America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Yakutat', 'America/Nome', 'America/Adak', 'America/Metlakatla'],
+  HI: ['Pacific/Honolulu'], PR: ['America/Puerto_Rico'],
+};
+
+/** Could a shop at this address really keep this zone? */
+function zoneFitsState(state, zone) {
+  const list = ZONES_IN_STATE[String(state || '').toUpperCase()];
+  return !list || list.includes(zone);
 }
 
 /** When the state is missing or odd, longitude alone is a decent guess. */
@@ -154,7 +199,7 @@ function openStatus(hoursInput, timeZone, at = new Date()) {
   return { isOpen: false, label: nextOpening() || 'Closed now', today: todayStr };
 }
 
-module.exports = { timeZoneFor, openStatus, nowIn, parseRange };
+module.exports = { timeZoneFor, zoneFitsState, openStatus, nowIn, parseRange };
 
 // ── Self-test ────────────────────────────────────────────────────────────────
 if (require.main === module) {
@@ -166,6 +211,31 @@ if (require.main === module) {
   ok(timeZoneFor('FL', 30.4, -87.2) === CENTRAL, 'Pensacola is Central');
   ok(timeZoneFor('FL', 25.8, -80.2) === EASTERN, 'Miami is Eastern');
   ok(timeZoneFor('TN', 36.2, -86.8) === CENTRAL && timeZoneFor('TN', 35.9, -83.9) === EASTERN, 'Nashville Central, Knoxville Eastern');
+  // The lines the old longitude rules cut through, town by town.
+  ok(timeZoneFor('TN', 35.0456, -85.3097) === EASTERN, 'Chattanooga is Eastern');
+  ok(timeZoneFor('TN', 35.9487, -85.0269) === CENTRAL, 'Crossville is Central, though it lies east of Chattanooga');
+  ok(timeZoneFor('MI', 47.1211, -88.5694) === 'America/Detroit', 'Houghton keeps Eastern in the Upper Peninsula');
+  ok(timeZoneFor('MI', 45.1077, -87.6142) === 'America/Menominee', 'Menominee is Central');
+  ok(timeZoneFor('MI', 46.4953, -84.3453) === 'America/Detroit', 'Sault Ste. Marie is Eastern, not Canadian');
+  ok(timeZoneFor('IN', 41.7075, -86.8950) === CENTRAL, 'Michigan City is Central');
+  ok(timeZoneFor('KY', 36.9959, -85.9119) === CENTRAL, 'Glasgow is Central');
+  ok(timeZoneFor('ND', 46.8267, -100.8896) === 'America/North_Dakota/New_Salem', 'Mandan keeps Central time');
+  // McKenzie County keeps Central with the rest of the oil patch, and the
+  // Idaho panhandle keeps Pacific well east of Coeur d'Alene. A rounded grid
+  // got both wrong, so the boundaries themselves are read.
+  ok(timeZoneFor('ND', 47.8022, -103.2832) === CENTRAL, 'Watford City is Central');
+  ok(timeZoneFor('ND', 48.1557, -103.6264) === CENTRAL, 'Williston is Central');
+  ok(timeZoneFor('ID', 47.5397, -116.1214) === PACIFIC, 'Kellogg is Pacific');
+  ok(timeZoneFor('ID', 48.6380, -116.0575) === PACIFIC, 'Moyie Springs is Pacific');
+  ok(timeZoneFor('TN', 35.7032, -84.8509) === EASTERN, 'Spring City is Eastern');
+  ok(timeZoneFor('AL', 32.4710, -85.0008) === EASTERN, 'Phenix City keeps Columbus, Georgia time');
+  ok(timeZoneFor('ME', 46.1262, -67.8403) === EASTERN, 'Houlton falls back to its state, not America/Moncton');
+  ok(timeZoneFor('TX', 31.7619, -106.4850) === MOUNTAIN && timeZoneFor('TX', 29.76, -95.37) === CENTRAL, 'El Paso Mountain, Houston Central');
+  // Malheur County keeps Mountain time under Idaho's zone name.
+  ok(timeZoneFor('OR', 44.05, -117.0) === 'America/Boise' && timeZoneFor('OR', 45.52, -122.68) === PACIFIC, 'Malheur County Mountain, Portland Pacific');
+  ok(timeZoneFor('ID', 47.68, -116.78) === PACIFIC && timeZoneFor('ID', 43.61, -116.20) === 'America/Boise', 'the Idaho panhandle is Pacific, Boise is Mountain');
+  ok(timeZoneFor('FL', 30.4213, -87.2169) === CENTRAL && timeZoneFor('FL', 25.77, -80.19) === EASTERN, 'Pensacola Central, Miami Eastern');
+  ok(timeZoneFor('XX', null, null) === EASTERN && timeZoneFor('CA', null, null) === PACIFIC, 'no pin: the state, then the coast');
   ok(timeZoneFor('TX', 31.8, -106.4) === MOUNTAIN && timeZoneFor('TX', 29.8, -95.4) === CENTRAL, 'El Paso Mountain, Houston Central');
   ok(timeZoneFor('WA', 45.6, -122.4) === PACIFIC, 'Camas is Pacific');
   ok(timeZoneFor('', null, -122.4) === PACIFIC, 'no state: longitude decides');
