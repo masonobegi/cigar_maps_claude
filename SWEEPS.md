@@ -25,13 +25,31 @@ this directory, whatever it carries.
 | 8b | Pure cigar check: every listing must prove itself | 7,230 public → 4,750. 4,114 proven by name or stock, 636 by their own site, 2,480 hidden as unproven with the reason kept. A browser pass rescued 60 whose sites are built in JavaScript |
 | 8 | Non-shop purge, with Mason's scope rule: cigar and pipe shops only | 160 hidden — 110 vape, hookah, kava, glass and novelty shops, 16 makers and leaf companies, 14 lounges on wheels, 4 rolling services, 4 humidor catalogues, 2 cigarette outlets, 2 anti-smoking bodies, a plumber, 3 pins on an ATF office and an RV resort. The classifier scores the same way, so a refresh does not bring them back |
 
+## In progress
+
+**4, moved shops.** A shop that moved but is still listed at the door it left.
+171 groups of listings share a phone or a name in one town at different street
+addresses. Each is judged by its own website: if the site publishes the doors it
+trades from and ours is not among them, ours has been left. Guards: a street one
+letter apart still matches (Point Break's site spells Greene "Green"), and a
+listing is never judged by a site it does not point at (Diamond Crown shares a
+phone with J.C. Newman).
+
+Where it stands: the plan step is reading the 163 sites. Then: read the output by
+hand, drop the false positives, apply.
+
+    node src/jobs/movedShops.js plan  --from <scratch>/decisions/moved_candidates.json --out <scratch>/decisions/moved.json
+    node src/jobs/movedShops.js apply --from <scratch>/decisions/moved.json --confirm
+
+The scratch directory is session-specific; the candidates can be rebuilt from
+production at any time with the same job.
+
 ## Still to do
 
 In the order I plan to work through them.
 
 | # | Sweep | Size |
 |---|-------|------|
-| 4 | Moved shops still at the old address | ~173 candidates, ~18 confirmed |
 | 9 | Pins more than 1 km from their address, wrong states, foreign records | 100–130 pins |
 | 7, 19 | Taken-over, parked and redirected links; links to the wrong business | ~318 links, 14 gambling thumbnails |
 | 10 | Likely-closed: clean its inputs, extend to stale map-only pins | 45 flagged today |
