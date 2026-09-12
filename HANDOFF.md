@@ -4,9 +4,17 @@
 is written and tested, and almost none of it has been run against production.
 This file is your work order. Read it, then start at "Your next task".**
 
-Written 2026-09-12. It replaces the handoff of 2026-09-11, which is in the git
-history if you want it (`git show 94bcfd2:HANDOFF.md`). Work stopped cleanly:
-nothing is half-applied, and production is in a consistent state.
+Written 2026-09-12, and revised later the same day after a second pass that
+finished every remaining sweep that needs no credentials and no money. It
+replaces the handoff of 2026-09-11 (`git show 94bcfd2:HANDOFF.md`). Work stopped
+cleanly: nothing is half-applied, and production is in a consistent state.
+
+**What changed in the revision:** the first version of this file listed the
+code-only sweeps from `sweeps/plan.json` as still to do. They are done and
+pushed. The tasks below are now, with two named exceptions in task 8, exactly
+the work that cannot be done without credentials or an open network — so if you
+have those, everything here is available to you, and if you do not, there is
+very little left that this repository can honestly progress.
 
 ---
 
@@ -30,8 +38,11 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://geocoding.geo.census.gov/
 - **Both work** → you can do everything below. Start at task 1.
 - **Railway but no open web** → you can apply the decision files that already
   exist (task 1) but not produce new ones.
-- **Neither** → say so plainly and stop rather than guessing. `PROGRESS.md`
-  records what the last session did in that position.
+- **Neither** → say so plainly rather than guessing. Two sessions have now run
+  in that position and between them finished every sweep in `sweeps/plan.json`
+  that code alone can finish; `PROGRESS.md` records both. What is left needs
+  what you do not have. Read task 8 for the only two code-only items still
+  open, and do not invent work to look busy.
 
 ## Your next task
 
@@ -46,7 +57,7 @@ In this order. The first is the only one that changes what a customer sees today
 | 5 | [Finish the amenity crawl](#5-finish-the-amenity-crawl) | 1,095 sites unread, 65 with evidence cut short by a bug since fixed |
 | 6 | [Licence registries](#6-licence-registries) | The strongest free evidence that a shop exists. Feeds task 7 |
 | 7 | [Recover hidden shops](#7-recover-hidden-shops) | ~75 real shops are hidden. Useless until 2, 5 and 6 have run |
-| 8 | [The rest](#8-the-rest) | Two client niceties, and the menu scanner's first real pass |
+| 8 | [The rest](#8-the-rest) | Two code-only items deliberately left, with reasons, plus the menu scanner's first real pass |
 
 **Before task 1, fifteen minutes:**
 
@@ -134,12 +145,46 @@ non-shop purge, the pure-cigar check, outlet chains, and moved shops.
 `SWEEPS.md` has the numbers for each.
 
 **Deployed as code on 2026-09-12, not yet run against data:** everything in the
-task list above. Plus two things that are live for customers right now because
-they are pure code:
+task list above.
+
+**Live for customers right now, because it is pure code.** Each of these is a
+sweep from `sweeps/plan.json` whose sources are code only; each was measured
+against a database built from the committed directory (42,928 listings, 7,904
+public), never against the synthetic fixture:
 
 - **Search returns every shop in range.** `GET /stores` used to take 300 rows in
   placement order and only then cut to the radius, so a dense metro silently
   lost shops a few blocks away. Recall went 89.96% → 100.00% over 1,984 cases.
+- **The map draws every pin.** `GET /stores/map` groups in the database. The map
+  asked the list for 1,000 rows and clustered those in the browser, so the
+  national view drew 1,000 of 7,904, every bubble's count came from that
+  thousand — a bubble marked 84 could open onto nine shops — and the header said
+  "1000+ stores in view". Fifteen viewports now account for every listing in the
+  box, exactly (`sweeps/scripts/map_viewports.js`).
+- **Search matches the way people type.** Accents fold by Unicode decomposition,
+  St/Saint and Mt/Mount fold as whole words, trademark badges and emoji drop,
+  and other alphabets are left intact so a shop named in Arabic stays searchable
+  by its own letters. `sweeps/scripts/fold_parity.js` runs the SQL half and the
+  JavaScript half against each other in the engine over 42 cases.
+- **The duplicate matcher.** Measured against the 13 pairs the audit named and
+  the 4 it warns must never merge: 122 clusters proposing 125 drops, against 116
+  and 119 before. It also fixes a false positive the plan names — the "two
+  shared words" shortcut counted two *generic* words, so "Cigar City Brewing"
+  matched "Cigar City Cigars".
+- **Corrections survive the import.** `node src/jobs/reimportTest.js` seeds every
+  kind of correction, forces a re-import and checks all 16 are still there.
+- **Staff can see and undo things.** `/admin/listings` covered `source = 'osm'`
+  only: a page of 500 rows showed 9 listings and hid 491 Overture ones, so most
+  of the directory could not be reviewed at all. A claim can be taken back. The
+  claim card carries the evidence a decision rests on. Phone and website have a
+  staff editor.
+- **`destinationKind` called all 23,972 stored websites ordinary sites** — it
+  ran `new URL()` on a column that stores bare hosts. With the scheme supplied:
+  2,011 platform links, 878 social, 4 parked. Those 2,893 listings have
+  something other than the shop's own site in the website field and no verdict
+  would ever have flagged them, because the links work. They are in the staff
+  queue under `kind=link`.
+- **The Request button did nothing** — it set React state that nothing rendered.
 - **The no-location list and paid placement** — see `SWEEPS.md`.
 
 ## 3. Reaching production, and working locally
@@ -199,7 +244,18 @@ never hide a shop for having a JavaScript site.
   before re-fetching anything.**
 - **`sweeps/scripts/`** — `prod.js`, `hours_offline.js` (the hours harness,
   rebuilt to work from the committed files), `metro_diff.js`, `before_recall.js`,
-  `build_fixture_db.js`, the snapshot dumps.
+  `build_fixture_db.js`, the snapshot dumps, and four added in the revision:
+  - **`selftest_all.js`** — runs every self-test and prints one total. **Use
+    this.** 850 assertions across 23 suites, 0 failed, as of this file.
+  - **`fold_parity.js`** — the SQL and JavaScript halves of the search fold,
+    against each other, in the database engine. A difference between them is a
+    search that matches nothing rather than one that errors, so no
+    JavaScript-only test can catch it.
+  - **`map_viewports.js`** — for 15 viewports, the pins plus every bubble's
+    count must equal the listings in the box. It also checks the SQL grouping
+    against the JavaScript one used for "open now".
+  - `server/src/utils/storeMap.js` is the map endpoint's logic, alongside
+    `storeList.js`, so both can be replayed without HTTP.
 - **`sweeps/plan.json`** — the full audit: `.plan.sweeps[]` ranked, `.audits[]`
   and `.gaps[]` with the ids and examples behind every claim.
 
@@ -219,7 +275,16 @@ Before you delete, note that **`sweep/search-and-menus` is the only branch whose
 code is not in master** — it was superseded, not adopted.
 
 **Every job answers to `selftest`.** `geocodePins` also answers to `applytest`,
-and `recallMonitor` to `contract`. Run them before and after you touch anything.
+and `recallMonitor` to `contract`. Run them before and after you touch anything:
+
+```bash
+node sweeps/scripts/selftest_all.js          # 850 assertions, 23 suites
+node src/jobs/reimportTest.js                # from server/: 16 checks
+```
+
+`selftest_all.js` reads each file before launching it and skips any that does
+not declare a `selftest` handler. That is not fussiness — see the trap about it
+in section 5.
 
 ---
 
@@ -389,6 +454,33 @@ quote. A name is never enough — a name is what put 2,480 listings in this pile
 
 ### 8. The rest
 
+**Two items here are code-only and were deliberately left.** Everything else in
+this file is blocked on credentials or a network; these two are judgement calls
+that wanted a human's eye first, and the reasoning is given so you can overrule
+it rather than rediscover it.
+
+- **Review one `dedupeListings` auto-tier output before letting it run
+  unattended.** `sweeps/plan.json` (duplicates, sweep 5, item 4) asks for the
+  same-door merge's auto tier to run after every import. It is not wired up.
+  The matcher changed materially in this session — six pairs moved from auto to
+  review, eight new clusters appeared — and a job that hides listings on every
+  deploy should not be the first thing to exercise a matcher nobody has
+  eyeballed. Do this: run `node src/jobs/dedupeListings.js --out plan.json`
+  against production, read the 73 auto rows, and if they are right, call
+  `apply` from `runStartupImport`. Not before.
+- **The other half of "stop re-creating duplicates" needs the Overture source.**
+  Items 2 and 3 of that sweep want `buildDirectory` to let one Overture record
+  absorb *every* OSM record of the same shop rather than stopping at the first
+  (the `!t.osm_id` guard), emitting an `also_osm_ids` list, and the importer to
+  hide any older OSM row those ids name. Both are small changes. Neither could
+  be made here, because `server/data/overture_raw.json` is not in the repository
+  (it is gitignored) and without it a directory rebuild produces an OSM-only
+  file. Writing code for a build I could not run — or worse, running it — is how
+  the directory got destroyed once already this session. Get the Overture
+  extract, then make the change, then rebuild and diff the record count.
+
+The rest of this section is unchanged and still true:
+
 - **The menu scanner has never had a real pass.** Its back-off and staleness
   ordering are deployed and a 30-day replay proves every shop gets reached
   (against 3,940 of 4,000 untouched under the old order), but it has only ever
@@ -397,9 +489,16 @@ quote. A name is never enough — a name is what put 2,480 listings in this pile
   location** (audit items (e) and (f)). Neither is wrong now that the
   no-location order is neutral; both would be better.
 - **Stale former names** come out of `licenceSync` as its `renamed` and `moved`
-  lists — that is the overlap the old handoff predicted.
+  lists — that is the overlap the old handoff predicted. `stores.name_aliases`
+  now exists to hold them, and search already reads it, so that sweep has
+  somewhere to write.
 - **Chain branches** shrank to almost nothing when the tobacco-outlet chains came
   off the map.
+- **A fresh database has no confirmed hours at all.** The import leaves
+  `hours_source` NULL, so on a newly built copy `open_now` correctly returns
+  zero and the list reports `unconfirmed_hours_nearby: 7904`. That is the
+  honest rule working, not a bug — map hours earn no Open badge. Task 1 is what
+  changes it.
 
 ---
 
@@ -432,6 +531,29 @@ quote. A name is never enough — a name is what put 2,480 listings in this pile
 - **A test that has never been run is not a test.** All five `sweep/*` branches
   shipped with tests that had never executed, and running them found five real
   bugs — one of which would have left the automatic pin move dead on arrival.
+- **Never run a file to find out whether it is a test.** The first version of
+  `sweeps/scripts/selftest_all.js` did `node <file> selftest` over everything in
+  `jobs/` and `utils/`. Most jobs ignore an argument they do not recognise and
+  get on with their work, so that run did not test `buildDirectory.js` — it
+  *ran* it, and `buildDirectory` rebuilds
+  `server/src/data/store_directory.json.gz` in place. With no network reachable
+  it wrote what it could, and the 3.7 MB national directory of 42,928 listings
+  became a 310 KB stub. It was restored with `git checkout` and verified against
+  HEAD's checksum, but only because it is committed. The script now reads each
+  file's source and launches nothing that does not declare the handler. If you
+  add a runner of any kind, make it do the same.
+- **PGlite allows one connection.** Opening a scratch database with `node -e`
+  while the server holds the same `PGLITE_DIR` aborts the second process with
+  `Aborted()`. Stop the server, or check through the API.
+- **`new URL()` throws on a bare host,** and the `stores.website` column stores
+  bare hosts. Three functions had a `try/catch` that quietly returned a
+  plausible default for all 23,972 of them. If you parse a URL from that
+  column, add the scheme first.
+- **The synthetic fixture is too small to catch ceiling bugs.** `CANDIDATE_CEILING`
+  was set to 5,000 against a 3,636-row fixture and broke the nationwide list at
+  7,904 public rows. Measure against a database built from the committed
+  directory (`node src/index.js` does it with no credentials) and say which of
+  the two any number came from.
 
 ## 6. What to ask Mason
 
@@ -444,9 +566,20 @@ quote. A name is never enough — a name is what put 2,480 listings in this pile
 - **Whether the paid-placement prices and reach match what he wants to sell** —
   $49 for 15 miles, $149 for 50. The mechanism is built and documented; the
   numbers are commercial.
-- **Not questions any more:** paid placement's shape and the no-location order.
-  Both were decided on 2026-09-12 at his request, and both are written up in
-  `SWEEPS.md` with the constants to change if he disagrees.
+- **Not questions any more:** paid placement's shape and the no-location order,
+  decided on 2026-09-12 at his request. Plus, decided in the revision because he
+  asked for judgement rather than questions, each written up in `SWEEPS.md` with
+  what to change to reverse it:
+  - Requests on unclaimed listings are **collected**, and the dialog says they
+    cannot reach the shop yet, rather than the tile being hidden.
+  - A website nobody has checked stays a **live link**; only an address somebody
+    has just changed is withheld, under a new `checking` verdict. Rendering
+    unchecked as unclickable would have emptied the website line on 5,214 of the
+    5,214 public listings that have one.
+  - Which owner edits go live instantly: hours, phone and website, each with its
+    checks re-run; an address change re-geocodes and recomputes the time zone.
+  - The dead domain is **no longer named** in the unclaimed banner, since the
+    page has already withheld the link.
 
 ## 7. Keep the log
 

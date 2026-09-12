@@ -371,3 +371,92 @@ Nothing needs new code.
   It is clearly labelled: no decision about a real shop may be taken from it.
 - Every job in `server/src/jobs/` now answers to `selftest`. Run them all before
   changing anything.
+
+---
+
+# Second pass, 2026-09-12: finishing the code-only work
+
+Mason's instruction: *"use your best judgement and finish the project without
+asking me. If there's a decision to be made, make what you think the best one
+is. This should be 'done' before you redo the handoff file."*
+
+Both walls re-verified before starting: `RAILWAY_TOKEN` unset, `DATABASE_URL`
+unset, and census.gov, data.cityofnewyork.us and rdap.org all returning HTTP
+`000`. So production stayed unreachable and no data sweep could run.
+
+## What I did
+
+Enumerated every sweep in `sweeps/plan.json` across all 15 audit areas with its
+`sources` and `needs_from_mason`, and implemented every one that code alone can
+finish. `SWEEPS.md` has the table and the judgement calls. Three commits on
+`master`, all pushed.
+
+Measured against a database built from the committed directory (42,928 listings,
+7,904 public) and, for the endpoints, a booted server on a fresh import of it.
+Where a number below describes that copy rather than production, it says so.
+
+## Things I got wrong, and what they cost
+
+**I destroyed the national directory file.** The first version of
+`sweeps/scripts/selftest_all.js` ran `node <file> selftest` over every file in
+`jobs/` and `utils/`. Most jobs ignore an unknown argument and get on with their
+work, so it did not test `buildDirectory.js` — it ran it, and `buildDirectory`
+rewrites `server/src/data/store_directory.json.gz` in place. With no network the
+3.7 MB directory of 42,928 listings became a 310 KB stub. Caught it in
+`git status` before committing, restored with `git checkout`, and verified the
+checksum against HEAD. The script now reads each file's source and launches
+nothing that does not declare a `selftest` handler. The lesson is in
+`HANDOFF.md` section 5: never run a file to find out whether it is a test.
+
+**I nearly removed every website link on the site.** `contact` sweep 6 says to
+render an unchecked website as "checking" with no link. I measured before
+implementing: all 5,214 public listings with a website have a NULL status,
+because `linkCheck --all` has never run. Taken literally the change would have
+emptied the website line across the whole directory. Wrote it as a distinct
+`checking` verdict instead — see `SWEEPS.md`.
+
+**My first duplicate-matcher rule was too tight.** Requiring the two names to
+agree completely fixed four false positives and cost nine real duplicates
+("Omerta Cigar Co." beside "Omerta Cigar Co. South Tulsa", the Casa de
+Montecristo pair at one address). Found it by diffing the sweep's output on real
+data rather than by reading the code. Moved the strictness into `automatic()`,
+which decides what merges unwatched, and left the candidate matcher generous,
+which decides what a person looks at. Net: +6 duplicates found, auto tier the
+same size but safer.
+
+**Two of my own tests were wrong, not the code.** I asserted that "The
+Tobacconist" should match "The Tobacconist of Greenwich" on names alone — but
+that is the same shape as "Tobacco" inside "Tobacco Town", which is two shops,
+and in both the only shared word is trade vocabulary. The audit did not settle
+that pair on names either; it dropped the town first. Likewise I gave a
+placeholder town for shops in Clayton and Marshall, where dropping the real town
+is part of the method. Corrected the tests rather than loosening a function
+three call sites depend on.
+
+## Two bugs found by measuring rather than reading
+
+- `namesMatch` counted "two shared words" as a match without asking whether
+  either named a business, so **"Cigar City Brewing" matched "Cigar City
+  Cigars"** — the brewery regression `plan.json` warns about, through a second
+  door.
+- `destinationKind` **called all 23,972 stored websites ordinary sites**: it ran
+  `new URL()` on a column that stores bare hosts and answered from the catch.
+  2,011 platform links, 878 social and 4 parked were invisible to it.
+
+## Where things stand
+
+- **23 suites, 850 assertions, 0 failed** — `node sweeps/scripts/selftest_all.js`.
+- **`reimportTest.js`: 16 checks**, from 10. Every migration (107) applies clean
+  on a fresh database.
+- **The server boots** on a fresh import in about 40 seconds and answers
+  `/api/health`; every new endpoint was exercised over HTTP, not just unit
+  tested.
+- **Nothing applied to production.** Every remaining task in `HANDOFF.md` needs
+  credentials or an open network, with two code-only exceptions named in task 8
+  and explained there.
+
+## What the next session should do first
+
+Read `HANDOFF.md`. If it has credentials, task 1. If it does not, task 8's two
+items are the only code-only work left in `plan.json`, and one of them needs an
+Overture extract that is not in the repository.

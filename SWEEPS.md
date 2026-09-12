@@ -259,3 +259,101 @@ so reporting "you appeared in N searches" is possible but not built.
 - Claimed and staff-edited listings are never touched by a sweep.
 - Verdicts the import honours: `not_retail`, `online_only`, `closed`,
   `duplicate`, `moved`, `unproven`, and any `permanently_closed` status.
+
+---
+
+# 2026-09-12, second pass: the code-only sweeps
+
+Every sweep in `sweeps/plan.json` whose `sources` is code alone and whose
+`needs_from_mason` is nothing, plus the ones whose only Mason item was a
+decision he asked to be made without him. No credentials, no network beyond the
+package registry, no money.
+
+**Where the numbers come from.** A database built from the committed directory
+with `node src/index.js` — 42,928 listings, 7,904 public, no credentials
+needed — and, for the endpoints, a booted server on a fresh import of it. Not
+the synthetic fixture; `sweeps/scripts/build_fixture_db.js` says why no decision
+about a real shop may come from that. Nothing here was applied to production,
+because production was unreachable: these are code changes, live on `master`,
+that change what the site does with whatever data it holds.
+
+## What changed
+
+| Area | Sweep | Measured effect |
+|---|---|---|
+| result-assembly | Server-side map clustering | National view drew 1,000 of 7,904 pins; now 7,856 accounted for exactly across 15 viewports |
+| names-and-text | S8 search folding | 73 accented names reachable; `st james` = `saint james`; 38 listings in Saint/Mount towns |
+| names-and-text | S1 name provenance | `source_name` on all 42,928 rows; `name_aliases` added and searched |
+| duplicates | Matcher, both copies | 122 clusters / 125 drops, from 116 / 119 |
+| contact | Guardrails in code | 2,893 links that are not the shop's own site surfaced; verdicts no longer inherited across a domain change |
+| claims-and-owner-edits | Staff review, revoke, honest copy | Unclaim exists; claim card carries its evidence; 35,024 hidden rows reviewable where 0 Overture rows were |
+| inventory-and-brands | Hidden stock, $0 prices | Reconciled in one place; $0 reads as "not listed" |
+| amenities | Prerequisite item 3 | Lounge badge can be removed and stay removed |
+| location / closures / names | "Make it stick" | 16 checks in `reimportTest.js`, from 10 |
+
+## The judgement calls, and how to reverse each
+
+Mason asked for decisions rather than questions. Each of these was a `plan.json`
+item marked as needing him.
+
+**An unchecked website stays a live link.** `contact` sweep 6 item 2 says to
+render a NULL `website_status` as "checking" with no link. Measured first: 5,214
+of the 5,214 public listings that carry a website have a NULL status, because
+`linkCheck --all` has never run. Implementing it literally would have removed
+the website link from every listing that has one, on an absence of evidence
+rather than any evidence of a problem. So NULL — "nobody has looked" — stays a
+link and makes no freshness claim, and a new verdict `checking` marks an address
+a hand has just changed, which is what the work order was actually about. The
+owner form, the staff editor and the importer all write it.
+*To reverse:* treat `!status` as not-ok in `websiteInfo` in
+`client/src/pages/StoreProfile.jsx`.
+
+**Requests on unclaimed listings are collected, not hidden.** `claims` sweep 6
+item 1 offers either. The Request button had been on every profile for months
+setting React state that nothing rendered, so a customer pressed it and the page
+did nothing. Collecting wins because a list of people asking for a particular
+cigar at a particular shop is the strongest thing we can show that shop when we
+ask it to claim its listing. The dialog says plainly that the request cannot
+reach anyone yet; the server refuses requests on a listing that is off the map.
+*To reverse:* render the Request tile only when `store.claimed`.
+
+**Which owner edits go live instantly.** `claims` sweep 4 proposes hours, phone
+and website immediately with re-checks, and name, state and large address moves
+held for staff. Adopted as proposed, with one addition: an address change
+re-geocodes and recomputes the time zone, because otherwise a moved shop keeps a
+pin across town and "open now" is judged on the old clock. All of it is recorded
+in `field_sources` as `owner`, so the next import leaves it alone.
+
+**The dead domain is no longer named in the unclaimed banner.** `contact` sweep
+6 item 6. The page has already withheld the link; naming the domain in the next
+breath republishes it exactly where a reader is most likely to type it by hand.
+The line still tells an owner the listed website does not work, which is the
+part that gets a shop to claim.
+
+**The dedupe auto tier is still not wired to the import.** `duplicates` sweep 5
+item 4 asks for it. The matcher changed materially in this pass — six pairs
+moved from auto to review, eight clusters are new — and a job that hides
+listings on every deploy should not be the thing that first exercises a matcher
+nobody has read the output of. `HANDOFF.md` task 8 says what to do instead.
+
+## Two bugs worth naming
+
+**The matcher merged a brewery into the directory.** `namesMatch` treated "two
+shared words" as a match without asking whether either word named a business,
+so "Cigar City Brewing" matched "Cigar City Cigars". `plan.json` records that
+regression happening once already through the classifier; this was a second door
+onto it. At least one shared word must now name the business.
+
+**`destinationKind` called all 23,972 stored websites ordinary sites.** It ran
+`new URL()` on a column that stores bare hosts and returned `'site'` from the
+catch. With the scheme supplied: 2,011 platform links, 878 social, 4 parked.
+Those 2,893 listings carry something other than the shop's own website, and no
+verdict would ever have flagged them, because the links work.
+
+## Tests
+
+850 assertions across 23 suites, 0 failed (`node sweeps/scripts/selftest_all.js`).
+16 checks in `reimportTest.js`. 117 in `map_viewports.js`. 42 in
+`fold_parity.js`, which is the only thing that can catch the SQL and JavaScript
+halves of the search fold disagreeing — a difference there is a search that
+matches nothing rather than one that errors.
