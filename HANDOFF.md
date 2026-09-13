@@ -73,6 +73,21 @@ Task 1 is not like the others. Do it first and do not start anything else until
 it is done: every day the directory is up, it is sending people to shops that
 are not there.
 
+> **Check this before you start, not after.** Everything that writes to
+> production goes through
+> `railway run --service Postgres node sweeps/scripts/prod.js <script>`, and the
+> credential for it lives in `~/.railway/config.json` on the owner's machine —
+> **not in this repository.** A cloud or otherwise fresh environment needs
+> `railway login` or a `RAILWAY_TOKEN` set before anything in tasks 1, 2, 4, 5
+> or 6 can be applied. Find out now rather than after the research.
+>
+> **The research itself needs none of it.** Task 1's expensive half is WebSearch
+> over files that are committed, so with no credentials at all you can still
+> research all 482, make the judgement calls, write the apply script and dry-run
+> it against the decision file — then hand over one command. That split is a
+> good one anyway: the owner wanted to read the drop list before anything is
+> hidden, and he is the one who caught the shop this all started with.
+
 | Order | Task | Why it is next |
 |-------|------|----------------|
 | **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **482 of 672 unresearched. 30% of those already checked should not be public** |
@@ -163,11 +178,16 @@ room, smoke/vape/head shops, one manufacturer, one liquor store: `#403 Jallo`,
 The workflow script is saved and can be re-run against the 482:
 
 ```
-.claude/.../workflows/scripts/prove-shops-open-wf_bed87099-a6d.js
+sweeps/workflows/prove-shops-open.js
 ```
 
-Point it at `open_research_todo.json` instead of `research_input.json` and set
-`total` to 482. Batches of 10 worked well; 16 run concurrently; the whole 672
+Run it with the Workflow tool, passing:
+
+```
+{ total: 482, size: 10, file: "sweeps/decisions/open_research_todo.json" }
+```
+
+Its header block says what not to change and what to watch for. Batches of 10 worked well; 16 run concurrently; the whole 672
 looked like 2-3 hours end to end. Give each agent the scope rules verbatim —
 the ones already in the script produced the sixteen correct out-of-scope calls
 above, so do not rewrite them.
