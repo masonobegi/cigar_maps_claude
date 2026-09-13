@@ -1,0 +1,30 @@
+{
+  "note": "Decisions made by reading the rows, not by research. These override the researched verdict in build_open_decisions.js. Each one says what was compared and why the surviving row won.",
+  "overrides": [
+    {
+      "id": 42345,
+      "name": "ZODI'X Cigar Lounge",
+      "decision": "duplicate",
+      "keeps": 2827,
+      "reason": "the same shop as #2827 Zodi'X Cigar Lounge — same door (101 Limmer Loop), same phone (512) 688-5287, same website. This row is the worse of the two: it says Georgetown, but the Census geocoder puts 101 Limmer Loop in ROUND ROCK 78665, and its pin is 9.5km from the real address. #2827 has the correct city, the suite number, and a pin 0.2km out."
+    },
+    {
+      "id": 22080,
+      "name": "Carmel Cigar Vault",
+      "decision": "duplicate",
+      "keeps": 22082,
+      "reason": "the same shop as #22082 The Carmel Cigar Vault — same door (71 Gleneida Ave), same phone (929) 614-6561, same website, same hours. #22082 is kept because its name matches the shop's own domain, thecarmelcigarvault.com, and because 'Carmel' is the name people search rather than the census place name 'Carmel Hamlet'."
+    }
+  ],
+  "considered_and_left_alone": [
+    {
+      "ids": [3979, 3980],
+      "what": "Smokers Castle / Ventura Cigar Lounge, both at 1824 E Main St, Ventura CA, same phone and website",
+      "why": "not a duplicate entry but a rename: the successor's own site and Cigar Aficionado both say 'formerly known as'. The research pass already found #3979 closed with that evidence, so it is handled there and does not need an override."
+    },
+    {
+      "what": "17 feeds shared by more than one listing — Spring Street Cigars x6, Cigaret Shopper x5, Anthony's Cigar Emporium x4, Puff Puff Tobacco x4, and others",
+      "why": "real branches at different doors, not duplicates. The owner has confirmed Anthony's locations are separate shops. They do mean 33% of inventory rows are one chain catalogue credited to every branch, so 'in stock here' does not mean in stock at that door — worth fixing, but it is an inventory-attribution question and not a reason to hide a listing."
+    }
+  ]
+}

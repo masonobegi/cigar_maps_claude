@@ -108,17 +108,38 @@ function decide(r, v) {
   return { decision: 'keep', reason: v.why || r.evidence || 'confirmed open and in scope' };
 }
 
+/**
+ * Decisions made by hand, which beat the researched verdict.
+ *
+ * Research answers one question — is this shop open and in scope — and there are
+ * things it cannot see. Two listings can both be genuinely open and genuinely
+ * cigar shops and still be the same shop entered twice, at which case both come
+ * back 'keep' and the directory shows it twice. Those are settled by looking at
+ * the rows, and recorded here so they ride in the same list for approval.
+ */
+function overrides() {
+  const f = path.join(__dirname, '..', 'decisions', 'open_sweep_overrides.json');
+  if (!fs.existsSync(f)) return new Map();
+  const raw = JSON.parse(fs.readFileSync(f, 'utf8'));
+  const list = Array.isArray(raw) ? raw : raw.overrides || [];
+  return new Map(list.map(o => [o.id, o]));
+}
+
 (async () => {
   const file = journalPath();
   console.log(`reading ${file}\n`);
   const { research, verify } = readJournal(file);
   const all = JSON.parse(fs.readFileSync(INPUT, 'utf8'));
+  const manual = overrides();
+  if (manual.size) console.log(`${manual.size} decisions made by hand will override research\n`);
 
   const decisions = all.map(row => {
     const r = research.get(row.id);
     const v = verify.get(row.id);
-    const d = decide(r, v);
+    const m = manual.get(row.id);
+    const d = m ? { decision: m.decision, reason: m.reason, byHand: true } : decide(r, v);
     return {
+      ...(d.byHand ? { byHand: true } : {}),
       id: row.id,
       name: row.name,
       where: row.address,

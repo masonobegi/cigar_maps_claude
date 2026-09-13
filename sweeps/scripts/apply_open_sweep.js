@@ -48,11 +48,12 @@ const { writeFields } = require('../../server/src/utils/storeEdits');
 const DRY = process.env.DRY === '1';
 const FILE = process.env.FILE || path.join(__dirname, '..', 'decisions', 'open_sweep_decisions.json');
 
-/** The three verdicts that hide a listing, and what each one means. */
+/** The verdicts that hide a listing, and what each one means. */
 const HIDE = {
   closed: 'the shop has shut',
   not_retail: 'not a cigar shop under the scope rule',
   unproven: 'nothing found that shows it is trading now',
+  duplicate: 'the same shop is already in the directory under another row',
 };
 
 (async () => {
