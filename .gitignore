@@ -1,5 +1,8 @@
 node_modules/
 server/data/
+# 39MB of embedded Postgres. Local only, and never a thing to commit.
+server/.pglite-data/
+**/.pglite-data/
 scraper/results/
 scraper/node_modules/
 .env
