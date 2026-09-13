@@ -60,7 +60,7 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' })
  */
 app.get('/api/health/config', async (_, res) => {
   const db = require('./database/db');
-  const { mailConfigured } = require('./utils/email');
+  const { mailConfigured, mailStatus } = require('./utils/email');
   const { appUrl, onDefaultDomain } = require('./utils/appUrl');
   const env = process.env;
 
@@ -81,6 +81,10 @@ app.get('/api/health/config', async (_, res) => {
     still_on_the_railway_subdomain: onDefaultDomain(),
     email: {
       configured: mailConfigured(),
+      // Configured and working are different questions, and were the same one
+      // only until this host turned out not to route SMTP on any port.
+      can_actually_send: mailStatus().ok,
+      last_check: mailStatus().detail,
       provider: env.SMTP_HOST ? 'a host of its own' : env.SMTP_SERVICE ? env.SMTP_SERVICE : mailConfigured() ? 'gmail' : null,
       from_address_set: !!env.MAIL_FROM,
       postal_address_set: !!env.OUTREACH_POSTAL_ADDRESS,

@@ -157,6 +157,15 @@ async function sendMail({ to, subject, text, html, replyTo }) {
  * something that could not happen. The routes pass this on so the copy can
  * tell a visitor to check back instead.
  */
+/**
+ * What the boot check found, so a status page can report whether mail WORKS
+ * rather than whether it is configured. Those were the same question until this
+ * host turned out not to route SMTP at all: the variables were set, the status
+ * said yes, and not one message had ever left.
+ */
+let lastVerify = { checked: false, ok: false, detail: 'not checked yet' };
+const mailStatus = () => ({ ...lastVerify });
+
 const mailConfigured = () => !!(httpProvider() || (process.env.SMTP_USER && process.env.SMTP_PASS));
 
 /** Network failures and credential failures need different answers. */
@@ -180,27 +189,31 @@ function describeSmtpError(err) {
 async function verifyTransport({ log = console.log } = {}) {
   const provider = httpProvider();
   if (provider) {
+    lastVerify = { checked: true, ok: true, detail: `${provider} over HTTPS` };
     log(`[email] ready via ${provider} over HTTPS, sending as ${fromAddress()}`);
     return true;
   }
   const transporter = await getTransport();
   if (!transporter) {
+    lastVerify = { checked: true, ok: false, detail: 'nothing is configured' };
     log('[email] no SMTP credentials: nothing can be sent, and the claim flow will say so');
     return false;
   }
   try {
     await transporter.verify();
     const c = transportConfig() || {};
+    lastVerify = { checked: true, ok: true, detail: `SMTP via ${c.host || c.service}` };
     log(`[email] ready via ${c.host || c.service}, sending as ${fromAddress()}`);
     return true;
   } catch (err) {
+    lastVerify = { checked: true, ok: false, detail: describeSmtpError(err) };
     log(`[email] SMTP is configured but not working: ${describeSmtpError(err)}`);
     return false;
   }
 }
 
-module.exports = { sendMail, mailConfigured, verifyTransport, transportConfig, pinToIPv4, fromAddress,
-  describeSmtpError, selftest };
+module.exports = { sendMail, mailConfigured, mailStatus, verifyTransport, transportConfig, pinToIPv4,
+  fromAddress, describeSmtpError, selftest };
 
 // ── self-test ───────────────────────────────────────────────────────────────
 function selftest() {
