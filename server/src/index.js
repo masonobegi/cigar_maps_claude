@@ -5,12 +5,31 @@ const path = require('path');
 const fs = require('fs');
 const { initSchema, runMigrations } = require('./database/schema');
 const { seed } = require('./database/seed');
+const { appUrl } = require('./utils/appUrl');
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
 app.set('trust proxy', 1); // Railway sits behind a proxy; needed for correct client IPs in rate limiting
+
+// One hostname, or the search engines are asked to choose between two.
+// www.cigar-buddy.com is a Railway domain in its own right and would otherwise
+// serve the whole directory a second time under a second name. Only the www
+// form of the canonical host is touched: the Railway subdomain still answers,
+// which is what the platform's own health check calls, and locally APP_URL is
+// unset so nothing here runs at all.
+const canonicalHost = process.env.APP_URL ? new URL(appUrl()).host : null;
+if (canonicalHost) {
+  app.use((req, res, next) => {
+    if (req.get('host') !== `www.${canonicalHost}`) return next();
+    // 308 for anything carrying a body: a 301 permits the client to replay a
+    // POST as a GET, which turns a submitted claim form into a silent no-op.
+    const code = req.method === 'GET' || req.method === 'HEAD' ? 301 : 308;
+    res.redirect(code, `https://${canonicalHost}${req.originalUrl}`);
+  });
+}
+
 app.use(helmet({
   contentSecurityPolicy: false,          // the SPA loads map tiles, fonts, and geocoding from third parties
   crossOriginEmbedderPolicy: false,
