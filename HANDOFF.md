@@ -101,7 +101,7 @@ are not there.
 | 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
 | 4 | [The pins nobody could settle](#4-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
 | 5 | [Licence moves](#5-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
-| 6 | [The four manual registries](#6-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
+| 6 | [The two remaining manual registries](#6-the-two-remaining-manual-registries) | Pennsylvania and Washington; California and Florida fetch themselves now |
 | 7 | [The Overture dedupe change](#7-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
 | 8 | [Watch the menu scanner](#8-watch-the-menu-scanner) | It has never had a real 24 hours |
 
@@ -390,12 +390,35 @@ does not touch:
 for staff and none were hidden. A self-test asserts there is no verdict in that
 job that hides a listing. Keep it that way.
 
-## 6. The four manual registries
+## 6. The two remaining manual registries
 
-`licenceSync fetch` prints the URL for each. Save the file into
-`sweeps/decisions/licences/` under the name it asks for (`fl.csv`, `ca.csv`,
-`pa.csv`, `wa.csv`), then re-run `match`. Between them they cover roughly 2,100
-listings that four registries cannot currently speak for.
+**California and Florida are no longer manual.** Both publish the whole file as
+plain CSV with no key and no form — the pages that made them look manual are
+JavaScript, so the link is simply not in the HTML. `licenceSync fetch` now
+downloads and parses them like any other registry:
+
+    https://data-cdtfa.opendata.arcgis.com/datasets/CDTFA::california-cigarette-and-tobacco-licensees.csv
+    https://www2.myfloridalicense.com/sto/file_download/extracts/bd4012lic.csv
+    https://www2.myfloridalicense.com/sto/file_download/extracts/bdTOBlic.csv
+
+That took listings verified by a current licence from 126 to **177**, and put a
+current state tobacco licence behind 22 listings the open/closed research could
+not settle.
+
+**One caveat to carry.** Every match is on house number, ZIP and street — the
+address, not the name — so a licence says a licensed tobacco retailer trades at
+that door, not that this particular shop does. It is supporting evidence, not
+proof. #6180 Hemingway's is the case that shows why: the registry says the
+address is licensed, and research found a different business trading there now.
+
+California withholds the licensee name under taxpayer confidentiality, so its
+rows are address-only and the `renamed` verdict cannot work there at all.
+Florida publishes both the owner and the DBA, so it can.
+
+**Still manual: Pennsylvania and Washington.** `licenceSync fetch` prints the
+URL for each; save the file into `sweeps/decisions/licences/` as `pa.csv` or
+`wa.csv` and re-run `match`. Washington genuinely has no dataset — the Business
+Lookup is a search form, and the list needs a public-records request.
 
 The four that work are NYC (6,699 licences), New York State (22,091), Texas
 (59,603) and Chicago (59,414). **Their dataset ids move**: all four broke

@@ -88,18 +88,65 @@ const REGISTRIES = [
   {
     key: 'fl',
     name: 'Florida Division of Alcoholic Beverages and Tobacco: retail tobacco licences',
-    url: 'https://www.myfloridalicense.com/DBPR/abt-licensee-list/',
+    // Two files because Florida issues tobacco permits under two professions:
+    // 4012 is the stand-alone retail tobacco dealer, and the broader extract
+    // also carries the alcohol licences that come with tobacco, which is how a
+    // cigar lounge with a bar is licensed. A cigar shop can be either.
+    // Rebuilt every morning, plain CSV, no key and no form.
+    url: [
+      'https://www2.myfloridalicense.com/sto/file_download/extracts/bd4012lic.csv',
+      'https://www2.myfloridalicense.com/sto/file_download/extracts/bdTOBlic.csv',
+    ],
     states: ['FL'],
-    format: 'manual',
-    note: 'Florida publishes a downloadable CSV rather than an API. Save it into the fetch directory as fl.csv.',
+    format: 'csv',
+    // Florida codes status as a number, 20 being current. isCurrent() reads
+    // words, so it is given the expiry date instead — a real date it can
+    // compare, so a permit that lapsed last month is not read as current merely
+    // because the extract still lists it.
+    map: r => ({
+      name: r.DBA || r['Owner Name'] || null,
+      owner: r['Owner Name'] || null,
+      address: r['Location Address 1'],
+      city: r['Location City'],
+      state: r['Location State'] || 'FL',
+      zip: String(r['Location ZIP'] || '').slice(0, 5),
+      phone: null,
+      status: r['Primary Status'] === '20' ? 'Active' : `status ${r['Primary Status']}`,
+      expires: r['Expiration Date'] || null,
+      series: r.Series || null,
+    }),
+    dedupeOn: r => r['License Number'] || null,
   },
   {
     key: 'ca',
     name: 'California Department of Tax and Fee Administration: cigarette and tobacco licences',
-    url: 'https://www.cdtfa.ca.gov/dataportal/dataset.htm?url=CigTobLicenses',
+    // The dataset page is JavaScript and shows no link, but the ArcGIS portal
+    // behind it serves the whole file as CSV. Refreshed monthly.
+    //
+    // California does NOT publish the licensee's name — taxpayer
+    // confidentiality — so every row is an address and a licence type. That
+    // costs the 'renamed' verdict, which needs a name to compare, but not
+    // 'verified': a current retail licence at a listing's own front door is
+    // still the state saying somebody sells tobacco there.
+    url: 'https://data-cdtfa.opendata.arcgis.com/datasets/CDTFA::california-cigarette-and-tobacco-licensees.csv',
     states: ['CA'],
-    format: 'manual',
-    note: 'CDTFA publishes a downloadable file. Save it into the fetch directory as ca.csv.',
+    format: 'csv',
+    // Only Retailer rows. A distributor or wholesaler licence at an address is
+    // not a shop anybody can walk into.
+    keep: r => String(r.type || '').trim() === 'Retailer',
+    map: r => ({
+      name: null,
+      address: r.STREET,
+      city: r.CITY,
+      state: 'CA',
+      zip: String(r.ZIPCODE || '').slice(0, 5),
+      phone: null,
+      // The file is "active licensees as of" its publication date, so every row
+      // in it is current by construction; there is no per-row status column.
+      status: 'Active',
+      expires: null,
+      licence_no: r.ID || null,
+    }),
   },
   {
     key: 'pa',
@@ -357,6 +404,61 @@ function verdictFor(store, records, now = new Date()) {
 
 // ── fetching ────────────────────────────────────────────────────────────────
 
+/** One CSV line, respecting quotes: addresses and business names contain commas. */
+function splitCsvLine(line) {
+  const out = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === ',' && !inQ) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+/** A CSV as objects keyed by its header row. Strips a UTF-8 BOM, which ArcGIS sends. */
+function parseCsv(text) {
+  const lines = String(text).replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) return [];
+  const hdr = splitCsvLine(lines[0]).map(h => h.trim());
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = splitCsvLine(lines[i]);
+    const rec = {};
+    for (let j = 0; j < hdr.length; j++) rec[hdr[j]] = (cells[j] || '').trim();
+    out.push(rec);
+  }
+  return out;
+}
+
+/** The same fetch as getJson, but handing back the body as text. */
+function getText(url, depth = 0) {
+  return new Promise((resolve, reject) => {
+    if (depth > 5) return reject(new Error('too many redirects'));
+    const req = https.get(url, {
+      headers: { 'User-Agent': 'CigarBuddy/1.0 (mason.obegi@gmail.com)', Accept: 'text/csv,*/*' },
+      timeout: 300000,
+    }, res => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        res.resume();
+        return resolve(getText(new URL(res.headers.location, url).toString(), depth + 1));
+      }
+      if (res.statusCode !== 200) { res.resume(); return reject(new Error(`http ${res.statusCode}`)); }
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', c => { body += c; });
+      res.on('end', () => resolve(body));
+    });
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    req.on('error', reject);
+  });
+}
+
 function getJson(url) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, {
@@ -392,6 +494,33 @@ async function fetchAll({ outDir, only = null, log = console.log } = {}) {
     if (reg.format === 'manual') {
       log(`${reg.key}: not an API. ${reg.note}`);
       log(`      ${reg.url}`);
+      continue;
+    }
+    if (reg.format === 'csv') {
+      try {
+        const urls = [].concat(reg.url);
+        const seen = new Set();
+        const rows = [];
+        for (const u of urls) {
+          const text = await getText(u);
+          for (const rec of parseCsv(text)) {
+            if (reg.keep && !reg.keep(rec)) continue;
+            const mapped = reg.map(rec);
+            if (!mapped.address) continue;
+            // A licence can appear in both extracts. Dedupe on the number where
+            // there is one, otherwise on the door it is issued for.
+            const key = (reg.dedupeOn && reg.dedupeOn(rec))
+              || `${mapped.address}|${mapped.zip}|${mapped.series || ''}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            rows.push(mapped);
+          }
+        }
+        fs.writeFileSync(path.join(outDir, `${reg.key}.json`), JSON.stringify(rows, null, 1));
+        log(`${reg.key}: ${rows.length} licences`);
+      } catch (e) {
+        log(`${reg.key}: could not fetch — ${e.message}`);
+      }
       continue;
     }
     try {

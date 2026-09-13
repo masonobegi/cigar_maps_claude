@@ -1,0 +1,2816 @@
+{
+ "note": "A lapsed licence is NOT evidence of closure — the audit measured it at roughly a coin flip. The lapsed list is a staff queue and nothing in it may be hidden on this signal alone.",
+ "generated_at": "2026-09-13T17:18:03.014Z",
+ "verified": [
+  {
+   "id": 155,
+   "name": "Cigar Society Lounge and Bar",
+   "address": "116 W State Ave",
+   "city": "Pharr",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR SOCIETY CAFE",
+    "address": "116 W STATE AVE",
+    "city": "PHARR",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 186,
+   "name": "Padre Island Cigar Company",
+   "address": "15217 S Padre Island Dr #214",
+   "city": "Corpus Christi",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "PADRE ISLAND CIGAR CO",
+    "address": "15217 S PADRE ISLAND DR STE 214",
+    "city": "CORPUS CHRISTI",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2160,
+   "name": "Crown City Cigars and Fine Tobacco",
+   "address": "1136 Loma Ave #107",
+   "city": "Coronado",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1136 Loma Ave",
+    "city": "Coronado",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2364,
+   "name": "Racine & Laramie Tobacconist",
+   "address": "2737 San Diego Ave",
+   "city": "San Diego",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "2737 San Diego Ave",
+    "city": "San Diego",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2389,
+   "name": "Finck Cigars Helotes",
+   "address": "12950 Bandera Rd",
+   "city": "Helotes",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FINCK'S CIGAR FACTORY OUTLET II",
+    "address": "12950 BANDERA RD",
+    "city": "HELOTES",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2527,
+   "name": "Shade Tree Cigar Lounge",
+   "address": "1 Brookmeadow Dr Bldg 2",
+   "city": "Wimberley",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "SHADE TREE CIGAR LOUNGE, LLC",
+    "address": "1 BROOKMEADOW DR",
+    "city": "WIMBERLEY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2584,
+   "name": "Four9 Cigars",
+   "address": "22806 US-281",
+   "city": "San Antonio",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FOUR9 CIGARS",
+    "address": "22806 US HIGHWAY 281 N STE 101",
+    "city": "SAN ANTONIO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2592,
+   "name": "Finck Cigars Stone Oak",
+   "address": "19422 Blanco Rd",
+   "city": "San Antonio",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FINCK'S CIGAR FACTORY OUTLET IV",
+    "address": "19422 BLANCO RD",
+    "city": "SAN ANTONIO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2627,
+   "name": "Kings Cigar Lounge",
+   "address": "429 W Ben White Blvd",
+   "city": "Austin",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "KINGS CIGAR LOUNGE LLC",
+    "address": "429 W BEN WHITE BLVD STE A",
+    "city": "AUSTIN",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2637,
+   "name": "1911 Cigars",
+   "address": "207 S Main St",
+   "city": "Cibolo",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "1911 CIGARS, LLC",
+    "address": "207 S MAIN ST",
+    "city": "CIBOLO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2657,
+   "name": "Hill Country Tobacco Company",
+   "address": "1405 Mormon Mill Rd C",
+   "city": "Marble Falls",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "HILL COUNTRY TOBACCO COMPANY",
+    "address": "1405 MORMON MILL RD STE C",
+    "city": "MARBLE FALLS",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2669,
+   "name": "Canyon Cigar Co Inc",
+   "address": "1739 FM-2673",
+   "city": "Canyon Lake",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CANYON CIGAR COMPANY INC",
+    "address": "1739 FM 2673",
+    "city": "CANYON LAKE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2709,
+   "name": "Cigar Depot",
+   "address": "601 E Whitestone Blvd  Ste 210",
+   "city": "Cedar Park",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "CIGAR DEPOT",
+    "address": "601 E WHITESTONE BLVD STE 210",
+    "city": "CEDAR PARK",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2717,
+   "name": "Wimberley Valley Cigar Lounge",
+   "address": "13620 Ranch Rd 12 Ste D",
+   "city": "Wimberley",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "WIMBERLEY VALLEY CIGAR LOUNGE, LLC",
+    "address": "13620 RANCH ROAD 12 STE D",
+    "city": "WIMBERLEY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2801,
+   "name": "The Leaf",
+   "address": "1166 N 2nd St",
+   "city": "Abilene",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE LEAF",
+    "address": "1166 N 2ND ST",
+    "city": "ABILENE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2822,
+   "name": "Bogeys and Stogies",
+   "address": "110 N Lambert St",
+   "city": "Granbury",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BOGEYS AND STOGIES",
+    "address": "110 N LAMBERT ST",
+    "city": "GRANBURY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2827,
+   "name": "Zodi'X Cigar Lounge",
+   "address": "101 Limmer Loop Ste 400",
+   "city": "Round Rock",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "ZODI'X",
+    "address": "101 LIMMER LOOP",
+    "city": "ROUND ROCK",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2852,
+   "name": "Bobalu Cigar Company",
+   "address": "8501 Burnet Rd",
+   "city": "Austin",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "BOBALU CIGAR CO. AUSTIN, INC.",
+    "address": "8501 BURNET RD STE A",
+    "city": "AUSTIN",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2937,
+   "name": "Big Dave's Cigars",
+   "address": "6500 Camp Bowie Blvd Ste 160",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BIG DAVE'S CIGAR",
+    "address": "6500 CAMP BOWIE BLVD STE 160",
+    "city": "FORT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2955,
+   "name": "Silver Leaf Cigar Lounge",
+   "address": "426 Commerce St",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "SILVER LEAF CIGAR LOUNGE",
+    "address": "426 COMMERCE ST",
+    "city": "FORT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2994,
+   "name": "Creekside Cigar Lounge",
+   "address": "602 E Central Ave",
+   "city": "Belton",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CREEKSIDE CIGAR",
+    "address": "602 E CENTRAL AVE",
+    "city": "BELTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3032,
+   "name": "Bright fire cigars",
+   "address": "2015 Main St",
+   "city": "Liberty Hill",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BRIGHT FIRE CIGARS",
+    "address": "2015 MAIN ST",
+    "city": "LIBERTY HILL",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3034,
+   "name": "Paladin Cigars",
+   "address": "6080 S Hulen St",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "PALADIN CIGARS LLC",
+    "address": "6080 S HULEN ST STE 790",
+    "city": "FORT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3047,
+   "name": "Taboo Cigar Bar and Lounge",
+   "address": "8214 Bedford Euless Rd",
+   "city": "North Richland Hills",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TABOO CIGAR BAR & L0UNGE",
+    "address": "8214 BEDFORD EULESS RD",
+    "city": "NORTH RICHLAND HILLS",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3059,
+   "name": "1849 Cigar Shop",
+   "address": "6619 N Beach St",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FORT WORTH 1849 CIGAR SHOP",
+    "address": "6619 N BEACH ST",
+    "city": "FT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3132,
+   "name": "Cigars International Superstore",
+   "address": "12853 Cabela Dr",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGARS INTERNATIONAL TEXAS, LLC",
+    "address": "12853 CABELA DR",
+    "city": "FORT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3181,
+   "name": "Prestige Cigars Lounge and Coffee Bar",
+   "address": "3225 Harwood Rd",
+   "city": "Bedford",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "PRESTIGE CIGARS & TOBACCO",
+    "address": "3225 HARWOOD RD STE E",
+    "city": "BEDFORD",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3203,
+   "name": "Smoking Jacket Cigar Lounge",
+   "address": "1435 Hwy 67",
+   "city": "Cedar Hill",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "SMOKING JACKET CIGAR LOUNGE",
+    "address": "1435 N HIGHWAY 67 STE 100",
+    "city": "CEDAR HILL",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3216,
+   "name": "Don's Humidor & Coffee Beans",
+   "address": "1412 N Valley Mills Dr",
+   "city": "Waco",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "DON'S HUMIDOR AND COFFEE BEANS, INC.",
+    "address": "1412 N VALLEY MILLS DR STE 220",
+    "city": "WACO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3297,
+   "name": "Henry's Cigar Lounge",
+   "address": "101 S Main St",
+   "city": "Mansfield",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MEEHAN'S CHOPHOUSE/HENRY'S CIGAR LOUNGE",
+    "address": "101 S MAIN ST",
+    "city": "MANSFIELD",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3373,
+   "name": "Latitude Cigars",
+   "address": "405 W Madison St",
+   "city": "Waxahachie",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "LATITUDE CIGARS LLC",
+    "address": "405 W MADISON ST STE F",
+    "city": "WAXAHACHIE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3392,
+   "name": "Drobe Stogies",
+   "address": "1322 N La Brea Ave",
+   "city": "Inglewood",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1322 N La Brea Ave",
+    "city": "Inglewood",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3399,
+   "name": "Brazil Smoke & Cigar Shop",
+   "address": "11127 Venice Blvd  Ste 3",
+   "city": "Los Angeles",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "11127 Venice Blvd",
+    "city": "Los Angeles",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3442,
+   "name": "Blue Flame Cigar Lounge",
+   "address": "1305 Sartori Ave",
+   "city": "Torrance",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1305 Sartori Ave",
+    "city": "Torrance",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3506,
+   "name": "The King Cigar Lounge",
+   "address": "1117 S Hope St",
+   "city": "Los Angeles",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1117 S Hope St",
+    "city": "Los Angeles",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3587,
+   "name": "Orange County Cigars Lounge",
+   "address": "2470 Newport Blvd",
+   "city": "Costa Mesa",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "2470 Newport Blvd",
+    "city": "Costa Mesa",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3729,
+   "name": "Stixx Cigar House",
+   "address": "783 E Thousand Oaks Blvd",
+   "city": "Thousand Oaks",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "783 E Thousand Oaks Blvd",
+    "city": "Thousand Oaks",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3822,
+   "name": "Cigar Empire Santa Barbara",
+   "address": "3621 State St",
+   "city": "Santa Barbara",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "3621 State St",
+    "city": "Santa Barbara",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3873,
+   "name": "Cigar Inc",
+   "address": "21900 Burbank Blvd Ste 265",
+   "city": "Woodland Hills",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "21900 Burbank Blvd",
+    "city": "Woodland Hills",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3963,
+   "name": "Cuban Seed Cigar Lounge",
+   "address": "8851 W Sunset Blvd",
+   "city": "West Hollywood",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "8851 W Sunset Blvd",
+    "city": "West Hollywood",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3965,
+   "name": "WeHo Cigar & Smoke Shop",
+   "address": "8733 Santa Monica Blvd",
+   "city": "West Hollywood",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "8733 Santa Monica Blvd",
+    "city": "West Hollywood",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3979,
+   "name": "Smokers Castle",
+   "address": "1824 E Main St",
+   "city": "Ventura",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1824 E Main St",
+    "city": "Ventura",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3980,
+   "name": "Ventura Cigar Lounge",
+   "address": "1824 E Main St",
+   "city": "Ventura",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1824 E Main St",
+    "city": "Ventura",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4156,
+   "name": "Mursuli Cigars",
+   "address": "10669 Lower Azusa Rd",
+   "city": "Temple City",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "10669 Lower Azusa Rd",
+    "city": "Temple City",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4208,
+   "name": "Captain Tobacco",
+   "address": "2371 E Colorado Blvd",
+   "city": "Pasadena",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "2371 E Colorado Blvd",
+    "city": "Pasadena",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4369,
+   "name": "The Monarch Stag Whiskey & Cigar Lounge",
+   "address": "6655 Winning Dr",
+   "city": "Frisco",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE GLEN RESTAURANT & BAR AND THE MONARCH STAG BAR",
+    "address": "6655 WINNING DR STE 600",
+    "city": "FRISCO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4594,
+   "name": "Denton Cigar Co",
+   "address": "100 N Interstate 35 #101",
+   "city": "Denton",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "DENTON CIGAR CO",
+    "address": "100 N INTERSTATE 35 E STE 101",
+    "city": "DENTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4630,
+   "name": "Ezra Zion Cigar Bar",
+   "address": "103 W Main St",
+   "city": "Decatur",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "EZRA ZION CIGAR BAR",
+    "address": "103 W MAIN ST UNIT B",
+    "city": "DECATUR",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4631,
+   "name": "The Chief Cigar Lounge",
+   "address": "200 S Highway 287",
+   "city": "Decatur",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "THE CHIEF CIGAR LOUNGE, LLC",
+    "address": "200 S HIGHWAY 287 UNIT B",
+    "city": "DECATUR",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4653,
+   "name": "CigarSpots",
+   "address": "42 Plaza Square",
+   "city": "Orange",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "42 Plaza Sq",
+    "city": "Orange",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4700,
+   "name": "Industrial Cigar Co.",
+   "address": "9500 Dallas Pkwy",
+   "city": "Frisco",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "INDUSTRIAL CIGAR COMPANY",
+    "address": "9500 DALLAS PKWY STE 400",
+    "city": "FRISCO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4751,
+   "name": "Ron'devu Cigar Lounge",
+   "address": "27701 Scott Rd",
+   "city": "Menifee",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "27701 Scott Rd",
+    "city": "Menifee",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4787,
+   "name": "Lordsburg Cigar Lounge",
+   "address": "1249 Foothill Blvd",
+   "city": "La Verne",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1249 Foothill Blvd",
+    "city": "La Verne",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4794,
+   "name": "Mi Havana Cigar House",
+   "address": "261 S Thomas St",
+   "city": "Pomona",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "261 S Thomas St",
+    "city": "Pomona",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 4825,
+   "name": "Havana Cigar Lounge",
+   "address": "12221 Poplar St",
+   "city": "Hesperia",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "12221 Poplar St",
+    "city": "Hesperia",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5084,
+   "name": "Legacy Cigars and Lounge",
+   "address": "3130 S Main St",
+   "city": "Stafford",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "LEGACY CIGAR AND LOUNGE",
+    "address": "3130 S MAIN ST",
+    "city": "STAFFORD",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5185,
+   "name": "Fame Cigars and Wine",
+   "address": "155 S Palm Canyon Dr",
+   "city": "Palm Springs",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "155 S Palm Canyon Dr",
+    "city": "Palm Springs",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5186,
+   "name": "Tinder Box",
+   "address": "200 N Palm Canyon Dr",
+   "city": "Palm Springs",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "200 N Palm Canyon Dr",
+    "city": "Palm Springs",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5237,
+   "name": "Cigars International Superstore",
+   "address": "25407 Bell Patna Dr",
+   "city": "Katy",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGARS INTERNATIONAL",
+    "address": "25407 BELL PATNA DR UNIT 3355",
+    "city": "KATY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5261,
+   "name": "Tobacco Habana",
+   "address": "6513 Westheimer Rd",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TOBACCO HABANA",
+    "address": "6513B WESTHEIMER RD",
+    "city": "HOUSTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5282,
+   "name": "Stoa Fine Cigars and Spirits",
+   "address": "2221 S Voss Rd",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "STOA FINE CIGARS AND SPIRITS",
+    "address": "2221 S VOSS RD",
+    "city": "HOUSTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5306,
+   "name": "Cigar Towne",
+   "address": "1127 Eldridge Pkwy #500",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR TOWNE",
+    "address": "1127 ELDRIDGE PKWY STE 500",
+    "city": "HOUSTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5414,
+   "name": "A-1 Cigar Bar & Lounge",
+   "address": "5632 Richmond Ave",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "A-1 CIGAR BAR & LOUNGE",
+    "address": "5632 RICHMOND AVE",
+    "city": "HOUSTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5428,
+   "name": "Cigar Exchange",
+   "address": "806 Katy Fort Bend Rd",
+   "city": "Katy",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "CIGAR EXCHANGE",
+    "address": "806 KATY FORT BEND RD",
+    "city": "KATY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5473,
+   "name": "The Smoke Ring Cigars",
+   "address": "17066 State Hwy 3",
+   "city": "Webster",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE SMOKE RING",
+    "address": "17066 HIGHWAY 3",
+    "city": "WEBSTER",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5505,
+   "name": "Heights Cigar Lounge",
+   "address": "240 W 19th St",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "HEIGHTS CIGAR LOUNGE",
+    "address": "240 W 19TH ST",
+    "city": "HOUSTON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5557,
+   "name": "CIGAR HEAVEN - Cigar Lounge",
+   "address": "850 Kobayashi Rd S",
+   "city": "Webster",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR HEAVEN",
+    "address": "850 S KOBAYASHI RD",
+    "city": "WEBSTER",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5580,
+   "name": "Woodlands Fine Cigars",
+   "address": "414 Sawdust Rd",
+   "city": "The Woodlands",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "WOODLANDS FINE CIGARS",
+    "address": "414 SAWDUST RD",
+    "city": "SPRING",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5590,
+   "name": "The Cigar Box Houston Lounge",
+   "address": "727 E Louetta Rd Ste 102",
+   "city": "Houston",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "THE CIGAR BOX HOUSTON",
+    "address": "727 E LOUETTA RD STE 102",
+    "city": "SPRING",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5604,
+   "name": "Coaches Cigar Lounge",
+   "address": "414 E Main St",
+   "city": "Tomball",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "COACHES CIGAR LOUNGE",
+    "address": "414 E MAIN ST",
+    "city": "TOMBALL",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5608,
+   "name": "Blue Hill Tobacco",
+   "address": "15838 Tri City Beach Rd",
+   "city": "Beach City",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BLUE HILL TOBACCO LLC",
+    "address": "15838 TRI CITY BEACH RD STE C",
+    "city": "BEACH CITY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5647,
+   "name": "Top 10 Cigars",
+   "address": "9502 N Sam Houston Pkwy E #111",
+   "city": "Humble",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TOP 10 CIGARS LLC",
+    "address": "9502 N SAM HOUSTON PKWY E # 111",
+    "city": "HUMBLE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5667,
+   "name": "War Wagon Cigar Lounge",
+   "address": "8480 TX-87",
+   "city": "Orange",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "WAR WAGON CIGAR LOUNGE",
+    "address": "8480 HIGHWAY 87 N",
+    "city": "ORANGE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5682,
+   "name": "Humidor Cigar Lounge",
+   "address": "1645 Jefferson Dr Ste 140",
+   "city": "Port Arthur",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "HUMIDOR CIGAR LOUNGE",
+    "address": "1645 JEFFERSON DR STE 140",
+    "city": "PORT ARTHUR",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5684,
+   "name": "Brown Water Cigar Bar",
+   "address": "200 W Alamo St",
+   "city": "Brenham",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BROWN WATER CIGAR BAR, LLC",
+    "address": "200 W ALAMO ST",
+    "city": "BRENHAM",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5702,
+   "name": "Hey Guy: Cigars, Spa & Shop",
+   "address": "18521 Kuykendahl Rd",
+   "city": "Spring",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "HEY GUY CIGAR LOUNGE & SHOP",
+    "address": "18521 KUYKENDAHL RD",
+    "city": "SPRING",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5709,
+   "name": "The Craft Cigar Company",
+   "address": "15103 Mason Rd B5",
+   "city": "Cypress",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE CRAFT CIGAR COMPANY",
+    "address": "15103 MASON RD STE B5",
+    "city": "CYPRESS",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5720,
+   "name": "Midtown Cigar Lounge & Bar",
+   "address": "700 Finfeather Rd",
+   "city": "Bryan",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MIDTOWN CIGAR LOUNGE AND BAR",
+    "address": "700 FINFEATHER RD",
+    "city": "BRYAN",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5739,
+   "name": "Cigar Club",
+   "address": "5760 Walden Rd",
+   "city": "Beaumont",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "CIGAR CLUB TEXAS",
+    "address": "5760 WALDEN RD STE 202",
+    "city": "BEAUMONT",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5770,
+   "name": "Cavalier Cigar Company",
+   "address": "505 University Dr E Ste 303",
+   "city": "College Station",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CAVALIER CIGAR COMPANY",
+    "address": "505 UNIVERSITY DR E STE 303",
+    "city": "COLLEGE STATION",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 5795,
+   "name": "Stories Cigars + Lounge",
+   "address": "122 S 1st St",
+   "city": "Lufkin",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "STORIES CIGARS + LOUNGE",
+    "address": "122 S 1ST ST",
+    "city": "LUFKIN",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 6985,
+   "name": "Dallas Cigars",
+   "address": "6162 Greenville Ave # A",
+   "city": "Dallas",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "DALLAS CIGARS",
+    "address": "6162 GREENVILLE AVE STE A",
+    "city": "DALLAS",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7054,
+   "name": "Elite Cigars and Accessories",
+   "address": "5021 Alma Dr",
+   "city": "Plano",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "ELITE CIGARS",
+    "address": "5021 ALMA DR",
+    "city": "PLANO",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7081,
+   "name": "D&B Cigar Corner",
+   "address": "1925 Towne Centre Dr #108",
+   "city": "Mesquite",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "D & B CIGAR CORNER, INC",
+    "address": "1925 TOWNE CENTRE DR # 108",
+    "city": "MESQUITE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7177,
+   "name": "Renegade Cigars",
+   "address": "1002 N Central Expy #589",
+   "city": "Richardson",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "RENEGADE CIGARS, LLC",
+    "address": "1002 N CENTRAL EXPY STE 589",
+    "city": "RICHARDSON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7315,
+   "name": "Viso Cigars",
+   "address": "1521 N Custer Rd",
+   "city": "Mckinney",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "VISO CIGAR LOUNGE LLC",
+    "address": "1521 N CUSTER RD STE 2850",
+    "city": "MCKINNEY",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 7378,
+   "name": "Rigby’s Cigars & Lounge",
+   "address": "10 N Plaza",
+   "city": "Paris",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "RIGBY'S CIGARS",
+    "address": "10 NORTH PLZ",
+    "city": "PARIS",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8518,
+   "name": "Occidental Cigar Club",
+   "address": "471 Pine St",
+   "city": "San Francisco",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "471 Pine St",
+    "city": "San Francisco",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8574,
+   "name": "Cigar Bar & Grill",
+   "address": "850 Montgomery St",
+   "city": "San Francisco",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "850 Montgomery St",
+    "city": "San Francisco",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8624,
+   "name": "Cigars Tobacco Hut",
+   "address": "1807 Santa Rita Rd",
+   "city": "Pleasanton",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1807 Santa Rita Rd Ste E",
+    "city": "Pleasanton",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8654,
+   "name": "Campbell Cigars",
+   "address": "831 Union Ave",
+   "city": "Campbell",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "831 Union Ave",
+    "city": "Campbell",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8681,
+   "name": "LG Cigar Club",
+   "address": "565 W Alma Ave",
+   "city": "San Jose",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "565 W Alma Ave",
+    "city": "San Jose",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8682,
+   "name": "West Coast Cigars",
+   "address": "1650 Almaden Rd",
+   "city": "San Jose",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "1650 Almaden Rd",
+    "city": "San Jose",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8687,
+   "name": "Mission Pipe Shop",
+   "address": "950 The Alameda",
+   "city": "San Jose",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "950 The Alameda",
+    "city": "San Jose",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 8996,
+   "name": "Casillas Cigar Company",
+   "address": "2031 16th St",
+   "city": "Sacramento",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "2031 16th St",
+    "city": "Sacramento",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9099,
+   "name": "Sequoia Cigar",
+   "address": "111 N Locust St",
+   "city": "Visalia",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "111 N Locust St",
+    "city": "Visalia",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9142,
+   "name": "Perfect Blend Fine Cigars",
+   "address": "729 E Olive Ave",
+   "city": "Fresno",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "729 E Olive Ave",
+    "city": "Fresno",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9188,
+   "name": "Cigars Limited",
+   "address": "5160 N Palm Ave",
+   "city": "Fresno",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "5160 N Palm Ave",
+    "city": "Fresno",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9189,
+   "name": "Aldo Cigars",
+   "address": "5139 N Blackstone Ave",
+   "city": "Fresno",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "5139 N Blackstone Ave",
+    "city": "Fresno",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9329,
+   "name": "Stogies Lounge",
+   "address": "230 W Pine St",
+   "city": "Lodi",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "230 W Pine St",
+    "city": "Lodi",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9412,
+   "name": "Casillas Cigars",
+   "address": "7435 Madison Ave",
+   "city": "Citrus Heights",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "7435 Madison Ave",
+    "city": "Citrus Heights",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9481,
+   "name": "Cigar City Lounge",
+   "address": "307 Iron Point Rd",
+   "city": "Folsom",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "307 Iron Point Rd",
+    "city": "Folsom",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9535,
+   "name": "CJ's Cigars",
+   "address": "4364 Town Center Blvd",
+   "city": "El Dorado Hills",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "4364 Town Center Blvd",
+    "city": "El Dorado Hills",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 9558,
+   "name": "Tobacco Republic",
+   "address": "3589 Taylor Rd",
+   "city": "Loomis",
+   "state": "CA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": null,
+    "address": "3589 Taylor Rd # 3",
+    "city": "Loomis",
+    "status": "Active",
+    "expires": null,
+    "registry": "ca"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 10860,
+   "name": "Kingdom Cigar Company",
+   "address": "2321 4th Ave",
+   "city": "Canyon",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "KINGDOM CIGAR COMPANY, LLC",
+    "address": "2321 4TH AVE",
+    "city": "CANYON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19466,
+   "name": "Nickel City Cigars",
+   "address": "284 Franklin St",
+   "city": "Buffalo",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "NICKEL CITY CIGARS L.L.C.",
+    "address": "284 FRANKLIN ST",
+    "city": "BUFFALO",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19616,
+   "name": "Cygaro Cigar Club & Lounge",
+   "address": "32 Washington St",
+   "city": "Ellicottville",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CYGARO OF ELLICOTTVILLE INC.",
+    "address": "32 WASHINGTON ST",
+    "city": "ELLICOTTVILLE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19685,
+   "name": "Tinder Box Buffalo",
+   "address": "4401 Transit Rd Ste 375",
+   "city": "Clarence",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TINDER BOX",
+    "address": "4401 TRANSIT RD STE 375",
+    "city": "BUFFALO",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19714,
+   "name": "Nice Ash Cigars",
+   "address": "36 Jefferson Ave",
+   "city": "Fairport",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "NICE ASH CIGARS",
+    "address": "36 JEFFERSON AVE",
+    "city": "FAIRPORT",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21236,
+   "name": "Martinez Handmade Cigars",
+   "address": "171 W 29th St",
+   "city": "New York",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "MARTINEZ HAND ROLLED CIGARS",
+    "address": "171 W 29TH ST",
+    "city": "NEW YORK",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21357,
+   "name": "Matador Cigars",
+   "address": "4874 Sunrise Hwy",
+   "city": "Massapequa Park",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MATADOR CIGARS",
+    "address": "4874 SUNRISE HWY",
+    "city": "MASSAPEQUA PK",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21465,
+   "name": "The Polo Cigar Lounge",
+   "address": "1100 Stewart Ave",
+   "city": "Garden City",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "The Polo Cigar Lounge",
+    "address": "1100 STEWART AVE",
+    "city": "GARDEN CITY",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21852,
+   "name": "Rocky's News and Cigars",
+   "address": "447 N Salina St",
+   "city": "Syracuse",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "ROCKYS NEWSSTAND",
+    "address": "447 N SALINA ST",
+    "city": "SYRACUSE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21855,
+   "name": "Aroma Cigar Room",
+   "address": "791 NY-17M",
+   "city": "Monroe",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "AROMA CIGAR ROOM LLC",
+    "address": "791 STATE ROUTE 17M STE 11",
+    "city": "MONROE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21915,
+   "name": "Middletown Cigar Lounge",
+   "address": "265 Rte 211 E",
+   "city": "Middletown",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MIDDLETOWN CIGAR LOUNGE, INC.",
+    "address": "265 ROUTE 211 E STE 106",
+    "city": "MIDDLETOWN",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21926,
+   "name": "Copper City Cigars & Lounge",
+   "address": "252 W Dominick St",
+   "city": "Rome",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "COPPER CITY CIGAR LOUNGE",
+    "address": "252 W DOMINICK ST",
+    "city": "ROME",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22037,
+   "name": "Matador Cigars",
+   "address": "582 Veterans Memorial Hwy",
+   "city": "Hauppauge",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MATADOR CIGARS",
+    "address": "582 VETERANS MEMORIAL HWY",
+    "city": "HAUPPAUGE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22041,
+   "name": "Gold Coast Cigars Northport",
+   "address": "146 Main St",
+   "city": "Northport",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "GOLD COAST CIGARS",
+    "address": "146 MAIN ST",
+    "city": "NORTHPORT",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22080,
+   "name": "Carmel Cigar Vault",
+   "address": "71 Gleneida Ave",
+   "city": "Carmel Hamlet",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE CARMEL CIGAR VAULT LIMITED",
+    "address": "71 GLENEIDA AVE",
+    "city": "CARMEL",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22082,
+   "name": "The Carmel Cigar Vault",
+   "address": "71 Gleneida Ave",
+   "city": "Carmel",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE CARMEL CIGAR VAULT LIMITED",
+    "address": "71 GLENEIDA AVE",
+    "city": "CARMEL",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22095,
+   "name": "Tobacco Plaza",
+   "address": "218 Lakeville Rd",
+   "city": "Great Neck",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TOBACCO PLAZA LTD.",
+    "address": "218 LAKEVILLE RD",
+    "city": "LAKE SUCCESS",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22147,
+   "name": "Long Island Cigar",
+   "address": "4775 Sunrise Hwy",
+   "city": "Bohemia",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "LONG ISLAND CIGAR INC",
+    "address": "4775 SUNRISE HWY",
+    "city": "BOHEMIA",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22337,
+   "name": "Queensbury Cigar & Pipe",
+   "address": "1036 US-9",
+   "city": "Queensbury",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "QUEENSBURY CIGAR & PIPE",
+    "address": "1036 STATE ROUTE 9",
+    "city": "QUEENSBURY",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22405,
+   "name": "Iron Horse Cigar Depot",
+   "address": "93 Ten Broeck Ave",
+   "city": "Greenport",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "IRON HORSE CIGAR DEPOT, LLC",
+    "address": "93 TEN BROECK AVE",
+    "city": "HUDSON",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 38236,
+   "name": "The Welton Room.  A metropolitan cigar lounge.",
+   "address": "492 Albany Shaker Rd",
+   "city": "Albany",
+   "state": "NY",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE WELTON ROOM LLC",
+    "address": "492 ALBANY SHAKER RD",
+    "city": "LOUDONVILLE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 42345,
+   "name": "ZODI'X Cigar Lounge",
+   "address": "101 Limmer Loop",
+   "city": "Georgetown",
+   "state": "TX",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "ZODI'X",
+    "address": "101 LIMMER LOOP",
+    "city": "ROUND ROCK",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  }
+ ],
+ "renamed": [
+  {
+   "id": 2562,
+   "name": "C&S Cigar Lounge",
+   "address": "705 Pine St",
+   "city": "Bastrop",
+   "state": "TX",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"C & S CIGARS, LLC\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "C & S CIGARS, LLC",
+    "address": "705 PINE ST",
+    "city": "BASTROP",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 2956,
+   "name": "Cigar Lounge",
+   "address": "900 Houston St",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"THOMPSON'S CIGAR LOUNGE, LLC\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THOMPSON'S CIGAR LOUNGE, LLC",
+    "address": "900 HOUSTON ST",
+    "city": "FORT WORTH",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3291,
+   "name": "Cigars on 35",
+   "address": "1980 S Stemmons freeway",
+   "city": "Lewisville",
+   "state": "TX",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"CIGARS ON 35\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGARS ON 35",
+    "address": "1980 S STEMMONS FWY",
+    "city": "LEWISVILLE",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 3345,
+   "name": "Addison Cigar Co.",
+   "address": "15401 Addison Rd",
+   "city": "Addison",
+   "state": "TX",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"TOBACCO LANE # 7\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "TOBACCO LANE # 7",
+    "address": "15401 ADDISON RD",
+    "city": "ADDISON",
+    "status": "ACTIVE",
+    "registry": "tx"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21463,
+   "name": "Jim's Stogies",
+   "address": "220 Main St",
+   "city": "Farmingdale",
+   "state": "NY",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"FEAL GOOD, INC.\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FEAL GOOD, INC.",
+    "address": "220 MAIN ST",
+    "city": "FARMINGDALE",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 22006,
+   "name": "The Cigar Republic",
+   "address": "133 E Main St",
+   "city": "Elmsford",
+   "state": "NY",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"MAIN STREET CIGARS\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MAIN STREET CIGARS",
+    "address": "133 E MAIN ST",
+    "city": "ELMSFORD",
+    "status": "ACTIVE",
+    "expires": null,
+    "registry": "ny_state"
+   },
+   "moved_to": null
+  }
+ ],
+ "moved": [
+  {
+   "id": 2459,
+   "name": "Finck Cigars West Ave.",
+   "address": "6100 West Ave",
+   "city": "San Antonio",
+   "state": "TX",
+   "verdict": "moved",
+   "why": "its licence is at 4415 WEST AVE, SAN ANTONIO",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "WEST FOOD MART",
+    "address": "4415 WEST AVE",
+    "city": "SAN ANTONIO",
+    "state": "TX",
+    "zip": "78213",
+    "phone": null,
+    "status": "ACTIVE",
+    "registry": "tx"
+   }
+  },
+  {
+   "id": 2803,
+   "name": "Boiler Room Smoking Lounge",
+   "address": "311 W 7th St",
+   "city": "Austin",
+   "state": "TX",
+   "verdict": "moved",
+   "why": "its licence is at 11500 ROCK ROSE AVE STE 140, AUSTIN",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "ROSE ROOM/ 77 DEGREES",
+    "address": "11500 ROCK ROSE AVE STE 140",
+    "city": "AUSTIN",
+    "state": "TX",
+    "zip": "78758",
+    "phone": null,
+    "status": "ACTIVE",
+    "registry": "tx"
+   }
+  },
+  {
+   "id": 7283,
+   "name": "Calavera Leather and Cigar Co.",
+   "address": "110 N Walnut St",
+   "city": "Jefferson",
+   "state": "TX",
+   "verdict": "moved",
+   "why": "its licence is at 113 N POLK ST, JEFFERSON",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "CALAVERA COMPANY, LLC",
+    "address": "113 N POLK ST",
+    "city": "JEFFERSON",
+    "state": "TX",
+    "zip": "75657",
+    "phone": null,
+    "status": "ACTIVE",
+    "registry": "tx"
+   }
+  },
+  {
+   "id": 7352,
+   "name": "Texoma Tobacco",
+   "address": "2205 Texoma Pkwy suite 100",
+   "city": "Sherman",
+   "state": "TX",
+   "verdict": "moved",
+   "why": "its licence is at 2107 TEXOMA PKWY, SHERMAN",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "TEXOMA FOOD MART",
+    "address": "2107 TEXOMA PKWY",
+    "city": "SHERMAN",
+    "state": "TX",
+    "zip": "75090",
+    "phone": null,
+    "status": "ACTIVE",
+    "registry": "tx"
+   }
+  },
+  {
+   "id": 15942,
+   "name": "Ralph's Cigars",
+   "address": "1154 W Taylor St",
+   "city": "Chicago",
+   "state": "IL",
+   "verdict": "moved",
+   "why": "its licence is at 1419 W 18TH ST, CHICAGO",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "RALPH'S CIGARS",
+    "address": "1419 W 18TH ST",
+    "city": "CHICAGO",
+    "state": "IL",
+    "zip": "60608",
+    "phone": null,
+    "status": "AAI",
+    "expires": "2004-02-15T00:00:00.000",
+    "registry": "chicago"
+   }
+  },
+  {
+   "id": 15955,
+   "name": "Norwood Royal Cigars",
+   "address": "6046 N Northwest Hwy",
+   "city": "Chicago",
+   "state": "IL",
+   "verdict": "moved",
+   "why": "its licence is at 6165 N NORTHWEST HWY 1ST, CHICAGO",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "NORWOOD HEALTHMART DRUGS",
+    "address": "6165 N NORTHWEST HWY 1ST",
+    "city": "CHICAGO",
+    "state": "IL",
+    "zip": "60631",
+    "phone": null,
+    "status": "AAI",
+    "expires": "2003-08-15T00:00:00.000",
+    "registry": "chicago"
+   }
+  },
+  {
+   "id": 15991,
+   "name": "Trading Post Tobacco and Cigars",
+   "address": "5510 W Devon Ave",
+   "city": "Chicago",
+   "state": "IL",
+   "verdict": "moved",
+   "why": "its licence is at 3737 W LAWRENCE AVE GROUND B, CHICAGO",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "RIDGE WAY TRADING",
+    "address": "3737 W LAWRENCE AVE GROUND B",
+    "city": "CHICAGO",
+    "state": "IL",
+    "zip": "60625",
+    "phone": null,
+    "status": "AAI",
+    "expires": "2019-04-15T00:00:00.000",
+    "registry": "chicago"
+   }
+  }
+ ],
+ "lapsed": [
+  {
+   "id": 200,
+   "name": "Prohibition - Private Cigar Lounge",
+   "address": "326 N Chaparral St Ste 100",
+   "city": "Corpus Christi",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 2576,
+   "name": "The Library Cigar Lounge",
+   "address": "4400 US-281 Bldg #1",
+   "city": "Bulverde",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 2934,
+   "name": "The Boardroom Whisky & Cigar Lounge",
+   "address": "1708 8th Ave",
+   "city": "Fort Worth",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 2948,
+   "name": "Cattleman Cigar Co.",
+   "address": "110 Palo Pinto St",
+   "city": "Weatherford",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 3148,
+   "name": "J.Merrill Cigar & Cocktail Lounge",
+   "address": "206 N Oak St",
+   "city": "Roanoke",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 3643,
+   "name": "Taylor's Cigar Lounge",
+   "address": "6440 E Stearns St",
+   "city": "Long Beach",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 4219,
+   "name": "Hemingway Cigars",
+   "address": "26 N First Ave",
+   "city": "Arcadia",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 4733,
+   "name": "CigarSpots",
+   "address": "23532 El Toro Rd Ste 13",
+   "city": "Lake Forest",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 4944,
+   "name": "Casa De La Riva Cigar Lounge",
+   "address": "220 W B St",
+   "city": "Ontario",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 5555,
+   "name": "El Cubano Cigars",
+   "address": "916 E Main St",
+   "city": "League City",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 5823,
+   "name": "Kings & Queens Cigar Lounge",
+   "address": "236 1st St W",
+   "city": "Humble",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 7007,
+   "name": "El Jefe Cigars",
+   "address": "115 N Carroll Ave",
+   "city": "Dallas",
+   "state": "TX",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 8691,
+   "name": "Telford's Pipe and Cigar",
+   "address": "664 Redwood Hwy Frontage Rd",
+   "city": "Mill Valley",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 15627,
+   "name": "The Place Cigar Club and Lounge",
+   "address": "5236 Main St",
+   "city": "Downers Grove",
+   "state": "IL",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 15726,
+   "name": "Old Havana Cigar Shop",
+   "address": "189 E Butterfield Rd",
+   "city": "Elmhurst",
+   "state": "IL",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 15936,
+   "name": "Puros Birriel Cigars",
+   "address": "2711 Ridgeland Ave",
+   "city": "Berwyn",
+   "state": "IL",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 15980,
+   "name": "New Havana Joe's Cigar Store & Lounge",
+   "address": "211 E Rand Rd",
+   "city": "Mt Prospect",
+   "state": "IL",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 40094,
+   "name": "Royal Cigar",
+   "address": "7094 Miramar Road",
+   "city": "San Diego",
+   "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  }
+ ]
+}
