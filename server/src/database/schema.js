@@ -567,6 +567,11 @@ const MIGRATIONS = [
   // The other ways into a shop that publishes no address: its own contact
   // form, its Facebook page, its Instagram. "No email" and "no way to reach
   // them" are different facts and only the second is a dead end.
+  // What the picture actually looks like, so the thumbnail is not drawn from a
+  // guess about its filename. See utils/imageTreatment.js.
+  { name: '111_stores_image_metrics', sql: `ALTER TABLE stores
+    ADD COLUMN IF NOT EXISTS image_kind TEXT,
+    ADD COLUMN IF NOT EXISTS image_luma REAL` },
   { name: '110_store_outreach_routes', sql: `ALTER TABLE store_outreach
     ADD COLUMN IF NOT EXISTS contact_url TEXT,
     ADD COLUMN IF NOT EXISTS facebook TEXT,
