@@ -567,6 +567,13 @@ const MIGRATIONS = [
   // The other ways into a shop that publishes no address: its own contact
   // form, its Facebook page, its Instagram. "No email" and "no way to reach
   // them" are different facts and only the second is a dead end.
+  // Whether anybody has established this shop is actually trading, and when.
+  // Written by the open/closed sweep. verifiedSet will not PUBLISH a listing
+  // without it — see the comment there for why the other four gates are not
+  // enough on their own.
+  { name: "112_stores_open_verdict", sql: `ALTER TABLE stores
+    ADD COLUMN IF NOT EXISTS open_verdict TEXT,
+    ADD COLUMN IF NOT EXISTS open_checked_at TIMESTAMP` },
   // What the picture actually looks like, so the thumbnail is not drawn from a
   // guess about its filename. See utils/imageTreatment.js.
   { name: '111_stores_image_metrics', sql: `ALTER TABLE stores

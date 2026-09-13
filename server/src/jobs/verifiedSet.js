@@ -19,6 +19,17 @@
  *                          the shop's own site printing that street, or both
  *                          geocoders landing on it
  *
+ * And a fifth, which only applies to PUBLISHING a listing:
+ *
+ *   somebody looked        open_verdict = 'open', written by the open/closed
+ *                          sweep
+ *
+ * That fifth one was added on 2026-09-13 because the four above are not enough
+ * and had already proved it. Cascade Cigar & Tobacco had every one of them and
+ * had been shut for six months; its abandoned website answered 200 and went on
+ * publishing "11am to 7pm - Everyday" throughout. Backed is not open. See
+ * researched() for why it gates publishing only and can never hide anything.
+ *
  * It moves listings both ways, and only ever its own: a listing a person or an
  * owner touched is never moved, and a listing hidden for any other reason —
  * closed, not a shop, a duplicate — stays hidden whatever else becomes true.
@@ -51,6 +62,29 @@ function certainty(row) {
   return missing.length ? { certain: false, missing } : { certain: true, missing: [] };
 }
 
+/**
+ * May this listing be PUBLISHED — as opposed to merely having its facts backed?
+ *
+ * The four things certainty() checks are exactly the four Cascade Cigar &
+ * Tobacco had on the day somebody who lives next door to it pointed out it had
+ * been shut for six months: it is not ruled out, it has a live website of its
+ * own, hours were read off that website, and something outside the directory
+ * backs its address. All four were true. The shop was gone. An abandoned
+ * website goes on satisfying every one of them until somebody stops paying for
+ * the hosting.
+ *
+ * So being backed is not the same as being open, and this is the difference.
+ * `open_verdict` is written by the open/closed sweep, which goes and looks.
+ *
+ * Deliberately asymmetric: this gates publishing only, and its absence never
+ * hides anything. A listing that has not been researched simply waits. Making
+ * it part of certainty() instead would hide every public listing the moment
+ * this shipped, which is the shape of mistake this job exists to avoid.
+ */
+function researched(row) {
+  return row.open_verdict === 'open';
+}
+
 /** A listing this job is allowed to move. */
 function mayMove(row) {
   if (Number(row.claimed) === 1 || Number(row.staff_edited) === 1) return false;
@@ -64,11 +98,11 @@ function mayMove(row) {
 async function run({ dry = false, log = console.log } = {}) {
   const rows = await db.all(`
     SELECT id, name, visible, storefront, website_status, hours, hours_source, address_backed_by,
-           claimed, staff_edited
+           claimed, staff_edited, open_verdict
     FROM stores
     WHERE visible = 1 OR storefront = '${HELD}'`);
 
-  let shown = 0, held = 0, skipped = 0;
+  let shown = 0, held = 0, skipped = 0, waiting = 0;
   const heldWhy = {};
   for (const row of rows) {
     if (!mayMove(row)) { skipped++; continue; }
@@ -76,6 +110,8 @@ async function run({ dry = false, log = console.log } = {}) {
     const isPublic = Number(row.visible) === 1;
 
     if (certain && !isPublic) {
+      // Backed is not open. Nothing is published until somebody has looked.
+      if (!researched(row)) { waiting++; continue; }
       if (!dry) {
         await db.run(`UPDATE stores SET visible = 1, storefront = 'yes',
           storefront_reason = 'every fact on this listing is backed: a cigar shop, a live site of its own, hours read from it, and an address something outside the directory agrees with',
@@ -97,9 +133,13 @@ async function run({ dry = false, log = console.log } = {}) {
     COUNT(*) FILTER (WHERE visible = 0 AND storefront = '${HELD}')::int AS held FROM stores`);
   log(`[verified] ${dry ? 'would show' : 'showed'} ${shown}, ${dry ? 'would hold' : 'held'} ${held}`
     + `, left ${skipped} alone (claimed, staff-edited, or hidden for another reason)`);
+  if (waiting) {
+    log(`[verified] ${waiting} have every fact backed but nobody has established they are trading — `
+      + `they stay held until the open/closed sweep reaches them`);
+  }
   for (const [why, count] of Object.entries(heldWhy)) log(`[verified]   ${count} — ${why}`);
   log(`[verified] ${n.public} public, ${n.held} held back`);
-  return { shown, held, skipped, publicCount: n.public };
+  return { shown, held, skipped, waiting, publicCount: n.public };
 }
 
 /**
@@ -114,7 +154,8 @@ function runOnStartup({ log = console.log } = {}) {
   setInterval(go, 24 * 60 * 60 * 1000);
 }
 
-module.exports = { run, runOnStartup, certainty, mayMove, RULED_OUT, HELD, selftest };
+module.exports = {
+  researched, run, runOnStartup, certainty, mayMove, RULED_OUT, HELD, selftest };
 
 // ── self-test ───────────────────────────────────────────────────────────────
 function selftest() {
@@ -154,6 +195,29 @@ function selftest() {
     'a visible row carrying a ruling-out verdict is a contradiction this job does not resolve');
 
   ok(!RULED_OUT.includes(HELD), 'the verdict this job writes is not one it treats as final, or nothing would ever come back');
+
+  // The fifth gate. Cascade Cigar & Tobacco is the reason it exists: it had all
+  // four of the others and had been shut for six months.
+  const cascade = {
+    id: 10184, visible: 0, storefront: HELD, website_status: 'ok',
+    hours: '{"Mon":"11am-7pm"}', hours_source: 'website', address_backed_by: 'site',
+    claimed: 0, staff_edited: 0, open_verdict: null,
+  };
+  ok(certainty(cascade).certain,
+    'a shop shut for six months can still pass all four of the backing checks — it did');
+  ok(!researched(cascade),
+    'and is not published, because nobody has established it is trading', cascade.open_verdict);
+  ok(researched({ ...cascade, open_verdict: 'open' }), 'one the sweep found open may be published');
+  ok(!researched({ ...cascade, open_verdict: 'unproven' }), 'one it could not settle may not');
+  ok(!researched({ ...cascade, open_verdict: 'closed' }), 'and one it found shut certainly may not');
+
+  // The asymmetry is the safety property: this can stop a listing appearing, and
+  // can never take one down. Wired the other way it would have hidden every
+  // public listing the day it shipped.
+  ok(certainty({ ...good, open_verdict: null }).certain,
+    'a public listing with no verdict yet is still certain, so nothing hides it', certainty({ ...good, open_verdict: null }));
+  ok(certainty({ ...good, open_verdict: 'unproven' }).certain,
+    'and certainty() ignores open_verdict entirely — it gates publishing, not holding');
 
   console.log(`\nverifiedSet self-test: ${pass} passed, ${fail} failed`);
   return fail === 0;

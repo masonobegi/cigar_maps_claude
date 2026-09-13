@@ -125,6 +125,25 @@ const HIDE = {
     else skipped.push({ id: d.id, why: `writeFields wrote nothing (${written.join(',') || 'no fields'})` });
   }
 
+  // Every researched listing records what was found, keeps included.
+  //
+  // This is what verifiedSet reads before it publishes anything. Without it a
+  // listing that gains hours next month gets published on the same four checks
+  // Cascade Cigar passed while shut, and the directory quietly refills with
+  // shops nobody has looked at. Writing it for the keeps is the half that
+  // matters: the drops are already hidden.
+  let stamped = 0;
+  for (const d of decisions) {
+    const verdict = d.decision === 'keep' ? 'open' : d.decision;
+    if (DRY) { stamped++; continue; }
+    const r = await db.run(
+      `UPDATE stores SET open_verdict = ?, open_checked_at = ?
+        WHERE id = ? AND COALESCE(claimed, 0) = 0 AND COALESCE(staff_edited, 0) = 0`,
+      [verdict, stamp, d.id]);
+    stamped += r.changes || 0;
+  }
+  console.log(`${DRY ? 'would stamp' : 'stamped'} ${stamped} listings with what the research found`);
+
   console.log(`\n${DRY ? 'would hide' : 'hid'} ${hidden}`);
   if (skipped.length) {
     console.log(`skipped ${skipped.length}:`);
