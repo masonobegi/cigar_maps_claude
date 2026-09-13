@@ -99,7 +99,7 @@ are not there.
 | **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **482 of 672 unresearched. 30% of those already checked should not be public** |
 | 2 | [Add Paul's Cigars, Hazel Dell](#2-add-pauls-cigars-hazel-dell) | Written and dry-run; one command. A real shop we are missing |
 | 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
-| 4 | [The pins nobody could settle](#4-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
+| 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
 | 5 | [Licence moves](#5-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
 | 6 | [The two remaining manual registries](#6-the-two-remaining-manual-registries) | Pennsylvania and Washington; California and Florida fetch themselves now |
 | 7 | [The Overture dedupe change](#7-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
@@ -342,30 +342,36 @@ Indexing is slow: pages start appearing in two to six weeks, rankings build over
 months. Nothing below will feel like it is working for a fortnight. The leading
 indicator is *impressions* in Search Console, which moves well before clicks do.
 
-## 4. The pins nobody could settle
+## 4. The pins nobody could settle — CLOSED, leave them
 
-All 59 held rows were read on 2026-09-12: 16 needed no move (Nominatim backs the
-pin we already hold), 18 were moved, and **25 are left** in
-`sweeps/decisions/pins/pins_left.json`. In every one of those the geocoder
-answered with a *different address* — "8608 Preston Rd" matched "8608 PRESTON
-MEADOW DR", "104 Hills Plz" matched "104 HILL DR" — or the address is a highway
-with no second opinion. Each needs a map and a person, not another rule.
+**Decided 2026-09-13: all 41 stay where they are.** Nothing here needs doing;
+this section is kept so the next session does not reopen it.
 
-The classifier that settled the other 34 is `sweeps/scripts/settle_pin_review.js`,
-and its four groups are written out at the top of that file. One rule came out
-of reading them: **a destination in another postcode is another door.** Cigar N
-Vape is listed at 452 5th Ave in 11215, which is Park Slope; both geocoders
-answered with 452 5th Avenue in Manhattan, nine kilometres away.
+Of the 41 rows in `sweeps/decisions/pins/pins_left.json`, **16 were never
+unsettled at all** — Nominatim, an independent second geocoder, answers with the
+pin already held, so it was the Census that was wrong and the pin is right.
 
-To apply any you decide to move, write `"verdict": "move"` on the row and:
+The other **25 have no reliable second opinion, and that is the finding.** In
+every one the Census answered with a *different street or town*:
 
-```bash
-railway run --service Postgres node sweeps/scripts/prodrun.js src/jobs/geocodePins.js apply --from ../sweeps/decisions/pins/<file>.json --confirm
-```
+    22 SW 8th St, Miami        ->  22 SW 8TH AVE      (a different street)
+    8608 Preston Rd, Plano     ->  8608 PRESTON MEADOW DR
+    104 Hills Plz, Charleston  ->  104 HILL DR
+    2015 Main St, Liberty Hill ->  2015 N MAIN ST, LIBERTY TX, 309 km away
 
-**Guardrails are unchanged.** A highway address is excluded outright: the
-geocoders are wrong about 40% of the time there. **Puro Estilo in Bethlehem,
-Pennsylvania is not foreign** whatever its name or its Israeli mobile suggests.
+or the address is a highway, where the handoff's own measurement puts the
+geocoders wrong about 40% of the time — `895 GA-138`, `1146 PA-72`,
+`6645 SE State Route O`, `3633 US Route 60`.
+
+**Moving a pin on a single wrong-street match makes the data worse, not better.**
+One geocoder answering confidently about a road it has confused for another is
+not evidence, and there is no third source: cross-referencing all 25 against the
+state licence registries — which now cover NY, TX, FL, CA and Chicago — returns
+a current licence for exactly two, and one of those (#42345 ZODI'X) is a
+duplicate being hidden anyway.
+
+So the existing pins stand. They come from the record's own source, which had
+the address in front of it, and nothing available beats that.
 
 ## 5. Licence renames and moves
 
