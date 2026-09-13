@@ -1,0 +1,3376 @@
+[
+  {
+    "id": 208,
+    "name": "Estate Cigars & Social",
+    "address": "1201 4th St S, St Petersburg, FL, 33701",
+    "phone": "(727) 201-8123",
+    "website": "estatecigars.com"
+  },
+  {
+    "id": 245,
+    "name": "St. Pete Cigar Company",
+    "address": "6125 9th Ave N, St Petersburg, FL, 33710",
+    "phone": "(727) 381-9027",
+    "website": "stpetecigar.com"
+  },
+  {
+    "id": 224,
+    "name": "Black Leaf Cigar and Wine Lounge",
+    "address": "237 2nd Ave S, St. Petersburg, FL, 33701",
+    "phone": "(727) 800-2102",
+    "website": "blackleaflounge.com"
+  },
+  {
+    "id": 1912,
+    "name": "Black Dog Cigar Bar",
+    "address": "3343 SE Federal Hwy, Stuart, FL, 34997",
+    "phone": "(772) 287-5060",
+    "website": "blackdogcigarbox.com"
+  },
+  {
+    "id": 6601,
+    "name": "Cigars of Tally",
+    "address": "1401 Market St, Tallahassee, FL, 32312",
+    "phone": "(850) 224-4277",
+    "website": "cigarsoftally.wordpress.com"
+  },
+  {
+    "id": 6633,
+    "name": "Jerry's Cigar Shop Northeast",
+    "address": "2910 Kerry Forest Pkwy Unit A1A, Tallahassee, FL, 32309",
+    "phone": "(850) 894-3696",
+    "website": "jerryscigarshop.com"
+  },
+  {
+    "id": 701,
+    "name": "King Corona Cigars",
+    "address": "1523 E 7th Ave, Tampa, FL, 33605",
+    "phone": "(813) 923-7982",
+    "website": "kingcoronacigars.com"
+  },
+  {
+    "id": 709,
+    "name": "Long Ash Cigars",
+    "address": "1728 E 7th Ave, Tampa, FL, 33605",
+    "phone": "(813) 374-0346",
+    "website": "LongAshCigars.com"
+  },
+  {
+    "id": 704,
+    "name": "Nicahabana Cigars",
+    "address": "1605 E 7th Ave, Tampa, FL, 33605",
+    "phone": "(813) 609-3474",
+    "website": "Nicahabanacigar.com"
+  },
+  {
+    "id": 703,
+    "name": "Sterling Cigar Lounge & Bar",
+    "address": "1531 E 7th Ave, Tampa, FL, 33605",
+    "phone": "(813) 466-5723",
+    "website": "sterlingcigarbar.com"
+  },
+  {
+    "id": 7697,
+    "name": "DD & Company, Inc. \"Smokes Lounge\"",
+    "address": "37 Beatty St, Hiram, GA, 30141",
+    "phone": "(678) 567-5666",
+    "website": "dallascigars.co"
+  },
+  {
+    "id": 8218,
+    "name": "The Chateau Cigar Lounge",
+    "address": "9700 Medlock Bridge Rd, Johns Creek, GA, 30097",
+    "phone": "(678) 822-0912",
+    "website": "thechateaucigarlounge.com"
+  },
+  {
+    "id": 8171,
+    "name": "The Chateau Wine and Cigar Bar",
+    "address": "4090 Johns Creek Pkwy, Johns Creek, GA, 30024",
+    "phone": "(678) 822-0912",
+    "website": "thechateaucigarbar.com"
+  },
+  {
+    "id": 8274,
+    "name": "The Cigar Merchant",
+    "address": "9850 Nesbit Ferry Rd, Johns Creek, GA, 30022",
+    "phone": "(770) 552-1942",
+    "website": "thecigarmerchant.com"
+  },
+  {
+    "id": 7723,
+    "name": "The Cigar Cellar",
+    "address": "2500 Cobb Pkwy NW Ste B3, Kennesaw, GA, 30152",
+    "phone": "(470) 785-4941",
+    "website": "cigarcellar.net/reservations"
+  },
+  {
+    "id": 7795,
+    "name": "Acere Cigar",
+    "address": "230 Thornton Rd, Lithia Springs, GA, 30122",
+    "phone": "(770) 726-0015",
+    "website": "acerecigar.com"
+  },
+  {
+    "id": 7912,
+    "name": "The Cigar Bank",
+    "address": "19 Keys Ferry St Ste b, Mcdonough, GA, 30253",
+    "phone": "(470) 878-1184",
+    "website": "thecigarbank.com"
+  },
+  {
+    "id": 8065,
+    "name": "DAM Fine Cigars",
+    "address": "110 Southern Jct Blvd Ste 106, Pooler, GA, 31322",
+    "phone": "(912) 988-3008",
+    "website": "mydamcigars.com"
+  },
+  {
+    "id": 8255,
+    "name": "Cigar City Club",
+    "address": "5006 Roswell Rd, Sandy Springs, GA, 30342",
+    "phone": "(404) 843-8826",
+    "website": "cigarcityclub.com"
+  },
+  {
+    "id": 6997,
+    "name": "Tobacco Hub",
+    "address": "5910 Ogeechee Rd Ste 1, Savannah, GA, 31419",
+    "phone": "(912) 349-1849",
+    "website": "tobaccohubsav.com"
+  },
+  {
+    "id": 7964,
+    "name": "Humidor Cigar Bar & Lounge",
+    "address": "3555 Centerville Hwy #107, Snellville, GA, 30039",
+    "phone": "(470) 203-0737",
+    "website": "humidorcigar-bar.com"
+  },
+  {
+    "id": 7702,
+    "name": "Montana Cigar Company",
+    "address": "4641 Flat Shoals Rd, Union City, GA, 30291",
+    "phone": "(770) 487-8345",
+    "website": "montanacigarcompany.net"
+  },
+  {
+    "id": 6791,
+    "name": "Stogies Downtown",
+    "address": "101 S Patterson St, Valdosta, GA, 31601",
+    "phone": "(229) 242-4427",
+    "website": "stogiesdowntown.com"
+  },
+  {
+    "id": 7667,
+    "name": "Wesmoke Cigars Shop",
+    "address": "205 E Wilson St, Villa Rica, GA, 30180",
+    "phone": "(678) 941-3339",
+    "website": "wesmokega.com"
+  },
+  {
+    "id": 8100,
+    "name": "Maxwell's Cigar Bar",
+    "address": "150 Towne Lake Pkwy #158, Woodstock, GA, 30188",
+    "phone": "(770) 627-2006",
+    "website": "MAXWELLSCIGARBAR.COM"
+  },
+  {
+    "id": 7712,
+    "name": "Mr G's Cigar and Tobacco Shop",
+    "address": "2370 Towne Lake Pkwy, Woodstock, GA, 30189",
+    "phone": "(678) 494-6619",
+    "website": "mrgscigars.com"
+  },
+  {
+    "id": 13310,
+    "name": "The Cigar Social USA",
+    "address": "5161 Utica Ridge Rd, Davenport, IA, 52807",
+    "phone": "(563) 551-6242",
+    "website": "thecigarsocialqc.com"
+  },
+  {
+    "id": 13177,
+    "name": "Cap City Cigars",
+    "address": "1536 2nd Ave, Des Moines, IA, 50314",
+    "phone": "(515) 978-0586",
+    "website": "capcitycigars.com"
+  },
+  {
+    "id": 13169,
+    "name": "Cigar Source",
+    "address": "3305 Ingersoll Ave, Des Moines, IA, 50312",
+    "phone": "(515) 279-1439",
+    "website": "cigarsourcedesmoines.com"
+  },
+  {
+    "id": 13106,
+    "name": "Iowa Cigar Company",
+    "address": "1401 22nd St, West Des Moines, IA, 50266",
+    "phone": "(515) 327-1255",
+    "website": "iowacigar.com"
+  },
+  {
+    "id": 10683,
+    "name": "Yellowstone Cigar Company",
+    "address": "290 N Water Ave, Idaho Falls, ID, 83402",
+    "phone": "(208) 419-0603",
+    "website": "yellowstonecigarco.com"
+  },
+  {
+    "id": 10786,
+    "name": "Stella's Stogies",
+    "address": "6249 W Maine St, Spirit Lake, ID, 83869",
+    "phone": "(208) 262-5868",
+    "website": "stellasstogies.com"
+  },
+  {
+    "id": 10527,
+    "name": "The Cigar Silo",
+    "address": "7275 Sweet-Ola Hwy, Sweet, ID, 83670",
+    "phone": "(208) 821-6111",
+    "website": "thecigarsilo.com"
+  },
+  {
+    "id": 16183,
+    "name": "S.T.Cigars, Inc.",
+    "address": "1312 E Algonquin Rd, Algonquin, IL, 60102",
+    "phone": "(847) 458-8644",
+    "website": "stcigars.com"
+  },
+  {
+    "id": 12503,
+    "name": "AP Cigar Co. Alton",
+    "address": "202 State St, Alton, IL, 62002",
+    "phone": "(618) 631-3645",
+    "website": "APCIGAR.co"
+  },
+  {
+    "id": 15922,
+    "name": "Arlington Pipe and Cigar Lounge",
+    "address": "546 W Northwest Hwy, Arlington Heights, IL, 60004",
+    "phone": "(847) 255-2263",
+    "website": "arlingtoncigar.com"
+  },
+  {
+    "id": 15622,
+    "name": "Wild Leaf Tobacco",
+    "address": "2150 W Galena Blvd Unit A1, Aurora, IL, 60506",
+    "phone": "(630) 873-0094",
+    "website": "wildleaftobacco.com"
+  },
+  {
+    "id": 15936,
+    "name": "Puros Birriel Cigars",
+    "address": "2711 Ridgeland Ave, Berwyn, IL, 60402",
+    "phone": "(773) 330-3004",
+    "website": "purosbirriel.com"
+  },
+  {
+    "id": 15955,
+    "name": "Norwood Royal Cigars",
+    "address": "6046 N Northwest Hwy, Chicago, IL, 60631",
+    "phone": "(773) 853-0894",
+    "website": "nrcigars.com"
+  },
+  {
+    "id": 15942,
+    "name": "Ralph's Cigars",
+    "address": "1154 W Taylor St, Chicago, IL, 60607",
+    "phone": "(312) 877-5755",
+    "website": "ralphcigars.com"
+  },
+  {
+    "id": 15991,
+    "name": "Trading Post Tobacco and Cigars",
+    "address": "5510 W Devon Ave, Chicago, IL, 60646",
+    "phone": "(773) 763-8937",
+    "website": "tradingpostcigar.com"
+  },
+  {
+    "id": 14013,
+    "name": "Goodfellas Fine Cigars",
+    "address": "160 N Merchant St, Decatur, IL, 62523",
+    "phone": "(217) 422-6383",
+    "website": "goodfellasfinecigars.com"
+  },
+  {
+    "id": 15627,
+    "name": "The Place Cigar Club and Lounge",
+    "address": "5236 Main St, Downers Grove, IL, 60515",
+    "phone": "(630) 239-7177",
+    "website": "theplacedg.com"
+  },
+  {
+    "id": 15726,
+    "name": "Old Havana Cigar Shop",
+    "address": "189 E Butterfield Rd, Elmhurst, IL, 60126",
+    "phone": "(331) 225-3579",
+    "website": "OldHavanaCigarShop.com"
+  },
+  {
+    "id": 14391,
+    "name": "The Embassy Cigar Lounge",
+    "address": "1615 Vollmer Rd, Flossmoor, IL, 60422",
+    "phone": "(708) 726-0388",
+    "website": "theembassy.vip"
+  },
+  {
+    "id": 14340,
+    "name": "Little Havana Cigar Lounge",
+    "address": "7645 W Saint Francis Rd, Frankfort, IL, 60423",
+    "phone": "(708) 495-2603",
+    "website": "LittleHavanaCigarLounge.com"
+  },
+  {
+    "id": 15524,
+    "name": "Blue Label Lounge",
+    "address": "423 N State St, Lockport, IL, 60441",
+    "phone": "(815) 524-4179",
+    "website": "bluelabelcigarlounge.com"
+  },
+  {
+    "id": 15980,
+    "name": "New Havana Joe's Cigar Store & Lounge",
+    "address": "211 E Rand Rd, Mt Prospect, IL, 60056",
+    "phone": "(224) 735-3352",
+    "website": "newhavanajoes.com"
+  },
+  {
+    "id": 13377,
+    "name": "Ash Cigar Lounge",
+    "address": "3901 N Prospect Rd, Peoria Heights, IL, 61616",
+    "phone": "(309) 916-9750",
+    "website": "ashcigarlounge.club"
+  },
+  {
+    "id": 15963,
+    "name": "Strike The Box Pipes and Cigars",
+    "address": "6935 11th St #8, Rockford, IL, 61109",
+    "phone": "(815) 362-4427",
+    "website": "striketheboxpipeandcigar.com"
+  },
+  {
+    "id": 13340,
+    "name": "Hickey Brothers Cigar Store",
+    "address": "130 18th St, Rock Island, IL, 61201",
+    "phone": "(309) 732-3222",
+    "website": "hickeybrothers.com"
+  },
+  {
+    "id": 14535,
+    "name": "The Cigar Box",
+    "address": "13702 N Meridian St, Carmel, IN, 46032",
+    "phone": "(317) 993-3074",
+    "website": "thecigarboxonline.com"
+  },
+  {
+    "id": 14788,
+    "name": "The Bay Cigar Lounge LLC",
+    "address": "901 Eastern Blvd, Clarksville, IN, 47129",
+    "phone": "(502) 493-7229",
+    "website": "thebaycigarlounge.com"
+  },
+  {
+    "id": 14307,
+    "name": "Level Up Cigar Hookah Lounge",
+    "address": "101 Joliet St, Dyer, IN, 46311",
+    "phone": "(219) 440-7540",
+    "website": "levelupsmokelounge.com"
+  },
+  {
+    "id": 16365,
+    "name": "Miller Beach Cigar Bar",
+    "address": "567 S Lake St, Gary, IN, 46403",
+    "phone": "(219) 746-6363",
+    "website": "millerbeachcigarbar.com"
+  },
+  {
+    "id": 14335,
+    "name": "Burn by Rocky Patel Indianapolis",
+    "address": "110 S Meridian St, Indianapolis, IN, 46225",
+    "phone": "(317) 602-2260",
+    "website": "burnbyrockypatel.com/indianapolis"
+  },
+  {
+    "id": 14523,
+    "name": "The Cigar Box Indianapolis",
+    "address": "7421 N Shadeland Ave, Indianapolis, IN, 46250",
+    "phone": "(317) 841-9992",
+    "website": "thecigarboxonline.com"
+  },
+  {
+    "id": 14739,
+    "name": "Match Cigar Bar",
+    "address": "207 Spring St, Jeffersonville, IN, 47130",
+    "phone": "(812) 590-2271",
+    "website": "matchcigarbar.com"
+  },
+  {
+    "id": 14532,
+    "name": "648 Bourbon and Cigar Lounge",
+    "address": "648 Main St, Lafayette, IN, 47901",
+    "phone": "(765) 746-6271",
+    "website": "648bourboncigarlounge.com"
+  },
+  {
+    "id": 14533,
+    "name": "Crossroads Cigars",
+    "address": "604 Columbia St, Lafayette, IN, 47901",
+    "phone": "(765) 269-7102",
+    "website": "crossroadscigars.com"
+  },
+  {
+    "id": 14383,
+    "name": "Karma Cigar Bar",
+    "address": "850 W 81st Ave, Merrillville, IN, 46410",
+    "phone": "(219) 226-3038",
+    "website": "karmacigar.com"
+  },
+  {
+    "id": 16392,
+    "name": "The Golden Leaf",
+    "address": "232 W 4th St, Michigan City, IN, 46360",
+    "phone": "(219) 872-9692",
+    "website": null
+  },
+  {
+    "id": 14769,
+    "name": "Lit Cigar Bar and Lounge",
+    "address": "330 Vincennes St, New Albany, IN, 47150",
+    "phone": "(812) 590-2323",
+    "website": "litcigarbarandlounge.com"
+  },
+  {
+    "id": 14612,
+    "name": "The Office Cigar Shop & Lounge",
+    "address": "2702 Paoli Pike, New Albany, IN, 47150",
+    "phone": "(812) 786-7477",
+    "website": "theofficecigarlounge.com"
+  },
+  {
+    "id": 14489,
+    "name": "Villa Havana Cigar Lounge",
+    "address": "1731 E Main St, Plainfield, IN, 46168",
+    "phone": "(317) 203-5114",
+    "website": "villahavanaplainfield.com"
+  },
+  {
+    "id": 14493,
+    "name": "The Cigar Box Bar & Lounge",
+    "address": "1385 Chatham Commons Blvd, Westfield, IN, 46074",
+    "phone": "(317) 804-2369",
+    "website": "thecigarboxonline.com"
+  },
+  {
+    "id": 11694,
+    "name": "Hutch Humidor",
+    "address": "214 S Main St, Hutchinson, KS, 67501",
+    "phone": "(620) 500-2200",
+    "website": "hutchhumidor.com"
+  },
+  {
+    "id": 11980,
+    "name": "Fireside Cigar",
+    "address": "15999 S Bradley Dr, Olathe, KS, 66062",
+    "phone": "(913) 839-9051",
+    "website": "firesidecigar.com"
+  },
+  {
+    "id": 11974,
+    "name": "Cigar and Tabac",
+    "address": "6898 W 105th St, Overland Park, KS, 66212",
+    "phone": "(913) 381-5597",
+    "website": "cigarandtabacltd.com"
+  },
+  {
+    "id": 12045,
+    "name": "Outlaw Cigar Co",
+    "address": "13700 Metcalf Ave, Overland Park, KS, 66223",
+    "phone": "(913) 814-9000",
+    "website": "outlawcigar.com"
+  },
+  {
+    "id": 11530,
+    "name": "Big Booty Trudy's Speakeasy and Cigar Bar",
+    "address": "509 S Broadway Blvd, Salina, KS, 67401",
+    "phone": "(785) 833-2022",
+    "website": "bigbootytrudys.com"
+  },
+  {
+    "id": 11412,
+    "name": "Cigar Chateau & Gifts",
+    "address": "10221 W 21st St N, Wichita, KS, 67205",
+    "phone": "(316) 636-2433",
+    "website": "cigarchateau.com"
+  },
+  {
+    "id": 11413,
+    "name": "The Humidor Cocktail Lounge",
+    "address": "8558 W 21st St, Wichita, KS, 67205",
+    "phone": "(316) 440-4890",
+    "website": "westsidehumidor1.com"
+  },
+  {
+    "id": 15022,
+    "name": "Leaf & Barrel Cigar and Bourbon Lounge",
+    "address": "401 Outlet Center Dr #340, Georgetown, KY, 40324",
+    "phone": "(502) 642-8044",
+    "website": "leafandbarrellounge.com"
+  },
+  {
+    "id": 15003,
+    "name": "Jake's Cigar Bar",
+    "address": "100 Langley Dr, Nicholasville, KY, 40356",
+    "phone": "(859) 273-0351",
+    "website": "jakescigarbar.com"
+  },
+  {
+    "id": 13948,
+    "name": "The House of Ross Coffee Bar and Cigar Lounge",
+    "address": "227 N 13th St, Paducah, KY, 42001",
+    "phone": "(270) 415-5824",
+    "website": "thehouseofross.org"
+  },
+  {
+    "id": 7279,
+    "name": "Tobacco House",
+    "address": "3055 E Texas St, Bossier City, LA, 71111",
+    "phone": "(318) 746-7700",
+    "website": "tobaccohouse.us"
+  },
+  {
+    "id": 6002,
+    "name": "Cigar Merchant LLC",
+    "address": "1001 Coolidge St, Lafayette, LA, 70503",
+    "phone": "(337) 233-9611",
+    "website": "cigarmerchantlafayette.com"
+  },
+  {
+    "id": 5970,
+    "name": "Big Easy Cigar Lounge",
+    "address": "4650 W Esplanade Ave, Metairie, LA, 70006",
+    "phone": "(504) 252-9789",
+    "website": "bigeasycigarslounge.com"
+  },
+  {
+    "id": 6023,
+    "name": "La Cigar Collective",
+    "address": "3807 Airline Dr, Metairie, LA, 70001",
+    "phone": "(504) 354-8619",
+    "website": "LACigarCollective.com"
+  },
+  {
+    "id": 6316,
+    "name": "Cuban Creations Cigar Bar",
+    "address": "533 Toulouse St, New Orleans, LA, 70130",
+    "phone": "(504) 372-4838",
+    "website": "cigarbarnola.com"
+  },
+  {
+    "id": 7157,
+    "name": "Havana Cigar and Sports Bar",
+    "address": "855 Pierremont Rd, Shreveport, LA, 71106",
+    "phone": "(318) 208-8699",
+    "website": "havanasportscigar.com"
+  },
+  {
+    "id": 7124,
+    "name": "Tobacco House #6",
+    "address": "6730 Pines Rd  Ste 206, Shreveport, LA, 71129",
+    "phone": "(318) 683-0069",
+    "website": "tobaccohouse.us"
+  },
+  {
+    "id": 7286,
+    "name": "Tobacco House Number 4",
+    "address": "707 S Pine St, Vivian, LA, 71082",
+    "phone": "(318) 375-2969",
+    "website": "tobaccohouse.us"
+  },
+  {
+    "id": 22440,
+    "name": "Original Seed Cigar & Lounge",
+    "address": "32 N Summer St, Adams, MA, 01220",
+    "phone": "(413) 749-7190",
+    "website": "originalseedcigar.com"
+  },
+  {
+    "id": 22813,
+    "name": "Boston Cigar Lounge",
+    "address": "73 Main St, Boston, MA, 02129",
+    "phone": "(617) 242-6010",
+    "website": "bostoncigarclub.com"
+  },
+  {
+    "id": 22845,
+    "name": "Elements Cigar / Hookah Lounge",
+    "address": "15 Victoria St, Everett, MA, 02149",
+    "phone": "(617) 778-8193",
+    "website": "elementscigarlounge.com"
+  },
+  {
+    "id": 22644,
+    "name": "C.B. Perkins Cigar Lounge & Bar",
+    "address": "649 Main St, Hyannis, MA, 02601",
+    "phone": "(508) 444-2029",
+    "website": "cbperkinscigars.com"
+  },
+  {
+    "id": 22881,
+    "name": "Cigar and Lounge",
+    "address": "56 Dexter Ave, Watertown, MA, 02472",
+    "phone": "(617) 393-1645",
+    "website": "cigarandlounge.com"
+  },
+  {
+    "id": 20319,
+    "name": "Chesapeake Pipe & Cigar",
+    "address": "45 Old Solomons Island Rd, Annapolis, MD, 21401",
+    "phone": "(443) 949-9004",
+    "website": "chesapeakepipeandcigar.com"
+  },
+  {
+    "id": 20136,
+    "name": "Davidus Cigars",
+    "address": "25 Olney Sandy Spring Rd, Ashton, MD, 20861",
+    "phone": "(301) 260-0788",
+    "website": "davidus.com"
+  },
+  {
+    "id": 20019,
+    "name": "Veterans Cigar Club",
+    "address": "6409 Old Alexandria Ferry Rd, Clinton, MD, 20735",
+    "phone": "(240) 244-5700",
+    "website": "veteranscigarclub.com"
+  },
+  {
+    "id": 20173,
+    "name": "Humidour Cigar Shoppe",
+    "address": "2 Sherwood Rd, Cockeysville, MD, 21030",
+    "phone": "(410) 666-3212",
+    "website": "humidour.com"
+  },
+  {
+    "id": 18452,
+    "name": "Queen City Cigar Company",
+    "address": "114 S Centre St, Cumberland, MD, 21502",
+    "phone": "(301) 338-7999",
+    "website": "queencitycigarcompany.com"
+  },
+  {
+    "id": 20179,
+    "name": "Easton Cigar and Smoke Shop",
+    "address": "6 Glenwood Ave Suite 1, Easton, MD, 21601",
+    "phone": "(410) 770-5084",
+    "website": "eastoncigarsmokeshop.com"
+  },
+  {
+    "id": 20265,
+    "name": "Aphelion Cigar Lounge",
+    "address": "2510 Conway Rd  Ste 106, Gambrills, MD, 21054",
+    "phone": "(410) 721-1700",
+    "website": "aphelioncigarlounge.com"
+  },
+  {
+    "id": 20264,
+    "name": "Titan Cigar Shop and Lounge",
+    "address": "2634 Chapel Lake Dr, Gambrills, MD, 21054",
+    "phone": "(410) 721-0100",
+    "website": "TitanCigar.com"
+  },
+  {
+    "id": 20312,
+    "name": "Tobacco Leaf",
+    "address": "7395 Cedar Ave, Jessup, MD, 20794",
+    "phone": "(410) 799-2094",
+    "website": "tobaccoleafmd.shop"
+  },
+  {
+    "id": 20007,
+    "name": "Senor Cigar's",
+    "address": "3314 Coastal Hwy, Ocean City, MD, 21842",
+    "phone": "(410) 524-2069",
+    "website": "senorcigars.com"
+  },
+  {
+    "id": 20126,
+    "name": "Tobacco On Main St",
+    "address": "133 E Main St #2C, Westminster, MD, 21157",
+    "phone": "(800) 272-1933",
+    "website": "tobaccoonmainst.com"
+  },
+  {
+    "id": 23090,
+    "name": "Cigaret Shopper",
+    "address": "64 North St, Houlton, ME, 04730",
+    "phone": "(207) 532-7207",
+    "website": "cigaretshopper.com"
+  },
+  {
+    "id": 23103,
+    "name": "Cigaret Shopper",
+    "address": "287 W Broadway, Lincoln, ME, 04457",
+    "phone": "(207) 794-3801",
+    "website": "cigaretshopper.com"
+  },
+  {
+    "id": 23050,
+    "name": "Cigaret Shopper",
+    "address": "579 Congress St, Portland, ME, 04101",
+    "phone": "(207) 772-2709",
+    "website": "cigaretshopper.com"
+  },
+  {
+    "id": 23086,
+    "name": "Cigaret Shopper",
+    "address": "25 Washington Rd, Waldoboro, ME, 04572",
+    "phone": "(207) 832-7580",
+    "website": "cigaretshopper.com"
+  },
+  {
+    "id": 23087,
+    "name": "Cigaret Shopper",
+    "address": "778 Roosevelt Trl, Windham, ME, 04062",
+    "phone": "(207) 892-8923",
+    "website": "cigaretshopper.com"
+  },
+  {
+    "id": 16559,
+    "name": "Chaloner & Co",
+    "address": "108 W Maumee St, Adrian, MI, 49221",
+    "phone": "(517) 263-9803",
+    "website": "chalonerscigarhouse.com"
+  },
+  {
+    "id": 17329,
+    "name": "Havana Dan's Cigar Bar",
+    "address": "804 E Midland St, Bay City, MI, 48706",
+    "phone": "(989) 778-2349",
+    "website": "libertyharboreventcenter.com/havana-dans"
+  },
+  {
+    "id": 17334,
+    "name": "Timothy's Fine Cigars",
+    "address": "115 Center Ave, Bay City, MI, 48708",
+    "phone": "(989) 894-6673",
+    "website": "timothysfinecigars.com"
+  },
+  {
+    "id": 17032,
+    "name": "Churchills Bistro Cigar Bar",
+    "address": "116 S Old Woodward Ave, Birmingham, MI, 48009",
+    "phone": "(248) 647-4555",
+    "website": "churchillscigarbar.com"
+  },
+  {
+    "id": 16721,
+    "name": "Le Cigar",
+    "address": "21918 Michigan Ave, Dearborn, MI, 48124",
+    "phone": "(313) 359-1716",
+    "website": "lecigardearborn.com"
+  },
+  {
+    "id": 16961,
+    "name": "Byrd's Cigar Lounge",
+    "address": "9421 John R St, Detroit, MI, 48202",
+    "phone": "(313) 466-2287",
+    "website": "Byrdscigarlounge.com"
+  },
+  {
+    "id": 16889,
+    "name": "Puff Puff Tobacco",
+    "address": "3340 E Lake Lansing Rd, East Lansing, MI, 48823",
+    "phone": "(517) 483-2166",
+    "website": "puffpufftobacco.com"
+  },
+  {
+    "id": 16825,
+    "name": "Secreto Cigar Bar",
+    "address": "315 W Nine Mile Rd, Ferndale, MI, 48220",
+    "phone": "(248) 542-4427",
+    "website": "secretocigarbar.com"
+  },
+  {
+    "id": 17326,
+    "name": "O Cigar Bar",
+    "address": "34 S Broadway St, Lake Orion, MI, 48362",
+    "phone": "(248) 690-7040",
+    "website": "ocigarbar.com"
+  },
+  {
+    "id": 16763,
+    "name": "Puff Puff Tobacco",
+    "address": "5603 W Saginaw Hwy, Lansing, MI, 48917",
+    "phone": "(517) 708-7973",
+    "website": "puffpufftobacco.com"
+  },
+  {
+    "id": 16869,
+    "name": "Puff Puff Tobacco",
+    "address": "2110 N Larch St, Lansing, MI, 48906",
+    "phone": "(517) 580-8612",
+    "website": "puffpufftobacco.com"
+  },
+  {
+    "id": 16730,
+    "name": "Northville Cigar Lounge",
+    "address": "331 N Center St, Northville, MI, 48167",
+    "phone": "(248) 924-3777",
+    "website": "northvillecigarlounge.com"
+  },
+  {
+    "id": 17376,
+    "name": "The Godfather Cigar Martini Lounge",
+    "address": "6876 N Rochester Rd, Rochester Hills, MI, 48306",
+    "phone": "(248) 652-1400",
+    "website": "Tgfcigar.com"
+  },
+  {
+    "id": 19433,
+    "name": "Don Christo's Cigar Room",
+    "address": "51748 Van Dyke Ave, Shelby Twp, MI, 48316",
+    "phone": "(586) 580-3546",
+    "website": "donchristos.com"
+  },
+  {
+    "id": 16404,
+    "name": "On the River Tavern & Mo’s Cigar Bar",
+    "address": "600 Fishermans Rd, St Joseph, MI, 49085",
+    "phone": "(269) 983-6878",
+    "website": "sjotr.com"
+  },
+  {
+    "id": 16832,
+    "name": "Puff Puff Tobacco",
+    "address": "2200 Alpine Ave NW, Walker, MI, 49544",
+    "phone": "(616) 284-8735",
+    "website": "puffpufftobacco.com"
+  },
+  {
+    "id": 16661,
+    "name": "Belicoso Cafe Martini & Wine Cigar Bar",
+    "address": "3030 Biddle Ave, Wyandotte, MI, 48192",
+    "phone": "(734) 282-2244",
+    "website": "belicosocafe.com"
+  },
+  {
+    "id": 13445,
+    "name": "Burn Premium Cigar Specialists",
+    "address": "409 W Burnsville Pkwy, Burnsville, MN, 55337",
+    "phone": "(952) 808-9259",
+    "website": "burncigars.com"
+  },
+  {
+    "id": 13380,
+    "name": "Hutch Tobacco Cigars & E-Cigs.",
+    "address": "725 Baltimore Ave SW, Hutchinson, MN, 55350",
+    "phone": "(320) 455-9021",
+    "website": "smokeshophutchinson.com"
+  },
+  {
+    "id": 13434,
+    "name": "Tobacco Grove",
+    "address": "8069 Wedgewood Ln N, Maple Grove, MN, 55369",
+    "phone": "(763) 494-6688",
+    "website": "tobaccogrove.com"
+  },
+  {
+    "id": 41226,
+    "name": "Minnoco Tobacco",
+    "address": "570 Old Highway 8 Northwest, New Brighton, MN",
+    "phone": "(651) 340-2950",
+    "website": "minnocotobacco.com"
+  },
+  {
+    "id": 12311,
+    "name": "Triple Leaf Cigar",
+    "address": "14021 Manchester Rd, Ballwin, MO, 63011",
+    "phone": "(636) 220-4750",
+    "website": "tripleleafcigar.com"
+  },
+  {
+    "id": 12244,
+    "name": "Cyns Cigar Lounge",
+    "address": "5710 Troost Ave, Kansas City, MO, 64110",
+    "phone": "(847) 858-4031",
+    "website": "cynscigarlounge.com"
+  },
+  {
+    "id": 12333,
+    "name": "The Outlaw Cigar Company",
+    "address": "6234 N Chatham Ave, Kansas City, MO, 64151",
+    "phone": "(816) 505-2442",
+    "website": "outlawcigar.com"
+  },
+  {
+    "id": 12261,
+    "name": "Oak & Ember Cigar and Bourbon Lounge",
+    "address": "630 N Main St, Laurie, MO, 65037",
+    "phone": "(636) 675-4330",
+    "website": "taverntrattoria.com/oak-and-ember-cigar-and-bourbon-lounge"
+  },
+  {
+    "id": 12005,
+    "name": "Stoke & Oak Cigars",
+    "address": "343 W Main St, Park Hills, MO, 63601",
+    "phone": "(573) 327-9417",
+    "website": "stokeandoakcigars.square.site"
+  },
+  {
+    "id": 12457,
+    "name": "LIT Pipe and Cigar",
+    "address": "700 S Main St, St Charles, MO, 63301",
+    "phone": "(636) 946-6899",
+    "website": "litstc.com"
+  },
+  {
+    "id": 12520,
+    "name": "Ash Cigar & Bar Lounge",
+    "address": "3116 Locust St, St Louis, MO, 63103",
+    "phone": "(314) 260-9819",
+    "website": "ashcigarstl.com"
+  },
+  {
+    "id": 12336,
+    "name": "The Hill Cigar Co",
+    "address": "5360 Southwest Ave, St Louis, MO, 63139",
+    "phone": "(314) 776-4455",
+    "website": "hillcigarco.com"
+  },
+  {
+    "id": 12584,
+    "name": "\"The CELLAR\" a Cigar Bar",
+    "address": "5239 Delmar Blvd, St. Louis, MO, 63108",
+    "phone": "(314) 346-0117",
+    "website": "thecellarcigarlounge.com"
+  },
+  {
+    "id": 12200,
+    "name": "Bootleggers Cigars & Apothecary",
+    "address": "201 W Main St, Washington, MO, 63090",
+    "phone": "(636) 432-1267",
+    "website": "bootleggerscigarsandapothecary.com"
+  },
+  {
+    "id": 12217,
+    "name": "Weston Tobacco",
+    "address": "357 Main St, Weston, MO, 64098",
+    "phone": "(816) 386-4086",
+    "website": "westontobacco.com"
+  },
+  {
+    "id": 7327,
+    "name": "Havana and Humidor Cigars",
+    "address": "115 Village Square Dr, Brandon, MS, 39047",
+    "phone": "(601) 981-2222",
+    "website": "humidorandhavana.com"
+  },
+  {
+    "id": 13695,
+    "name": "Spring Street Cigars",
+    "address": "116 N Fillmore St, Corinth, MS, 38834",
+    "phone": "(662) 331-5962",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 6682,
+    "name": "Flames Cigar Lounge",
+    "address": "340 N 25th Ave, Hattiesburg, MS, 39401",
+    "phone": "(769) 241-1318",
+    "website": "flamescigarlounge.com"
+  },
+  {
+    "id": 6679,
+    "name": "Spring Street Cigars",
+    "address": "107 E Front St, Hattiesburg, MS, 39401",
+    "phone": "(601) 336-7875",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 7181,
+    "name": "Spring Street Cigars",
+    "address": "4409 Old Canton Rd, Jackson, MS, 39211",
+    "phone": "(601) 203-2881",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 7288,
+    "name": "Spring Street Cigars",
+    "address": "300 N Frontage Rd, Meridian, MS, 39301",
+    "phone": "(601) 512-2270",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 6574,
+    "name": "Coast Cigars & Lounge",
+    "address": "3418 Bienville Blvd, Ocean Springs, MS, 39564",
+    "phone": "(228) 215-0846",
+    "website": "coastcigarsandlounge.com"
+  },
+  {
+    "id": 11918,
+    "name": "Spring Street Cigars",
+    "address": "5689 Goodman Rd, Olive Branch, MS, 38654",
+    "phone": "(662) 253-8071",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 7421,
+    "name": "Spring Street Cigars",
+    "address": "208 N Spring St, Tupelo, MS, 38804",
+    "phone": "(662) 842-6777",
+    "website": "springstreetcigars.com"
+  },
+  {
+    "id": 17907,
+    "name": "The Cigar Shop Aberdeen",
+    "address": "1608 N Sandhills Blvd, Aberdeen, NC, 28315",
+    "phone": "(910) 944-7665",
+    "website": "thecigarshop.com"
+  },
+  {
+    "id": 17452,
+    "name": "B and B Tobacconists",
+    "address": "520 Hendersonville Rd, Asheville, NC, 28803",
+    "phone": "(828) 253-8822",
+    "website": "bbtobacconists.net"
+  },
+  {
+    "id": 17482,
+    "name": "Carolina Cigar Company",
+    "address": "45 Broadway St, Asheville, NC, 28801",
+    "phone": "(828) 281-1500",
+    "website": "carolinacigarcompany.com"
+  },
+  {
+    "id": 17982,
+    "name": "Absolute Cigars NC",
+    "address": "1424 Holt Rd, Cary, NC, 27519",
+    "phone": "(919) 468-3999",
+    "website": "absolutecigarsnc.com"
+  },
+  {
+    "id": 17421,
+    "name": "City Cigar Co",
+    "address": "9815 Rea Rd, Charlotte, NC, 28277",
+    "phone": "(704) 443-7203",
+    "website": "citycigarco.com"
+  },
+  {
+    "id": 17420,
+    "name": "The Vintage Whiskey & Cigar Bar",
+    "address": "215 E Worthington Ave, Charlotte, NC, 28203",
+    "phone": "(704) 931-3636",
+    "website": "thevintageclt.com"
+  },
+  {
+    "id": 17432,
+    "name": "Tobacco Trader",
+    "address": "8152 S Tryon St, Charlotte, NC, 28273",
+    "phone": "(704) 588-0440",
+    "website": "tobaccotradercigars.com"
+  },
+  {
+    "id": 17551,
+    "name": "Cornelius Humidor and Tobacco",
+    "address": "19732 One Norman Blvd, Cornelius, NC, 28031",
+    "phone": "(980) 689-2831",
+    "website": "corneliushumidortobacco.net"
+  },
+  {
+    "id": 18188,
+    "name": "Smoking Bull Cigar Lounge",
+    "address": "1214 University Dr, Durham, NC, 27707",
+    "phone": "(919) 908-8982",
+    "website": "smokingbullcigar.com"
+  },
+  {
+    "id": 17302,
+    "name": "Casablanca Cigar Bar",
+    "address": "411 N Main St, Hendersonville, NC, 28792",
+    "phone": "(828) 595-2499",
+    "website": "casablancacigarbar.com"
+  },
+  {
+    "id": 17825,
+    "name": "Southerlands Cigar Lounge",
+    "address": "804 N Main St, High Point, NC, 27262",
+    "phone": "(336) 803-4093",
+    "website": "southerlandscigarlounge.com"
+  },
+  {
+    "id": 17561,
+    "name": "Burners Cigar Co.-Birkdale Village",
+    "address": "16620 Cranlyn Rd, Huntersville, NC, 28078",
+    "phone": "(704) 892-5112",
+    "website": "burnerscigar.com"
+  },
+  {
+    "id": 18079,
+    "name": "Abbies Cigars",
+    "address": "101 S Smithfield Rd, Knightdale, NC, 27545",
+    "phone": "(919) 964-2611",
+    "website": "abbiescigars.com"
+  },
+  {
+    "id": 17383,
+    "name": "105 Cigar Co.",
+    "address": "217 N Trade St, Matthews, NC, 28105",
+    "phone": "(704) 749-0405",
+    "website": "105cigarco.com"
+  },
+  {
+    "id": 17587,
+    "name": "Gold Leaf Cigar Lounge",
+    "address": "105 Landings Dr, Mooresville, NC, 28117",
+    "phone": "(704) 997-8279",
+    "website": "goldleafcigarlounge.com"
+  },
+  {
+    "id": 17933,
+    "name": "Pipe & Ember",
+    "address": "192 N Main St #100, Mt Airy, NC, 27030",
+    "phone": "(336) 648-8272",
+    "website": "PipeAndEmber.com"
+  },
+  {
+    "id": 17515,
+    "name": "Smoke and Barrel Cigar Bar and Lounge",
+    "address": "121 E Charlotte Ave, Mt Holly, NC, 28120",
+    "phone": "(704) 812-8621",
+    "website": "sandbcigarlounge.com"
+  },
+  {
+    "id": 19870,
+    "name": "Island Tobacco",
+    "address": "4711 S Croatan Hwy #9, Nags Head, NC, 27959",
+    "phone": "(252) 441-1392",
+    "website": "islandtobacco.com/?y_source=1_MTA4MTAwMDEwMC01NTktbG9jYXRpb24ud2Vic2l0ZQ%3D%3D"
+  },
+  {
+    "id": 19807,
+    "name": "Ocracoke Cigars",
+    "address": "432 Back Rd # 581, Ocracoke, NC, 27960",
+    "phone": "(972) 814-0886",
+    "website": "ocracokecigars.com"
+  },
+  {
+    "id": 17992,
+    "name": "Cigar Barn",
+    "address": "3256 NC-87 S, Sanford, NC, 27332",
+    "phone": "(919) 292-1451",
+    "website": "ansteads.com"
+  },
+  {
+    "id": 17400,
+    "name": "FD Cigar Company",
+    "address": "108 E South Main St, Waxhaw, NC, 28173",
+    "phone": "(704) 256-3671",
+    "website": "fdcigarcompany.com"
+  },
+  {
+    "id": 13054,
+    "name": "Big Stick Cigar Lounge",
+    "address": "104 2nd Ave NW, Mandan, ND, 58554",
+    "phone": "(701) 751-1029",
+    "website": "bigstickcigarsnd.com"
+  },
+  {
+    "id": 12936,
+    "name": "Copper Leaf cigar lounge",
+    "address": "3421 State St, Grand Island, NE, 68803",
+    "phone": "(308) 379-7043",
+    "website": "copperleaf-lounge.com"
+  },
+  {
+    "id": 12950,
+    "name": "NVY Bar & Cigar Lounge",
+    "address": "1925 Central Ave, Kearney, NE, 68847",
+    "phone": "(308) 224-3819",
+    "website": "nvybarcigarlounge.com"
+  },
+  {
+    "id": 12946,
+    "name": "Hearth Cigars & Pipes",
+    "address": "9230 Mormon Bridge Rd, Omaha, NE, 68152",
+    "phone": "(402) 964-2995",
+    "website": "hearthcigars.com"
+  },
+  {
+    "id": 12796,
+    "name": "Nicklebys Smoke Ring",
+    "address": "2464 S 120th St, Omaha, NE, 68144",
+    "phone": "(402) 330-4556",
+    "website": "nicklebyscigars.com"
+  },
+  {
+    "id": 12925,
+    "name": "Safari Cigars and Lounge",
+    "address": "13110 Birch Dr, Omaha, NE, 68164",
+    "phone": "(402) 965-1460",
+    "website": "safaricigarsandlounge.com"
+  },
+  {
+    "id": 12858,
+    "name": "S. G. Roi Tobacconist",
+    "address": "503 S 11th St, Omaha, NE, 68102",
+    "phone": "(402) 341-9264",
+    "website": "sgroitobacconist.com"
+  },
+  {
+    "id": 12844,
+    "name": "The Omaha Cigar Company",
+    "address": "5030 S 108th St, Omaha, NE, 68137",
+    "phone": "(531) 466-4882",
+    "website": "theomahacigarcompany.com"
+  },
+  {
+    "id": 23096,
+    "name": "TK's Cigar Bar & Golf Sims",
+    "address": "1625 NH-16, Center Ossipee, NH, 03814",
+    "phone": "(603) 256-2800",
+    "website": "tkspremiumcigarbarandgolfsims.com"
+  },
+  {
+    "id": 22992,
+    "name": "Federal Cigar",
+    "address": "96 Calef Hwy #2224, Epping, NH, 03042",
+    "phone": "(603) 679-2447",
+    "website": "federalcigar.com"
+  },
+  {
+    "id": 23010,
+    "name": "Granite State Cigar Shop",
+    "address": "1325 Union Ave, Laconia, NH, 03246",
+    "phone": "(603) 619-5740",
+    "website": "granitestatecigarshop.com"
+  },
+  {
+    "id": 22983,
+    "name": "Happy Jack's Cigars",
+    "address": "71 Church St, Laconia, NH, 03246",
+    "phone": "(603) 528-4092",
+    "website": "happyjacksonline.com"
+  },
+  {
+    "id": 22835,
+    "name": "Holy Smokes",
+    "address": "297 S Willow St, Manchester, NH, 03103",
+    "phone": "(603) 623-3337",
+    "website": "holysmokescigars.com"
+  },
+  {
+    "id": 22836,
+    "name": "Nh Cigars",
+    "address": "297 S Willow St, Manchester, NH, 03103",
+    "phone": "(888) 302-4427",
+    "website": "nhcigars.com"
+  },
+  {
+    "id": 22934,
+    "name": "Federal Cigar",
+    "address": "36 Market St, Portsmouth, NH, 03801",
+    "phone": "(603) 436-5363",
+    "website": "federalcigar.com"
+  },
+  {
+    "id": 21469,
+    "name": "Essex Cigar",
+    "address": "504 Washington Ave, Belleville, NJ, 07109",
+    "phone": "(973) 450-5245",
+    "website": "essexcigarlounge.com"
+  },
+  {
+    "id": 21185,
+    "name": "Senor Juan's Cigars",
+    "address": "905 Main St, Belmar, NJ, 07719",
+    "phone": "(732) 749-3192",
+    "website": "senorjuanscigars.com"
+  },
+  {
+    "id": 21631,
+    "name": "Ten86 Cigars",
+    "address": "1086 Goffle Rd, Hawthorne, NJ, 07506",
+    "phone": "(973) 949-3009",
+    "website": "ten86cigars.com"
+  },
+  {
+    "id": 21628,
+    "name": "JM Cigars",
+    "address": "248 Espanong Rd, Lake Hopatcong, NJ, 07849",
+    "phone": "(862) 777-1999",
+    "website": "jeffersonmarketnj.com/jm-cigars"
+  },
+  {
+    "id": 20773,
+    "name": "Heritage Premium Cigar Shop",
+    "address": "107 Merchants Way, Marlton, NJ, 08053",
+    "phone": "(856) 988-7665",
+    "website": "HeritagePremiumCigars.com"
+  },
+  {
+    "id": 21198,
+    "name": "Executive Leaf Cigar Emporium",
+    "address": "936 Broad St, Newark, NJ, 07102",
+    "phone": "(973) 679-6815",
+    "website": "theexecutiveleaf.com"
+  },
+  {
+    "id": 21199,
+    "name": "Jimenez Tobacco",
+    "address": "31 Liberty St, Newark, NJ, 07102",
+    "phone": "(973) 242-7904",
+    "website": "jimeneztobacco.com"
+  },
+  {
+    "id": 21634,
+    "name": "Leafs Cigar Lounge",
+    "address": "185 Madison Ave., New Milford, NJ, 07646",
+    "phone": "(201) 483-9300",
+    "website": "leafscigarlounge.com"
+  },
+  {
+    "id": 21412,
+    "name": "Brivado Cigars",
+    "address": "14 N Center St, Orange, NJ, 07050",
+    "phone": "(732) 366-3044",
+    "website": "brivadocigars.com"
+  },
+  {
+    "id": 20891,
+    "name": "Cigar Parlour At Earth's End Princeton",
+    "address": "45 Spring St, Princeton, NJ, 08542",
+    "phone": "(609) 356-0407",
+    "website": "earthsend.com/cigar-parlour"
+  },
+  {
+    "id": 20988,
+    "name": "Sticks Cigars of Rahway",
+    "address": "1513 Main St, Rahway, NJ, 07065",
+    "phone": "(732) 540-8500",
+    "website": "SticksCigarsNJ.com"
+  },
+  {
+    "id": 21667,
+    "name": "The Tobacco Shop of Ridgewood",
+    "address": "10 Chestnut St, Ridgewood, NJ, 07450",
+    "phone": "(201) 447-2204",
+    "website": "tobaccoshop.com"
+  },
+  {
+    "id": 21130,
+    "name": "The Leaf Cigar Emporium",
+    "address": "415 Shrewsbury Ave, Shrewsbury, NJ, 07702",
+    "phone": "(732) 747-0592",
+    "website": "leafcigaremporium.com"
+  },
+  {
+    "id": 20859,
+    "name": "Sticks Cigars of Somerville",
+    "address": "57 W Main St, Somerville, NJ, 08876",
+    "phone": "(908) 450-7500",
+    "website": "JerseyCigars.com"
+  },
+  {
+    "id": 21273,
+    "name": "Barrister Cigars",
+    "address": "2565 US-22, Union, NJ, 07083",
+    "phone": "(908) 964-3000",
+    "website": "barristercigars.com"
+  },
+  {
+    "id": 2498,
+    "name": "midnight moon cigars",
+    "address": "2617 N White Sands Blvd, Alamogordo, NM, 88310",
+    "phone": "(575) 348-2222",
+    "website": "midnightmooncigars.com"
+  },
+  {
+    "id": 10923,
+    "name": "Havana House Cigar Shop",
+    "address": "7600 Jefferson St NE #7th, Albuquerque, NM, 87109",
+    "phone": "(505) 797-9688",
+    "website": "havanahousecigarshop.com"
+  },
+  {
+    "id": 10844,
+    "name": "Lady Huntington's Fine Pipes & Pouches",
+    "address": "11200 Montgomery Blvd NE, Albuquerque, NM, 87111",
+    "phone": "(505) 492-1125",
+    "website": "ladyhlounge.net"
+  },
+  {
+    "id": 11026,
+    "name": "Montes Cigars and Pipe Tobacco",
+    "address": "3636 San Mateo Blvd NE, Albuquerque, NM, 87110",
+    "phone": "(505) 881-7999",
+    "website": "montescigarshop.com"
+  },
+  {
+    "id": 10865,
+    "name": "Padres Cigars",
+    "address": "4605 Corrales Rd, Corrales, NM, 87048",
+    "phone": "(505) 226-0628",
+    "website": "padrescigars.com"
+  },
+  {
+    "id": 9541,
+    "name": "Maine Street Cigar Company",
+    "address": "83 S Maine St, Fallon, NV, 89406",
+    "phone": "(775) 302-8773",
+    "website": "mainestreetcigar.com"
+  },
+  {
+    "id": 9589,
+    "name": "Sunset Cigar Lounge",
+    "address": "565 Marks St #150, Henderson, NV, 89014",
+    "phone": "(725) 240-1932",
+    "website": "sunsetcigarlv.com"
+  },
+  {
+    "id": 9383,
+    "name": "Chocolate City El Septimo Cigar Lounge",
+    "address": "1511 S Commerce St, Las Vegas, NV, 89102",
+    "phone": "(725) 205-0906",
+    "website": "chocolatecityelseptimolv.com"
+  },
+  {
+    "id": 9400,
+    "name": "Davidoff of Geneva Cigar Bar",
+    "address": "3200 Las Vegas Blvd S, Las Vegas, NV, 89109",
+    "phone": "(702) 473-5001",
+    "website": "davidoffcigarbarlv.com"
+  },
+  {
+    "id": 9313,
+    "name": "Eight Cigar Lounge",
+    "address": "3000 S Las Vegas Blvd, Las Vegas, NV, 89109",
+    "phone": "(702) 676-7405",
+    "website": "eightloungelv.com"
+  },
+  {
+    "id": 9363,
+    "name": "En Fuego Cigars & Lounge",
+    "address": "3540 W Sahara Ave, Las Vegas, NV, 89102",
+    "phone": "(702) 384-9262",
+    "website": "enfuegolasvegas.com"
+  },
+  {
+    "id": 9259,
+    "name": "Helios Cigar Lounge",
+    "address": "5752 S Fort Apache Rd #155, Las Vegas, NV, 89148",
+    "phone": "(702) 202-0008",
+    "website": "helioscigars.com"
+  },
+  {
+    "id": 9356,
+    "name": "Las Vegas Cigar Outlet",
+    "address": "1560 E Sahara Ave, Las Vegas, NV, 89104",
+    "phone": "(702) 473-5440",
+    "website": "lasvegascigarsonline.com"
+  },
+  {
+    "id": 9464,
+    "name": "Mr. Bill's Pipe and Tobacco Company",
+    "address": "4441 W Flamingo Rd, Las Vegas, NV, 89103",
+    "phone": "(702) 221-9771",
+    "website": "mr-bills.com"
+  },
+  {
+    "id": 9382,
+    "name": "Tap N Ash Social Club - Cigars & Libations",
+    "address": "1606 S Commerce St, Las Vegas, NV, 89102",
+    "phone": "(725) 204-5254",
+    "website": "Tapnashlv.com"
+  },
+  {
+    "id": 9670,
+    "name": "Fumare Fine Cigar Boutique",
+    "address": "7530 Longley Ln, Reno, NV, 89511",
+    "phone": "(775) 825-1121",
+    "website": "fumareusa.com"
+  },
+  {
+    "id": 9715,
+    "name": "Happy Dayze Cigar and Smoke",
+    "address": "1700 Victorian Ave, Sparks, NV, 89431",
+    "phone": "(775) 358-8875",
+    "website": "happydayze.net"
+  },
+  {
+    "id": 38236,
+    "name": "The Welton Room.  A metropolitan cigar lounge.",
+    "address": "492 Albany Shaker Rd, Albany, NY, 12211",
+    "phone": null,
+    "website": "TheWeltonRoom.com"
+  },
+  {
+    "id": 22147,
+    "name": "Long Island Cigar",
+    "address": "4775 Sunrise Hwy, Bohemia, NY, 11716",
+    "phone": "(631) 750-6800",
+    "website": "LIcigar.com"
+  },
+  {
+    "id": 19466,
+    "name": "Nickel City Cigars",
+    "address": "284 Franklin St, Buffalo, NY, 14202",
+    "phone": "(716) 844-9696",
+    "website": "nickelcitycigars.com"
+  },
+  {
+    "id": 22082,
+    "name": "The Carmel Cigar Vault",
+    "address": "71 Gleneida Ave, Carmel, NY, 10512",
+    "phone": "(929) 614-6561",
+    "website": "thecarmelcigarvault.com"
+  },
+  {
+    "id": 22080,
+    "name": "Carmel Cigar Vault",
+    "address": "71 Gleneida Ave, Carmel Hamlet, NY, 10512",
+    "phone": "(929) 614-6561",
+    "website": "thecarmelcigarvault.com"
+  },
+  {
+    "id": 19685,
+    "name": "Tinder Box Buffalo",
+    "address": "4401 Transit Rd Ste 375, Clarence, NY, 14221",
+    "phone": "(716) 689-2914",
+    "website": "tinderboxbuffalo.com"
+  },
+  {
+    "id": 19616,
+    "name": "Cygaro Cigar Club & Lounge",
+    "address": "32 Washington St, Ellicottville, NY, 14731",
+    "phone": "(716) 699-1323",
+    "website": "Cygaroellicottville.com"
+  },
+  {
+    "id": 22006,
+    "name": "The Cigar Republic",
+    "address": "133 E Main St, Elmsford, NY, 10523",
+    "phone": "(914) 592-1580",
+    "website": "TheCigarRepublic.com"
+  },
+  {
+    "id": 19714,
+    "name": "Nice Ash Cigars",
+    "address": "36 Jefferson Ave, Fairport, NY, 14450",
+    "phone": "(585) 364-3773",
+    "website": "niceashnews.com"
+  },
+  {
+    "id": 21463,
+    "name": "Jim's Stogies",
+    "address": "220 Main St, Farmingdale, NY, 11735",
+    "phone": "(516) 753-2596",
+    "website": "notessipsandstogies.com"
+  },
+  {
+    "id": 21465,
+    "name": "The Polo Cigar Lounge",
+    "address": "1100 Stewart Ave, Garden City, NY, 11530",
+    "phone": "(516) 340-0294",
+    "website": "thepolocigarlounge.com"
+  },
+  {
+    "id": 22095,
+    "name": "Tobacco Plaza",
+    "address": "218 Lakeville Rd, Great Neck, NY, 11020",
+    "phone": "(516) 829-7134",
+    "website": "tobaccoplazany.com"
+  },
+  {
+    "id": 22405,
+    "name": "Iron Horse Cigar Depot",
+    "address": "93 Ten Broeck Ave, Greenport, NY, 12534",
+    "phone": "(518) 828-1505",
+    "website": "ironhorsecigardepot.com"
+  },
+  {
+    "id": 22037,
+    "name": "Matador Cigars",
+    "address": "582 Veterans Memorial Hwy, Hauppauge, NY, 11788",
+    "phone": "(631) 656-8228",
+    "website": "matadorcigars.com"
+  },
+  {
+    "id": 21357,
+    "name": "Matador Cigars",
+    "address": "4874 Sunrise Hwy, Massapequa Park, NY, 11762",
+    "phone": "(516) 798-4515",
+    "website": "matadorcigars.com"
+  },
+  {
+    "id": 21915,
+    "name": "Middletown Cigar Lounge",
+    "address": "265 Rte 211 E, Middletown, NY, 10940",
+    "phone": "(845) 381-1011",
+    "website": "middletowncigarlounge.com"
+  },
+  {
+    "id": 21855,
+    "name": "Aroma Cigar Room",
+    "address": "791 NY-17M, Monroe, NY, 10950",
+    "phone": "(845) 238-2246",
+    "website": "aromacigarroom.com"
+  },
+  {
+    "id": 21236,
+    "name": "Martinez Handmade Cigars",
+    "address": "171 W 29th St, New York, NY, 10001",
+    "phone": "(212) 239-4049",
+    "website": "martinezcigars.com"
+  },
+  {
+    "id": 22041,
+    "name": "Gold Coast Cigars Northport",
+    "address": "146 Main St, Northport, NY, 11768",
+    "phone": "(631) 651-9920",
+    "website": "goldcoastcigarco.com"
+  },
+  {
+    "id": 22337,
+    "name": "Queensbury Cigar & Pipe",
+    "address": "1036 US-9, Queensbury, NY, 12804",
+    "phone": "(518) 636-3308",
+    "website": "queensburycigarandpipe.com"
+  },
+  {
+    "id": 21926,
+    "name": "Copper City Cigars & Lounge",
+    "address": "252 W Dominick St, Rome, NY, 13440",
+    "phone": "(347) 455-6630",
+    "website": "coppercitycigars.com"
+  },
+  {
+    "id": 21852,
+    "name": "Rocky's News and Cigars",
+    "address": "447 N Salina St, Syracuse, NY, 13203",
+    "phone": "(315) 422-9975",
+    "website": "rockyscigars.com"
+  },
+  {
+    "id": 18807,
+    "name": "The Cigar Lodge",
+    "address": "2989 S Main St, Akron, OH, 44319",
+    "phone": "(234) 334-7298",
+    "website": "thecigarlodge.com"
+  },
+  {
+    "id": 19175,
+    "name": "The Pipe Rack",
+    "address": "2200 Manchester Rd, Akron, OH, 44314",
+    "phone": "(330) 745-9022",
+    "website": "thepiperackohio.com"
+  },
+  {
+    "id": 18938,
+    "name": "L'ufficio Cigar and Social Club",
+    "address": "10576 Broadview Rd, Broadview Heights, OH, 44147",
+    "phone": "(330) 419-0989",
+    "website": "lufficiocigar.com"
+  },
+  {
+    "id": 18986,
+    "name": "Havana's Choice Cigars & Lounge",
+    "address": "170 Pearl Rd, Brunswick, OH, 44212",
+    "phone": "(234) 803-2012",
+    "website": "havanaschoicecigars.com"
+  },
+  {
+    "id": 19102,
+    "name": "Osi Tobacco",
+    "address": "2688 Easton St NE, Canton, OH, 44721",
+    "phone": "(234) 214-0868",
+    "website": "ositobacco.com"
+  },
+  {
+    "id": 19315,
+    "name": "JoVann's Tobacco Shop",
+    "address": "6260 Mayfield Rd, Cleveland, OH, 44124",
+    "phone": "(440) 442-4775",
+    "website": "clevelandcigar.net"
+  },
+  {
+    "id": 17723,
+    "name": "HOC South / D.Ellan  Lounge",
+    "address": "2448 S High St, Columbus, OH, 43207",
+    "phone": "(614) 869-1011",
+    "website": "HOUSEOFCIGAR.NET"
+  },
+  {
+    "id": 17722,
+    "name": "House Of Cigar",
+    "address": "2448 S High St, Columbus, OH, 43207",
+    "phone": "(614) 869-1011",
+    "website": "houseofcigar.net"
+  },
+  {
+    "id": 17678,
+    "name": "Montecristo House Of Cigar",
+    "address": "1209 N High St, Columbus, OH, 43201",
+    "phone": "(614) 299-9070",
+    "website": "houseofcigar.net"
+  },
+  {
+    "id": 15761,
+    "name": "Woodland Cigar Company, LLC",
+    "address": "46 N Sandusky St, Delaware, OH, 43015",
+    "phone": "(740) 368-8572",
+    "website": "woodlandcigar.com"
+  },
+  {
+    "id": 17959,
+    "name": "Rocky's Cigar Club of Marietta",
+    "address": "314 Greene St, Marietta, OH, 45750",
+    "phone": "(740) 760-8777",
+    "website": "rockyscigarclub.com"
+  },
+  {
+    "id": 16714,
+    "name": "The Cigar Affair",
+    "address": "323 Conant St, Maumee, OH, 43537",
+    "phone": "(567) 402-4331",
+    "website": "thecigaraffair.com"
+  },
+  {
+    "id": 18942,
+    "name": "Royal 10 Cigar and Tobacco",
+    "address": "6401 Royalton Rd, North Royalton, OH, 44133",
+    "phone": "(440) 652-6534",
+    "website": "royal10cigar.com"
+  },
+  {
+    "id": 18878,
+    "name": "Havana Cigar Outlet",
+    "address": "270 Milan Ave, Norwalk, OH, 44857",
+    "phone": "(419) 660-0577",
+    "website": "havanacigaroutlet.com"
+  },
+  {
+    "id": 19195,
+    "name": "North Coast Cigar",
+    "address": "2364 E Sand Rd, Port Clinton, OH, 43452",
+    "phone": "(419) 734-6222",
+    "website": "northcoastcigar.com"
+  },
+  {
+    "id": 15776,
+    "name": "House of Cigar",
+    "address": "9697 Sawmill Rd, Powell, OH, 43065",
+    "phone": "(614) 760-0190",
+    "website": "houseofcigar.net"
+  },
+  {
+    "id": 17740,
+    "name": "Governors Cigar Lounge East",
+    "address": "7311 E Main St, Reynoldsburg, OH, 43068",
+    "phone": "(614) 502-7530",
+    "website": "thegovernorscigarlounge.com"
+  },
+  {
+    "id": 15289,
+    "name": "House Of Cigar",
+    "address": "4010 Hauck Rd, Sharonville, OH, 45241",
+    "phone": "(513) 376-7540",
+    "website": "houseofcigar.net"
+  },
+  {
+    "id": 15679,
+    "name": "The Social Cigar",
+    "address": "92 S Washington St, Tiffin, OH, 44883",
+    "phone": "(419) 306-2224",
+    "website": "thesocialcigar.net"
+  },
+  {
+    "id": 15685,
+    "name": "Third Street Cigar",
+    "address": "20 N 3rd St, Waterville, OH, 43566",
+    "phone": "(419) 441-0020",
+    "website": "thirdstreetcigar.com"
+  },
+  {
+    "id": 15398,
+    "name": "B&Gs Cigar Lounge",
+    "address": "319 W Central Ave, West Carrollton City, OH, 45449",
+    "phone": "(937) 388-8433",
+    "website": "bgscigars.com"
+  },
+  {
+    "id": 19266,
+    "name": "Valley Tobacco",
+    "address": "5880 Mahoning Ave, Youngstown, OH, 44515",
+    "phone": "(330) 779-3830",
+    "website": "ValleyTobaccoUSA.com"
+  },
+  {
+    "id": 11030,
+    "name": "Mister B's Cigars",
+    "address": "914 W Main St, Duncan, OK, 73533",
+    "phone": "(580) 786-5035",
+    "website": "misterbscigars.com"
+  },
+  {
+    "id": 11131,
+    "name": "2nd Street Cigar Company",
+    "address": "3681 E 2nd St, Edmond, OK, 73034",
+    "phone": "(405) 285-7272",
+    "website": "Edmondcigars.com"
+  },
+  {
+    "id": 11053,
+    "name": "The Cigar Box OKC",
+    "address": "2839 S Douglas Blvd #105, Midwest City, OK, 73130",
+    "phone": "(405) 458-7879",
+    "website": "thecigarboxokc.com"
+  },
+  {
+    "id": 11100,
+    "name": "Royal Pipes & Tobaccos Ltd",
+    "address": "105 Boyd St, Norman, OK, 73069",
+    "phone": "(405) 364-5151",
+    "website": "royalpipesandtobacco.com"
+  },
+  {
+    "id": 11018,
+    "name": "ASH Cigar Lounge",
+    "address": "712 N Broadway Ave, Oklahoma City, OK, 73102",
+    "phone": "(405) 673-7452",
+    "website": "ashcigarloungeokc.com"
+  },
+  {
+    "id": 30298,
+    "name": "The Grand Cigar & Lounge",
+    "address": "217 S 2nd St, Ponca City, OK, 74601",
+    "phone": null,
+    "website": "thegrandcigar.com"
+  },
+  {
+    "id": 11264,
+    "name": "Bourbon and Ash Cigar Lounge",
+    "address": "6124 S Sheridan Rd, Tulsa, OK, 74133",
+    "phone": "(918) 857-6009",
+    "website": "bourbonandashcigarlounge.com"
+  },
+  {
+    "id": 11115,
+    "name": "Churchill's Cigar Lounge",
+    "address": "3334 S Peoria Ave, Tulsa, OK, 74105",
+    "phone": "(918) 619-9471",
+    "website": "churchillscigarlounge.com"
+  },
+  {
+    "id": 11485,
+    "name": "Classic Cigars and Lounge",
+    "address": "118 N Boston Ave, Tulsa, OK, 74103",
+    "phone": "(918) 960-2646",
+    "website": "classiccigarstulsa.com"
+  },
+  {
+    "id": 11484,
+    "name": "Tisdale's Cigar Lounge",
+    "address": "10 N Greenwood Ave Ste A, Tulsa, OK, 74120",
+    "phone": "(918) 561-6011",
+    "website": "tisdalescigar.com"
+  },
+  {
+    "id": 11136,
+    "name": "Tulsa Hills Cigar Cellar & Market",
+    "address": "7420 S Olympia Ave, Tulsa, OK, 74132",
+    "phone": "(918) 500-6169",
+    "website": "tulsahillscigarcellar.com"
+  },
+  {
+    "id": 11394,
+    "name": "Ultimo Premium Cigars",
+    "address": "6390 E 31st St Ste C, Tulsa, OK, 74135",
+    "phone": "(918) 340-5319",
+    "website": "ultimocigars.com"
+  },
+  {
+    "id": 9857,
+    "name": "Cigars On 7th",
+    "address": "679 Lincoln St, Eugene, OR, 97401",
+    "phone": "(541) 654-5004",
+    "website": "cigarson7th.com"
+  },
+  {
+    "id": 10184,
+    "name": "Cascade Cigar & Tobacco",
+    "address": "9691 SE 82nd Ave, Happy Valley, OR, 97086",
+    "phone": "(503) 775-5885",
+    "website": "cascadecigar.com"
+  },
+  {
+    "id": 10057,
+    "name": "Rich's Cigar Store",
+    "address": "820 SW Alder St, Portland, OR, 97205",
+    "phone": "(503) 228-1700",
+    "website": "richscigarstore.com"
+  },
+  {
+    "id": 10466,
+    "name": "High Desert Cigars",
+    "address": "520 SW Evergreen Ave, Redmond, OR, 97756",
+    "phone": "(541) 923-4706",
+    "website": "highdesertcigars.com"
+  },
+  {
+    "id": 10182,
+    "name": "Tim's Great Cigars",
+    "address": "23830 NE Halsey St, Wood Village, OR, 97060",
+    "phone": "(503) 665-2723",
+    "website": "Timsgreatcigars.com"
+  },
+  {
+    "id": 19038,
+    "name": "Bellevue Cigar",
+    "address": "565 Lincoln Ave, Bellevue, PA, 15202",
+    "phone": "(412) 301-5909",
+    "website": "bellevuecigar.com"
+  },
+  {
+    "id": 20743,
+    "name": "Cigars International",
+    "address": "535 Main St, Bethlehem, PA, 18018",
+    "phone": "(610) 419-2076",
+    "website": "cigarsinternational.com/retail/store/ci-downtown-store/11/?sourceCode=CIRTPA01"
+  },
+  {
+    "id": 20786,
+    "name": "Tó Makao Fine Cigars Llc",
+    "address": "1829 Stefko Blvd, Bethlehem, PA, 18017",
+    "phone": "(610) 849-2235",
+    "website": "tomakaocigars.com"
+  },
+  {
+    "id": 19302,
+    "name": "Butler Cigars & Smoking Lounge",
+    "address": "361 Pittsburgh Rd, Butler, PA, 16002",
+    "phone": "(724) 256-4422",
+    "website": "butlercigars.com"
+  },
+  {
+    "id": 20307,
+    "name": "Delco 202 Cigar",
+    "address": "3911 Pyle Rd, Chadds Ford, PA, 19317",
+    "phone": "(484) 474-4069",
+    "website": "202cigar.com"
+  },
+  {
+    "id": 37832,
+    "name": "Emporium Cigars Llc",
+    "address": "209 S State St, Clarks Summit, PA, 18411",
+    "phone": null,
+    "website": "lemongrassnh.com"
+  },
+  {
+    "id": 21508,
+    "name": "Best Cigar Pub",
+    "address": "3 Hillside Dr, Drums, PA, 18222",
+    "phone": "(570) 708-8800",
+    "website": "bestcigarpub.com"
+  },
+  {
+    "id": 20659,
+    "name": "Black Cat Cigars II",
+    "address": "46 W Germantown Pike, East Norriton Twp, PA, 19401",
+    "phone": "(484) 322-0800",
+    "website": "blackcatcigars.com"
+  },
+  {
+    "id": 20875,
+    "name": "Leaf Cigar Bar",
+    "address": "90 Mort Dr, Easton, PA, 18040",
+    "phone": "(610) 559-1336",
+    "website": "leafcigarbar.com"
+  },
+  {
+    "id": 20880,
+    "name": "Legends Cigar Bar",
+    "address": "154 Northampton St, Easton, PA, 18042",
+    "phone": "(484) 541-5624",
+    "website": "legendcigarbar.com"
+  },
+  {
+    "id": 19423,
+    "name": "Millcreek Cigar Lounge",
+    "address": "3723 W 12th St Ste 3, Erie, PA, 16505",
+    "phone": "(814) 923-4535",
+    "website": "millcreekcigarlounge.com"
+  },
+  {
+    "id": 19398,
+    "name": "The Brig Cigar Lounge",
+    "address": "419 State St, Erie, PA, 16501",
+    "phone": "(814) 636-5789",
+    "website": "brigcigar.com"
+  },
+  {
+    "id": 20498,
+    "name": "JM Cigars",
+    "address": "19 Marchwood Rd, Exton, PA, 19341",
+    "phone": "(610) 363-3063",
+    "website": "jmcigars.com"
+  },
+  {
+    "id": 18643,
+    "name": "Gettysburg Cigar Co.",
+    "address": "523 Baltimore St, Gettysburg, PA, 17325",
+    "phone": "(717) 339-0400",
+    "website": "gettysburgcigarco.com"
+  },
+  {
+    "id": 20676,
+    "name": "Chartwell Cigar Club",
+    "address": "2908 Conestoga Rd, Glenmoore, PA, 19343",
+    "phone": "(484) 341-8397",
+    "website": "chartwellcigarclub.com"
+  },
+  {
+    "id": 20766,
+    "name": "Kay's Cigar Sensations",
+    "address": "280 N Keswick Ave, Glenside, PA, 19038",
+    "phone": "(267) 287-8161",
+    "website": "kcigarsensations.com"
+  },
+  {
+    "id": 20575,
+    "name": "Cigars International",
+    "address": "1635 Mountain Rd, Hamburg, PA, 19526",
+    "phone": "(610) 562-0500",
+    "website": "cigarsinternational.com/retail/store/ci-hamburg-super-store/9/?sourceCode=CIFBSM"
+  },
+  {
+    "id": 20578,
+    "name": "Tinder Box Haverford",
+    "address": "391 W Lancaster Ave, Haverford, PA, 19041",
+    "phone": "(610) 896-4511",
+    "website": "tinderbox.com"
+  },
+  {
+    "id": 21564,
+    "name": "Smoke Rings Cigar Bar",
+    "address": "1008 N Vine St, Hazleton, PA, 18201",
+    "phone": "(570) 497-4089",
+    "website": "smokeringscigarbar.com"
+  },
+  {
+    "id": 19506,
+    "name": "The Humidor Cigars & Lounge",
+    "address": "202 S 2nd St, Jeannette, PA, 15644",
+    "phone": "(724) 961-8882",
+    "website": "humidorcigarslounge.com"
+  },
+  {
+    "id": 20508,
+    "name": "D&S Cigar Lounge",
+    "address": "1623 Manheim Pike, Lancaster, PA, 17601",
+    "phone": "(717) 569-3500",
+    "website": "dnscigars.com"
+  },
+  {
+    "id": 19052,
+    "name": "Cigars & Ash",
+    "address": "99 Ohio River Blvd, Leetsdale, PA, 15056",
+    "phone": "(724) 385-0209",
+    "website": "cigarsandash.com"
+  },
+  {
+    "id": 20479,
+    "name": "The Tobacco Company",
+    "address": "829 State St, Lemoyne, PA, 17043",
+    "phone": "(717) 975-8877",
+    "website": "tobaccocompany.com"
+  },
+  {
+    "id": 19096,
+    "name": "Dirty Dog Cigar Shoppe",
+    "address": "4601 Walnut St, Mckeesport, PA, 15132",
+    "phone": "(412) 751-3011",
+    "website": "dirtydogcigarshoppe.com"
+  },
+  {
+    "id": 19137,
+    "name": "The Cigar Vault Oakdale",
+    "address": "105 Seminary Ave, Oakdale, PA, 15071",
+    "phone": "(412) 701-9813",
+    "website": "thecigarvaultoakdale.com"
+  },
+  {
+    "id": 20592,
+    "name": "Oscar's Cigar & Sports Lounge",
+    "address": "633 W Main St, Palmyra, PA, 17078",
+    "phone": "(717) 497-3367",
+    "website": "oscarscigarlounge.com"
+  },
+  {
+    "id": 20612,
+    "name": "Ashton Cigar Bar",
+    "address": "1522 Walnut St, Philadelphia, PA, 19102",
+    "phone": "(267) 350-0000",
+    "website": "ashtoncigarbar.com"
+  },
+  {
+    "id": 20716,
+    "name": "BNB Cigars",
+    "address": "7920 Germantown Ave, Philadelphia, PA, 19118",
+    "phone": "(215) 242-6776",
+    "website": "bnbcigars.com"
+  },
+  {
+    "id": 20671,
+    "name": "Infusion Lounge - Philly's Best Cocktails, Hookahs & Cigars",
+    "address": "16 S 2nd St, Philadelphia, PA, 19106",
+    "phone": "(267) 908-4009",
+    "website": "infusionphilly.com"
+  },
+  {
+    "id": 20651,
+    "name": "Xhale Lounge",
+    "address": "453 E Girard Ave, Philadelphia, PA, 19125",
+    "phone": "(267) 639-5108",
+    "website": "xhalelounge.com"
+  },
+  {
+    "id": 42086,
+    "name": "Leaf by Oscar",
+    "address": "2200 Penn Avenue, Pittsburgh, PA, 15222",
+    "phone": "(412) 886-7438",
+    "website": "leafbyoscarcigar.com"
+  },
+  {
+    "id": 19014,
+    "name": "S & S Candy & Cigar Co",
+    "address": "2025 E Carson St, Pittsburgh, PA, 15203",
+    "phone": "(412) 481-6577",
+    "website": "sscandycigar.com"
+  },
+  {
+    "id": 20760,
+    "name": "Cole's Tobacco",
+    "address": "215 E High St, Pottstown, PA, 19464",
+    "phone": "(610) 323-4991",
+    "website": "colestobacco.net"
+  },
+  {
+    "id": 20633,
+    "name": "Cigar Plus",
+    "address": "4 Cheltenham Dr, Reading, PA, 19610",
+    "phone": "(610) 678-5644",
+    "website": "cigar-plus.com"
+  },
+  {
+    "id": 18525,
+    "name": "Shamrock Whiskey & Cigar Bar, LLC",
+    "address": "624 Humbert School Rd, Rockwood, PA, 15557",
+    "phone": "(814) 233-1768",
+    "website": "shamrockwcb.com"
+  },
+  {
+    "id": 20926,
+    "name": "Sellersville Beverage & Cigar",
+    "address": "301 S Main St, Sellersville, PA, 18960",
+    "phone": "(215) 257-2119",
+    "website": "sellersvillebeverage.com"
+  },
+  {
+    "id": 21344,
+    "name": "Breaker Cigars",
+    "address": "500 N 8th St, Shamokin, PA, 17872",
+    "phone": "(570) 266-8523",
+    "website": "breakercigars.com"
+  },
+  {
+    "id": 35932,
+    "name": "Just The Tip Cigars",
+    "address": "2550 Brownsville Rd, South Park Township, PA, 15129",
+    "phone": "(724) 957-9229",
+    "website": "justthetipcigars.com"
+  },
+  {
+    "id": 20482,
+    "name": "Cigar Box Tobacconist and Vape Center",
+    "address": "400 Terry Rich Blvd #8, St Clair, PA, 17970",
+    "phone": "(570) 429-1190",
+    "website": "cigarboxpa.com"
+  },
+  {
+    "id": 21368,
+    "name": "Cigar Box Premium Tobacconist",
+    "address": "200 Claremont Ave, Tamaqua, PA, 18252",
+    "phone": "(570) 225-7307",
+    "website": "cigarboxpa.com"
+  },
+  {
+    "id": 18542,
+    "name": "Christie's House of Pipes & Cigars",
+    "address": "56 W Main St, Waynesboro, PA, 17268",
+    "phone": "(717) 765-8129",
+    "website": "christiepipes.com"
+  },
+  {
+    "id": 20304,
+    "name": "Cigar Authority of Chester",
+    "address": "3177 Limestone Rd, West Fallowfield Twp, PA, 19330",
+    "phone": "(610) 979-8900",
+    "website": "cigarauthorityofchester.com"
+  },
+  {
+    "id": 21542,
+    "name": "The Tobacco Center",
+    "address": "21 W Church St, Williamsport, PA, 17701",
+    "phone": "(570) 322-7766",
+    "website": "thetobaccocenter.com"
+  },
+  {
+    "id": 20108,
+    "name": "Don Collins Cigars",
+    "address": "59 Calle del Cristo, San Juan, PR, 00901",
+    "phone": "(866) 977-2983",
+    "website": "don-collins.com"
+  },
+  {
+    "id": 20066,
+    "name": "Habanacuba Cigar Shop",
+    "address": "638 Av. San Patricio, San Juan, PR, 00920",
+    "phone": "(787) 774-5589",
+    "website": "habanacubacigar.com"
+  },
+  {
+    "id": 42237,
+    "name": "The Gentleman Cigar Lounge",
+    "address": "100 East Street, Cranston, RI",
+    "phone": "(401) 228-8450",
+    "website": "thegentlemancigar.com"
+  },
+  {
+    "id": 22520,
+    "name": "Hill & Harbor Cigar Lounge",
+    "address": "564 Main St, East Greenwich, RI, 02818",
+    "phone": "(401) 885-0111",
+    "website": "hillandharborcigarlounge.com"
+  },
+  {
+    "id": 22494,
+    "name": "Breakwaters Cigar & Whiskey Lounge LLC",
+    "address": "796 Aquidneck Ave, Middletown, RI, 02842",
+    "phone": "(401) 324-5196",
+    "website": "breakwaterscigar.com"
+  },
+  {
+    "id": 22510,
+    "name": "White Ash Cigar Lounge",
+    "address": "413 Central Ave, Pawtucket, RI, 02861",
+    "phone": "(401) 726-1715",
+    "website": "whiteashcigarlounge.com"
+  },
+  {
+    "id": 22696,
+    "name": "Ale House Cigar Bar",
+    "address": "52 Pine St, Providence, RI, 02903",
+    "phone": "(401) 861-0007",
+    "website": "alehousecigar.com"
+  },
+  {
+    "id": 22687,
+    "name": "Broadway Cigar",
+    "address": "186 Broadway, Providence, RI, 02903",
+    "phone": "(401) 272-9600",
+    "website": "broadwaycigars.com"
+  },
+  {
+    "id": 8398,
+    "name": "Blythewood Cigar & Wine Lounge",
+    "address": "158 Langford Rd, Blythewood, SC, 29016",
+    "phone": "(803) 939-2903",
+    "website": "bwoodcigarandwine.com"
+  },
+  {
+    "id": 8399,
+    "name": "Silver Leaf Cigar Lounge",
+    "address": "1015 Broad St, Camden, SC, 29020",
+    "phone": "(803) 677-6329",
+    "website": "silverleaflounge.com"
+  },
+  {
+    "id": 7992,
+    "name": "Legacy Cigar Lounge & Golf Sim",
+    "address": "1937 Clements Ferry Rd, Charleston, SC, 29492",
+    "phone": "(843) 936-2965",
+    "website": "legacycigarlounge.net/golf-simulator"
+  },
+  {
+    "id": 7931,
+    "name": "West Ash Cigars",
+    "address": "1890 Sam Rittenberg Blvd, Charleston, SC, 29407",
+    "phone": "(843) 573-9911",
+    "website": "westashcigarsandpipessc.com"
+  },
+  {
+    "id": 8482,
+    "name": "Smoke Break Cigar Lounge",
+    "address": "6801 St Andrews Rd, Columbia, SC, 29212",
+    "phone": "(803) 661-6193",
+    "website": "smokebreakcigarlounge.com"
+  },
+  {
+    "id": 8502,
+    "name": "The Cigar Militia",
+    "address": "1410 Colonial Life Blvd W, Columbia, SC, 29210",
+    "phone": "(803) 661-9003",
+    "website": "thecigarmilitia.com"
+  },
+  {
+    "id": 17433,
+    "name": "Charterhouse Cigar & Barrel",
+    "address": "237 Main St, Fort Mill, SC, 29715",
+    "phone": "(623) 203-1676",
+    "website": "Charterhousecigar.com"
+  },
+  {
+    "id": 17402,
+    "name": "Cigar Shop and Tobacco",
+    "address": "2000 SC-160 #103, Fort Mill, SC, 29708",
+    "phone": "(803) 548-9531",
+    "website": "cigarandtobaccoshop.com"
+  },
+  {
+    "id": 17404,
+    "name": "The Breakroom Cigar Lounge",
+    "address": "817 Stockbridge Dr, Fort Mill, SC, 29708",
+    "phone": "(803) 228-4111",
+    "website": "breakroomcigars.com"
+  },
+  {
+    "id": 17353,
+    "name": "Torch Cigar Pub",
+    "address": "500 E Park Ave, Greenville, SC, 29601",
+    "phone": "(864) 800-6664",
+    "website": "torchcigarpub.com"
+  },
+  {
+    "id": 8054,
+    "name": "Tinder Box",
+    "address": "1301 Celebrity Cir, Myrtle Beach, SC, 29577",
+    "phone": "(843) 444-5690",
+    "website": "tinderboxcigars.com"
+  },
+  {
+    "id": 7961,
+    "name": "Bucksnort's Cigar Lounge",
+    "address": "215 Edgefield Rd, North Augusta, SC, 29841",
+    "phone": "(803) 278-1111",
+    "website": "bucksnortscigars.com"
+  },
+  {
+    "id": 13003,
+    "name": "Deadwood Tobacco Co.",
+    "address": "715 Main St, Deadwood, SD, 57732",
+    "phone": "(605) 722-1510",
+    "website": "deadwoodtobacco.com"
+  },
+  {
+    "id": 14645,
+    "name": "Burns Tobacconist",
+    "address": "110 Jordan Dr, Chattanooga, TN, 37421",
+    "phone": "(423) 855-5200",
+    "website": "burnstobacconist.com"
+  },
+  {
+    "id": 14658,
+    "name": "Scenic City Cigars & Social",
+    "address": "7912 E Brainerd Rd, Chattanooga, TN, 37421",
+    "phone": "(423) 662-2447",
+    "website": "sceniccitycigars.com"
+  },
+  {
+    "id": 14772,
+    "name": "Ocoee Cigar Lounge",
+    "address": "246 N Ocoee St, Cleveland, TN, 37311",
+    "phone": "(423) 790-5070",
+    "website": "ocoeecigars.com"
+  },
+  {
+    "id": 13925,
+    "name": "Battleground South Cigar Lounge",
+    "address": "1020 S Garden St, Columbia, TN, 38401",
+    "phone": "(931) 548-2171",
+    "website": "battlegroundsouth.com"
+  },
+  {
+    "id": 13923,
+    "name": "Briarworks And Columbia Pipe & Cigar",
+    "address": "511 N Main St, Columbia, TN, 38401",
+    "phone": "(931) 223-8985",
+    "website": "briarworksusa.com"
+  },
+  {
+    "id": 13650,
+    "name": "Ye Ole Pipe Shoppe",
+    "address": "581 Old Hickory Blvd, Jackson, TN, 38305",
+    "phone": "(731) 668-8999",
+    "website": "yeolepipeshoppe.com"
+  },
+  {
+    "id": 14912,
+    "name": "Alchemy Lounge and Cigar",
+    "address": "119 S Central St, Knoxville, TN, 37902",
+    "phone": "(865) 320-0840",
+    "website": "alchemyloungeandcigar.com"
+  },
+  {
+    "id": 14855,
+    "name": "Smokys Tobacco Cigars and Gifts",
+    "address": "7805 Montvue Center Way, Knoxville, TN, 37919",
+    "phone": "(865) 693-8371",
+    "website": "smokystobacco.com"
+  },
+  {
+    "id": 14054,
+    "name": "Bad Ash Stogies",
+    "address": "1400 W Main St, Lebanon, TN, 37087",
+    "phone": "(615) 965-2106",
+    "website": "badashstogies.com"
+  },
+  {
+    "id": 14072,
+    "name": "Southpaw Stogies",
+    "address": "402 E Main St, Lebanon, TN, 37087",
+    "phone": "(615) 584-2116",
+    "website": "southpawstogies.com"
+  },
+  {
+    "id": 12082,
+    "name": "Memphis Smokes Cigar Lounge",
+    "address": "3241 Elvis Presley Blvd, Memphis, TN, 38116",
+    "phone": "(901) 347-3749",
+    "website": "Memphissmokescigarlounge.com"
+  },
+  {
+    "id": 14018,
+    "name": "Big Star Cigar Lounge",
+    "address": "3384 N Mt Juliet Rd #1100, Mt Juliet, TN, 37122",
+    "phone": "(615) 288-4084",
+    "website": "BigStarCigar.com"
+  },
+  {
+    "id": 13813,
+    "name": "Belle Meade Premium Cigars",
+    "address": "4518 Harding Pike, Nashville, TN, 37205",
+    "phone": "(615) 297-7963",
+    "website": "bellemeadecigars.com"
+  },
+  {
+    "id": 13997,
+    "name": "Cigar Especial",
+    "address": "701 4th Ave S, Nashville, TN, 37210",
+    "phone": "(615) 915-2514",
+    "website": "barcigarespecial.com"
+  },
+  {
+    "id": 13909,
+    "name": "Single Malt Cigar Bar",
+    "address": "2018 Lindell Ave, Nashville, TN, 37203",
+    "phone": "(615) 401-9946",
+    "website": "singlemaltcigarbar.com"
+  },
+  {
+    "id": 14620,
+    "name": "Patriot Cigar Lounge",
+    "address": "410 N Spring St, Sparta, TN, 38583",
+    "phone": "(931) 208-2365",
+    "website": "patriotcigarlounge.com"
+  },
+  {
+    "id": 14255,
+    "name": "4 The Win Cigar Shop & Lounge",
+    "address": "110 W Lincoln St, Tullahoma, TN, 37388",
+    "phone": "(765) 860-7209",
+    "website": "4thewincigar.com"
+  },
+  {
+    "id": 2801,
+    "name": "The Leaf",
+    "address": "1166 N 2nd St, Abilene, TX, 79601",
+    "phone": "(325) 670-9955",
+    "website": "theleafcigar.com"
+  },
+  {
+    "id": 3345,
+    "name": "Addison Cigar Co.",
+    "address": "15401 Addison Rd, Addison, TX, 75001",
+    "phone": "(972) 239-1521",
+    "website": "addisoncigarshop.com"
+  },
+  {
+    "id": 2852,
+    "name": "Bobalu Cigar Company",
+    "address": "8501 Burnet Rd, Austin, TX, 78757",
+    "phone": "(512) 469-5877",
+    "website": "Bobalu.com"
+  },
+  {
+    "id": 2803,
+    "name": "Boiler Room Smoking Lounge",
+    "address": "311 W 7th St, Austin, TX, 78701",
+    "phone": "(512) 845-1137",
+    "website": "boilerroomsmokinglounge.com"
+  },
+  {
+    "id": 2627,
+    "name": "Kings Cigar Lounge",
+    "address": "429 W Ben White Blvd, Austin, TX, 78704",
+    "phone": "(512) 893-3947",
+    "website": "kingscigarloungeatx.com"
+  },
+  {
+    "id": 2562,
+    "name": "C&S Cigar Lounge",
+    "address": "705 Pine St, Bastrop, TX, 78602",
+    "phone": "(512) 412-6029",
+    "website": "coppershotdistillery.com/c-and-s-cigar-lounge"
+  },
+  {
+    "id": 5608,
+    "name": "Blue Hill Tobacco",
+    "address": "15838 Tri City Beach Rd, Beach City, TX, 77523",
+    "phone": "(832) 902-2173",
+    "website": "bluehilltobacco.com"
+  },
+  {
+    "id": 5739,
+    "name": "Cigar Club",
+    "address": "5760 Walden Rd, Beaumont, TX, 77707",
+    "phone": "(409) 242-1783",
+    "website": "cigarclublatx.com"
+  },
+  {
+    "id": 3181,
+    "name": "Prestige Cigars Lounge and Coffee Bar",
+    "address": "3225 Harwood Rd, Bedford, TX, 76021",
+    "phone": "(817) 600-0317",
+    "website": "prestigecigarlounge.com"
+  },
+  {
+    "id": 2994,
+    "name": "Creekside Cigar Lounge",
+    "address": "602 E Central Ave, Belton, TX, 76513",
+    "phone": "(254) 831-3131",
+    "website": "creeksidecigarlounge.com"
+  },
+  {
+    "id": 5684,
+    "name": "Brown Water Cigar Bar",
+    "address": "200 W Alamo St, Brenham, TX, 77833",
+    "phone": "(979) 551-9019",
+    "website": "brownwatercigar.com"
+  },
+  {
+    "id": 5720,
+    "name": "Midtown Cigar Lounge & Bar",
+    "address": "700 Finfeather Rd, Bryan, TX, 77803",
+    "phone": "(979) 450-7720",
+    "website": "midtownloungebtx.com"
+  },
+  {
+    "id": 2576,
+    "name": "The Library Cigar Lounge",
+    "address": "4400 US-281 Bldg #1, Bulverde, TX, 78070",
+    "phone": "(830) 438-8190",
+    "website": "thelibrarycigarlounge.com"
+  },
+  {
+    "id": 10860,
+    "name": "Kingdom Cigar Company",
+    "address": "2321 4th Ave, Canyon, TX, 79015",
+    "phone": "(806) 656-5077",
+    "website": "kingdomcigar.com"
+  },
+  {
+    "id": 2669,
+    "name": "Canyon Cigar Co Inc",
+    "address": "1739 FM-2673, Canyon Lake, TX, 78133",
+    "phone": "(830) 964-4044",
+    "website": "canyoncigarcoinc.com"
+  },
+  {
+    "id": 3203,
+    "name": "Smoking Jacket Cigar Lounge",
+    "address": "1435 Hwy 67, Cedar Hill, TX, 75104",
+    "phone": "(972) 291-2557",
+    "website": "smokingjacketcl.com"
+  },
+  {
+    "id": 2709,
+    "name": "Cigar Depot",
+    "address": "601 E Whitestone Blvd  Ste 210, Cedar Park, TX, 78613",
+    "phone": "(512) 986-4505",
+    "website": "cigardepotrailyard.com"
+  },
+  {
+    "id": 2637,
+    "name": "1911 Cigars",
+    "address": "207 S Main St, Cibolo, TX, 78108",
+    "phone": "(920) 827-6653",
+    "website": "1911Cigars.com"
+  },
+  {
+    "id": 5770,
+    "name": "Cavalier Cigar Company",
+    "address": "505 University Dr E Ste 303, College Station, TX, 77840",
+    "phone": "(979) 693-6734",
+    "website": "txcigar.com"
+  },
+  {
+    "id": 186,
+    "name": "Padre Island Cigar Company",
+    "address": "15217 S Padre Island Dr #214, Corpus Christi, TX, 78418",
+    "phone": "(361) 589-4320",
+    "website": "padrecigars.com"
+  },
+  {
+    "id": 200,
+    "name": "Prohibition - Private Cigar Lounge",
+    "address": "326 N Chaparral St Ste 100, Corpus Christi, TX, 78401",
+    "phone": "(361) 333-0007",
+    "website": "ProhibitionCorpus.com"
+  },
+  {
+    "id": 5709,
+    "name": "The Craft Cigar Company",
+    "address": "15103 Mason Rd B5, Cypress, TX, 77433",
+    "phone": "(281) 213-2117",
+    "website": "cigarshopcypress.com"
+  },
+  {
+    "id": 6985,
+    "name": "Dallas Cigars",
+    "address": "6162 Greenville Ave # A, Dallas, TX, 75206",
+    "phone": "(214) 373-9993",
+    "website": "thedallascigars.com"
+  },
+  {
+    "id": 7007,
+    "name": "El Jefe Cigars",
+    "address": "115 N Carroll Ave, Dallas, TX, 75226",
+    "phone": "(720) 432-3253",
+    "website": "eljefecigarsco.com"
+  },
+  {
+    "id": 4630,
+    "name": "Ezra Zion Cigar Bar",
+    "address": "103 W Main St, Decatur, TX, 76234",
+    "phone": "(940) 373-0216",
+    "website": "EzraZionCigarBar.com"
+  },
+  {
+    "id": 4631,
+    "name": "The Chief Cigar Lounge",
+    "address": "200 S Highway 287, Decatur, TX, 76234",
+    "phone": "(940) 448-0908",
+    "website": "thechiefcigarlounge.com"
+  },
+  {
+    "id": 4594,
+    "name": "Denton Cigar Co",
+    "address": "100 N Interstate 35 #101, Denton, TX, 76205",
+    "phone": "(940) 514-1009",
+    "website": "dentoncigar.com"
+  },
+  {
+    "id": 3059,
+    "name": "1849 Cigar Shop",
+    "address": "6619 N Beach St, Fort Worth, TX, 76137",
+    "phone": "(817) 349-9507",
+    "website": "fortworth1849cigarshop.com"
+  },
+  {
+    "id": 2937,
+    "name": "Big Dave's Cigars",
+    "address": "6500 Camp Bowie Blvd Ste 160, Fort Worth, TX, 76116",
+    "phone": "(817) 731-6433",
+    "website": "bigdavescigars.com"
+  },
+  {
+    "id": 2956,
+    "name": "Cigar Lounge",
+    "address": "900 Houston St, Fort Worth, TX, 76102",
+    "phone": "(817) 882-8003",
+    "website": "thompsonsbookstore.com"
+  },
+  {
+    "id": 3132,
+    "name": "Cigars International Superstore",
+    "address": "12853 Cabela Dr, Fort Worth, TX, 76177",
+    "phone": "(817) 562-1150",
+    "website": "cigarsinternational.com/retail/store/textas-forth-worth-super-store/2028253/?sourceCode=CIRTFBTX02"
+  },
+  {
+    "id": 3034,
+    "name": "Paladin Cigars",
+    "address": "6080 S Hulen St, Fort Worth, TX, 76132",
+    "phone": "(817) 263-9999",
+    "website": "paladincigars.com"
+  },
+  {
+    "id": 2955,
+    "name": "Silver Leaf Cigar Lounge",
+    "address": "426 Commerce St, Fort Worth, TX, 76102",
+    "phone": "(817) 887-9535",
+    "website": "silverleafcigarlounge.com"
+  },
+  {
+    "id": 2934,
+    "name": "The Boardroom Whisky & Cigar Lounge",
+    "address": "1708 8th Ave, Fort Worth, TX, 76110",
+    "phone": "(817) 945-2975",
+    "website": "theboardroomcigarlounge.com"
+  },
+  {
+    "id": 4700,
+    "name": "Industrial Cigar Co.",
+    "address": "9500 Dallas Pkwy, Frisco, TX, 75033",
+    "phone": "(469) 305-7360",
+    "website": "industrialcigars.com"
+  },
+  {
+    "id": 4369,
+    "name": "The Monarch Stag Whiskey & Cigar Lounge",
+    "address": "6655 Winning Dr, Frisco, TX, 75034",
+    "phone": "(469) 731-0955",
+    "website": "Monarchstag.com"
+  },
+  {
+    "id": 42345,
+    "name": "ZODI'X Cigar Lounge",
+    "address": "101 Limmer Loop, Georgetown, TX, 78665",
+    "phone": "(512) 688-5287",
+    "website": "zodixcigarlounge.com"
+  },
+  {
+    "id": 2822,
+    "name": "Bogeys and Stogies",
+    "address": "110 N Lambert St, Granbury, TX, 76048",
+    "phone": "(817) 559-5406",
+    "website": "bandscigars.com"
+  },
+  {
+    "id": 2389,
+    "name": "Finck Cigars Helotes",
+    "address": "12950 Bandera Rd, Helotes, TX, 78023",
+    "phone": "(210) 695-8889",
+    "website": "finckcigar.com"
+  },
+  {
+    "id": 5414,
+    "name": "A-1 Cigar Bar & Lounge",
+    "address": "5632 Richmond Ave, Houston, TX, 77057",
+    "phone": "(832) 365-3443",
+    "website": "a1cigarbar.com"
+  },
+  {
+    "id": 5306,
+    "name": "Cigar Towne",
+    "address": "1127 Eldridge Pkwy #500, Houston, TX, 77077",
+    "phone": "(281) 752-4427",
+    "website": "cigartowne.com"
+  },
+  {
+    "id": 5505,
+    "name": "Heights Cigar Lounge",
+    "address": "240 W 19th St, Houston, TX, 77008",
+    "phone": "(832) 487-9086",
+    "website": "heightscigarlounge.com"
+  },
+  {
+    "id": 5282,
+    "name": "Stoa Fine Cigars and Spirits",
+    "address": "2221 S Voss Rd, Houston, TX, 77057",
+    "phone": "(281) 815-8666",
+    "website": "stoacigars.com"
+  },
+  {
+    "id": 5590,
+    "name": "The Cigar Box Houston Lounge",
+    "address": "727 E Louetta Rd Ste 102, Houston, TX, 77373",
+    "phone": "(346) 873-3966",
+    "website": "thecigarboxhouston.net"
+  },
+  {
+    "id": 5261,
+    "name": "Tobacco Habana",
+    "address": "6513 Westheimer Rd, Houston, TX, 77057",
+    "phone": "(713) 266-5508",
+    "website": "Tobaccohabana.com"
+  },
+  {
+    "id": 5823,
+    "name": "Kings & Queens Cigar Lounge",
+    "address": "236 1st St W, Humble, TX, 77338",
+    "phone": "(703) 944-1527",
+    "website": "kingsandqueenscigarlounge.com"
+  },
+  {
+    "id": 5647,
+    "name": "Top 10 Cigars",
+    "address": "9502 N Sam Houston Pkwy E #111, Humble, TX, 77396",
+    "phone": "(281) 506-8461",
+    "website": "top10-cigars.com"
+  },
+  {
+    "id": 7283,
+    "name": "Calavera Leather and Cigar Co.",
+    "address": "110 N Walnut St, Jefferson, TX, 75657",
+    "phone": "(903) 578-5833",
+    "website": "calaveraleatherandcigar.com"
+  },
+  {
+    "id": 5428,
+    "name": "Cigar Exchange",
+    "address": "806 Katy Fort Bend Rd, Katy, TX, 77494",
+    "phone": "(832) 437-0387",
+    "website": "cigarexchangekaty.com"
+  },
+  {
+    "id": 5237,
+    "name": "Cigars International Superstore",
+    "address": "25407 Bell Patna Dr, Katy, TX, 77494",
+    "phone": "(832) 437-8659",
+    "website": "cigarsinternational.com/retail/store/texas-katy-store/2047282/?sourceCode=CIFBTX04"
+  },
+  {
+    "id": 5555,
+    "name": "El Cubano Cigars",
+    "address": "916 E Main St, League City, TX, 77573",
+    "phone": "(832) 905-4122",
+    "website": "elcubanocigars.com"
+  },
+  {
+    "id": 3291,
+    "name": "Cigars on 35",
+    "address": "1980 S Stemmons freeway, Lewisville, TX, 75067",
+    "phone": "(214) 222-5915",
+    "website": "cigarson35.com"
+  },
+  {
+    "id": 3032,
+    "name": "Bright fire cigars",
+    "address": "2015 Main St, Liberty Hill, TX, 78642",
+    "phone": "(512) 548-5388",
+    "website": "brightfirecigars.com"
+  },
+  {
+    "id": 5795,
+    "name": "Stories Cigars + Lounge",
+    "address": "122 S 1st St, Lufkin, TX, 75901",
+    "phone": "(936) 299-4651",
+    "website": "storiescigarlounge.com"
+  },
+  {
+    "id": 3297,
+    "name": "Henry's Cigar Lounge",
+    "address": "101 S Main St, Mansfield, TX, 76063",
+    "phone": "(817) 225-2703",
+    "website": "henryscigarlounge.com"
+  },
+  {
+    "id": 2657,
+    "name": "Hill Country Tobacco Company",
+    "address": "1405 Mormon Mill Rd C, Marble Falls, TX, 78654",
+    "phone": "(830) 201-4134",
+    "website": "hillcountrytobacco.com"
+  },
+  {
+    "id": 7315,
+    "name": "Viso Cigars",
+    "address": "1521 N Custer Rd, Mckinney, TX, 75071",
+    "phone": "(972) 369-7045",
+    "website": "visocigars.com"
+  },
+  {
+    "id": 7081,
+    "name": "D&B Cigar Corner",
+    "address": "1925 Towne Centre Dr #108, Mesquite, TX, 75150",
+    "phone": "(972) 681-3400",
+    "website": "dandbcigarcorner.wixsite.com/dandbcigarcorner"
+  },
+  {
+    "id": 3047,
+    "name": "Taboo Cigar Bar and Lounge",
+    "address": "8214 Bedford Euless Rd, North Richland Hills, TX, 76180",
+    "phone": "(817) 427-1777",
+    "website": "taboocigars.com"
+  },
+  {
+    "id": 5667,
+    "name": "War Wagon Cigar Lounge",
+    "address": "8480 TX-87, Orange, TX, 77632",
+    "phone": "(409) 223-7252",
+    "website": "thewarwagon.com"
+  },
+  {
+    "id": 7378,
+    "name": "Rigby’s Cigars & Lounge",
+    "address": "10 N Plaza, Paris, TX, 75460",
+    "phone": "(903) 715-5691",
+    "website": "rigbyscigars.com"
+  },
+  {
+    "id": 155,
+    "name": "Cigar Society Lounge and Bar",
+    "address": "116 W State Ave, Pharr, TX, 78577",
+    "phone": "(956) 223-1303",
+    "website": "cigarsocietyus.com"
+  },
+  {
+    "id": 7054,
+    "name": "Elite Cigars and Accessories",
+    "address": "5021 Alma Dr, Plano, TX, 75023",
+    "phone": "(214) 703-9399",
+    "website": "elitecigarcafe.com"
+  },
+  {
+    "id": 5682,
+    "name": "Humidor Cigar Lounge",
+    "address": "1645 Jefferson Dr Ste 140, Port Arthur, TX, 77642",
+    "phone": "(409) 300-3010",
+    "website": "Humidorpatx.com"
+  },
+  {
+    "id": 7177,
+    "name": "Renegade Cigars",
+    "address": "1002 N Central Expy #589, Richardson, TX, 75080",
+    "phone": "(972) 231-6545",
+    "website": "renegadecigars.com"
+  },
+  {
+    "id": 3148,
+    "name": "J.Merrill Cigar & Cocktail Lounge",
+    "address": "206 N Oak St, Roanoke, TX, 76262",
+    "phone": "(682) 204-6002",
+    "website": "jmerrillcigar.com"
+  },
+  {
+    "id": 2827,
+    "name": "Zodi'X Cigar Lounge",
+    "address": "101 Limmer Loop Ste 400, Round Rock, TX, 78665",
+    "phone": "(512) 688-5287",
+    "website": "zodixcigarlounge.com"
+  },
+  {
+    "id": 2592,
+    "name": "Finck Cigars Stone Oak",
+    "address": "19422 Blanco Rd, San Antonio, TX, 78258",
+    "phone": "(210) 257-6317",
+    "website": "finckcigars.com"
+  },
+  {
+    "id": 2459,
+    "name": "Finck Cigars West Ave.",
+    "address": "6100 West Ave, San Antonio, TX, 78213",
+    "phone": "(210) 341-8888",
+    "website": "finckcigars.com"
+  },
+  {
+    "id": 2584,
+    "name": "Four9 Cigars",
+    "address": "22806 US-281, San Antonio, TX, 78258",
+    "phone": "(210) 888-1463",
+    "website": "four9cigars.com"
+  },
+  {
+    "id": 7352,
+    "name": "Texoma Tobacco",
+    "address": "2205 Texoma Pkwy suite 100, Sherman, TX, 75090",
+    "phone": "(903) 868-3000",
+    "website": "texomatobacco.com"
+  },
+  {
+    "id": 5593,
+    "name": "BlackHouse Cigars",
+    "address": "318 Gentry St, Spring, TX, 77373",
+    "phone": "(713) 999-9193",
+    "website": "BLACKHOUSECIGARS.COM"
+  },
+  {
+    "id": 5702,
+    "name": "Hey Guy: Cigars, Spa & Shop",
+    "address": "18521 Kuykendahl Rd, Spring, TX, 77379",
+    "phone": "(281) 817-4222",
+    "website": "heyguycigarlounge.com"
+  },
+  {
+    "id": 5084,
+    "name": "Legacy Cigars and Lounge",
+    "address": "3130 S Main St, Stafford, TX, 77477",
+    "phone": "(832) 539-6370",
+    "website": "legacycigarshouston.com"
+  },
+  {
+    "id": 5159,
+    "name": "Smoke Ring",
+    "address": "14019 Southwest Fwy, Sugar Land, TX, 77478",
+    "phone": "(281) 265-1387",
+    "website": null
+  },
+  {
+    "id": 5580,
+    "name": "Woodlands Fine Cigars",
+    "address": "414 Sawdust Rd, The Woodlands, TX, 77380",
+    "phone": "(281) 296-0202",
+    "website": "woodlandsfinecigars.com"
+  },
+  {
+    "id": 5604,
+    "name": "Coaches Cigar Lounge",
+    "address": "414 E Main St, Tomball, TX, 77375",
+    "phone": "(281) 547-8405",
+    "website": "coachescigars.com"
+  },
+  {
+    "id": 3216,
+    "name": "Don's Humidor & Coffee Beans",
+    "address": "1412 N Valley Mills Dr, Waco, TX, 76710",
+    "phone": "(254) 301-6293",
+    "website": "DonsHumidorWaco.com"
+  },
+  {
+    "id": 3373,
+    "name": "Latitude Cigars",
+    "address": "405 W Madison St, Waxahachie, TX, 75165",
+    "phone": "(214) 903-7517",
+    "website": "latitudecigar.com"
+  },
+  {
+    "id": 2948,
+    "name": "Cattleman Cigar Co.",
+    "address": "110 Palo Pinto St, Weatherford, TX, 76086",
+    "phone": "(682) 262-1660",
+    "website": "cattlemancigar.com"
+  },
+  {
+    "id": 5557,
+    "name": "CIGAR HEAVEN - Cigar Lounge",
+    "address": "850 Kobayashi Rd S, Webster, TX, 77598",
+    "phone": "(281) 525-4127",
+    "website": "cigarsheaven.com"
+  },
+  {
+    "id": 5473,
+    "name": "The Smoke Ring Cigars",
+    "address": "17066 State Hwy 3, Webster, TX, 77598",
+    "phone": "(281) 332-9871",
+    "website": "smokeringcigars.com"
+  },
+  {
+    "id": 2527,
+    "name": "Shade Tree Cigar Lounge",
+    "address": "1 Brookmeadow Dr Bldg 2, Wimberley, TX, 78676",
+    "phone": "(512) 722-3800",
+    "website": "shadetreecigarlounge.com"
+  },
+  {
+    "id": 2717,
+    "name": "Wimberley Valley Cigar Lounge",
+    "address": "13620 Ranch Rd 12 Ste D, Wimberley, TX, 78676",
+    "phone": "(512) 666-7140",
+    "website": "wimberleyvalleycigarlounge.com"
+  },
+  {
+    "id": 9802,
+    "name": "The Tinder Box",
+    "address": "188 E Winchester St, Murray, UT, 84107",
+    "phone": "(801) 268-1321",
+    "website": "tinderboxutah.com"
+  },
+  {
+    "id": 9969,
+    "name": "Beehive Cigars",
+    "address": "1564 S 300 W, Salt Lake City, UT, 84115",
+    "phone": "(801) 671-3612",
+    "website": "beehivecigars.com"
+  },
+  {
+    "id": 18753,
+    "name": "John Crouch Tobacconist",
+    "address": "215 King St, Alexandria, VA, 22314",
+    "phone": "(703) 548-2900",
+    "website": "johncrouchtobacconist.com"
+  },
+  {
+    "id": 18751,
+    "name": "Old Virginia Tobacco Co.",
+    "address": "210 King St, Alexandria, VA, 22314",
+    "phone": "(571) 685-2100",
+    "website": "oldvatobacco.com"
+  },
+  {
+    "id": 18746,
+    "name": "Duke Cigar and Tobacco",
+    "address": "7354 Little River Turnpike, Annandale, VA, 22003",
+    "phone": "(703) 256-3475",
+    "website": "dukecigar.com"
+  },
+  {
+    "id": 18587,
+    "name": "Fratello Cigars",
+    "address": "44621 Guilford Dr, Ashburn, VA, 20147",
+    "phone": "(800) 977-5912",
+    "website": "fratellocigar.com"
+  },
+  {
+    "id": 17948,
+    "name": "Blacksburg Pipe and Tobacco",
+    "address": "408 N Main St, Blacksburg, VA, 24060",
+    "phone": "(540) 951-8457",
+    "website": "blacksburgtobacco.com"
+  },
+  {
+    "id": 17730,
+    "name": "Sidetrack Tobacco",
+    "address": "1061 Old Abingdon Hwy Ste 6, Bristol, VA, 24201",
+    "phone": "(276) 821-3043",
+    "website": "sidetracktobaccollc.com"
+  },
+  {
+    "id": 18694,
+    "name": "Burke Cigar",
+    "address": "9558 Old Keene Mill Rd, Burke, VA, 22015",
+    "phone": "(703) 440-0678",
+    "website": "burkecigar.com"
+  },
+  {
+    "id": 18245,
+    "name": "Winston's Humidor",
+    "address": "6531 Centralia Rd, Chesterfield, VA, 23832",
+    "phone": "(804) 621-4520",
+    "website": "winstonshumidor.com"
+  },
+  {
+    "id": 18265,
+    "name": "Mona Lounge & Cigar Bar",
+    "address": "2442 Old Brick Rd, Glen Allen, VA, 23060",
+    "phone": "(804) 360-2460",
+    "website": "monaloungecigarbar.com"
+  },
+  {
+    "id": 18849,
+    "name": "McLean Cigars PG Boutique",
+    "address": "1429 Center St, Mclean, VA, 22101",
+    "phone": "(703) 848-8095",
+    "website": "mcleancigars.com"
+  },
+  {
+    "id": 19911,
+    "name": "Tailored Smoke Cigar Lounge",
+    "address": "605 Pilot House Dr, Newport News, VA, 23606",
+    "phone": "(757) 782-4800",
+    "website": "tailoredsmokeva.com"
+  },
+  {
+    "id": 18285,
+    "name": "Griffin Cigar",
+    "address": "9200 Stony Point Pkwy, Richmond, VA, 23235",
+    "phone": "(804) 938-5511",
+    "website": "griffincigar.com"
+  },
+  {
+    "id": 18355,
+    "name": "The Lion's Den RVA Cigar Bar and Restaurant",
+    "address": "700 Dawn St, Richmond, VA, 23222",
+    "phone": "(804) 562-6025",
+    "website": "thelionsdenrva.com"
+  },
+  {
+    "id": 17899,
+    "name": "Bison Head Cigar & Lounge",
+    "address": "20 Campbell Ave SE, Roanoke, VA, 24011",
+    "phone": "(540) 566-3866",
+    "website": "bisonheadcigar.com"
+  },
+  {
+    "id": 18547,
+    "name": "Old Virginia Tobacco Co.",
+    "address": "20921 Davenport Dr, Sterling, VA, 20165",
+    "phone": "(703) 444-8708",
+    "website": "oldvatobacco.com"
+  },
+  {
+    "id": 18624,
+    "name": "Long Ridge Cigars",
+    "address": "141 Featherbed Ln, Winchester, VA, 22601",
+    "phone": "(540) 313-4185",
+    "website": "longridgecigars.com"
+  },
+  {
+    "id": 19861,
+    "name": "The Burning Leaf Cigar Lounge",
+    "address": "1730 George Washington Memorial Hwy, Yorktown, VA, 23693",
+    "phone": "(757) 292-4823",
+    "website": "theburningleaf.com"
+  },
+  {
+    "id": 22425,
+    "name": "Garcia's Tobacco Shop",
+    "address": "97 Church St, Burlington, VT, 05401",
+    "phone": "(802) 658-5737",
+    "website": "garciatobaccoshop.com"
+  },
+  {
+    "id": 10441,
+    "name": "Cigar Savvy",
+    "address": "8390 W Gage Blvd #110, Kennewick, WA, 99336",
+    "phone": "(509) 579-4444",
+    "website": "cigarsavvyshop.com"
+  },
+  {
+    "id": 10448,
+    "name": "Rain City Cigar Kirkland",
+    "address": "115 Lake St S, Kirkland, WA, 98033",
+    "phone": "(425) 533-0139",
+    "website": "raincitycigar.com"
+  },
+  {
+    "id": 10420,
+    "name": "The Educated Cigar & Wine",
+    "address": "624 Wellsian Way, Richland, WA, 99352",
+    "phone": "(509) 205-2876",
+    "website": "educatedcigar.com"
+  },
+  {
+    "id": 10133,
+    "name": "F. K. Kirsten Tobacconist",
+    "address": "2200 Westlake Ave, Seattle, WA, 98121",
+    "phone": "(206) 264-2966",
+    "website": "kirstenpipe.com"
+  },
+  {
+    "id": 10103,
+    "name": "Rain City Cigar",
+    "address": "5963 Corson Ave S, Seattle, WA, 98108",
+    "phone": "(206) 767-3619",
+    "website": "raincitycigar.com"
+  },
+  {
+    "id": 10277,
+    "name": "Union Cigar Society",
+    "address": "2046 Westlake Ave N  Ste 201, Seattle, WA, 98109",
+    "phone": "(206) 805-0866",
+    "website": "unioncigarsociety.com"
+  },
+  {
+    "id": 10597,
+    "name": "Lit Cigar Lounge",
+    "address": "37500 SE North Bend Way, Snoqualmie, WA, 98065",
+    "phone": "(425) 888-8265",
+    "website": "smokeatlit.com"
+  },
+  {
+    "id": 10590,
+    "name": "Cigar House",
+    "address": "7314 N Division St, Spokane, WA, 99208",
+    "phone": "(509) 862-4971",
+    "website": "cigarhouseshop.com"
+  },
+  {
+    "id": 10593,
+    "name": "Cigar Train",
+    "address": "1010 W Rosewood Ave, Spokane, WA, 99208",
+    "phone": "(509) 389-3874",
+    "website": "cigartrain.com"
+  },
+  {
+    "id": 10048,
+    "name": "Thunderbird Cigars",
+    "address": "7121 Waller Rd E, Tacoma, WA, 98443",
+    "phone": "(253) 531-8814",
+    "website": "thunderbirdtrading.com"
+  },
+  {
+    "id": 10234,
+    "name": "Paul's Cigars",
+    "address": "11516 SE Mill Plain Blvd, Vancouver, WA, 98684",
+    "phone": "(360) 885-3838",
+    "website": "paulscigars.net"
+  },
+  {
+    "id": 10461,
+    "name": "The Cigar Pairing Parlor",
+    "address": "432 S 48th Ave, Yakima, WA, 98908",
+    "phone": "(509) 208-7566",
+    "website": "thecigarpairingparlor.com"
+  },
+  {
+    "id": 16074,
+    "name": "Appleton Cigar Company",
+    "address": "415 W College Ave, Appleton, WI, 54911",
+    "phone": "(920) 830-8349",
+    "website": "appletoncigar.com"
+  },
+  {
+    "id": 16087,
+    "name": "Lake Country Cigars",
+    "address": "2566 Sun Valley Dr Ste 1, Delafield, WI, 53018",
+    "phone": "(262) 646-7530",
+    "website": "lccigars.com"
+  },
+  {
+    "id": 16286,
+    "name": "Uhle Tobacco Company | Milwaukee’s Finest Smoking Lounge",
+    "address": "114 W Wisconsin Ave, Milwaukee, WI, 53203",
+    "phone": "(414) 273-6665",
+    "website": "uhles.com"
+  },
+  {
+    "id": 17912,
+    "name": "Tobacco Town",
+    "address": "702 Ritter Dr, Beaver, WV, 25813",
+    "phone": "(304) 254-0500",
+    "website": "tobaccotownwv.com"
+  },
+  {
+    "id": 17885,
+    "name": "Destination Cigars",
+    "address": "1107 Johnstown Rd, Beckley, WV, 25801",
+    "phone": "(865) 315-6714",
+    "website": "destinationcigarlounge.com"
+  },
+  {
+    "id": 18527,
+    "name": "King Street Coffee & Tobacco Emporium",
+    "address": "320 W King St, Martinsburg, WV, 25401",
+    "phone": "(304) 264-9130",
+    "website": "kingstreetemporium.com"
+  },
+  {
+    "id": 19136,
+    "name": "Havana Nights Wv Cigar Bar & Grill",
+    "address": "222 Park Dr, Weirton, WV, 26062",
+    "phone": "(304) 914-3006",
+    "website": "Havananights-wv.com"
+  },
+  {
+    "id": 12752,
+    "name": "Casper Cigar Company",
+    "address": "1831 CY Ave, Casper, WY, 82604",
+    "phone": "(307) 337-4400",
+    "website": "caspercigar.com"
+  },
+  {
+    "id": 12822,
+    "name": "The Colonel Venue and Cigar Lounge",
+    "address": "1328 Beck Ave, Cody, WY, 82414",
+    "phone": "(307) 578-8510",
+    "website": "thecolonelvenue.com"
+  },
+  {
+    "id": 12938,
+    "name": "Cigar Box 307 Humidor & Lounge",
+    "address": "1901 Energy Ct, Gillette, WY, 82718",
+    "phone": "(307) 299-2033",
+    "website": "cigarbox-307.com"
+  }
+]

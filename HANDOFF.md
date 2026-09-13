@@ -1,9 +1,11 @@
 # Handoff: instructions for the next session
 
-**Every sweep in this programme has now been run against production.** What is
-left is judgement work on lists a person has to read, plus two things blocked on
-data this repository does not hold. This file is your work order. Read it, then
-start at "Your next task".
+**The directory is live at https://cigar-buddy.com and it has a trust problem.**
+A shop that closed six months ago was sitting on the public map with full
+opening hours, and the owner — who lives next door to it — had to be the one to
+notice. A sweep to find the rest was started and is only 28% done. **That sweep
+is task 1 and nothing else matters until it is finished.** This file is your
+work order. Read it, then start at "Your next task".
 
 Written 2026-09-12, revised twice the same day: once by a cloud session that had
 no credentials and built the jobs, and once by the session that ran them all.
@@ -11,11 +13,13 @@ The version before this one (`git show 00b2d75:HANDOFF.md`) described eight
 tasks waiting to be run; they are done, and what running them changed is
 recorded in `SWEEPS.md` under "The session of 2026-09-12 (evening)".
 
-**Production, 2026-09-12 evening: 4,363 public listings.** 930 with hours (783
-from the shop's own site), 806 with a thumbnail, 1,854 with a lounge badge, 367
-with a walk-in humidor, 230 stamped by a current tobacco licence, and no public
-listing linking to a gambling or parking page. Every badge on the map now rests
-on a sentence from the shop's own site or on the shop's own name.
+**Production, 2026-09-13: 672 public listings**, on `https://cigar-buddy.com`
+(Cloudflare in front, Railway behind, `www` 301s to the apex). 670 with hours
+read from the shop's own website, 349 with a thumbnail, 814 URLs in the sitemap,
+and a favicon and share card that did not exist yesterday.
+
+**Treat the 672 as unproven.** Of the first 190 researched, 57 (30%) should not
+be there: 4 shut, 16 not cigar shops, 37 unprovable either way. See task 1.
 
 ---
 
@@ -65,32 +69,181 @@ railway run --service Postgres node sweeps/scripts/prod.js <absolute path to you
 
 ## Your next task
 
-In this order. None of these changes what a customer sees by itself — they are
-all lists somebody has to read.
+Task 1 is not like the others. Do it first and do not start anything else until
+it is done: every day the directory is up, it is sending people to shops that
+are not there.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| 1 | [Three environment variables, then one command a day](#1-three-environment-variables-then-one-command-a-day) | Everything automatable is automated; what is left needs a card and a password |
-| 2 | [The pins nobody could settle](#2-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
-| 3 | [Licence moves](#3-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
-| 4 | [The four manual registries](#4-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
-| 5 | [The Overture dedupe change](#5-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
-| 6 | [Watch the menu scanner](#6-watch-the-menu-scanner) | It has never had a real 24 hours |
+| **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **482 of 672 unresearched. 30% of those already checked should not be public** |
+| 2 | [Add Paul's Cigars, Hazel Dell](#2-add-pauls-cigars-hazel-dell) | Written and dry-run; one command. A real shop we are missing |
+| 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
+| 4 | [The pins nobody could settle](#4-the-pins-nobody-could-settle) | 25 rows where the geocoder answered with a different address |
+| 5 | [Licence moves](#5-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
+| 6 | [The four manual registries](#6-the-four-manual-registries) | Florida, California, Pennsylvania and Washington, by hand |
+| 7 | [The Overture dedupe change](#7-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
+| 8 | [Watch the menu scanner](#8-watch-the-menu-scanner) | It has never had a real 24 hours |
 
 ---
 
-## 1. Three environment variables, then one command a day
+## 1. Finish proving the shops are open
 
-**Everything that could be automated has been.** What is left needs a card and a
-password, and takes an afternoon.
+### What happened
 
-### What you have to do by hand, once
+`#10184 Cascade Cigar & Tobacco`, Happy Valley OR, was public with full opening
+hours. It had been shut for six months. The owner lives next to it.
+
+It passed every gate the directory had: a live website of its own, an address
+something outside the directory agreed with, and hours read off that website.
+**Those gates prove a website exists. They do not prove a shop does, and nobody
+had noticed those are two different questions.** `cascadecigar.com` still
+answers 200 with 85KB and still publishes "11am to 7pm - Everyday".
+
+The obvious fix does not work either, and this is the part worth knowing before
+you spend a day on it. Measuring how stale each site is fails: Cascade is on
+Squarespace, whose `sitemap.xml` `lastmod` reads **15 days old**, with a cart,
+an Instagram link and a Facebook link. It scores as *more alive* than shops that
+are genuinely trading. `sweeps/scripts/probe_open_evidence.js` is kept because it
+does catch dead hosts and truly frozen sites — Prestige Cigars at 987 days — but
+it cannot answer the question and you should not try to make it.
+
+**What answers it is research.** Directory sites put closure in the page title:
+Yelp renders `CASCADE CIGAR & TOBACCO - CLOSED - Updated June 2026`. That is one
+WebSearch away and no crawl of the shop's own site will ever contain it.
+
+### The owner's rule, verbatim
+
+> "PLEASE PLEASE only keep stores you are 100% sure are open, do research on the
+> stores, do whatever you need to do to ensure they are open. this should not be
+> innocent until proven guilty this should be guilty until proven innocent"
+
+and, separately:
+
+> "ensure that not only are they just open stores but they are open CIGAR stores
+> or tobacconists"
+
+So each listing must clear **two** bars: trading now, **and** in scope under the
+rules in "Reference: the owner's rules" below. `unknown` does not survive.
+
+On the `unknown` pile the owner was asked and said: **"i just want you to make
+judgement calls on the unknowns."** So: research them harder first, then decide
+each one yourself on the evidence and say why. Do not blanket-drop them, and do
+not keep them just because nothing disproved them.
+
+### Where it got to
+
+A workflow of 68 research agents, each taking 10 shops, each batch then handed to
+a second agent whose only job is to disprove "open". It was stopped at the
+owner's request partway through. **190 of 672 judged, 482 left.** Verification
+had not started when it stopped, so treat all 190 as research-only.
+
+| | |
+|---|---|
+| `sweeps/decisions/open_research_partial.json` | the 190 already judged, with evidence and source URLs |
+| `sweeps/decisions/open_research_todo.json` | the 482 still to do, ready to batch |
+| `sweeps/decisions/research_input.json` | all 672, the input the agents read |
+| `sweeps/decisions/open_candidates.json` | every public row with all its current fields |
+| `sweeps/decisions/open_evidence.json` | the site-freshness probe, for triage only |
+
+Of the 190: **142 open, 4 closed, 44 unknown, 16 out of scope.**
+
+Closed: `#1949 Sabor Havana`, `#3979 Smokers Castle`, `#11405 Tobacco Leaf`,
+`#18884 Signature Cigars`.
+
+Out of scope, and note the shape of them — restaurants and bars with a cigar
+room, smoke/vape/head shops, one manufacturer, one liquor store: `#403 Jallo`,
+`#618 Cigar Bar Live`, `#815 My Tobacconist`, `#1676 Cigar Cartel Posner`,
+`#1738 St Lucie`, `#1969 Warped Cigars`, `#3399 Brazil Smoke`, `#3965 WeHo`,
+`#4208 Captain Tobacco`, `#5054 Frontier Tobacco`, `#6180 Hemingway's`,
+`#6666 The 19th Hole`, `#8198 Continent`, `#8574 Cigar Bar & Grill`,
+`#10272 Lucky Raven`, `#14995 Embers Vine`.
+
+### How to run the rest
+
+The workflow script is saved and can be re-run against the 482:
+
+```
+.claude/.../workflows/scripts/prove-shops-open-wf_bed87099-a6d.js
+```
+
+Point it at `open_research_todo.json` instead of `research_input.json` and set
+`total` to 482. Batches of 10 worked well; 16 run concurrently; the whole 672
+looked like 2-3 hours end to end. Give each agent the scope rules verbatim —
+the ones already in the script produced the sixteen correct out-of-scope calls
+above, so do not rewrite them.
+
+### Then, and only then, apply it
+
+**No apply script exists yet. Write it, dry-run it, and let the owner read the
+list before anything is hidden.** He caught Cascade himself and will catch your
+mistakes too; show him every shop you want to drop with its evidence and source
+URL.
+
+Hiding must survive the next deploy. `importStores.js` recomputes `visible`
+from the classifier on every boot, and a regression once put 519 hidden listings
+back on the map including a brewery. It honours only these:
+
+```
+storefront IN ('not_retail','online_only','closed','duplicate','moved','unproven','unverified')
+   -- or --
+staff_edited = 1
+```
+
+So use `storefront = 'closed'` for shut, `'not_retail'` for out of scope, and
+`'unproven'` for the ones you judge unprovable — all three are honoured. Write
+through `utils/storeEdits.js` `writeFields` so every hide is logged and
+reversible, and put the evidence in `storefront_reason`.
+
+---
+
+## 2. Add Paul's Cigars, Hazel Dell
+
+Reported missing by the owner. Paul's runs two shops in Vancouver WA; we had one.
+Mill Plain (`#10234`) is public, Hazel Dell was not in the table under any name.
+
+`sweeps/scripts/add_pauls_hazel_dell.js` is written, commented and **not yet
+run**. Everything in it is first-hand from `paulscigars.net`'s own locations
+page, and the pin is where Census and Nominatim agree (about 70m apart, a
+multi-tenant strip, consistent with "Suite 114").
+
+```
+DRY=1 railway run --service Postgres node sweeps/scripts/prod.js <abs path>
+      railway run --service Postgres node sweeps/scripts/prod.js <abs path>
+```
+
+Two other rows named "Paul's Cigars" exist — Beaverton OR and Hayden Island
+Portland — on no page of the company's own site. They are already hidden. They
+are probably former locations; task 1 will settle them.
+
+---
+
+## 3. Two environment variables
+
+---
+
+**The domain is done.** `cigar-buddy.com` is live, `APP_URL` is set on the
+**`cigar_maps_claude`** service (not Postgres — see below), `www` 301s to the
+apex, SSL is Full (strict), and a crawl of the live site reports 814 URLs with
+no faults. Two variables are left.
 
 | | What | Why it blocks everything behind it |
 |---|---|---|
-| 1 | **Buy a domain, point it at Railway, set `APP_URL`** | Every canonical, sitemap entry and outreach link reads `APP_URL`. Change it later and you throw away whatever the indexing has earned |
-| 2 | **Set `RESEND_API_KEY`** (not SMTP) | Mail cannot leave over SMTP from here at all — see below. One key, and mail goes over HTTPS. Also set `MAIL_FROM` and `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry |
-| 3 | **Add analytics and Search Console** | Otherwise none of the rest can be measured. `store_views` already records every shop page view; what is missing is search impressions and indexed-page counts |
+| 1 | **Set `RESEND_API_KEY`** (not SMTP) | Mail cannot leave over SMTP from here at all — see below. One key, and mail goes over HTTPS. Also set `MAIL_FROM` and `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry. Until this is set, **a shop that tries to claim its listing gets nothing** |
+| 2 | **Add analytics and Search Console** | `GOOGLE_SITE_VERIFICATION` then submit `https://cigar-buddy.com/sitemap.xml`. `store_views` already records every shop page view; what is missing is search impressions and indexed-page counts |
+
+**The Railway trap, which has now cost three wrong conclusions.** The project has
+two services and the CLI's linked default for this directory is **Postgres**, not
+the app. Any `railway` command without `--service` acts on the database, where
+nothing reads your variable. The app is:
+
+```
+railway variable set KEY=VALUE --service 76dbe85c-e820-42e1-882c-aa23038a115c
+railway status --json            # bare 'railway status' hangs on a prompt
+```
+
+Reading variables is blocked, so **verify from outside**: `/api/health/config`
+reports `app_url`, whether mail can actually send, verification tokens and
+analytics. That endpoint is the check, not the CLI.
 
 The old Gmail password in this repository's history is burned — rotate it
 whatever you decide.
@@ -163,7 +316,7 @@ Indexing is slow: pages start appearing in two to six weeks, rankings build over
 months. Nothing below will feel like it is working for a fortnight. The leading
 indicator is *impressions* in Search Console, which moves well before clicks do.
 
-## 2. The pins nobody could settle
+## 4. The pins nobody could settle
 
 All 59 held rows were read on 2026-09-12: 16 needed no move (Nominatim backs the
 pin we already hold), 18 were moved, and **25 are left** in
@@ -188,7 +341,7 @@ railway run --service Postgres node sweeps/scripts/prodrun.js src/jobs/geocodePi
 geocoders are wrong about 40% of the time there. **Puro Estilo in Bethlehem,
 Pennsylvania is not foreign** whatever its name or its Israeli mobile suggests.
 
-## 3. Licence renames and moves
+## 5. Licence renames and moves
 
 `sweeps/decisions/licences.json` holds two lists the apply step deliberately
 does not touch:
@@ -211,7 +364,7 @@ does not touch:
 for staff and none were hidden. A self-test asserts there is no verdict in that
 job that hides a listing. Keep it that way.
 
-## 4. The four manual registries
+## 6. The four manual registries
 
 `licenceSync fetch` prints the URL for each. Save the file into
 `sweeps/decisions/licences/` under the name it asks for (`fl.csv`, `ca.csv`,
@@ -225,7 +378,7 @@ answers 400 or 404, find the new id rather than dropping the registry —
 `sweeps/scripts/socrata_find.js` searches a Socrata domain by keyword, and
 `socrata_peek.js` prints one row so the column names can be read.
 
-## 5. The Overture dedupe change
+## 7. The Overture dedupe change
 
 Unchanged and still blocked. `sweeps/plan.json` (duplicates, items 2 and 3) asks
 `buildDirectory` to let one Overture record absorb *every* OSM record of the
@@ -243,11 +396,38 @@ wired up: `dedupeListings.mergeAutomatic` runs after every import on the auto
 tier only. Its first production run merged six doors, all six genuinely one shop
 listed twice.
 
-## 6. Watch the menu scanner
+## 8. Watch the menu scanner
 
 Still true, and still worth a look: its back-off and staleness ordering are
 deployed and a 30-day replay proves every shop gets reached, but it has only
 ever run against a model. Watch the first real 24 hours.
+
+---
+
+## Reference: what the session of 2026-09-13 changed
+
+Shipped and deployed, all verified against the live site:
+
+| | |
+|---|---|
+| **The domain** | `cigar-buddy.com` live. Cloudflare in front, Railway behind. `www` 301s to the apex keeping the path. SSL Full (strict) |
+| **`APP_URL`** | Was never set, so every verification email, password reset, unsubscribe and outreach link pointed at a dead Railway subdomain. Now `https://cigar-buddy.com` |
+| **The map** | OpenStreetMap had blocked us — correctly; their tile policy asks that anything past light use go elsewhere, and a pannable map over 672 shops is not light use. Now CARTO's dark basemap, which also removes the white slab from the middle of a dark page |
+| **A favicon** | There was none. The old PWA icons carry the words CIGAR BUDDY across the middle, which at 16px is four grey smudges, so the mark is the cigar alone |
+| **A share card** | `og:image` was `null` on the homepage, `/stores` and `/cigar-shops`, so a texted link arrived as a grey rectangle. `client/public/og.png`, with dimensions attached. Regenerate with `sweeps/scripts/make_brand_assets.js` |
+| **Thumbnails** | `StoreThumb` decided how to draw a picture by testing whether the URL contained the word "logo". 67 logos were being drawn as photographs on a near-black backdrop — a see-through logo in dark ink on a near-black square is an invisible logo, and six measured a standard deviation of 0.022. Now drawn from `image_kind`/`image_luma`, measured from the file |
+| **User-Agents** | Three crawler jobs announced `cigarbuddy.com` — no hyphen, a domain nobody owns — and `thumbCheck` sent it as a `Referer` to third-party image hosts. All follow `APP_URL` now |
+
+Two faults found by reading output rather than trusting a pass, which is the
+lesson this file opens with:
+
+- `readClosureText` returns `{ closed: false }` — an object, always truthy — so
+  a plain truthiness check reported **37 of 37 sites as closed**.
+- The site check reported "robots.txt does not name the sitemap" against a site
+  whose robots.txt names the sitemap. It was reading Cloudflare's four-hour
+  cache of a copy made before the domain was wired up. Cloudflare **merges**
+  the origin's robots.txt; it does not replace it. The check now asks the
+  origin when the cached answer fails, and says which of the two it is.
 
 ---
 
@@ -260,11 +440,19 @@ ever run against a model. Watch the first real 24 hours.
    open, at the address we hold, it stays hidden rather than making the site look
    like a junk directory. Hidden is never deleted: every hide records its reason
    and is reversible.
-3. **Claimed and staff-edited listings are never touched by a sweep.**
-4. **Ask Mason** before publishing anything we cannot show is a cigar shop, or
+3. **Guilty until proven innocent** — his words, 2026-09-13, after finding a shop
+   on the map that had been shut for six months and that he lives next door to:
+   *"only keep stores you are 100% sure are open, do research on the stores, do
+   whatever you need to do to ensure they are open. this should not be innocent
+   until proven guilty this should be guilty until proven innocent."* Nothing
+   disproving a closure is not evidence it is open. This outranks rule 2, which
+   was written as a tie-breaker and was being read as a licence to keep anything
+   nobody had actively disproved.
+4. **Claimed and staff-edited listings are never touched by a sweep.**
+5. **Ask Mason** before publishing anything we cannot show is a cigar shop, or
    before spending money.
 
-On rule 4 and judgement calls: Mason has said he would rather a session **make
+On rule 5 and judgement calls: Mason has said he would rather a session **make
 the call and document it** than stop and ask, for anything that is not spending
 money or publishing unproven listings. Two calls were made on that basis on
 2026-09-12 (paid placement, and the no-location order) — both are written up in
@@ -597,57 +785,3 @@ copy, or a fixture. Say which.
   7,904 public rows. Measure against a database built from the committed
   directory (`node src/index.js` does it with no credentials) and say which of
   the two any number came from.
-
-## Reference: what to ask Mason
-
-### One command for him to run
-
-The five `sweep/*` branches are merged and the work is on `master`. They cannot
-be deleted from a cloud session — the git proxy refuses any ref push that is not
-a branch create or update, so a delete comes back HTTP 403, and the GitHub tools
-available here have no delete-branch call. From a normal machine:
-
-```bash
-git push origin --delete sweep/claims sweep/hours sweep/links sweep/pins \
-  sweep/search-and-menus __reftest
-```
-
-`__reftest` is litter from diagnosing that limitation. **Before running it:**
-`sweep/search-and-menus` is the only one of the five whose code is *not* in
-`master` — it was superseded rather than adopted, so that deletion is the one
-that actually loses a version. `PROGRESS.md` has the table of what came from
-which branch. Nothing in the repository depends on any of them.
-
-### The rest
-
-- **A Google Places API key and budget**, for the closures and hours no free
-  source settles. Everything so far was done without paid data. This is the only
-  item on this list that is genuinely blocked on him.
-- **Whether any outlet chain should come back:** Wild Bill's (198 listings),
-  Sweet Fire (61), Cheap Tobacco (32), The Tobacco Shoppe (21). Each is one
-  command. Rule 4 makes this his call, not a session's.
-- **Whether the paid-placement prices and reach match what he wants to sell** —
-  $49 for 15 miles, $149 for 50. The mechanism is built and documented; the
-  numbers are commercial.
-- **Not questions any more:** paid placement's shape and the no-location order,
-  decided on 2026-09-12 at his request. Plus, decided in the revision because he
-  asked for judgement rather than questions, each written up in `SWEEPS.md` with
-  what to change to reverse it:
-  - Requests on unclaimed listings are **collected**, and the dialog says they
-    cannot reach the shop yet, rather than the tile being hidden.
-  - A website nobody has checked stays a **live link**; only an address somebody
-    has just changed is withheld, under a new `checking` verdict. Rendering
-    unchecked as unclickable would have emptied the website line on 5,214 of the
-    5,214 public listings that have one.
-  - Which owner edits go live instantly: hours, phone and website, each with its
-    checks re-run; an address change re-geocodes and recomputes the time zone.
-  - The dead domain is **no longer named** in the unclaimed banner, since the
-    page has already withheld the link.
-
-## Reference: keep the log
-
-After each task: update `SWEEPS.md` with what changed in production and the
-numbers, and commit. If you stop part-way, say in `SWEEPS.md` exactly where you
-are, as this file does. **The next session should never have to reconstruct it** —
-and should never have to guess whether a number describes production, a local
-copy, or a fixture. Say which.
