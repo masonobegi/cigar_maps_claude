@@ -73,20 +73,26 @@ Task 1 is not like the others. Do it first and do not start anything else until
 it is done: every day the directory is up, it is sending people to shops that
 are not there.
 
-> **Check this before you start, not after.** Everything that writes to
-> production goes through
-> `railway run --service Postgres node sweeps/scripts/prod.js <script>`, and the
-> credential for it lives in `~/.railway/config.json` on the owner's machine —
-> **not in this repository.** A cloud or otherwise fresh environment needs
-> `railway login` or a `RAILWAY_TOKEN` set before anything in tasks 1, 2, 4, 5
-> or 6 can be applied. Find out now rather than after the research.
+> ### Run this WITHOUT production credentials. That is a decision, not a gap.
 >
-> **The research itself needs none of it.** Task 1's expensive half is WebSearch
-> over files that are committed, so with no credentials at all you can still
-> research all 482, make the judgement calls, write the apply script and dry-run
-> it against the decision file — then hand over one command. That split is a
-> good one anyway: the owner wanted to read the drop list before anything is
-> hidden, and he is the one who caught the shop this all started with.
+> Asked on 2026-09-13 whether the next session should be given a
+> `RAILWAY_TOKEN`, Mason said **go without it**. So do not ask for one, do not
+> wait on one, and do not treat its absence as something blocking you.
+>
+> **What that means in practice.** Everything that writes to production goes
+> through `railway run --service Postgres node sweeps/scripts/prod.js <script>`,
+> and that credential lives on his machine, not in this repository. So tasks 1,
+> 2, 4, 5 and 6 are yours to *decide* and his to *apply*.
+>
+> **Your job is to finish everything up to the write.** For task 1: research all
+> 482, run the verify pass, make the judgement calls on the unknowns, write the
+> apply script, dry-run it against the decision file, and commit the result.
+> Then hand him one command and a list he can read.
+>
+> This is deliberate and it is the point. He found the shop that started all of
+> this by standing next to it, and roughly 90 to 150 listings are going to come
+> off the map — too many to remove without him seeing them first. **Do not
+> design around getting access later. Design to hand over a reviewed list.**
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
