@@ -96,8 +96,8 @@ are not there.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **482 of 672 unresearched. 30% of those already checked should not be public** |
-| 2 | [Add Paul's Cigars, Hazel Dell](#2-add-pauls-cigars-hazel-dell) | Written and dry-run; one command. A real shop we are missing |
+| **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **All 672 researched 2026-09-13. Verification and a deeper pass on the unknowns were running when this was written; the drop list still needs reading before anything is hidden** |
+| 2 | ~~Add Paul&#39;s Cigars, Hazel Dell~~ | **Done 2026-09-13.** Added as #42931; both Vancouver shops are public |
 | 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
 | 5 | ~~Licence renames and moves~~ | **Closed 2026-09-13.** All 19 addresses stay; the 13 renames are split and applied |
