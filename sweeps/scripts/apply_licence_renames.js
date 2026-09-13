@@ -26,7 +26,14 @@ const path = require('path');
 const db = require('../../server/src/database/db');
 const { isKnownOpen } = require('../../server/src/jobs/licenceSync');
 
-const d = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'decisions', 'licences.json'), 'utf8'));
+// FILE=licences_all.json points this at a fresher match without overwriting the
+// one the 2026-09-12 reading was done against, which is still the record of
+// what was decided then.
+const SRC = process.env.FILE
+  ? path.resolve(process.cwd(), process.env.FILE)
+  : path.join(__dirname, '..', 'decisions', 'licences.json');
+const d = JSON.parse(fs.readFileSync(SRC, 'utf8'));
+console.log(`reading ${SRC}\n`);
 
 const fold = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const squash = s => fold(s).replace(/ /g, '');

@@ -100,7 +100,7 @@ are not there.
 | 2 | [Add Paul's Cigars, Hazel Dell](#2-add-pauls-cigars-hazel-dell) | Written and dry-run; one command. A real shop we are missing |
 | 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
-| 5 | [Licence moves](#5-licence-renames-and-moves) | 132 shops whose licence is at another address: stale, or a namesake |
+| 5 | ~~Licence renames and moves~~ | **Closed 2026-09-13.** All 19 addresses stay; the 13 renames are split and applied |
 | 6 | [The two remaining manual registries](#6-the-two-remaining-manual-registries) | Pennsylvania and Washington; California and Florida fetch themselves now |
 | 7 | [The Overture dedupe change](#7-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
 | 8 | [Watch the menu scanner](#8-watch-the-menu-scanner) | It has never had a real 24 hours |
@@ -373,28 +373,63 @@ duplicate being hidden anyway.
 So the existing pins stand. They come from the record's own source, which had
 the address in front of it, and nothing available beats that.
 
-## 5. Licence renames and moves
+## 5. Licence renames and moves — CLOSED, nothing moves
 
-`sweeps/decisions/licences.json` holds two lists the apply step deliberately
-does not touch:
+**Decided 2026-09-13. No address in the directory changes on this evidence.**
 
-- **renamed (57) — done.** Read and split by
-  `sweeps/scripts/apply_licence_renames.js`: 7 are the same name formalised, 15
-  are a licence holder rather than a name over the door, 29 went into
-  `name_aliases` so search finds the shop either way, and 5 doors that now hold
-  a licence for another trade are staff flags. Re-run that script if the
-  registries are refreshed.
-- **moved (132) — still open.** The licence for this business is at a different
-  address, which means either our address is stale or the match is a namesake.
-  Cross-check against `sweeps/decisions/pins/pins_left.json` before believing
-  either one. Three spellings of one address have already been taken out of this
-  list ("5832 Highway Six" is "5832 HIGHWAY 6", "10 N Plaza" is "10 NORTH PLZ",
-  "170B" is the unit letter on 170), so what is left is genuinely two different
-  addresses.
+The "moved (132)" figure in the previous handoff was measured against a 4,363-listing
+directory that no longer exists; most of those rows are already hidden. Re-matched
+against today's 673 public listings with the registries now covering NY, TX, FL, CA and
+Chicago, it is **19 moved and 13 renamed**. All 32 were read.
 
-**A lapse is never a hide.** 202 listings have no current licence; 54 were noted
-for staff and none were hidden. A self-test asserts there is no verdict in that
-job that hides a listing. Keep it that way.
+### Moved: all 19 stay
+
+A "moved" verdict turns out not to be evidence that our address is wrong.
+
+**Four are the same address spelled differently** — the same class of thing the previous
+session had already pulled three of:
+
+    1895 NW 21st St        vs  1895 NW 21 Street
+    1130 Townpark Ave      vs  1130 Town Park Avenue
+    24174 Hwy 27 Ste 500   vs  24174 Hwy 27 #500
+    36 S Atlantic Ave      vs  34/36/38 S Atlantic Avenue   (a multi-unit building)
+
+**One is settled by the shop's own words.** El Titan de Bronze is listed by us at 1071
+SW 8th St and licensed at 1067; the research quotes their own site saying 1071. Ours is
+right and the licence is the unit next door.
+
+**One looked like a real move and is not.** Boiler Room Smoking Lounge is licensed at
+11500 Rock Rose Ave while we list 311 W 7th St. Their own site reads "311 W 7th Street,
+Basement of the York Rite Building, Austin, TX 78701" and lists no second location. The
+licence is somebody else.
+
+**The rest are chains and namesakes** — Finck Cigars runs three San Antonio shops, Corona
+several in Florida — where the licence found is a different branch of the same business.
+In nearly all of them the open/closed research independently confirms the shop is
+trading at the address we hold.
+
+### Renamed: 13, split and applied
+
+`sweeps/scripts/apply_licence_renames.js` (now takes `FILE=` so it can be pointed at a
+fresher match without overwriting the record of the 2026-09-12 reading):
+
+  - 3 the same name formalised — nothing to do
+  - 3 a licence holder rather than a name over the door — not an alias anybody searches
+  - 5 another name in the trade — written to `name_aliases` so search finds the shop
+    either way
+  - 2 another trade at the door, for staff: Jallo Cigar Lounge is licensed to
+    "Friendship Wine & Liquor", Burn One Cigars to "Cigar & Wine Bar"
+
+**One thing worth keeping from this.** The script flags "another trade" by keyword, and
+3 Islas Cigar Lounge, whose door is licensed to "Toke Shack LLC", slipped through it —
+the pattern has no term for cannabis. It did not matter, because the research had
+already settled it independently: its Yelp page was updated this month and describes a
+walk-in humidor, so it is open and in scope, and "Toke Shack LLC" is simply the company
+holding the licence. Read that as a reminder that the keyword list is a prompt for a
+human, not a verdict.
+
+**A lapse is never a hide.** A self-test asserts there is no verdict in that job that
+hides a listing. Keep it that way.
 
 ## 6. The two remaining manual registries
 
