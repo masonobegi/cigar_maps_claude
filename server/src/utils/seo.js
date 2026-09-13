@@ -29,6 +29,16 @@ const DAYS = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday',
 
 const SITE_NAME = 'CigarBuddy';
 const DEFAULT_TITLE = 'CigarBuddy — find a proper cigar shop near you';
+/**
+ * The card a link turns into when the page has no picture of its own.
+ *
+ * Every branch of metaFor was free to return image: null and most did, so the
+ * homepage — the link people actually text each other — arrived in iMessage as
+ * a grey rectangle with a URL under it. Drawn by sweeps/scripts/make_brand_assets.js
+ * and served from client/public.
+ */
+const SITE_IMAGE = '/og.png';
+const SITE_IMAGE_SIZE = { width: 1200, height: 630 };
 const DEFAULT_DESC = 'A directory of real cigar shops: opening hours read from each shop\'s own website, '
   + 'walk-in humidors, lounges you can sit and smoke in, and what they have in stock.';
 
@@ -157,8 +167,11 @@ function placeDescription(place, shops) {
   return `${bits.join(', ')}. Addresses, phone numbers and what each one carries.`;
 }
 
-/** Everything the head needs for one page. */
-function metaFor({ pathname, store = null, place = null, shops = [], base }) {
+/**
+ * Everything the head needs for one page, before the share-image fallback.
+ * Call metaFor, not this.
+ */
+function metaForPage({ pathname, store = null, place = null, shops = [], base }) {
   const url = `${base}${pathname}`;
   if (place) {
     return {
@@ -205,6 +218,19 @@ function metaFor({ pathname, store = null, place = null, shops = [], base }) {
     title: DEFAULT_TITLE, description: DEFAULT_DESC, canonical: `${base}${pathname}`,
     image: null, jsonld: null, robots: private_ ? 'noindex, follow' : null,
   };
+}
+
+/** Everything the head needs for one page. */
+function metaFor(args) {
+  const meta = metaForPage(args);
+  // A shop picture that measured as 'blank' is a flat dark square — it says
+  // less than the site card does, so it is not worth attaching to a link.
+  if (meta.image && args.store && args.store.image_kind === 'blank') meta.image = null;
+  if (!meta.image) {
+    meta.image = `${args.base}${SITE_IMAGE}`;
+    meta.imageSize = SITE_IMAGE_SIZE;
+  }
+  return meta;
 }
 
 /**
@@ -272,6 +298,13 @@ function render(template, meta) {
   if (meta.image) {
     tags.push(`<meta property="og:image" content="${esc(meta.image)}">`);
     tags.push(`<meta name="twitter:image" content="${esc(meta.image)}">`);
+    tags.push(`<meta property="og:image:alt" content="${esc(meta.title)}">`);
+    // Only for our own card, whose size we know. A shop's picture could be
+    // any shape, and a wrong width is worse than none.
+    if (meta.imageSize) {
+      tags.push(`<meta property="og:image:width" content="${meta.imageSize.width}">`);
+      tags.push(`<meta property="og:image:height" content="${meta.imageSize.height}">`);
+    }
   }
   if (meta.robots) tags.push(`<meta name="robots" content="${esc(meta.robots)}">`);
   for (const block of [].concat(meta.jsonld || [])) {
@@ -409,7 +442,7 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
     const m = /^\/stores\/(\d+)\b/.exec(req.path);
     if (m) {
       store = await db.get(`SELECT id, name, address, city, state, zip, phone, website, lat, lng,
-        hours, hours_source, has_lounge, has_walk_in_humidor, web_image_url
+        hours, hours_source, has_lounge, has_walk_in_humidor, web_image_url, image_kind
         FROM stores WHERE id = ? AND visible = 1`, [Number(m[1])]).catch(() => null);
     }
     const pm = /^\/cigar-shops\/([a-z0-9-]+)\/?$/i.exec(req.path);
@@ -528,6 +561,28 @@ function selftest() {
   const xml = sitemapXml([urlEntry(`${base}/stores/223`, '2026-09-12', '0.8')]);
   ok(xml.startsWith('<?xml') && xml.includes('<loc>https://cigarbuddy.com/stores/223</loc>'), 'a sitemap is well formed');
   ok(sitemapIndexXml([`${base}/sitemap-stores-1.xml`]).includes('<sitemapindex'), 'and the index points at its pages');
+
+  // The share card. Every one of these returned image: null before, which is
+  // why a texted link showed a grey rectangle.
+  const home = metaFor({ pathname: '/', base });
+  ok(home.image === `${base}/og.png`, 'the homepage has a card to share', home.image);
+  ok(home.imageSize.width === 1200 && home.imageSize.height === 630, 'and its size is known');
+  ok(metaFor({ pathname: '/stores', base }).image === `${base}/og.png`, 'so does the directory');
+  ok(metaFor({ pathname: '/cigar-shops', base }).image === `${base}/og.png`, 'and the place index');
+
+  const withPic = metaFor({ pathname: '/stores/223', base, store: { ...shop, web_image_url: 'https://x.test/a.jpg' } });
+  ok(withPic.image === 'https://x.test/a.jpg', 'a shop with a picture of its own uses it', withPic.image);
+  ok(withPic.imageSize === undefined, 'and does not claim a size nobody measured');
+
+  const blank = metaFor({ pathname: '/stores/223', base,
+    store: { ...shop, web_image_url: 'https://x.test/black.png', image_kind: 'blank' } });
+  ok(blank.image === `${base}/og.png`, 'a picture measured as a flat dark square falls back to the card', blank.image);
+
+  const cardHtml = render(template, home);
+  ok(cardHtml.includes(`<meta property="og:image" content="${base}/og.png">`), 'render emits og:image');
+  ok(cardHtml.includes('<meta property="og:image:width" content="1200">'), 'with the width a scraper wants');
+  ok(cardHtml.includes('name="twitter:card" content="summary_large_image"'), 'and asks for the large card');
+  ok(!render(template, withPic).includes('og:image:width'), 'but claims no width for a picture it did not measure');
 
   console.log(`\nseo self-test: ${pass} passed, ${fail} failed`);
   return fail === 0;
