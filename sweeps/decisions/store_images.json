@@ -1,0 +1,2794 @@
+[
+  {
+    "id": 155,
+    "name": "Cigar Society Lounge and Bar",
+    "where": "Pharr, TX",
+    "src": "https://www.cigarsocietyus.com/images/brands/opus-x.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 186,
+    "name": "Padre Island Cigar Company",
+    "where": "Corpus Christi, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/4438d2db-8dfd-4ea3-8655-8ae595b16719/PICC%20Logo.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 200,
+    "name": "Prohibition - Private Cigar Lounge",
+    "where": "Corpus Christi, TX",
+    "src": "https://i.vimeocdn.com/video/2045547753-98455fb40a9b6a7f1a54fba8316b788e84daf387491e97bc7a311e2125543273-d_1920x1080?&r=pad&region=us",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 203,
+    "name": "Jen's Cigar Bar",
+    "where": "Fort Myers Beach, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/6d44bd90-7bc5-4f0e-93d4-ef29f20829af/IMG_2795.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 208,
+    "name": "Estate Cigars & Social",
+    "where": "St Petersburg, FL",
+    "src": "https://static1.squarespace.com/static/6656349b518ff5420d7370d7/t/665760db87d3c54c757e7672/1717002459625/The+Estate+Logos-02+copy.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 220,
+    "name": "Cigar Cutters",
+    "where": "Fort Myers, FL",
+    "src": "https://cigarcuttersswfl.com/wp-content/uploads/2021/06/location.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 224,
+    "name": "Black Leaf Cigar and Wine Lounge",
+    "where": "St. Petersburg, FL",
+    "src": "https://static.wixstatic.com/media/ed0dc9_e4563bc2a6d946e4923f1a26e3bed22a%7Emv2.png/v1/fit/w_2500,h_1330,al_c/ed0dc9_e4563bc2a6d946e4923f1a26e3bed22a%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 245,
+    "name": "St. Pete Cigar Company",
+    "where": "St Petersburg, FL",
+    "src": "https://img1.wsimg.com/isteam/stock/r20r3ee",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 403,
+    "name": "Jallo Cigar Lounge",
+    "where": "New Port Richey, FL",
+    "src": "https://cityhive-production-cdn.cityhive.net/web_assets/6994c28aa5bc8c20074c400b.png?1771356810",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 414,
+    "name": "Mardo Cigars",
+    "where": "Sarasota, FL",
+    "src": "https://mardocigars.com/cdn/shop/files/Mardo_Logo_df8ceeb2-e6fd-4b56-9899-3f74d6a3ad1a.png?v=1774716112",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 489,
+    "name": "Cigars on the Boulevard",
+    "where": "Apollo Beach, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/4c3fe801-a578-45da-9529-ac4a644431fc/Alysa%20002.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 501,
+    "name": "Bennington Tobacconist",
+    "where": "Sarasota, FL",
+    "src": "https://benningtons.com/cdn/shop/files/BEN_Crest_bd480f8f-157d-4e37-81b1-67c75e23aeb8.jpg?v=1726086356",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 566,
+    "name": "Cozy Cigar Lounge",
+    "where": "Largo, FL",
+    "src": "https://cozycigars.com/cdn/shop/files/IMG_5915.png?height=628&pad_color=ffffff&v=1761160351&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 598,
+    "name": "Maduro Cigar & Bar",
+    "where": "Sarasota, FL",
+    "src": "https://maduroscigarsrq.com/assets/og-home.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 618,
+    "name": "Cigar Bar Live",
+    "where": "Fort Myers, FL",
+    "src": "https://liveonhendry.com/og-image.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 632,
+    "name": "Toast Cigar Bar",
+    "where": "Fort Myers, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/ce19ea4b-2396-47a4-bc04-17f89d8fc496/02C020AB-A168-43B4-BFEC-4D01FA7AEED6.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 701,
+    "name": "King Corona Cigars",
+    "where": "Tampa, FL",
+    "src": "https://www.kingcoronacigars.com/img/logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 703,
+    "name": "Sterling Cigar Lounge & Bar",
+    "where": "Tampa, FL",
+    "src": "https://static.spotapps.co/website_images/ab_websites/142673_website/social.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 704,
+    "name": "Nicahabana Cigars",
+    "where": "Tampa, FL",
+    "src": "https://static.wixstatic.com/media/40b93a_b849307503d447f4a5a94033f45e66ff%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/40b93a_b849307503d447f4a5a94033f45e66ff%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 711,
+    "name": "Ybor Cigars Plus",
+    "where": "Tampa, FL",
+    "src": "https://cdn.shopify.com/s/files/1/0409/8415/0166/files/1883.jpg?v=1656057747",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 865,
+    "name": "The Cigar Room",
+    "where": "Zephyrhills, FL",
+    "src": "https://vibe.filesafe.space/1776060226422737974/attachments/f1bfade4-eb7b-4932-913b-131fbaed69d0.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 894,
+    "name": "Cuba Linda Cigars, Beans & Culture",
+    "where": "South Miami, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/fb78b89e-fa4c-4372-814e-b3ef78ced0a6/Cuba%20Linda.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 922,
+    "name": "Miami Tobacco Traders",
+    "where": "Coral Gables, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/f3f413a4-3620-4d0a-841a-e1f7f7c79cf9/blob-54b1338.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1007,
+    "name": "3 Islas Cigar Lounge",
+    "where": "Hialeah, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/5423ae49-2551-45d6-89c6-9687c61e18d4/LW2_6376.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1029,
+    "name": "Pita Cigars",
+    "where": "Miami, FL",
+    "src": "https://static.wixstatic.com/media/4d72de_4a161b774e3f41bcaf0b359ebcb6834f~mv2.jpg/v1/fill/w_912,h_719,al_c/4d72de_4a161b774e3f41bcaf0b359ebcb6834f~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1049,
+    "name": "Mr. Cigars",
+    "where": "Miami, FL",
+    "src": "https://mistercigars.com/cdn/shop/files/IMG_5513.jpg?v=1754360364",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1085,
+    "name": "El Titan de Bronze",
+    "where": "Miami, FL",
+    "src": "https://cdn.shopify.com/s/files/1/0013/0498/5662/files/Bronze_Original_Logo_fafb075d-04b7-4eed-a3ab-421a0914c785.png?v=1774891623",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 1111,
+    "name": "Espanola Cigar Bar and Lounge",
+    "where": "Miami Beach, FL",
+    "src": "https://static.spotapps.co/website_images/ab_websites/102650_website/food_back.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1353,
+    "name": "Royal Cigars",
+    "where": "Hallandale Beach, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/6e1833b7-3639-42c2-aa41-569d1c59aced/_MG_2167-1800.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1486,
+    "name": "Backstage Cigar Lounge",
+    "where": "Fort Lauderdale, FL",
+    "src": "https://cdn.prod.website-files.com/69ecd9ff6e9bcbef07793cb5/69efb6c3803ea3990a96dac4_OpenGraph-backstage.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1622,
+    "name": "His and Hers Cigars",
+    "where": "Cocoa, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/983b4880-cf1f-4ad8-8513-770283d039ba/blob-0b36945.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1674,
+    "name": "Low Ball Louie's Cigars",
+    "where": "Lake Wales, FL",
+    "src": "https://static.wixstatic.com/media/d6d16a_7310f7aace71469f89ed63b176b44e12~mv2.jpg/v1/fill/w_504,h_276,al_c/d6d16a_7310f7aace71469f89ed63b176b44e12~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1695,
+    "name": "Burn One Cigars",
+    "where": "Margate, FL",
+    "src": "https://burnonecigars.com/wp-content/uploads/2021/08/burn-one-og.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1738,
+    "name": "St Lucie Smoke & Cigars",
+    "where": "Port St Lucie, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/a3886819-04a6-4382-8253-0aaa0309fa42/pexels-li-sun-3322845.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1885,
+    "name": "Perfect Ash Cigar Lounge",
+    "where": "Jensen Beach, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/d0477b6a-3564-4d99-8745-f56bd7186980/Perfect-Ash-1_2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1902,
+    "name": "Churchill Cigar Company",
+    "where": "Palm Beach, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/c5e566e0-d424-44d5-bf16-333389fc3f90/Bar%20Front%20(1).jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1912,
+    "name": "Black Dog Cigar Bar",
+    "where": "Stuart, FL",
+    "src": "https://static.wixstatic.com/media/814bfa_b87ad53b41e744cb991245dd3cd4bb61%7Emv2.webp/v1/fit/w_2500,h_1330,al_c/814bfa_b87ad53b41e744cb991245dd3cd4bb61%7Emv2.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1949,
+    "name": "Sabor Havana Cigars",
+    "where": "Palm Beach Gardens, FL",
+    "src": "https://saborhavanalounge.com/images/og-share.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1969,
+    "name": "Warped Cigars",
+    "where": "Jupiter, FL",
+    "src": "https://warpedcigars.com/img/share.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 1992,
+    "name": "Cigars of Wellington",
+    "where": "Wellington, FL",
+    "src": "https://static.wixstatic.com/media/9a7fb8_b50db1a5e30149538488bf47de6019f3%7Emv2.png/v1/fit/w_2500,h_1330,al_c/9a7fb8_b50db1a5e30149538488bf47de6019f3%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2160,
+    "name": "Crown City Cigars and Fine Tobacco",
+    "where": "Coronado, CA",
+    "src": "https://img1.wsimg.com/isteam/ip/caad959f-3588-40d6-aa39-0e58ca9af368/padrons.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2364,
+    "name": "Racine & Laramie Tobacconist",
+    "where": "San Diego, CA",
+    "src": "https://www.racineandlaramie.com/carousel/cigarlounge.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2389,
+    "name": "Finck Cigars Helotes",
+    "where": "Helotes, TX",
+    "src": "https://static1.squarespace.com/static/65affa33565e871b77261b60/t/65affc26e78eaf52d44c310f/1706032166866/Finck-Cigar-Logo-3.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2459,
+    "name": "Finck Cigars West Ave.",
+    "where": "San Antonio, TX",
+    "src": "https://static1.squarespace.com/static/65affa33565e871b77261b60/t/65affc26e78eaf52d44c310f/1706032166866/Finck-Cigar-Logo-3.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2527,
+    "name": "Shade Tree Cigar Lounge",
+    "where": "Wimberley, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/f30b88ee-110a-425e-b900-cc7d81cb4703/Photo%20Oct%2031%202023%2C%2012%2051%2016%20PM.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2558,
+    "name": "Sun of a Gun Cigars",
+    "where": "Yuma, AZ",
+    "src": "https://static.wixstatic.com/media/d26939_4e1e8fe9b82c496bbe12d672abe17678%7Emv2.png/v1/fit/w_2500,h_1330,al_c/d26939_4e1e8fe9b82c496bbe12d672abe17678%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2576,
+    "name": "The Library Cigar Lounge",
+    "where": "Bulverde, TX",
+    "src": "https://thelibrarycigarlounge.com/wp-content/uploads/2022/09/social.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2584,
+    "name": "Four9 Cigars",
+    "where": "San Antonio, TX",
+    "src": "https://assets.cdn.filesafe.space/DaWXbbsAgb2T9ol25elH/media/66364029ff279065b8615635.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2592,
+    "name": "Finck Cigars Stone Oak",
+    "where": "San Antonio, TX",
+    "src": "https://static1.squarespace.com/static/65affa33565e871b77261b60/t/65affc26e78eaf52d44c310f/1706032166866/Finck-Cigar-Logo-3.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2627,
+    "name": "Kings Cigar Lounge",
+    "where": "Austin, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/2027b286-ffe9-44a7-bf02-9c490ee15831/185A0951.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2637,
+    "name": "1911 Cigars",
+    "where": "Cibolo, TX",
+    "src": "https://static.wixstatic.com/media/8d4028_6f8d73c986814696a2b611da1665be11%7Emv2.png/v1/fit/w_2500,h_1330,al_c/8d4028_6f8d73c986814696a2b611da1665be11%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2717,
+    "name": "Wimberley Valley Cigar Lounge",
+    "where": "Wimberley, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/fc407d8e-f64f-43f1-8456-56d2c0301b3b/DSC01561-Enhanced-NR.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2803,
+    "name": "Boiler Room Smoking Lounge",
+    "where": "Austin, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/1e2a3eb8-80a0-4c0b-b2c5-993252c60520/Boiler%20Room%20Smoking%20Lounge%20photo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2822,
+    "name": "Bogeys and Stogies",
+    "where": "Granbury, TX",
+    "src": "https://bogeys-stogies.myshopify.com/cdn/shop/files/The_Official_Cigar_Provider_Granbury_GranPrix.png?v=1785271317",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2827,
+    "name": "Zodi'X Cigar Lounge",
+    "where": "Round Rock, TX",
+    "src": "https://zodixcigarlounge.com/files/2025/02/d62AkR3Vc4HAACg6-RZzPyISwPgYT0MRhQ.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2852,
+    "name": "Bobalu Cigar Company",
+    "where": "Austin, TX",
+    "src": "https://bobalu.com/cdn/shop/files/bobalu-logo-1200x628_1204x630.png?v=1690822222",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2934,
+    "name": "The Boardroom Whisky & Cigar Lounge",
+    "where": "Fort Worth, TX",
+    "src": "https://boardroomcigarlounge.com/cdn/shop/files/The_Boardroom_Cigar_Launch_-_SEO_Image.jpg?v=1769220235",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2937,
+    "name": "Big Dave's Cigars",
+    "where": "Fort Worth, TX",
+    "src": "https://bigdavescigars.com/cdn/shop/files/BD_Logo_600x600_0b75d4d9-d757-4e3f-b135-d320c67fc7dd.png?v=1764537493",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2955,
+    "name": "Silver Leaf Cigar Lounge",
+    "where": "Fort Worth, TX",
+    "src": "https://static1.squarespace.com/static/63ffb3717a35581b581d1a99/t/63ffb3b17a35581b581d22e4/1596054859169/Silverleaf+Logo.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 2956,
+    "name": "Cigar Lounge",
+    "where": "Fort Worth, TX",
+    "src": "https://static.wixstatic.com/media/eda062_c26b47e54a8a47b3b77d4a45dc6c43d4%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/eda062_c26b47e54a8a47b3b77d4a45dc6c43d4%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 2994,
+    "name": "Creekside Cigar Lounge",
+    "where": "Belton, TX",
+    "src": "https://www.creeksidecigarlounge.com/uploads/1/4/5/6/145649341/20250306-132445_orig.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3032,
+    "name": "Bright fire cigars",
+    "where": "Liberty Hill, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/289618c5-3892-441f-b901-eb3944d9a47f/blob-0009.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3059,
+    "name": "1849 Cigar Shop",
+    "where": "Fort Worth, TX",
+    "src": "https://static1.squarespace.com/static/600f21d9c53cb83124bc35f3/t/600f2ac327c185049af5a086/1611606726260/1849+icon.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3148,
+    "name": "J.Merrill Cigar & Cocktail Lounge",
+    "where": "Roanoke, TX",
+    "src": "https://jmerrillcigar.com/assets/images/social-share.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3181,
+    "name": "Prestige Cigars Lounge and Coffee Bar",
+    "where": "Bedford, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/4558739a-e001-49d1-a67b-9ac2942cf67a/blob.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3203,
+    "name": "Smoking Jacket Cigar Lounge",
+    "where": "Cedar Hill, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/72b959f7-e503-46c1-96b4-ec076fc5c971/fb_749340478605662_1316x640",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3392,
+    "name": "Drobe Stogies",
+    "where": "Inglewood, CA",
+    "src": "https://drobestogies.com/assets/img/bar.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3442,
+    "name": "Blue Flame Cigar Lounge",
+    "where": "Torrance, CA",
+    "src": "https://static1.squarespace.com/static/693884a6379c6a57aaee87d0/t/695ceea07e40566bcb4f6bca/1767698080641/bfcg_transparent.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3729,
+    "name": "Stixx Cigar House",
+    "where": "Thousand Oaks, CA",
+    "src": "https://static1.squarespace.com/static/68ac6e3700754e1985aaae1b/t/68cdf703072b5a6bb4498e03/1758328579635/Stixx-Cigars-brand-Logo.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 3822,
+    "name": "Cigar Empire Santa Barbara",
+    "where": "Santa Barbara, CA",
+    "src": "https://cigarempireonline.com/wp-content/uploads/2025/03/nongoogle.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 3873,
+    "name": "Cigar Inc",
+    "where": "Woodland Hills, CA",
+    "src": "https://cigarinc.com/cdn/shop/files/Cigar_Inc_-_Logo_Center_02.png?v=1737671980",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 3963,
+    "name": "Cuban Seed Cigar Lounge",
+    "where": "West Hollywood, CA",
+    "src": "https://thecubanseed.com/wp-content/uploads/2026/08/7C055D5E-3351-4CC2-B3C8-361410485CDD.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4208,
+    "name": "Captain Tobacco",
+    "where": "Pasadena, CA",
+    "src": "https://static.wixstatic.com/media/c07294_0d73e5d57df745aa82e65ec4496d9ba3~mv2.jpg/v1/fill/w_2500,h_2046,al_c/c07294_0d73e5d57df745aa82e65ec4496d9ba3~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4219,
+    "name": "Hemingway Cigars",
+    "where": "Arcadia, CA",
+    "src": "https://hemingwaycigarsarcadia.com/wp-content/uploads/2025/08/featured01.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4481,
+    "name": "Hiland's Cigars",
+    "where": "Scottsdale, AZ",
+    "src": "https://www.hilandscigars.com/wp-content/uploads/2023/08/Hilands-Cigars-OG-Image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4576,
+    "name": "RJ'S Cigars",
+    "where": "Mesa, AZ",
+    "src": "https://img1.wsimg.com/isteam/ip/5b437d04-b2d6-4aaf-99eb-187cd83fb983/20190802_122013.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4587,
+    "name": "Churchill's Fine Cigars",
+    "where": "Phoenix, AZ",
+    "src": "https://churchillsaz.com/og-humidor.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4616,
+    "name": "The Yard Cigar Bar",
+    "where": "Chandler, AZ",
+    "src": "https://www.theyardcigarbar.com/uploads/2/5/4/7/2547846/the-yard-dog-copy_orig.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4630,
+    "name": "Ezra Zion Cigar Bar",
+    "where": "Decatur, TX",
+    "src": "https://ezrazioncigarbar.com/cdn/shop/files/Image_500_2_b94b44d3-145c-4cb1-8271-9e407aa9242d.jpg?v=1688581692",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4631,
+    "name": "The Chief Cigar Lounge",
+    "where": "Decatur, TX",
+    "src": "https://i.vimeocdn.com/video/1777807447-7ae1d227cd44fbd86b0957f1c567404e4fefa66ff6b2f19577ec88ee29d2efdf-d_1920x1080?r=pad",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4700,
+    "name": "Industrial Cigar Co.",
+    "where": "Frisco, TX",
+    "src": "https://industrialcigars.co/cdn/shop/files/IMG_8558_fa126e08-d0d1-4fce-9d19-5226dc887ca0.jpg?v=1733955815",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 4787,
+    "name": "Lordsburg Cigar Lounge",
+    "where": "La Verne, CA",
+    "src": "https://static1.squarespace.com/static/53611f8ce4b055c269c36880/t/661990db36932d600cc4c094/1712951536476/moose+logo.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 4944,
+    "name": "Casa De La Riva Cigar Lounge",
+    "where": "Ontario, CA",
+    "src": "https://static1.squarespace.com/static/64a675343f523b2623b63c7e/t/64a67ce185d4552014aead3c/1688632545134/GOLD+LOGO+PNG.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 5052,
+    "name": "Scottsdale Cigars",
+    "where": "Scottsdale, AZ",
+    "src": "https://static.wixstatic.com/media/3fd0b3_ad5438956d2043d793c128b2c90628b2~mv2.jpg/v1/fill/w_2500,h_1875,al_c/3fd0b3_ad5438956d2043d793c128b2c90628b2~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5054,
+    "name": "Frontier Tobacco",
+    "where": "Wickenburg, AZ",
+    "src": "https://frontiertobacco.store/images/hero-leaves.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5084,
+    "name": "Legacy Cigars and Lounge",
+    "where": "Stafford, TX",
+    "src": "https://legacycigarshouston.com/wp-content/uploads/2025/11/IMG_20251115_235441.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5185,
+    "name": "Fame Cigars and Wine",
+    "where": "Palm Springs, CA",
+    "src": "https://www.famelounge-ps.com/wp-content/uploads/2026/02/Sideral-2022.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5186,
+    "name": "Tinder Box",
+    "where": "Palm Springs, CA",
+    "src": "https://www.tinderboxpalmsprings.com/app/uploads/2024/05/about-tinder.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5261,
+    "name": "Tobacco Habana",
+    "where": "Houston, TX",
+    "src": "https://cdn.shopify.com/s/files/1/0339/7251/9051/files/Tobacco_Habana_Logo_new.png?height=628&pad_color=fff&v=1613619719&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 5428,
+    "name": "Cigar Exchange",
+    "where": "Katy, TX",
+    "src": "https://img1.wsimg.com/isteam/stock/r20r3ee",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5473,
+    "name": "The Smoke Ring Cigars",
+    "where": "Webster, TX",
+    "src": "https://static1.squarespace.com/static/58095566bebafb6ff02a719c/t/6a95e3c0b709142c3fb5d717/1788208064770/humidor+8_26.jpeg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5555,
+    "name": "El Cubano Cigars",
+    "where": "League City, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/ced742b3-4e2e-4715-a4ac-95ed366f59d2/front%20of%20el%20cubano%20league%20city%201080px.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5557,
+    "name": "CIGAR HEAVEN - Cigar Lounge",
+    "where": "Webster, TX",
+    "src": "https://cigarsheaven.com/og-exterior.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5593,
+    "name": "BlackHouse Cigars",
+    "where": "Spring, TX",
+    "src": "https://img1.wsimg.com/isteam/ip/78b63cc2-7c4e-46d2-ade2-559b59adc910/d10389de-81cd-446a-a0d2-fd69065f6d87.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5604,
+    "name": "Coaches Cigar Lounge",
+    "where": "Tomball, TX",
+    "src": "https://coachescigars.com/wp-content/uploads/2026/02/tobacco.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5608,
+    "name": "Blue Hill Tobacco",
+    "where": "Beach City, TX",
+    "src": "https://bluehilltobacco.com/cdn/shop/files/cluehill_9d069e46-0a6d-4abe-9fca-879067d0d65a.png?v=1788854598",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5667,
+    "name": "War Wagon Cigar Lounge",
+    "where": "Orange, TX",
+    "src": "https://thewarwagon.com/assets/warwagon/wwcl-logo-skull-noglow-858x1024.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 5702,
+    "name": "Hey Guy: Cigars, Spa & Shop",
+    "where": "Spring, TX",
+    "src": "https://static1.squarespace.com/static/6671d453c87335622344c775/t/684ef3b770b2ea52388ce72d/1750004667500/Untitled+design.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5720,
+    "name": "Midtown Cigar Lounge & Bar",
+    "where": "Bryan, TX",
+    "src": "https://www.midtownloungebtx.com/uploads/b/03ee6e10-6764-11f0-9b3f-bb4d977ad0d5/Midtown%20Profile.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5739,
+    "name": "Cigar Club",
+    "where": "Beaumont, TX",
+    "src": "https://static.wixstatic.com/media/d62f55_25358b457f9b4aa7ac655ee266903e91%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/d62f55_25358b457f9b4aa7ac655ee266903e91%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5770,
+    "name": "Cavalier Cigar Company",
+    "where": "College Station, TX",
+    "src": "https://txcigar.com/wp-content/uploads/2025/04/Cavalier-with-Maroon-Camo-Square.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 5795,
+    "name": "Stories Cigars + Lounge",
+    "where": "Lufkin, TX",
+    "src": "https://static.wixstatic.com/media/4470cb_d1fa3c5886524bda9b87ecb43de234ad%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/4470cb_d1fa3c5886524bda9b87ecb43de234ad%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6002,
+    "name": "Cigar Merchant LLC",
+    "where": "Lafayette, LA",
+    "src": "https://irp.cdn-website.com/8504720b/dms3rep/multi/opt/imgi_7_Cigar_merchant_3-1920w.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6023,
+    "name": "La Cigar Collective",
+    "where": "Metairie, LA",
+    "src": "https://lacigarcollective.com/cdn/shop/files/DEE0954D-C6A9-43EB-A536-EA3AE2D5CFAD.png?v=1787705617",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6201,
+    "name": "Tobacco Cove",
+    "where": "Jacksonville, FL",
+    "src": "https://tobaccocove.weebly.com/uploads/1/2/4/3/12433913/published/tobaccocovelogo.jpg?1691599115",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 6299,
+    "name": "Cigar Hustler",
+    "where": "Deltona, FL",
+    "src": "https://www.cigarhustler.com/og-image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6574,
+    "name": "Coast Cigars & Lounge",
+    "where": "Ocean Springs, MS",
+    "src": "https://cdn01.s4shops.com/skytabweb/uploads/1cba710d-616a-f111-ac9a-000d3a7b73be/cc17c552-586b-f111-ac9a-000d3a7b73be.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6654,
+    "name": "Stogies Cigar Shop",
+    "where": "St Augustine, FL",
+    "src": "https://static1.squarespace.com/static/5c083274aa49a1c293a12b2f/t/6847ac5d5f33d9388b63a5f6/1749527645829/New+Stogies+Logo+White+Background.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 6666,
+    "name": "The 19th Hole Cigar & Golf Lounge",
+    "where": "Greenville, AL",
+    "src": "https://img1.wsimg.com/isteam/ip/4e0717f0-df44-4a1e-a1dc-4a8ff5193048/blob.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6679,
+    "name": "Spring Street Cigars",
+    "where": "Hattiesburg, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6682,
+    "name": "Flames Cigar Lounge",
+    "where": "Hattiesburg, MS",
+    "src": "https://primary.jwwb.nl/public/i/t/e/temp-mkzesccbnklzmuplbnsx/messenger_creation_13cae12e-dc69-4771-b8bb-fe063d1c74be-high.jpg?enable-io=true&enable=upscale&fit=bounds&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6788,
+    "name": "Gulf Wind Cigars",
+    "where": "Santa Rosa Beach, FL",
+    "src": "https://irp.cdn-website.com/ab2e1026/dms3rep/multi/opt/logo1500x1000-1920w.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 6791,
+    "name": "Stogies Downtown",
+    "where": "Valdosta, GA",
+    "src": "https://img1.wsimg.com/isteam/ip/34ae8529-120d-4518-830f-51800d45804a/Stogies_Downtown_14.JPG",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6833,
+    "name": "Second Wind Cigars",
+    "where": "Jacksonville, FL",
+    "src": "https://images.unsplash.com/photo-1612659429508-b429d6b07ac1?ixid=M3wzOTE5Mjl8MHwxfHNlYXJjaHw0fHxjaWdhcnN8ZW58MHx8fHwxNzA1MTA1NjA4fDA&ixlib=rb-4.0.3&auto=jpeg&fit=crop&w=1200&h=630",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6914,
+    "name": "Marmol Cigars Shop",
+    "where": "Jacksonville, FL",
+    "src": "https://img1.wsimg.com/isteam/ip/b07b21b5-f798-4c26-96a8-59b5f702e993/IMG_20210327_152113_01.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 6941,
+    "name": "Ash Street Cigar Parlor",
+    "where": "Fernandina Beach, FL",
+    "src": "https://ashstcigarparlor.com/wp-content/uploads/2024/03/cropped-cropped-ash-street-cigar-final-logo-transparent.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 7007,
+    "name": "El Jefe Cigars",
+    "where": "Dallas, TX",
+    "src": "https://static1.squarespace.com/static/618ad5ef6ea804607fad9437/t/618ad989957a945575c0e437/1636489622113/El+Jefe+Logo.PNG?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 7124,
+    "name": "Tobacco House #6",
+    "where": "Shreveport, LA",
+    "src": "https://tobaccohouse.us/wp-content/uploads/2026/06/2-768x1024.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7157,
+    "name": "Havana Cigar and Sports Bar",
+    "where": "Shreveport, LA",
+    "src": "https://static1.squarespace.com/static/67e5c193bf57e858ad8a965e/t/67e5f3cf3ba49c4f0ae4a893/1743123407664/1.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7181,
+    "name": "Spring Street Cigars",
+    "where": "Jackson, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7279,
+    "name": "Tobacco House",
+    "where": "Bossier City, LA",
+    "src": "https://tobaccohouse.us/wp-content/uploads/2026/06/2-768x1024.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7288,
+    "name": "Spring Street Cigars",
+    "where": "Meridian, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7327,
+    "name": "Havana and Humidor Cigars",
+    "where": "Brandon, MS",
+    "src": "https://www.humidorandhavana.com/assets/ridgeland.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7342,
+    "name": "Sanctuary Cigars",
+    "where": "Montgomery, AL",
+    "src": "https://static1.squarespace.com/static/63ed2bda20615b4610d852df/t/63ee83d9bd5769090b46a64f/1676575705749/SANC+LOGO-01.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 7378,
+    "name": "Rigby’s Cigars & Lounge",
+    "where": "Paris, TX",
+    "src": "https://static1.squarespace.com/static/5dcafbf887bee851be2eae4e/t/66fc3f083f582311cfa9704a/1727807240981/vertical.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7384,
+    "name": "F & M Cigars",
+    "where": "Phenix City, AL",
+    "src": "https://fandmcigars.com/wp-content/uploads/2026/07/m-1.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7421,
+    "name": "Spring Street Cigars",
+    "where": "Tupelo, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7524,
+    "name": "Cutters Cigars",
+    "where": "Northport, AL",
+    "src": "https://static.wixstatic.com/media/ffb89c_ade974a88a034fe290b5fc631d50ef3c%7Emv2.png/v1/fit/w_2500,h_1330,al_c/ffb89c_ade974a88a034fe290b5fc631d50ef3c%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7538,
+    "name": "Vitola Fine Cigars Tuscaloosa",
+    "where": "Tuscaloosa, AL",
+    "src": "https://www.vitolafinecigars.com/wp-content/uploads/2021/02/pjx8vgukbo1z9os9rssr.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7628,
+    "name": "Cigars & More",
+    "where": "Hoover, AL",
+    "src": "https://www.vitolafinecigars.com/wp-content/uploads/2021/02/pjx8vgukbo1z9os9rssr.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7652,
+    "name": "The Cigar Room Guntersville",
+    "where": "Guntersville, AL",
+    "src": "https://www.cigarroom.net/wpcr21a/wp-content/uploads/2021/04/hsv-group1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7667,
+    "name": "Wesmoke Cigars Shop",
+    "where": "Villa Rica, GA",
+    "src": "https://img1.wsimg.com/isteam/ip/24fb0324-44d1-4c55-bd0a-735f76e810ae/WeSmoke%20Logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 7723,
+    "name": "The Cigar Cellar",
+    "where": "Kennesaw, GA",
+    "src": "https://static.wixstatic.com/media/e427ca_6066196deb5245a3953f8cdcaf85f7e9%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/e427ca_6066196deb5245a3953f8cdcaf85f7e9%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7912,
+    "name": "The Cigar Bank",
+    "where": "Mcdonough, GA",
+    "src": "https://thecigarbank.com/cdn/shop/files/Screen_Shot_2023-11-19_at_3.23.59_PM.png?v=1703618263",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7931,
+    "name": "West Ash Cigars",
+    "where": "Charleston, SC",
+    "src": "https://du9m0k402rjmo.cloudfront.net/images/P_42516/059d4083-89f3-4807-883e-b9e3bfa82ce1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7961,
+    "name": "Bucksnort's Cigar Lounge",
+    "where": "North Augusta, SC",
+    "src": "https://img1.wsimg.com/isteam/ip/0f38a30d-78ab-42d8-bd8d-1f6053d43237/Golf%201.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 7992,
+    "name": "Legacy Cigar Lounge & Golf Sim",
+    "where": "Charleston, SC",
+    "src": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/67148c3b-b985-46da-a548-194f4a2af250/id-preview-b104d43e--b4bdfaf5-97c5-4773-99ff-d06751e73993.lovable.app-1779227024320.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8026,
+    "name": "The Experience Cigar Lounge",
+    "where": "Hephzibah, GA",
+    "src": "https://assets.cdn.filesafe.space/psEUhcdSTR5PLCuJFusy/media/68d44f82a1dad7733e5376d9.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8054,
+    "name": "Tinder Box",
+    "where": "Myrtle Beach, SC",
+    "src": "https://tinderboxcigars.com/wp-content/uploads/2022/08/Tinder_Box_Charlotte_Brands_Cigars_2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8065,
+    "name": "DAM Fine Cigars",
+    "where": "Pooler, GA",
+    "src": "https://img1.wsimg.com/isteam/ip/84576ff4-9d7b-4b11-b275-966d77d6d1e0/blob-baf8529.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8175,
+    "name": "Cigar Studio 57",
+    "where": "Cumming, GA",
+    "src": "https://img1.wsimg.com/isteam/ip/a47c9abc-3ea2-47e1-bfeb-312311fbf2b7/Home%20Page%20Header.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8198,
+    "name": "Continent Restaurant & Cigar Lounge",
+    "where": "Atlanta, GA",
+    "src": "https://static.spotapps.co/website_images/ab_websites/85003_website/about/about2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8305,
+    "name": "Ligero Tobacco House",
+    "where": "Buford, GA",
+    "src": "https://static1.squarespace.com/static/5e8257b2671b3c1621288068/t/5ebee3ac98460c603dd3dea0/1589568433891/Humidor+Banner.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8399,
+    "name": "Silver Leaf Cigar Lounge",
+    "where": "Camden, SC",
+    "src": "https://static1.squarespace.com/static/63ad09e03ff6be5bd1c3d550/t/657a06a8e1880b5417ffe84e/1702495912093/Frame+7.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8502,
+    "name": "The Cigar Militia",
+    "where": "Columbia, SC",
+    "src": "https://cdn.filesafe.space/location%2FLTae4g1lnLlwcVWtPPsV%2Fimages%2F6849344b-a85f-4779-87de-5a92d32f2b6f.png?alt=media",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8574,
+    "name": "Cigar Bar & Grill",
+    "where": "San Francisco, CA",
+    "src": "https://cigarbarandgrill.com/images/cbg/headings/Cigar-Bar-OpenGraph-Image-5.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8624,
+    "name": "Cigars Tobacco Hut",
+    "where": "Pleasanton, CA",
+    "src": "https://img1.wsimg.com/isteam/ip/d963985b-9065-4e95-bb99-f5d046c440c6/IMG_3299.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8654,
+    "name": "Campbell Cigars",
+    "where": "Campbell, CA",
+    "src": "https://i0.wp.com/campbellcigarclub.com/wp-content/uploads/2020/02/dsc_4365.jpg?fit=1200%2C801&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8681,
+    "name": "LG Cigar Club",
+    "where": "San Jose, CA",
+    "src": "https://www.lgcigars.com/wp-content/uploads/2013/04/contact.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8682,
+    "name": "West Coast Cigars",
+    "where": "San Jose, CA",
+    "src": "https://westcoastcigars.net/images/og-image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8687,
+    "name": "Mission Pipe Shop",
+    "where": "San Jose, CA",
+    "src": "https://www.missionpipe.com/wp-content/uploads/2025/05/retail2-resized-1-rotated-e1747943043282.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 8996,
+    "name": "Casillas Cigar Company",
+    "where": "Sacramento, CA",
+    "src": "https://static1.squarespace.com/static/543de5ece4b06af6820f984d/t/5afc62c38a922d5d7ffa3352/1526489798839/Casillas+Logo+-+New+text+12.18.14.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 9142,
+    "name": "Perfect Blend Fine Cigars",
+    "where": "Fresno, CA",
+    "src": "https://static.wixstatic.com/media/55f63a_4d59bc3491b7440fa7204d078e6da545.jpg/v1/fit/w_2500,h_1330,al_c/55f63a_4d59bc3491b7440fa7204d078e6da545.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9189,
+    "name": "Aldo Cigars",
+    "where": "Fresno, CA",
+    "src": "https://www.aldocigars.com/wp-content/uploads/2020/10/AldoCigarsLogo.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 9313,
+    "name": "Eight Cigar Lounge",
+    "where": "Las Vegas, NV",
+    "src": "https://images.getbento.com/accounts/6860b2ec8bfac14b849fc931cec10837/media/images/20321Eight-Logo_1_2.png?w=1200&fit=fill&auto=compress,format&cs=origin&h=600&bg=EDEDF1&pad=100",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 9363,
+    "name": "En Fuego Cigars & Lounge",
+    "where": "Las Vegas, NV",
+    "src": "https://www.enfuegolasvegas.com/wp-content/uploads/2024/03/En-Fuego-Cigars-Lounge.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9382,
+    "name": "Tap N Ash Social Club - Cigars & Libations",
+    "where": "Las Vegas, NV",
+    "src": "https://static.spotapps.co/website_images/ab_websites/226664_website_v1/soc_share.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9383,
+    "name": "Chocolate City El Septimo Cigar Lounge",
+    "where": "Las Vegas, NV",
+    "src": "https://static.spotapps.co/website_images/ab_websites/143553_website/shared_image_new.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9400,
+    "name": "Davidoff of Geneva Cigar Bar",
+    "where": "Las Vegas, NV",
+    "src": "https://davidoffcigarbarlv.com/wp-content/uploads/2015/10/cigarbar-outside-3.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9412,
+    "name": "Casillas Cigars",
+    "where": "Citrus Heights, CA",
+    "src": "https://casillascigars.com/wp-content/uploads/Palmeta-Lt-300x300.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9464,
+    "name": "Mr. Bill's Pipe and Tobacco Company",
+    "where": "Las Vegas, NV",
+    "src": "https://mr-bills.com/wp-content/uploads/2025/10/Zippo-Pipe-Lighter-Insert.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9535,
+    "name": "CJ's Cigars",
+    "where": "El Dorado Hills, CA",
+    "src": "https://static1.squarespace.com/static/6085e9f4f6ee4612f06c2578/t/6085ea456a87341dd3f5d824/1619389008692/Logo+V1+Gold+CMYK.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 9541,
+    "name": "Maine Street Cigar Company",
+    "where": "Fallon, NV",
+    "src": "https://mainestreetcigar.com/wp-content/uploads/2026/03/front-of-shop-1024x768-1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9670,
+    "name": "Fumare Fine Cigar Boutique",
+    "where": "Reno, NV",
+    "src": "https://fumareusa.com/wp-content/uploads/2026/03/Fumare-Fine-Cigar-Boutique-exterior.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9715,
+    "name": "Happy Dayze Cigar and Smoke",
+    "where": "Sparks, NV",
+    "src": "https://happydayze.net/wp-content/uploads/2017/10/dscn0330.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 9969,
+    "name": "Beehive Cigars",
+    "where": "Salt Lake City, UT",
+    "src": "https://static.wixstatic.com/media/9dab0c_8c46e357e8004dd1a41e720e4cb435da%7Emv2.png/v1/fit/w_2500,h_1330,al_c/9dab0c_8c46e357e8004dd1a41e720e4cb435da%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10057,
+    "name": "Rich's Cigar Store",
+    "where": "Portland, OR",
+    "src": "https://static1.squarespace.com/static/5dd31a5233eaf14c33c3fc59/t/5dd31dfac2af6160a07f8892/1637936882159/Richs_Final_Assets_Dark+Overlay+Lock+Up-17.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10103,
+    "name": "Rain City Cigar",
+    "where": "Seattle, WA",
+    "src": "https://static.wixstatic.com/media/6c5575_e396dba033244adfa257419c1fc05882%7Emv2.png/v1/fit/w_2500,h_1330,al_c/6c5575_e396dba033244adfa257419c1fc05882%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10184,
+    "name": "Cascade Cigar & Tobacco",
+    "where": "Happy Valley, OR",
+    "src": "https://static1.squarespace.com/static/54603045e4b0719cb5b1136c/t/664942b6333ed61fbbf57321/1716077238901/Cascade_Logo-2.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 10328,
+    "name": "5th Avenue Cigars",
+    "where": "Anchorage, AK",
+    "src": "https://static.wixstatic.com/media/fa7a62_a5f5a555203b485eb6e77d0dd8289fed%7Emv2.png/v1/fit/w_2500,h_1330,al_c/fa7a62_a5f5a555203b485eb6e77d0dd8289fed%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10448,
+    "name": "Rain City Cigar Kirkland",
+    "where": "Kirkland, WA",
+    "src": "https://static.wixstatic.com/media/6c5575_e396dba033244adfa257419c1fc05882%7Emv2.png/v1/fit/w_2500,h_1330,al_c/6c5575_e396dba033244adfa257419c1fc05882%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10527,
+    "name": "The Cigar Silo",
+    "where": "Sweet, ID",
+    "src": "https://img1.wsimg.com/isteam/ip/60214057-08b2-426d-8e54-fa5bf76a99bb/The%20Cigar%20Silo%20Bar%20Photo.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10590,
+    "name": "Cigar House",
+    "where": "Spokane, WA",
+    "src": "https://static.wixstatic.com/media/937ff8_594fc8ce8141481c8e2764936ffbdf0b%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/937ff8_594fc8ce8141481c8e2764936ffbdf0b%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10786,
+    "name": "Stella's Stogies",
+    "where": "Spirit Lake, ID",
+    "src": "https://static.wixstatic.com/media/13dc39_ec6a32f7f85b4f939f5d10d216b55e7a%7Emv2.jpeg/v1/fit/w_2500,h_1330,al_c/13dc39_ec6a32f7f85b4f939f5d10d216b55e7a%7Emv2.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10844,
+    "name": "Lady Huntington's Fine Pipes & Pouches",
+    "where": "Albuquerque, NM",
+    "src": "https://static1.squarespace.com/static/69349bc28f6d4b39267b66cf/t/6941ccae2e75cb65ee39c5be/1765919918551/Screenshot_20240820_212640_Gallery.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10865,
+    "name": "Padres Cigars",
+    "where": "Corrales, NM",
+    "src": "https://static1.squarespace.com/static/630922d0922fab518d95f97c/t/630fb6401c1bf77593e19988/1661974080377/Padres_CrestElement-White.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 10923,
+    "name": "Havana House Cigar Shop",
+    "where": "Albuquerque, NM",
+    "src": "https://storage.ghost.io/c/53/82/5382f4e9-4702-4143-a2f1-e1c66f90a2b9/content/images/size/w1200/2024/01/DSC01601-1.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11030,
+    "name": "Mister B's Cigars",
+    "where": "Duncan, OK",
+    "src": "https://static1.squarespace.com/static/5bf4903cb1059890c2c63c97/t/5bfc3afaf950b75bc4df09e5/1543256827555/Mister-B-logo.gif?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 11264,
+    "name": "Bourbon and Ash Cigar Lounge",
+    "where": "Tulsa, OK",
+    "src": "https://bourbonandashcigarlounge.com/images/logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 11269,
+    "name": "Edward's Pipe & Tobacco Shop",
+    "where": "Englewood, CO",
+    "src": "https://edwardspipeandtobacco.com/wp-content/uploads/2016/08/dummy-1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11284,
+    "name": "Old West Cigar and Tobacco Company",
+    "where": "Colorado Springs, CO",
+    "src": "https://smokeme.com/wp-content/uploads/go-x/u/43b98a84-ba12-4180-ab79-bf3831cf455d/image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11359,
+    "name": "Smoking Cave Cigar Lounge",
+    "where": "Littleton, CO",
+    "src": "https://smokingcave.com/cdn/shop/files/l_1200x1200.png?v=1784666894",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11394,
+    "name": "Ultimo Premium Cigars",
+    "where": "Tulsa, OK",
+    "src": "https://static.wixstatic.com/media/e77133_108a6ffda1ae4516b6e28053400abe2b%7Emv2.png/v1/fit/w_2500,h_1330,al_c/e77133_108a6ffda1ae4516b6e28053400abe2b%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11484,
+    "name": "Tisdale's Cigar Lounge",
+    "where": "Tulsa, OK",
+    "src": "https://static.spotapps.co/website_images/ab_websites/512063_website_v1/events_back.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11516,
+    "name": "3D's Cigars",
+    "where": "Colorado Springs, CO",
+    "src": "https://3dscigars.com/wp-content/uploads/2026/06/3Ds-Cigars_Hero.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11530,
+    "name": "Big Booty Trudy's Speakeasy and Cigar Bar",
+    "where": "Salina, KS",
+    "src": "https://static.wixstatic.com/media/b6022e61cb0449abaf9b477261adc218.jpg/v1/fit/w_2500,h_1330,al_c/b6022e61cb0449abaf9b477261adc218.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11694,
+    "name": "Hutch Humidor",
+    "where": "Hutchinson, KS",
+    "src": "https://hutchhumidor.com/og-image.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11869,
+    "name": "The Cigar District",
+    "where": "Bentonville, AR",
+    "src": "https://static1.squarespace.com/static/5c97dc7365019f39682c6608/t/5c97e5fde79c70b6f147e7c9/1718134029338/Secondary+Logo.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 11876,
+    "name": "White River Tobacco Co.",
+    "where": "Eureka Springs, AR",
+    "src": "https://irp.cdn-website.com/4e5227b8/dms3rep/multi/opt/20e10107-ff99-48a0-ab36-00bc5eb1f234-931798b6-1920w.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 11918,
+    "name": "Spring Street Cigars",
+    "where": "Olive Branch, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12200,
+    "name": "Bootleggers Cigars & Apothecary",
+    "where": "Washington, MO",
+    "src": "https://du9m0k402rjmo.cloudfront.net/images/P_34974/0db5a958-3f04-4f0d-a282-89f5ffc066cb.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12217,
+    "name": "Weston Tobacco",
+    "where": "Weston, MO",
+    "src": "https://static1.squarespace.com/static/54906228e4b07c37e3e901a6/t/6071d764548e5e7f9c3239b9/1618073495635/WestonTobacco_WT_LOGO%2B%25282%25291024_1_edited_edited.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 12261,
+    "name": "Oak & Ember Cigar and Bourbon Lounge",
+    "where": "Laurie, MO",
+    "src": "https://images.getbento.com/accounts/7865b9d418fc44b99ead87fc8940f50f/media/images/17527image000000_1.JPG?w=1200&fit=crop&auto=compress,format&cs=origin&h=600",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12584,
+    "name": "\"The CELLAR\" a Cigar Bar",
+    "where": "St. Louis, MO",
+    "src": "https://thecellarcigarlounge.com/cdn/shop/files/social-share-img.jpg?v=1722368241",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12796,
+    "name": "Nicklebys Smoke Ring",
+    "where": "Omaha, NE",
+    "src": "https://static.wixstatic.com/media/d84bc7_b82806d528584e0f92ee212da1f0046e~mv2_d_2016_1512_s_2.jpg/v1/fill/w_2500,h_1875,al_c/d84bc7_b82806d528584e0f92ee212da1f0046e~mv2_d_2016_1512_s_2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12822,
+    "name": "The Colonel Venue and Cigar Lounge",
+    "where": "Cody, WY",
+    "src": "https://static1.squarespace.com/static/60e4a430f671c83d04edf4e5/t/60e4a4f51a605368fa42ce62/1625597182064/tHE+cOLONEL+%281%29.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12858,
+    "name": "S. G. Roi Tobacconist",
+    "where": "Omaha, NE",
+    "src": "https://static.wixstatic.com/media/4609dc_5a36441fbbd1498eb08328f77f829bd0%7Emv2.webp/v1/fit/w_2500,h_1330,al_c/4609dc_5a36441fbbd1498eb08328f77f829bd0%7Emv2.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12938,
+    "name": "Cigar Box 307 Humidor & Lounge",
+    "where": "Gillette, WY",
+    "src": "https://static1.squarespace.com/static/69fa5972f7a885798f90d16f/t/69fa5a1cd382434ea4e188dd/1778014749000/humidor+and+lounge.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 12950,
+    "name": "NVY Bar & Cigar Lounge",
+    "where": "Kearney, NE",
+    "src": "https://static1.squarespace.com/static/6568fe674d28391e8daea7ad/t/65690143f18b0a2715f21e62/1701380419826/NVY+Logo+%28with+background%29.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 13054,
+    "name": "Big Stick Cigar Lounge",
+    "where": "Mandan, ND",
+    "src": "https://static.wixstatic.com/media/cba673_fd030ca2ed7640febc0ae11d27cb4310%7Emv2.png/v1/fit/w_2500,h_1330,al_c/cba673_fd030ca2ed7640febc0ae11d27cb4310%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13106,
+    "name": "Iowa Cigar Company",
+    "where": "West Des Moines, IA",
+    "src": "https://iowacigar.com/wp-content/uploads/2018/04/cigar-bg.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13310,
+    "name": "The Cigar Social USA",
+    "where": "Davenport, IA",
+    "src": "https://irp.cdn-website.com/f6afe030/dms3rep/multi/opt/1723228382265_cigar_social_corp_pics_462-1920w.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13377,
+    "name": "Ash Cigar Lounge",
+    "where": "Peoria Heights, IL",
+    "src": "https://static.wixstatic.com/media/4d46fe_bc3135f4685f4ae78f78a2203d9b66f6%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/4d46fe_bc3135f4685f4ae78f78a2203d9b66f6%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13434,
+    "name": "Tobacco Grove",
+    "where": "Maple Grove, MN",
+    "src": "https://s0.wp.com/_si/?t=eyJpbWciOiJodHRwczpcL1wvaTAud3AuY29tXC90b2JhY2NvZ3JvdmUuY29tXC93cC1jb250ZW50XC91cGxvYWRzXC8yMDIxXC8wNlwvY3JvcHBlZC1GYXZpY29uJTQwMngucG5nP2ZpdD01MTIlMkM1MTImc3NsPTEiLCJ0eHQiOiJUb2JhY2NvIEdyb3ZlIiwidGVtcGxhdGUiOiJlZGdlIiwiZm9udCI6IiIsImJsb2dfaWQiOjE5Mzc2NjAyMX0.Amye5iolxm27xM5tXjTreOu9Ne2d5Glu6ibokfXegOwMQ",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13650,
+    "name": "Ye Ole Pipe Shoppe",
+    "where": "Jackson, TN",
+    "src": "https://i2.wp.com/yeolepipeshoppe.com/wp-content/uploads/2019/06/Ye-Ole-Pipe-Shoppe.jpg?fit=225%2C225&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13695,
+    "name": "Spring Street Cigars",
+    "where": "Corinth, MS",
+    "src": "https://i0.wp.com/springstreetcigars.com/wp-content/uploads/2022/03/Largest-Humidor-1.jpeg?fit=1200%2C800&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13909,
+    "name": "Single Malt Cigar Bar",
+    "where": "Nashville, TN",
+    "src": "https://static.wixstatic.com/media/1ca1bb_fd54eb70862240b5a936a381a6bb3919~mv2.jpg/v1/fill/w_1098,h_774,al_c/1ca1bb_fd54eb70862240b5a936a381a6bb3919~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13923,
+    "name": "Briarworks And Columbia Pipe & Cigar",
+    "where": "Columbia, TN",
+    "src": "https://briarworksusa.com/cdn/shop/files/BriarWorks_Logo.png?v=1677859361",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 13925,
+    "name": "Battleground South Cigar Lounge",
+    "where": "Columbia, TN",
+    "src": "https://static1.squarespace.com/static/61236ff35df7ce46d48706ad/t/6144ddfcf821c253d011a8ea/1631903230921/188406670_3854379768021858_4193142766508027777_n.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 13997,
+    "name": "Cigar Especial",
+    "where": "Nashville, TN",
+    "src": "https://static1.squarespace.com/static/58d576035016e1c3ee563d0b/t/634cac5472a4aa55f86f1966/1665969258159/Bar+Cigar+Especial+Cigar+Bar+Nashville+TN.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14013,
+    "name": "Goodfellas Fine Cigars",
+    "where": "Decatur, IL",
+    "src": "https://goodfellasfinecigars.com/wp-content/uploads/2021/05/w-bg-103.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14072,
+    "name": "Southpaw Stogies",
+    "where": "Lebanon, TN",
+    "src": "https://static.wixstatic.com/media/d281bc_8a8ed9d049fc4b21becff78f64d53622%7Emv2.jpeg/v1/fit/w_2500,h_1330,al_c/d281bc_8a8ed9d049fc4b21becff78f64d53622%7Emv2.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14082,
+    "name": "SiP Fine Spirits & Cigar Lounge",
+    "where": "Huntsville, AL",
+    "src": "https://du9m0k402rjmo.cloudfront.net/images/P_33831/3bbc6093-daa3-4e08-853f-0e9a9f726a69.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14182,
+    "name": "Blaque Cigar Lounge",
+    "where": "Huntsville, AL",
+    "src": "https://static.wixstatic.com/media/e8a812_a3c7cb2dbb3348f990a5ab6ee2b448a0~mv2.jpg/v1/fill/w_2500,h_1405,al_c/e8a812_a3c7cb2dbb3348f990a5ab6ee2b448a0~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14307,
+    "name": "Level Up Cigar Hookah Lounge",
+    "where": "Dyer, IN",
+    "src": "https://static.wixstatic.com/media/87bb8e_c5de902fecd044bca89ced785dbfbc87%7Emv2.png/v1/fit/w_2500,h_1330,al_c/87bb8e_c5de902fecd044bca89ced785dbfbc87%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14335,
+    "name": "Burn by Rocky Patel Indianapolis",
+    "where": "Indianapolis, IN",
+    "src": "https://cdn.prod.website-files.com/662905fb3cad6c70c872e92b/662905fb3cad6c70c872ea88_Burn_Indy_Left%20Room_Final_12-27-19.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14391,
+    "name": "The Embassy Cigar Lounge",
+    "where": "Flossmoor, IL",
+    "src": "https://static.wixstatic.com/media/62e182_a87b90586bbc403aa8abd783f4841a9a~mv2.jpg/v1/fill/w_2500,h_1703,al_c/62e182_a87b90586bbc403aa8abd783f4841a9a~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14493,
+    "name": "The Cigar Box Bar & Lounge",
+    "where": "Westfield, IN",
+    "src": "https://static.wixstatic.com/media/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg/v1/fill/w_400,h_618,al_c/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14523,
+    "name": "The Cigar Box Indianapolis",
+    "where": "Indianapolis, IN",
+    "src": "https://static.wixstatic.com/media/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg/v1/fill/w_400,h_618,al_c/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14532,
+    "name": "648 Bourbon and Cigar Lounge",
+    "where": "Lafayette, IN",
+    "src": "https://648bourboncigarlounge.com/wp-content/uploads/2021/04/648_Full_Logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 14535,
+    "name": "The Cigar Box",
+    "where": "Carmel, IN",
+    "src": "https://static.wixstatic.com/media/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg/v1/fill/w_400,h_618,al_c/260164_15726493d2fb49b595eea1f0feb400c0~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14612,
+    "name": "The Office Cigar Shop & Lounge",
+    "where": "New Albany, IN",
+    "src": "https://www.theofficecigarlounge.com/assets/the-office-cigar-private-lounge.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14620,
+    "name": "Patriot Cigar Lounge",
+    "where": "Sparta, TN",
+    "src": "https://static1.squarespace.com/static/691105707e57c268d84d33fe/t/6960fefae2e9b41119e9a328/1767964418704/1000034639.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14645,
+    "name": "Burns Tobacconist",
+    "where": "Chattanooga, TN",
+    "src": "https://i0.wp.com/burnstobacconist.com/wp-content/uploads/2021/06/Burns_website_image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14658,
+    "name": "Scenic City Cigars & Social",
+    "where": "Chattanooga, TN",
+    "src": "https://sceniccitycigars.com/wp-content/uploads/2023/07/IMG_7427-scaled.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14866,
+    "name": "Smokey Bear Cigars & Cafe",
+    "where": "Blue Ridge, GA",
+    "src": "https://smokeybearcigarshop.com/wp-content/uploads/2024/07/Smokey-Grid-Pics-from-Smokey-Bear-Cigars-2.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14869,
+    "name": "Sheepdog Cigars and Lounge",
+    "where": "Blairsville, GA",
+    "src": "https://static.wixstatic.com/media/fd8220_ff6b0a08a4d44293b772c82ff0be7afc%7Emv2.png/v1/fit/w_2500,h_1330,al_c/fd8220_ff6b0a08a4d44293b772c82ff0be7afc%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 14995,
+    "name": "Embers Vine Cigar Lounge & Kitchen",
+    "where": "Clayton, GA",
+    "src": "https://static1.squarespace.com/static/660a1dda01941667f1e41f6b/t/6a8ec80f9e2374534f09ab68/1787742223348/IMG_0537.jpeg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 15524,
+    "name": "Blue Label Lounge",
+    "where": "Lockport, IL",
+    "src": "https://static1.squarespace.com/static/627985c28570a322a028c55c/t/676af5acd3baa97fb68cf74c/1735062957064/Blue+Label+Cigar+Lounge+Logo+Black+Polo.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 15627,
+    "name": "The Place Cigar Club and Lounge",
+    "where": "Downers Grove, IL",
+    "src": "https://theplacedg.com/wp-content/uploads/2025/11/ThePlace-06500-scaled.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 15685,
+    "name": "Third Street Cigar",
+    "where": "Waterville, OH",
+    "src": "https://thirdstreetcigar.com/wp-content/uploads/2023/03/IMG_9594-scaled.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 15761,
+    "name": "Woodland Cigar Company, LLC",
+    "where": "Delaware, OH",
+    "src": "https://static.wixstatic.com/media/b7c033_25c2e3487e214b2a895cc69439d26c16%7Emv2.png/v1/fit/w_2500,h_1330,al_c/b7c033_25c2e3487e214b2a895cc69439d26c16%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 15922,
+    "name": "Arlington Pipe and Cigar Lounge",
+    "where": "Arlington Heights, IL",
+    "src": "https://arlingtoncigar.com/cdn/shop/files/logo-trans_1200x1200.png?v=1615322490",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 15936,
+    "name": "Puros Birriel Cigars",
+    "where": "Berwyn, IL",
+    "src": "https://static1.squarespace.com/static/5d2e027ff16f180001cadfb6/t/5f8e3ab9b147026218fade3e/1603156670375/Thumbnail+copy.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 15942,
+    "name": "Ralph's Cigars",
+    "where": "Chicago, IL",
+    "src": "https://ralphcigars.com/cdn/shop/files/Ralph_s_Cigars_Logo_2021_2_cc37d07f-faaa-458f-907d-19c813c143bf_1200x1200.png?v=1649196545",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 16074,
+    "name": "Appleton Cigar Company",
+    "where": "Appleton, WI",
+    "src": "https://irp.cdn-website.com/ccbd473d/dms3rep/multi/opt/ACC_Social_No-Leaves-1920w.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16286,
+    "name": "Uhle Tobacco Company | Milwaukee’s Finest Smoking Lounge",
+    "where": "Milwaukee, WI",
+    "src": "https://cdn.shopify.com/s/files/1/0019/8501/9962/files/Uhles_Logo_ecdd22a5-c536-449f-a3c4-f8ce848a1410.jpg?height=628&pad_color=fff&v=1613162088&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 16404,
+    "name": "On the River Tavern & Mo’s Cigar Bar",
+    "where": "St Joseph, MI",
+    "src": "https://static-content.owner.com/funnel/images/30d9136a-5678-4cc4-9195-aff0cffdcc4a?v=3499006183",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16559,
+    "name": "Chaloner & Co",
+    "where": "Adrian, MI",
+    "src": "https://www.chalonerscigarhouse.com/wp-content/uploads/2026/05/cropped-fav-icon.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16661,
+    "name": "Belicoso Cafe Martini & Wine Cigar Bar",
+    "where": "Wyandotte, MI",
+    "src": "https://belicosocafe.com/wp-content/uploads/2025/06/content-slider-1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16714,
+    "name": "The Cigar Affair",
+    "where": "Maumee, OH",
+    "src": "https://static.wixstatic.com/media/cd0217_fddeb22c69b64c3e8b919675801a22ee~mv2.jpg/v1/fill/w_611,h_344,al_c/cd0217_fddeb22c69b64c3e8b919675801a22ee~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16763,
+    "name": "Puff Puff Tobacco",
+    "where": "Lansing, MI",
+    "src": "https://static1.squarespace.com/static/666b40a65d155b35096e5234/t/671c1695e1e8492a1de3693c/1729894037680/2022_PP_LOGO.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 16825,
+    "name": "Secreto Cigar Bar",
+    "where": "Ferndale, MI",
+    "src": "https://secretocigarbar.com/cdn/shop/files/IMG_2266_ed23c5d9-e287-4685-892f-f711fe2484a4_1200x1200.jpg?v=1740411616",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 16832,
+    "name": "Puff Puff Tobacco",
+    "where": "Walker, MI",
+    "src": "https://static1.squarespace.com/static/666b40a65d155b35096e5234/t/671c1695e1e8492a1de3693c/1729894037680/2022_PP_LOGO.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 16869,
+    "name": "Puff Puff Tobacco",
+    "where": "Lansing, MI",
+    "src": "https://static1.squarespace.com/static/666b40a65d155b35096e5234/t/671c1695e1e8492a1de3693c/1729894037680/2022_PP_LOGO.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 16889,
+    "name": "Puff Puff Tobacco",
+    "where": "East Lansing, MI",
+    "src": "https://static1.squarespace.com/static/666b40a65d155b35096e5234/t/671c1695e1e8492a1de3693c/1729894037680/2022_PP_LOGO.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 17302,
+    "name": "Casablanca Cigar Bar",
+    "where": "Hendersonville, NC",
+    "src": "https://static.wixstatic.com/media/df5370_fc572c82ffe0421fa45eff3a366a9c0a%7Emv2_d_2048_2048_s_2.png/v1/fit/w_2500,h_1330,al_c/df5370_fc572c82ffe0421fa45eff3a366a9c0a%7Emv2_d_2048_2048_s_2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17326,
+    "name": "O Cigar Bar",
+    "where": "Lake Orion, MI",
+    "src": "https://static1.squarespace.com/static/66a4610149fe770d2976f75a/t/66abaf4d1300ca7b28db037e/1722527565464/LOGO+IN+GOLD+SHINE.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 17334,
+    "name": "Timothy's Fine Cigars",
+    "where": "Bay City, MI",
+    "src": "https://timothysfinecigars.com/img/logo.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 17353,
+    "name": "Torch Cigar Pub",
+    "where": "Greenville, SC",
+    "src": "https://static.spotapps.co/website_images/ab_websites/246739_website_v1/drinks_pbg.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17376,
+    "name": "The Godfather Cigar Martini Lounge",
+    "where": "Rochester Hills, MI",
+    "src": "https://static.spotapps.co/website_images/ab_websites/775483_website_v1/socials.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17383,
+    "name": "105 Cigar Co.",
+    "where": "Matthews, NC",
+    "src": "https://i0.wp.com/105cigarco.com/wp-content/uploads/2016/10/cropped-cigar-club-matthews-cigars-where-to-buy-cigars-in-matthews-where-to-buy-cigars-in-charlotte-best-cigar-club-in-charotte-charlote-cigars-matthews-cigars-background-photo-final-77.jpeg?fit=1200%2C1200&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17404,
+    "name": "The Breakroom Cigar Lounge",
+    "where": "Fort Mill, SC",
+    "src": "https://www.breakroomcigars.com/assets/images/interior.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17420,
+    "name": "The Vintage Whiskey & Cigar Bar",
+    "where": "Charlotte, NC",
+    "src": "https://www.thevintageclt.com/media/vintage/home-hero/d77a3db0a73ab474/1600.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17421,
+    "name": "City Cigar Co",
+    "where": "Charlotte, NC",
+    "src": "https://static1.squarespace.com/static/67be21dfeef01f4b0052342a/t/67be2564a1b5d4085942720c/1740514660147/Untitled+design+%288%29.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17432,
+    "name": "Tobacco Trader",
+    "where": "Charlotte, NC",
+    "src": "https://static.wixstatic.com/media/e316f544f9094143b9eac01f1f19e697.png/v1/fit/w_2500,h_1330,al_c/e316f544f9094143b9eac01f1f19e697.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17452,
+    "name": "B and B Tobacconists",
+    "where": "Asheville, NC",
+    "src": "https://www.bbtobacconists.net/wp-content/uploads/2019/10/22788813_1857291814299597_9042486925418819947_n.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17482,
+    "name": "Carolina Cigar Company",
+    "where": "Asheville, NC",
+    "src": "https://static.wixstatic.com/media/b5eb73_3ed1113165304da19c91eea4b12fbd7f%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/b5eb73_3ed1113165304da19c91eea4b12fbd7f%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17551,
+    "name": "Cornelius Humidor and Tobacco",
+    "where": "Cornelius, NC",
+    "src": "https://static.wixstatic.com/media/6aa4a5_656c21ee1c204ab8a71bd38b7e2b24c4~mv2.jpeg/v1/fill/w_903,h_1280,al_c/6aa4a5_656c21ee1c204ab8a71bd38b7e2b24c4~mv2.jpeg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17587,
+    "name": "Gold Leaf Cigar Lounge",
+    "where": "Mooresville, NC",
+    "src": "https://static.spotapps.co/website_images/ab_websites/141549_website/drinks_back.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17740,
+    "name": "Governors Cigar Lounge East",
+    "where": "Reynoldsburg, OH",
+    "src": "https://www.thegovernorscigarlounge.com/uploads/1/2/4/2/124234233/published/official-logo.png?1757631436",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 17912,
+    "name": "Tobacco Town",
+    "where": "Beaver, WV",
+    "src": "https://tobaccotownwv.com/wp-content/uploads/2018/04/TOBACCO-TOWN-The-Cigar-Lodge-http___tobaccotownwv.com_.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17959,
+    "name": "Rocky's Cigar Club of Marietta",
+    "where": "Marietta, OH",
+    "src": "https://rockyscigarclub.com/uploads/1/4/3/3/143356350/editor/gettyimages-523465368-170667a.jpg?1664753304",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 17992,
+    "name": "Cigar Barn",
+    "where": "Sanford, NC",
+    "src": "https://static.wixstatic.com/media/8706e3_f2340d2101ac40b1bde1a3d674a9ac66%7Emv2.png/v1/fit/w_2500,h_1330,al_c/8706e3_f2340d2101ac40b1bde1a3d674a9ac66%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18079,
+    "name": "Abbies Cigars",
+    "where": "Knightdale, NC",
+    "src": "https://static.spotapps.co/website_images/ab_websites/246776_website_v1/shared_image.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18245,
+    "name": "Winston's Humidor",
+    "where": "Chesterfield, VA",
+    "src": "https://static.wixstatic.com/media/cf4fcb_dc50253c36cc452eb3c381034485918a~mv2.png/v1/fill/w_1497,h_789,al_c/cf4fcb_dc50253c36cc452eb3c381034485918a~mv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18452,
+    "name": "Queen City Cigar Company",
+    "where": "Cumberland, MD",
+    "src": "https://queencitycigarcompany.com/logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 18525,
+    "name": "Shamrock Whiskey & Cigar Bar, LLC",
+    "where": "Rockwood, PA",
+    "src": "https://www.shamrockwcb.com/Restaurant/Laurel-Highlands/Pennsylvania/Whiskey-Cigar-Bar/Steak-Seafood-Fine-Dining-Laurel-Highlands-Rockwood-PA.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18547,
+    "name": "Old Virginia Tobacco Co.",
+    "where": "Sterling, VA",
+    "src": "https://oldvatobacco.com/wp-content/uploads/2024/02/OVTC-Cigar-Feature-1024x1024.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18587,
+    "name": "Fratello Cigars",
+    "where": "Ashburn, VA",
+    "src": "https://fratellocigar.com/wp-content/uploads/2023/05/Fratello-no-cigars-1-e1691709098506-2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18624,
+    "name": "Long Ridge Cigars",
+    "where": "Winchester, VA",
+    "src": "https://www.longridgecigars.com/uploads/1/4/4/0/144065637/editor/longridgesign01-150dpi.png?1671822917",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18751,
+    "name": "Old Virginia Tobacco Co.",
+    "where": "Alexandria, VA",
+    "src": "https://oldvatobacco.com/wp-content/uploads/2024/02/OVTC-Cigar-Feature-1024x1024.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18753,
+    "name": "John Crouch Tobacconist",
+    "where": "Alexandria, VA",
+    "src": "https://static1.squarespace.com/static/636553be7d2fb41ccbf8aaaf/t/63666df13dde1608dd5f13aa/1667657201119/FINAL+LOGO+wht+on+blk+John+Crouch+Tobacconist+cropped.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 18807,
+    "name": "The Cigar Lodge",
+    "where": "Akron, OH",
+    "src": "https://www.thecigarlodge.com/uploads/1/3/5/1/135159227/published/cigar-logo-bear.png?1780851495",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 18878,
+    "name": "Havana Cigar Outlet",
+    "where": "Norwalk, OH",
+    "src": "https://static.wixstatic.com/media/cd0217_82194c4a7a1749a6b1a39189466ec946%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/cd0217_82194c4a7a1749a6b1a39189466ec946%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 18942,
+    "name": "Royal 10 Cigar and Tobacco",
+    "where": "North Royalton, OH",
+    "src": "https://royal10cigar.com/wp-content/uploads/2016/10/front.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19014,
+    "name": "S & S Candy & Cigar Co",
+    "where": "Pittsburgh, PA",
+    "src": "https://static1.squarespace.com/static/52ddb320e4b03cda32c5fbb0/t/530d65d3e4b0b60005711df9/1393386965932/webheader.gif?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19038,
+    "name": "Bellevue Cigar",
+    "where": "Bellevue, PA",
+    "src": "https://bellevuecigar.com/images/750643768_1544420814148353_1811679177972807653_n.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19096,
+    "name": "Dirty Dog Cigar Shoppe",
+    "where": "Mckeesport, PA",
+    "src": "https://www.dirtydogcigarshoppe.com/wp-content/uploads/2015/08/premier-cigar-shop-pittsburgh-pa-dirty-dog-cigar-shoppe.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19102,
+    "name": "Osi Tobacco",
+    "where": "Canton, OH",
+    "src": "https://www.ositobacco.com/images/humidor-main.webp",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19195,
+    "name": "North Coast Cigar",
+    "where": "Port Clinton, OH",
+    "src": "https://static.wixstatic.com/media/cd0217_cdf309103ed44257afd2ecd3dcbeaae8~mv2.jpg/v1/fill/w_1920,h_1080,al_c/cd0217_cdf309103ed44257afd2ecd3dcbeaae8~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19266,
+    "name": "Valley Tobacco",
+    "where": "Youngstown, OH",
+    "src": "https://valleytobaccousa.com/wp-content/uploads/2023/10/ValleyTobacco-logo-V.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 19315,
+    "name": "JoVann's Tobacco Shop",
+    "where": "Cleveland, OH",
+    "src": "https://le-cdn.hibuwebsites.com/363f01f5f5fd483fb42bc4014d179926/dms3rep/multi/opt/jovanns-tobacco-shop-social-networks-image-1920w.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19398,
+    "name": "The Brig Cigar Lounge",
+    "where": "Erie, PA",
+    "src": "https://static1.squarespace.com/static/61cc81c11b3f9a4aab5845d2/t/663f64cbdd55e61e2676be5e/1715430603717/Logo.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 19423,
+    "name": "Millcreek Cigar Lounge",
+    "where": "Erie, PA",
+    "src": "https://static1.squarespace.com/static/66a7a69f3b75f17e236fee24/t/66aa589b8bbdee7b22dbd6a7/1722439835584/Millcreek+Logo+Transparent+2.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 19466,
+    "name": "Nickel City Cigars",
+    "where": "Buffalo, NY",
+    "src": "https://cdn.shopify.com/s/files/1/0044/0247/9153/files/nickel1_bw.png?height=628&pad_color=ffffff&v=1614305799&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19861,
+    "name": "The Burning Leaf Cigar Lounge",
+    "where": "Yorktown, VA",
+    "src": "https://static.wixstatic.com/media/2e8cbc_502cf50c631f499cb800c4bd5d039e16~mv2.jpg/v1/fill/w_2500,h_2183,al_c/2e8cbc_502cf50c631f499cb800c4bd5d039e16~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19870,
+    "name": "Island Tobacco",
+    "where": "Nags Head, NC",
+    "src": "https://islandtobacco.com/wp-content/uploads/island-tobacco.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 19911,
+    "name": "Tailored Smoke Cigar Lounge",
+    "where": "Newport News, VA",
+    "src": "https://static.spotapps.co/website_images/ab_websites/581493_website_v1/social.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20019,
+    "name": "Veterans Cigar Club",
+    "where": "Clinton, MD",
+    "src": "https://static1.squarespace.com/static/6693569b1126a558411ff9e6/t/66979700d0d3565418c5ec35/1721210624428/VeteransCigarClub_CLR__1_-removebg-preview.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20020,
+    "name": "Petworth Cigars",
+    "where": "Washington, DC",
+    "src": "https://www.petworthcigars.com/cdn/shop/files/Petworth-Cigars_2c6ab813-94e0-480e-b6f1-d2473903f8e9_1200x1200.png?v=1614325146",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20066,
+    "name": "Habanacuba Cigar Shop",
+    "where": "San Juan, PR",
+    "src": "https://habanacubacigar.com/wp-content/uploads/2022/11/img-home-about-1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20108,
+    "name": "Don Collins Cigars",
+    "where": "San Juan, PR",
+    "src": "https://static.wixstatic.com/media/42556b_b54ec24108794d7ba2477e204da19311~mv2.jpg/v1/fill/w_1170,h_1121,al_c/42556b_b54ec24108794d7ba2477e204da19311~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20136,
+    "name": "Davidus Cigars",
+    "where": "Ashton, MD",
+    "src": "https://dhgf5mcbrms62.cloudfront.net/130839794/global/YW4VWHN-1200x1200.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20179,
+    "name": "Easton Cigar and Smoke Shop",
+    "where": "Easton, MD",
+    "src": "https://s0.wp.com/_si/?t=eyJpbWciOiJodHRwczpcL1wvczAud3AuY29tXC9pXC9ibGFuay5qcGciLCJ0eHQiOiJFYXN0b24gQ2lnYXIgJmFtcDsgU21va2VzaG9wIiwidGVtcGxhdGUiOiJoaWdod2F5IiwiZm9udCI6IiIsImJsb2dfaWQiOjIzMjAzNDA3M30.YlyOI3A6EhbWNaqotDL4LnQXxq1BLoAL3EJIG9pte5MMQ",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20307,
+    "name": "Delco 202 Cigar",
+    "where": "Chadds Ford, PA",
+    "src": "https://static.wixstatic.com/media/86aa20_5884af6ffb2e4d449dc4f0e069a22c03%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/86aa20_5884af6ffb2e4d449dc4f0e069a22c03%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20319,
+    "name": "Chesapeake Pipe & Cigar",
+    "where": "Annapolis, MD",
+    "src": "https://i0.wp.com/www.chesapeakepipeandcigar.com/wp-content/uploads/2020/09/cropped-cropped-cpclighthousewithlotsofbackground-1-1.png?fit=512%2C512&ssl=1",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20479,
+    "name": "The Tobacco Company",
+    "where": "Lemoyne, PA",
+    "src": "https://static1.squarespace.com/static/57625eecb3db2b9410cb9697/t/5774d6fbe3df28533c019e15/1467275006275/Tobacco+Company+Updated+Header.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20578,
+    "name": "Tinder Box Haverford",
+    "where": "Haverford, PA",
+    "src": "https://www.tinderbox.com/cdn/shop/files/assets_task_01k0w2geh3f1kvxbtbhjez33x1_1753288939_img_0_76befcdd-6b18-4afe-a211-b6d21e528b29.webp?v=1755898746&width=300",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20612,
+    "name": "Ashton Cigar Bar",
+    "where": "Philadelphia, PA",
+    "src": "https://www.ashtoncigarbar.com/assets/images/acb-ogimage.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20651,
+    "name": "Xhale Lounge",
+    "where": "Philadelphia, PA",
+    "src": "https://www.xhalelounge.com/wp-content/uploads/2014/03/DSC051843.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20671,
+    "name": "Infusion Lounge - Philly's Best Cocktails, Hookahs & Cigars",
+    "where": "Philadelphia, PA",
+    "src": "https://static.wixstatic.com/media/2da143_c46e3746ece04263b6e03be6cf9e4673%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/2da143_c46e3746ece04263b6e03be6cf9e4673%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20676,
+    "name": "Chartwell Cigar Club",
+    "where": "Glenmoore, PA",
+    "src": "https://chartwellcigarclub.com/wp-content/uploads/2026/04/Chartwell-Logo-Dark.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 20716,
+    "name": "BNB Cigars",
+    "where": "Philadelphia, PA",
+    "src": "https://bnbcigars.com/cdn/shop/files/BNB-Logo-400x300-Transparent_1200x1200.png?v=1613514061",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 20760,
+    "name": "Cole's Tobacco",
+    "where": "Pottstown, PA",
+    "src": "https://colestobacco.net/wp-content/uploads/2019/10/20191018_173915.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20859,
+    "name": "Sticks Cigars of Somerville",
+    "where": "Somerville, NJ",
+    "src": "https://jerseycigars.com/wp-content/uploads/2026/09/friday-smoke-sessions-rahway-sep-2026.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20875,
+    "name": "Leaf Cigar Bar",
+    "where": "Easton, PA",
+    "src": "https://leafcigarbar.com/wp-content/uploads/2022/08/logo.svg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 20880,
+    "name": "Legends Cigar Bar",
+    "where": "Easton, PA",
+    "src": "https://legendcigarbar.com/assets/img/lounge-leather-leopard-1920.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 20926,
+    "name": "Sellersville Beverage & Cigar",
+    "where": "Sellersville, PA",
+    "src": "https://static1.squarespace.com/static/5cf9dcfab1d66700013a7ac7/t/5d681cee1fda3c00016533d2/1567104240561/sbc_logo_1920_2019_0829_003.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 20988,
+    "name": "Sticks Cigars of Rahway",
+    "where": "Rahway, NJ",
+    "src": "https://prodsticks.wpenginepowered.com/wp-content/uploads/2026/09/friday-smoke-sessions-rahway-sep-2026.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21198,
+    "name": "Executive Leaf Cigar Emporium",
+    "where": "Newark, NJ",
+    "src": "https://static1.squarespace.com/static/66b2318cdfdb070d3bdee8c1/t/66b68accddea674180c091f7/1723239116410/the+executive+leaf+social+sharing.jpg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21273,
+    "name": "Barrister Cigars",
+    "where": "Union, NJ",
+    "src": "https://barristercigars.com/wp-content/uploads/2024/01/cropped-cb-logo.png",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 21344,
+    "name": "Breaker Cigars",
+    "where": "Shamokin, PA",
+    "src": "https://breakercigars.com/cdn/shop/files/Header_Logo_Black_1200x1200.png?v=1757622335",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 21412,
+    "name": "Brivado Cigars",
+    "where": "Orange, NJ",
+    "src": "https://static.wixstatic.com/media/4f2a22_e1462858b61540e7a59386caf1d4cf4e%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/4f2a22_e1462858b61540e7a59386caf1d4cf4e%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21564,
+    "name": "Smoke Rings Cigar Bar",
+    "where": "Hazleton, PA",
+    "src": "https://s0.wp.com/_si/?t=eyJpbWciOiJodHRwczpcL1wvc21va2VyaW5nc2NpZ2FyYmFyLmNvbVwvd3AtY29udGVudFwvdXBsb2Fkc1wvMjAyMFwvMDZcL3NyLXdlYi1sb2dvLTIucG5nP3c9MjAwIiwidHh0IjoiU01PS0UgUklOR1MiLCJ0ZW1wbGF0ZSI6ImVkZ2UiLCJmb250IjoiIiwiYmxvZ19pZCI6MTA1NjQ1NDQzfQ.3Cl7LnXz_ubxh4JYwWheo66pRrBAhba6iibRBmwRZQMMQ",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21628,
+    "name": "JM Cigars",
+    "where": "Lake Hopatcong, NJ",
+    "src": "https://i.postimg.cc/529kwsjX/2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21631,
+    "name": "Ten86 Cigars",
+    "where": "Hawthorne, NJ",
+    "src": "https://static.wixstatic.com/media/4a2656_a1617ea6d02e47cfa55c9519fcae81ba%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/4a2656_a1617ea6d02e47cfa55c9519fcae81ba%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21634,
+    "name": "Leafs Cigar Lounge",
+    "where": "New Milford, NJ",
+    "src": "https://mlyx7usu9dcb.i.optimole.com/cb:414V.7ad/w:auto/h:auto/q:mauto/f:best/https://leafscigarlounge.com/wp-content/uploads/2026/01/MG_1491.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21667,
+    "name": "The Tobacco Shop of Ridgewood",
+    "where": "Ridgewood, NJ",
+    "src": "https://static1.squarespace.com/static/59149d7f579fb3c20cf442b1/t/5931baf71b10e380933bbf69/1496431358472/Tobacco+Shop+of+Ridgewood+and+Davidoff+Lounge+Logo+-+Transparent+Background+PNG+white+lounge+enlarged+davidoff+v2.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 21852,
+    "name": "Rocky's News and Cigars",
+    "where": "Syracuse, NY",
+    "src": "https://cdn.shopify.com/s/files/1/0374/7394/3597/files/3E2AB925-D345-458F-A27D-12D79A4578FC_-_Edited.png?height=628&pad_color=f8f8f8&v=1778864646&width=1200",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 21926,
+    "name": "Copper City Cigars & Lounge",
+    "where": "Rome, NY",
+    "src": "https://coppercitycigars.com/img-hero.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22041,
+    "name": "Gold Coast Cigars Northport",
+    "where": "Northport, NY",
+    "src": "https://d14tal8bchn59o.cloudfront.net/og4Wfn7HfjWjmF53P1uOve5cClzrcCEs3LF5BVoYass/fn:og-image-goldcoastcigar/plain/s3://multisiteadmin-production/utvgyew2k1u8gg5hay1qbu2egwhd",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22080,
+    "name": "Carmel Cigar Vault",
+    "where": "Carmel Hamlet, NY",
+    "src": "https://static1.squarespace.com/static/62f955485bc99d6189388095/t/640b5116adcd727f49409b34/1678463254783/CIGAR+VAULT+copy.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22082,
+    "name": "The Carmel Cigar Vault",
+    "where": "Carmel, NY",
+    "src": "https://static1.squarespace.com/static/62f955485bc99d6189388095/t/640b5116adcd727f49409b34/1678463254783/CIGAR+VAULT+copy.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22196,
+    "name": "Prime Tobacconist",
+    "where": "Milford, CT",
+    "src": "https://static.wixstatic.com/media/5f40d2_8c5f7ff635834b1295bf0080e516f95d~mv2.jpg/v1/fill/w_2500,h_2499,al_c/5f40d2_8c5f7ff635834b1295bf0080e516f95d~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22251,
+    "name": "Orange Cigar Lounge",
+    "where": "Orange, CT",
+    "src": "https://static.wixstatic.com/media/dd1e1f_e57a0e3b797b4aa78552d61a73d6f520~mv2.jpg/v1/fill/w_1869,h_856,al_c/dd1e1f_e57a0e3b797b4aa78552d61a73d6f520~mv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22268,
+    "name": "Farmington Valley Cigar",
+    "where": "Farmington, CT",
+    "src": "https://farmingtonvalleycigar.com/wp-content/uploads/2025/12/farmington-valley-cigar-logo.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 22281,
+    "name": "The Owl Shop",
+    "where": "New Haven, CT",
+    "src": "https://owlshopcigars.com/images/owl-shop-logo-og.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 22425,
+    "name": "Garcia's Tobacco Shop",
+    "where": "Burlington, VT",
+    "src": "https://dhgf5mcbrms62.cloudfront.net/116576272/global/uB5Hxxm-1200x1200.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22494,
+    "name": "Breakwaters Cigar & Whiskey Lounge LLC",
+    "where": "Middletown, RI",
+    "src": "https://static1.squarespace.com/static/5f086a93631b431719c6cbd0/t/5fd2e86f74fad65e1af5e646/1607657586235/Logo+-+website-01.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 22520,
+    "name": "Hill & Harbor Cigar Lounge",
+    "where": "East Greenwich, RI",
+    "src": "https://static1.squarespace.com/static/556e5b4be4b0cd951e1047d3/t/5be0a94203ce6473eb4c9db2/1541450067540/DSC_0062.JPG?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22696,
+    "name": "Ale House Cigar Bar",
+    "where": "Providence, RI",
+    "src": "https://static1.squarespace.com/static/59a0afd16b8f5be647eaf0de/t/5bca5ac30852297bbeb0456e/1539988194099/DSC_0094.JPG?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22813,
+    "name": "Boston Cigar Lounge",
+    "where": "Boston, MA",
+    "src": "https://static1.squarespace.com/static/68e15136122de0582f1b6e66/t/69617e7168d4ec7803299afa/1767997041993/image.jpeg?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22835,
+    "name": "Holy Smokes",
+    "where": "Manchester, NH",
+    "src": "https://www.holysmokescigars.com/wp-content/uploads/2022/07/337299825-1570420546803028-4793371910356413926-n-1400x788.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22836,
+    "name": "Nh Cigars",
+    "where": "Manchester, NH",
+    "src": "https://nhcigars.com/wp-content/uploads/2023/02/nh-cigars-tax-free.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 22881,
+    "name": "Cigar and Lounge",
+    "where": "Watertown, MA",
+    "src": "https://static1.squarespace.com/static/6430b28da78dcf6d747d0446/t/6430b382ad1ac2448a2f1a16/1680913282429/CigarAndLounge_W_LOGO.png?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": true
+  },
+  {
+    "id": 22983,
+    "name": "Happy Jack's Cigars",
+    "where": "Laconia, NH",
+    "src": "https://happyjacksonline.com/wp-content/uploads/2024/10/1-500x500.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23050,
+    "name": "Cigaret Shopper",
+    "where": "Portland, ME",
+    "src": "https://www.cigaretshopper.com/wp-content/uploads/2025/07/hero.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23086,
+    "name": "Cigaret Shopper",
+    "where": "Waldoboro, ME",
+    "src": "https://www.cigaretshopper.com/wp-content/uploads/2025/07/hero.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23087,
+    "name": "Cigaret Shopper",
+    "where": "Windham, ME",
+    "src": "https://www.cigaretshopper.com/wp-content/uploads/2025/07/hero.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23090,
+    "name": "Cigaret Shopper",
+    "where": "Houlton, ME",
+    "src": "https://www.cigaretshopper.com/wp-content/uploads/2025/07/hero.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23096,
+    "name": "TK's Cigar Bar & Golf Sims",
+    "where": "Center Ossipee, NH",
+    "src": "https://cdn.durable.co/blocks/22ad0GIbgNx9EOiNWNPs9FbvbpTKTuUlsNrbYV8EaYMj5fgFiJQUtUlxNixwtvV1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 23103,
+    "name": "Cigaret Shopper",
+    "where": "Lincoln, ME",
+    "src": "https://www.cigaretshopper.com/wp-content/uploads/2025/07/hero.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 35932,
+    "name": "Just The Tip Cigars",
+    "where": "South Park Township, PA",
+    "src": "https://justthetipcigars.com/images/cowboy-wb.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 37832,
+    "name": "Emporium Cigars Llc",
+    "where": "Clarks Summit, PA",
+    "src": "https://static.wixstatic.com/media/d63912_34c4e49058604dd487388b8ce2ed30b8%7Emv2.png/v1/fit/w_2500,h_1330,al_c/d63912_34c4e49058604dd487388b8ce2ed30b8%7Emv2.png",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 38236,
+    "name": "The Welton Room.  A metropolitan cigar lounge.",
+    "where": "Albany, NY",
+    "src": "https://static.wixstatic.com/media/692144_5b0e206d451a4ed5a96c9333420f6a39%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/692144_5b0e206d451a4ed5a96c9333420f6a39%7Emv2.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 42086,
+    "name": "Leaf by Oscar",
+    "where": "Pittsburgh, PA",
+    "src": "https://www.leafbyoscarcigar.com/wp-content/uploads/2015/02/2-1.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 42237,
+    "name": "The Gentleman Cigar Lounge",
+    "where": "Cranston, RI",
+    "src": "https://static1.squarespace.com/static/58ab17b19de4bb32da667a2b/t/5bd86e7d4785d3f0b148dda9/1540910730933/DSC_0066.JPG?format=1500w",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  },
+  {
+    "id": 42345,
+    "name": "ZODI'X Cigar Lounge",
+    "where": "Georgetown, TX",
+    "src": "https://zodixcigarlounge.com/files/2025/02/d62AkR3Vc4HAACg6-RZzPyISwPgYT0MRhQ.jpg",
+    "field": "web_image_url",
+    "treatedAsLogo": false
+  }
+]

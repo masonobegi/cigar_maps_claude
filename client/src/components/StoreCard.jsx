@@ -64,17 +64,45 @@ function initials(name) {
 }
 
 /**
+ * How much to lift a dim picture, as a CSS brightness multiplier.
+ *
+ * Mirrors liftFor() in server/src/utils/imageTreatment.js, which is where the
+ * reasoning and the self-test live. Aims to bring the mean to 0.20, so a
+ * picture at 0.19 is barely touched and one at 0.05 is lifted hard — capped,
+ * because past 2.2x the compression noise in a dark JPEG becomes more visible
+ * than the subject does.
+ */
+function lift(luma) {
+  if (typeof luma !== 'number' || luma <= 0 || luma >= 0.2) return 1;
+  return Math.min(2.2, Math.round((0.2 / luma) * 100) / 100);
+}
+
+/**
  * The shop's picture: the owner's upload first, then the image its own website
  * offers for sharing, then a monogram. A picture that fails to load (plenty of
  * sites refuse to be embedded) falls back to the monogram instead of a broken
  * image.
+ *
+ * How it is drawn comes from what the picture measured as, not from its
+ * filename. This used to ask `/logo/i.test(src)`, so a logo living at
+ * /uploads/2021/header.png was drawn as a photograph — object-fit: cover on a
+ * near-black backdrop — and a see-through logo in dark ink composited onto a
+ * near-black square is an invisible logo. Twenty-nine were, six of them so
+ * uniformly that the whole thumbnail measured a standard deviation of 0.022.
+ *
+ * image_kind is filled in by measuring every picture the directory shows. When
+ * it is missing the old filename guess still applies, so a listing nothing has
+ * measured yet looks exactly as it did.
  */
 export function StoreThumb({ store, size = 72 }) {
   const src = store.logo_url || store.cover_url || store.web_image_url;
   const [failed, setFailed] = useState(false);
-  const isLogo = /logo/i.test(String(src || ''));
+  const kind = store.image_kind || (/logo/i.test(String(src || '')) ? 'logo' : null);
+  const isLogo = kind === 'logo';
   const box = { width: size, height: size, flexShrink: 0 };
-  if (!src || failed) {
+  // 'blank' is dark with nothing in it — at 72px a black square, which says
+  // less about a shop than its own initials do.
+  if (!src || failed || kind === 'blank') {
     return (
       <div className="rounded-xl flex items-center justify-center font-serif font-bold select-none"
         style={{ ...box, background: tint(store.name), color: '#F3E6D3', fontSize: size * 0.34 }} aria-hidden="true">
@@ -86,7 +114,12 @@ export function StoreThumb({ store, size = 72 }) {
     <div className="rounded-xl overflow-hidden" style={{ ...box, backgroundColor: isLogo ? '#F4EEE6' : '#2A2520' }}>
       <img src={src.replace(/^http:\/\//, 'https://')} alt="" loading="lazy" referrerPolicy="no-referrer"
         onError={() => setFailed(true)}
-        className="w-full h-full" style={{ objectFit: isLogo ? 'contain' : 'cover', padding: isLogo ? 6 : 0 }} />
+        className="w-full h-full" style={{
+          objectFit: isLogo ? 'contain' : 'cover',
+          padding: isLogo ? 6 : 0,
+          // A real photograph of a dim room, lifted only as far as it needs.
+          filter: kind === 'dim' && lift(store.image_luma) > 1 ? `brightness(${lift(store.image_luma)})` : undefined,
+        }} />
     </div>
   );
 }
