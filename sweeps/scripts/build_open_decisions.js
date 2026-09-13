@@ -125,13 +125,48 @@ function overrides() {
   return new Map(list.map(o => [o.id, o]));
 }
 
+/**
+ * What the state licence registries say about each listing, as a second,
+ * independent source.
+ *
+ * It answers a different question from the research and is worth carrying
+ * beside it rather than folded into it: a licence is issued to a door, not to a
+ * shop. A match means a licensed tobacco retailer trades at that address — not
+ * that this listing is the one doing it. So it corroborates, and it never
+ * decides on its own.
+ *
+ * Where it earns its place is the `renamed` verdict: when the current licence
+ * at a cigar lounge's door reads "Friendship Wine & Liquor" or "Toke Shack
+ * LLC", that is the registry saying somebody else is in the building.
+ */
+function licences() {
+  const f = path.join(__dirname, '..', 'decisions', 'licences_all.json');
+  if (!fs.existsSync(f)) return new Map();
+  const d = JSON.parse(fs.readFileSync(f, 'utf8'));
+  const out = new Map();
+  for (const kind of ['verified', 'renamed', 'moved', 'lapsed']) {
+    for (const r of d[kind] || []) {
+      out.set(r.id, {
+        licenceVerdict: kind,
+        licenceWhy: r.why,
+        licenceName: r.licence ? r.licence.name : null,
+        licenceRegistry: r.licence ? r.licence.registry : null,
+      });
+    }
+  }
+  return out;
+}
+
 (async () => {
   const file = journalPath();
   console.log(`reading ${file}\n`);
   const { research, verify } = readJournal(file);
   const all = JSON.parse(fs.readFileSync(INPUT, 'utf8'));
   const manual = overrides();
-  if (manual.size) console.log(`${manual.size} decisions made by hand will override research\n`);
+  const lic = licences();
+  if (manual.size) console.log(`${manual.size} decisions made by hand will override research`);
+  if (lic.size) console.log(`${lic.size} listings have something from a state licence registry`);
+  if (manual.size || lic.size) console.log();
 
   const decisions = all.map(row => {
     const r = research.get(row.id);
@@ -155,8 +190,16 @@ function overrides() {
       sources: r ? r.sources : null,
       refuted: v ? v.refuted : null,
       verifyWhy: v ? v.why : null,
+      ...(lic.get(row.id) || {}),
     };
   });
+
+  // Where the two sources disagree, say so out loud rather than letting one
+  // quietly win. A listing the research could not settle but whose door holds a
+  // current licence is the most useful row in the file: it is the one a second,
+  // harder look is most likely to resolve.
+  const corroborated = decisions.filter(d => d.decision !== 'keep' && d.licenceVerdict === 'verified');
+  const contradicted = decisions.filter(d => d.decision === 'keep' && d.licenceVerdict === 'renamed');
 
   const by = k => decisions.filter(d => d.decision === k);
   const unresearched = decisions.filter(d => !d.status).length;
@@ -170,7 +213,17 @@ function overrides() {
   console.log(`  keep        ${String(by('keep').length).padStart(4)}`);
   console.log(`  closed      ${String(by('closed').length).padStart(4)}`);
   console.log(`  not_retail  ${String(by('not_retail').length).padStart(4)}`);
+  console.log(`  duplicate   ${String(by('duplicate').length).padStart(4)}`);
   console.log(`  unproven    ${String(by('unproven').length).padStart(4)}   (of which ${unverified} are "research said open, nothing checked it")`);
+
+  if (corroborated.length || contradicted.length) {
+    console.log(`\nwhere the registry and the research disagree:`);
+    console.log(`  would drop, but the door holds a current licence   ${corroborated.length}`);
+    console.log(`  would keep, but the licence is in another name     ${contradicted.length}`);
+    for (const d of contradicted.slice(0, 10)) {
+      console.log(`    #${String(d.id).padEnd(6)} ${String(d.name).slice(0, 28).padEnd(28)} licence reads "${String(d.licenceName).slice(0, 30)}"`);
+    }
+  }
 
   fs.writeFileSync(OUT, JSON.stringify({
     approved: false,
