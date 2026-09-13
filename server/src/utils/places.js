@@ -96,7 +96,7 @@ async function shopsInPlace(db, place, { limit = 200 } = {}) {
     : { sql: 'UPPER(state) = UPPER(?)', params: [place.state] };
   return db.all(`
     SELECT id, name, address, city, state, zip, phone, website, lat, lng, hours, hours_source,
-           has_lounge, has_walk_in_humidor, web_image_url
+           has_lounge, has_walk_in_humidor, web_image_url, image_kind, image_luma
     FROM stores
     WHERE visible = 1 AND ${where.sql}
     ORDER BY (hours_source = 'website') DESC, (web_image_url IS NOT NULL) DESC, has_lounge DESC, name

@@ -102,7 +102,8 @@ async function listStores(query = {}, now = new Date()) {
     // The extra columns are what that order reads, plus what the client needs
     // to render a card honestly.
     candidateCols.push('s.website', 's.website_status', 's.phone', 's.claimed', 's.confidence',
-      's.operating_status', 's.logo_url', 's.cover_url', 's.web_image_url');
+      's.operating_status', 's.logo_url', 's.cover_url', 's.web_image_url',
+      's.image_kind', 's.image_luma');
     order = noLocationOrderSql();
   }
 
