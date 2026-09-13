@@ -102,8 +102,8 @@ are not there.
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
 | 5 | ~~Licence renames and moves~~ | **Closed 2026-09-13.** All 19 addresses stay; the 13 renames are split and applied |
 | 6 | [The two remaining manual registries](#6-the-two-remaining-manual-registries) | Pennsylvania and Washington; California and Florida fetch themselves now |
-| 7 | [The Overture dedupe change](#7-the-overture-dedupe-change) | Blocked on a file that is not in the repository |
-| 8 | [Watch the menu scanner](#8-watch-the-menu-scanner) | It has never had a real 24 hours |
+| 7 | ~~The Overture dedupe change~~ | **Done 2026-09-13.** The extract was there all along; the fix removes 2 duplicates |
+| 8 | ~~Watch the menu scanner~~ | **Done 2026-09-13.** Healthy against the live table; it surfaced two duplicate listings |
 
 ---
 
@@ -468,23 +468,43 @@ answers 400 or 404, find the new id rather than dropping the registry —
 `sweeps/scripts/socrata_find.js` searches a Socrata domain by keyword, and
 `socrata_peek.js` prints one row so the column names can be read.
 
-## 7. The Overture dedupe change
+## 7. The Overture dedupe change — DONE, and smaller than it looked
 
-Unchanged and still blocked. `sweeps/plan.json` (duplicates, items 2 and 3) asks
-`buildDirectory` to let one Overture record absorb *every* OSM record of the
-same shop rather than stopping at the first (the `!t.osm_id` guard), emit an
-`also_osm_ids` list, and have the importer hide any older OSM row those ids
-name. Both are small changes. Neither can be made here, because
-`server/data/overture_raw.json` is gitignored and a rebuild without it produces
-an OSM-only file — which is how the directory got destroyed once already.
+**The blocker was not real.** `server/data/overture_raw.json` is present on the
+owner's machine (27 MB, 45,129 rows), so the change was made and measured
+against the real extract rather than an OSM-only rebuild.
 
-Get the Overture extract, then make the change, then rebuild and diff the record
-count before importing anything.
+`buildDirectory` had a `!t.osm_id` guard that stopped an Overture row once it
+had absorbed one OSM record, so a second OSM record for the same shop fell
+through to `osmOnly` and became a second listing for a shop already in the file.
+OpenStreetMap holds more than one record for one shop routinely — a node and a
+way for the same building, or two contributors who each mapped the same door.
+The guard is gone, and extra ids are recorded in `also_osm_ids`.
 
-The other half of this — merging the twins that already exist — is done and
-wired up: `dedupeListings.mergeAutomatic` runs after every import on the auto
-tier only. Its first production run merged six doors, all six genuinely one shop
-listed twice.
+**Measured, and the honest number is two.**
+
+    before   42,863 stores, 3,105 merged, 2,941 OSM-only
+    after    42,861 stores, 3,107 merged, 2,939 OSM-only
+
+Two duplicates, one of them Bellevue Tobacco — the very shop the comment beside
+that code warns about. The plan item was right; its importance was overestimated.
+
+### Two things deliberately not done
+
+**The importer half is not implemented.** The plan asked for the importer to hide
+any older row an `also_osm_id` names. Both absorbed ids were checked against
+production and neither names a row that exists, so it would act on nothing — and
+that file is the one that once put 519 hidden listings back on the map including
+a brewery. Zero benefit against that risk is not a trade worth making, and the
+build change already stops the duplicate at source. If `also_osm_ids` ever names
+a real row, this becomes worth doing; it does not today.
+
+**The rebuilt `store_directory.json.gz` is not committed.** A fresh build comes
+out 60 records different from the committed one for reasons unrelated to this
+change — an older classifier or older inputs produced the committed file.
+Shipping that delta while a 672-listing sweep was mid-flight would have made the
+two impossible to tell apart. **Rebuild it, diff it and review it on its own**,
+then commit; the code change is already in, so any future build carries the fix.
 
 ## 8. Watch the menu scanner
 
