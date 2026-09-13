@@ -98,7 +98,7 @@ are not there.
 |-------|------|----------------|
 | **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **All 672 researched 2026-09-13. Verification and a deeper pass on the unknowns were running when this was written; the drop list still needs reading before anything is hidden** |
 | 2 | ~~Add Paul&#39;s Cigars, Hazel Dell~~ | **Done 2026-09-13.** Added as #42931; both Vancouver shops are public |
-| 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
+| 3 | [The last of the setup](#3-two-environment-variables) | **Mail works** as of 2026-09-13. Left: four DNS records for the sending domain, a postal address, and Search Console |
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
 | 5 | ~~Licence renames and moves~~ | **Closed 2026-09-13.** All 19 addresses stay; the 13 renames are split and applied |
 | 6 | [Washington, the one manual registry left](#6-washington-the-one-manual-registry-left) | CA, FL and PA all fetch themselves now. WA has no dataset at all |
@@ -243,104 +243,60 @@ are probably former locations; task 1 will settle them.
 
 ---
 
-## 3. Two environment variables
+## 3. The last of the setup
 
----
+**Mail works.** 2026-09-13, and it had never worked before: the first message
+this project has successfully sent came back with a Resend message id, through
+`utils/mailHttp.js` over HTTPS — the app's own code path, not a curl call.
 
-**The domain is done.** `cigar-buddy.com` is live, `APP_URL` is set on the
-**`cigar_maps_claude`** service (not Postgres — see below), `www` 301s to the
-apex, SSL is Full (strict), and a crawl of the live site reports 814 URLs with
-no faults. Two variables are left.
+    provider picked: resend
+    { "ok": true, "id": "c67a755d-08c0-45ed-92c7-7c545ef3fa54" }
 
-| | What | Why it blocks everything behind it |
-|---|---|---|
-| 1 | **Set `RESEND_API_KEY`** (not SMTP) | Mail cannot leave over SMTP from here at all — see below. One key, and mail goes over HTTPS. Also set `MAIL_FROM` and `OUTREACH_POSTAL_ADDRESS`, which US commercial email is required to carry. Until this is set, **a shop that tries to claim its listing gets nothing** |
-| 2 | **Add analytics and Search Console** | `GOOGLE_SITE_VERIFICATION` then submit `https://cigar-buddy.com/sitemap.xml`. `store_views` already records every shop page view; what is missing is search impressions and indexed-page counts |
+`RESEND_API_KEY` and `MAIL_FROM` are set on the **web** service. The deployed app
+reports `can_actually_send: true`, `last_check: "resend over HTTPS"`.
 
-**The Railway trap, which has now cost three wrong conclusions.** The project has
-two services and the CLI's linked default for this directory is **Postgres**, not
-the app. Any `railway` command without `--service` acts on the database, where
-nothing reads your variable. The app is:
+**The four dead SMTP variables are gone** — `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASS`. They represented a fallback that never existed: this
+host does not route SMTP outbound on any port (ENETUNREACH on IPv6, then
+ETIMEDOUT on 465, then on 587). `SMTP_PASS` also still held the Gmail password
+that is in this repository's public git history. Do not put them back.
 
-```
-railway variable set KEY=VALUE --service 76dbe85c-e820-42e1-882c-aa23038a115c
-railway status --json            # bare 'railway status' hangs on a prompt
-```
+### What is left
 
-Reading variables is blocked, so **verify from outside**: `/api/health/config`
-reports `app_url`, whether mail can actually send, verification tokens and
-analytics. That endpoint is the check, not the CLI.
+**1. Four DNS records, so mail can send as @cigar-buddy.com.** The domain is
+registered with Resend but `status: not_started` — DNS has not been added, so
+sends from `hello@cigar-buddy.com` will be refused until it is. All four go in
+Cloudflare as **DNS only (grey cloud)**, never proxied:
 
-The old Gmail password in this repository's history is burned — rotate it
-whatever you decide.
+| Type | Name | Value | Priority |
+|---|---|---|---|
+| TXT | `resend._domainkey` | `p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDPmEduRgpyZPUhRizhIvTwx5lLZUy/qGfkq2Mslm5rmvpFMM2f6oUCeh1fLqp2IL20+TpVQRw5746V4pH+JxYfuCgXlT1sq7C4uL4dpQLYDokl3dCJ8/t58ktW8eVyhhXxUY+ji46rzi8CLIJer9kmL1zpEi2ZOGC0bLFIwIIqZwIDAQAB` | |
+| MX | `send` | `feedback-smtp.us-east-1.amazonses.com` | 10 |
+| TXT | `send` | `v=spf1 include:amazonses.com ~all` | |
+| CNAME | `rsend` | `send.forge.rmta.net` | |
 
-### Mail: SMTP is not available here, and never will be
+Then `POST https://api.resend.com/domains/d6c4092e-64c7-4b25-b419-76a5ccd27653/verify`
+with the key, and check the status goes to `verified`.
 
-`SMTP_USER` and `SMTP_PASS` were set, `/api/health/config` reported email as
-configured, and **not one message had ever left the server.** A boot check added
-on 2026-09-12 is what found it:
+Until then mail leaves only from `onboarding@resend.dev`, which Resend allows
+without a verified domain but delivers **only to the account owner** — fine for
+proving the path, useless for shop claim codes.
 
-    [email] SMTP is configured but not working:
-    cannot reach the mail server (ETIMEDOUT). This is the network, not the password.
+**2. `OUTREACH_POSTAL_ADDRESS`.** US commercial email is required by law to carry
+a physical postal address, and `jobs/outreach.js` will not send without one. A PO
+box is fine. This is Mason's to supply and is not something to invent.
 
-It began as `ENETUNREACH` on an IPv6 address — the container has an IPv6
-interface with no route, and nodemailer picks the family by looking at the
-interfaces. Pinning to IPv4 fixed that and produced `ETIMEDOUT` on port 465, and
-then on 587. **Railway does not route outbound SMTP at all**, which is ordinary:
-a platform that lets arbitrary code open port 25 becomes a spam relay within a
-week. No SMTP provider will work here. Resend over SMTP will not work here.
+**3. Search Console and analytics.** `GOOGLE_SITE_VERIFICATION`, then submit
+`https://cigar-buddy.com/sitemap.xml` — 816 URLs waiting. Optionally
+`PLAUSIBLE_DOMAIN` or `GA_MEASUREMENT_ID`. `store_views` already records every
+shop page view; what is missing is search impressions.
 
-So mail goes over HTTPS on 443, which is never blocked:
-
-```
-RESEND_API_KEY=re_...        # resend.com, 3,000 a month free
-# or
-POSTMARK_TOKEN=...
-MAIL_FROM=CigarBuddy <hello@yourdomain.com>
-```
-
-`utils/mailHttp.js` posts to the provider's API — no SDK, since it is one POST —
-and `utils/email.js` prefers it whenever a key is set, keeping the SMTP path for
-anywhere that allows SMTP. The boot log then says `[email] ready via resend over
-HTTPS`.
-
-**What this means for everything upstream:** the claim flow's verification codes
-have never arrived, so a shop that tried to claim a listing fell through to
-staff review without knowing why. That is fixed by the same one key.
-
-### What runs itself now
-
-| Job | What it does | When |
-|---|---|---|
-| `utils/seo.js` | Per-page title, description, canonical, LocalBusiness JSON-LD, robots.txt, sitemap index | Every request; sitemap rebuilt hourly |
-| `utils/places.js` + `/cigar-shops/:slug` | A page per state and per city with two or more shops, with an ItemList and a breadcrumb | Live, cached 10 minutes |
-| `jobs/verifiedSet.js` | Recomputes the verified set both ways: a shop whose hours get read appears, one whose domain lapses goes | 10 minutes after boot, then daily |
-| `jobs/outreach.js find` | Reads each shop's own site for the address it publishes | Already run |
-| `jobs/contactRoutes.js` | The same, but decoding Cloudflare-protected addresses, HTML entities and "name (at) domain" — plus contact forms, Facebook and Instagram for shops that publish no address | Already run: **416 emails, 161 contact forms, 31 Facebook, 652 phones, 0 shops with no way in** |
-| `jobs/linkCheck`, `webMenu`, `closureCheck` | Links, menus and closures | On boot, then on their own timers |
-
-### The one command a day
-
-```bash
-node src/jobs/outreach.js draft --city tampa-fl      # queue a city, once
-node src/jobs/outreach.js send  --limit 20           # every morning
-node src/jobs/outreach.js followup                   # picks up anything 7 days old
-node src/jobs/outreach.js report                     # sent, replied, claimed
-```
-
-`send` refuses to exceed 40 in any 24 hours and paces two seconds apart, because
-a new domain sending six hundred at once is a new domain in a spam folder. Every
-message carries a one-click unsubscribe (`/api/outreach/unsubscribe`, signed per
-shop) and is never sent twice to the same listing.
-
-**What is deliberately not automated: the reply.** A shop that answers gets a
-person. That is the entire value of the channel.
-
-### What to expect, and when
-
-Indexing is slow: pages start appearing in two to six weeks, rankings build over
-months. Nothing below will feel like it is working for a fortnight. The leading
-indicator is *impressions* in Search Console, which moves well before clicks do.
+**The Railway trap, which has cost three wrong conclusions.** The project has two
+services and the CLI's linked default for this directory is **Postgres**, not the
+app. Any `railway` command without `--service` acts on the database, where
+nothing reads your variable. The app is
+`76dbe85c-e820-42e1-882c-aa23038a115c`. Reading variables is blocked, so verify
+from outside: `/api/health/config` is the check, not the CLI.
 
 ## 4. The pins nobody could settle — CLOSED, leave them
 
