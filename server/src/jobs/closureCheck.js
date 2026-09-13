@@ -44,8 +44,9 @@ const http = require('http');
 const { URL } = require('url');
 const db = require('../database/db');
 const { parseWebsite } = require('./linkCheck');
+const { appUrl } = require('../utils/appUrl');
 
-const UA = 'CigarBuddy/1.0 (+https://cigarbuddy.com; closure check)';
+const UA = `CigarBuddy/1.0 (+${appUrl()}; closure check)`;
 const TIMEOUT_MS = 10000;
 const MAX_REDIRECTS = 4;
 const MAX_BODY = 256 * 1024;

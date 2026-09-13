@@ -25,8 +25,9 @@ const http = require('http');
 const { URL } = require('url');
 const db = require('../database/db');
 const { normalizeName, buildIndex, matchCigar, MATCHER_VERSION } = require('../utils/cigarMatcher');
+const { appUrl } = require('../utils/appUrl');
 
-const UA = 'CigarBuddy/1.0 (+https://cigarbuddy.com; menu reader)';
+const UA = `CigarBuddy/1.0 (+${appUrl()}; menu reader)`;
 const TIMEOUT_MS = 12000;
 const MAX_REDIRECTS = 3;
 const MAX_BODY = 2 * 1024 * 1024; // 2 MB

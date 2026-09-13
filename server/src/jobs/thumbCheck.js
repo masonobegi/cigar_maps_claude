@@ -37,11 +37,12 @@ const https = require('https');
 const http = require('http');
 
 const { parseWebsite, registrableDomain, TAKEN_OVER_STATUSES } = require('./linkCheck');
+const { appUrl } = require('../utils/appUrl');
 
 const TIMEOUT_MS = 12000;
 const MAX_BYTES = 3 * 1024 * 1024;
 const WORKERS = 6;
-const UA = 'CigarBuddy/1.0 (+https://cigarbuddy.com; thumbnail check)';
+const UA = `CigarBuddy/1.0 (+${appUrl()}; thumbnail check)`;
 
 /** Under this, a card shows a blurred stamp rather than a picture. */
 const MIN_EDGE_PX = 200;
@@ -202,7 +203,7 @@ async function read({ out, limit = 0, log = console.log } = {}) {
     while (next < queue.length) {
       const r = queue[next++];
       // Once with our own referer, the way a customer's browser would ask.
-      const got = await fetchImage(r.web_image_url, { referer: 'https://cigarbuddy.com/' });
+      const got = await fetchImage(r.web_image_url, { referer: `${appUrl()}/` });
       const rec = {
         id: r.id, name: r.name, city: r.city, state: r.state,
         website: r.website, website_status: r.website_status, url: r.web_image_url,
