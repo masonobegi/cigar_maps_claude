@@ -96,7 +96,7 @@ are not there.
 
 | Order | Task | Why it is next |
 |-------|------|----------------|
-| **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open)** | **All 672 researched 2026-09-13. Verification and a deeper pass on the unknowns were running when this was written; the drop list still needs reading before anything is hidden** |
+| **1** | **[Finish proving the shops are open](#1-finish-proving-the-shops-are-open--34-done-stopped-by-a-quota)** | **3/4 done.** 40 of 164 agents died on a session limit. 167 listings sit in `unproven` as an artifact of that and must NOT be dropped |
 | 2 | ~~Add Paul&#39;s Cigars, Hazel Dell~~ | **Done 2026-09-13.** Added as #42931; both Vancouver shops are public |
 | 3 | [The last of the setup](#3-two-environment-variables) | **Mail works** as of 2026-09-13. Left: four DNS records for the sending domain, a postal address, and Search Console |
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
@@ -107,120 +107,98 @@ are not there.
 
 ---
 
-## 1. Finish proving the shops are open
+## 1. Finish proving the shops are open — 3/4 done, stopped by a quota
+
+**Do not apply `open_sweep_decisions.json` as it stands.** It would drop 167
+listings that nothing is wrong with. Read the "what is an artifact" part below
+before touching anything.
 
 ### What happened
 
 `#10184 Cascade Cigar & Tobacco`, Happy Valley OR, was public with full opening
-hours. It had been shut for six months. The owner lives next to it.
+hours and had been shut for six months. The owner lives next door to it.
 
 It passed every gate the directory had: a live website of its own, an address
 something outside the directory agreed with, and hours read off that website.
-**Those gates prove a website exists. They do not prove a shop does, and nobody
-had noticed those are two different questions.** `cascadecigar.com` still
-answers 200 with 85KB and still publishes "11am to 7pm - Everyday".
+**Those gates prove a website exists. They do not prove a shop does.**
+cascadecigar.com still answers 200 and still publishes "11am to 7pm - Everyday".
 
-The obvious fix does not work either, and this is the part worth knowing before
-you spend a day on it. Measuring how stale each site is fails: Cascade is on
-Squarespace, whose `sitemap.xml` `lastmod` reads **15 days old**, with a cart,
-an Instagram link and a Facebook link. It scores as *more alive* than shops that
-are genuinely trading. `sweeps/scripts/probe_open_evidence.js` is kept because it
-does catch dead hosts and truly frozen sites — Prestige Cigars at 987 days — but
-it cannot answer the question and you should not try to make it.
-
-**What answers it is research.** Directory sites put closure in the page title:
-Yelp renders `CASCADE CIGAR & TOBACCO - CLOSED - Updated June 2026`. That is one
-WebSearch away and no crawl of the shop's own site will ever contain it.
-
-### The owner's rule, verbatim
-
-> "PLEASE PLEASE only keep stores you are 100% sure are open, do research on the
-> stores, do whatever you need to do to ensure they are open. this should not be
-> innocent until proven guilty this should be guilty until proven innocent"
-
-and, separately:
-
-> "ensure that not only are they just open stores but they are open CIGAR stores
-> or tobacconists"
-
-So each listing must clear **two** bars: trading now, **and** in scope under the
-rules in "Reference: the owner's rules" below. `unknown` does not survive.
-
-On the `unknown` pile the owner was asked and said: **"i just want you to make
-judgement calls on the unknowns."** So: research them harder first, then decide
-each one yourself on the evidence and say why. Do not blanket-drop them, and do
-not keep them just because nothing disproved them.
+Measuring site staleness does not work either, and this is worth knowing before
+spending a day on it: Cascade is on Squarespace, whose sitemap lastmod reads 15
+days old, with a cart and social links. It scores as *more* alive than shops that
+are genuinely trading. What works is research — Yelp writes closure into its page
+title, one search away.
 
 ### Where it got to
 
-A workflow of 68 research agents, each taking 10 shops, each batch then handed to
-a second agent whose only job is to disprove "open". It was stopped at the
-owner's request partway through. **190 of 672 judged, 482 left.** Verification
-had not started when it stopped, so treat all 190 as research-only.
+Two workflows, 164 agents, ~13M subagent tokens. **124 finished, 40 died on
+"You've hit your session limit".**
 
 | | |
 |---|---|
-| `sweeps/decisions/open_research_partial.json` | the 190 already judged, with evidence and source URLs |
-| `sweeps/decisions/open_research_todo.json` | the 482 still to do, ready to batch |
-| `sweeps/decisions/research_input.json` | all 672, the input the agents read |
-| `sweeps/decisions/open_candidates.json` | every public row with all its current fields |
-| `sweeps/decisions/open_evidence.json` | the site-freshness probe, for triage only |
+| research | **68/68 — complete.** All 672 listings judged |
+| verify | **36/68.** 32 batches died on the quota |
+| deep pass over the unknowns | **22/30.** 176 of 236 deepened; 8 batches died |
 
-Of the 190: **142 open, 4 closed, 44 unknown, 16 out of scope.**
+The deep pass was worth its cost: it **rescued 133 listings** the first pass could
+not settle — each on a dated signal, a Google review from May 2026, a Facebook
+post from 8 August, an events calendar running forward to December — and found
+**15 closures the first pass had missed**, including Perfect Ash Cigar Lounge and
+Admiral Cigar Club.
 
-Closed: `#1949 Sabor Havana`, `#3979 Smokers Castle`, `#11405 Tobacco Leaf`,
-`#18884 Signature Cigars`.
+### What is a verdict and what is an artifact
 
-Out of scope, and note the shape of them — restaurants and bars with a cigar
-room, smoke/vape/head shops, one manufacturer, one liquor store: `#403 Jallo`,
-`#618 Cigar Bar Live`, `#815 My Tobacconist`, `#1676 Cigar Cartel Posner`,
-`#1738 St Lucie`, `#1969 Warped Cigars`, `#3399 Brazil Smoke`, `#3965 WeHo`,
-`#4208 Captain Tobacco`, `#5054 Frontier Tobacco`, `#6180 Hemingway's`,
-`#6666 The 19th Hole`, `#8198 Continent`, `#8574 Cigar Bar & Grill`,
-`#10272 Lucky Raven`, `#14995 Embers Vine`.
+Current file: **298 keep, 26 closed, 50 not_retail, 2 duplicate, 296 unproven.**
 
-### How to run the rest
+Of those 296 unproven:
 
-The workflow script is saved and can be re-run against the 482:
+  - **167 are an artifact.** Research found them open AND a cigar shop; their
+    verify agent died on the quota. There is no evidence against them at all.
+    **These must not be dropped.** Re-run verification for them.
+  - **129 are genuinely unsettled** after the passes that did run. Of these, 60
+    also never got the deep pass, so they deserve one before any decision.
 
-```
-sweeps/workflows/prove-shops-open.js
-```
+### To finish it
 
-Run it with the Workflow tool, passing:
+The quota resets at 2:30pm America/Los_Angeles. Both workflows resume from cache,
+so completed agents cost nothing to replay — only the 40 that failed re-run:
 
 ```
-{ total: 482, size: 10, file: "sweeps/decisions/open_research_todo.json" }
+Workflow({ scriptPath: 'sweeps/workflows/prove-shops-open.js',
+           resumeFromRunId: 'wf_5c807589-dc8',
+           args: { total: 672, size: 10, file: 'sweeps/decisions/research_input.json' } })
+
+Workflow({ scriptPath: 'sweeps/workflows/deepen-unknowns.js',
+           resumeFromRunId: 'wf_490c0b27-efd',
+           args: { total: 236, size: 8, file: 'sweeps/decisions/open_unknowns.json' } })
 ```
 
-Its header block says what not to change and what to watch for. Batches of 10 worked well; 16 run concurrently; the whole 672
-looked like 2-3 hours end to end. Give each agent the scope rules verbatim —
-the ones already in the script produced the sixteen correct out-of-scope calls
-above, so do not rewrite them.
-
-### Then, and only then, apply it
-
-**No apply script exists yet. Write it, dry-run it, and let the owner read the
-list before anything is hidden.** He caught Cascade himself and will catch your
-mistakes too; show him every shop you want to drop with its evidence and source
-URL.
-
-Hiding must survive the next deploy. `importStores.js` recomputes `visible`
-from the classifier on every boot, and a regression once put 519 hidden listings
-back on the map including a brewery. It honours only these:
+Then rebuild and read the list:
 
 ```
-storefront IN ('not_retail','online_only','closed','duplicate','moved','unproven','unverified')
-   -- or --
-staff_edited = 1
+JOURNAL=<wf_5c807589-dc8/journal.jsonl> DEEPEN=<wf_490c0b27-efd/journal.jsonl> \
+  node sweeps/scripts/build_open_decisions.js
+DRY=1 railway run --service Postgres node sweeps/scripts/prod.js <abs>/apply_open_sweep.js
 ```
 
-So use `storefront = 'closed'` for shut, `'not_retail'` for out of scope, and
-`'unproven'` for the ones you judge unprovable — all three are honoured. Write
-through `utils/storeEdits.js` `writeFields` so every hide is logged and
-reversible, and put the evidence in `storefront_reason`.
+**Then show Mason the drop list before writing anything.** He caught Cascade by
+standing next to it and will catch mistakes in this too. The file ships with
+`approved: false` and `apply_open_sweep.js` refuses to write without it.
 
----
+### The pieces, all built and tested
+
+| | |
+|---|---|
+| `sweeps/workflows/prove-shops-open.js` | research + adversarial verify |
+| `sweeps/workflows/deepen-unknowns.js` | opens the actual listing pages; a keep needs a **date** |
+| `sweeps/scripts/build_open_decisions.js` | merges both journals + licences + hand overrides |
+| `sweeps/scripts/apply_open_sweep.js` | writes it; refuses without `approved: true` |
+| `sweeps/decisions/open_sweep_overrides.json` | decisions research cannot make — the 2 duplicates |
+
+Hiding survives deploys: every verdict written is in `importStores.js`'s
+`ruledOut` list. And `verifiedSet` now needs `open_verdict = 'open'` before it
+will publish anything, so the directory cannot quietly refill with shops nobody
+has looked at.
 
 ## 2. Add Paul's Cigars, Hazel Dell
 
