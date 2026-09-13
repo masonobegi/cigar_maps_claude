@@ -80,6 +80,39 @@ function readJournal(file) {
   return { research, verify };
 }
 
+/**
+ * The second, harder pass over the listings the first could not settle.
+ *
+ * Its verdicts beat the first pass's for one reason only: it opened the actual
+ * listing pages instead of reading search snippets, so where it says 'open' it
+ * has a date attached — the day of a review, a post or an event — and a date is
+ * the thing the first pass never had.
+ *
+ * DEEPEN=<path to journal.jsonl> to point at it.
+ */
+function deepPass() {
+  const f = process.env.DEEPEN;
+  if (!f || !fs.existsSync(f)) return new Map();
+  const out = new Map();
+  for (const line of fs.readFileSync(f, 'utf8').split('\n')) {
+    if (!line.trim()) continue;
+    let j;
+    try { j = JSON.parse(line); } catch { continue; }
+    if (j.type !== 'result' || !j.result || !Array.isArray(j.result.shops)) continue;
+    for (const s of j.result.shops) if (typeof s.id === 'number' && s.status) out.set(s.id, s);
+  }
+  return out;
+}
+
+/** How old a YYYY-MM or YYYY-MM-DD signal is, in days. Null if unparseable. */
+function ageOfDays(iso, now) {
+  if (!iso) return null;
+  const t = String(iso).trim();
+  const d = /^\d{4}-\d{2}$/.test(t) ? new Date(`${t}-01T00:00:00Z`) : new Date(t);
+  if (isNaN(d.getTime())) return null;
+  return Math.round((now - d) / 86400000);
+}
+
 /** One listing's verdict, and the sentence explaining it. */
 function decide(r, v) {
   if (!r) return { decision: 'unproven', reason: 'no research result for this listing' };
@@ -168,11 +201,48 @@ function licences() {
   if (lic.size) console.log(`${lic.size} listings have something from a state licence registry`);
   if (manual.size || lic.size) console.log();
 
+  const deep = deepPass();
+  if (deep.size) console.log(`${deep.size} listings were put through the deeper second pass\n`);
+  // Fixed rather than read from the clock, so rebuilding the file twice cannot
+  // produce two different answers for the same evidence.
+  const NOW = new Date(process.env.AS_OF || '2026-09-13T00:00:00Z');
+  /** A dated signal this recent is a trading business. */
+  const FRESH_DAYS = 250;
+
   const decisions = all.map(row => {
     const r = research.get(row.id);
     const v = verify.get(row.id);
     const m = manual.get(row.id);
-    const d = m ? { decision: m.decision, reason: m.reason, byHand: true } : decide(r, v);
+    const dp = deep.get(row.id);
+    let d = m ? { decision: m.decision, reason: m.reason, byHand: true } : decide(r, v);
+
+    // The deeper pass only ever speaks about listings the first could not
+    // settle, and only overrides an 'unproven' verdict — never a 'closed', a
+    // 'not_retail' or a decision made by hand.
+    if (dp && !m && d.decision === 'unproven') {
+      const age = ageOfDays(dp.newestSignalDate, NOW);
+      if (dp.status === 'closed') {
+        d = { decision: 'closed', reason: `on a second look: ${dp.evidence || ''}`.trim(), fromDeepPass: true };
+      } else if (dp.isCigarShop === 'no') {
+        d = { decision: 'not_retail', reason: `on a second look: ${dp.shopKind || ''} — ${dp.evidence || ''}`.trim(), fromDeepPass: true };
+      } else if (dp.status === 'open' && age !== null && age <= FRESH_DAYS && dp.isCigarShop === 'yes') {
+        // This is the only route by which a listing the first pass could not
+        // settle becomes public again, and it requires a date.
+        d = {
+          decision: 'keep',
+          reason: `${dp.newestSignalWhat || 'a dated signal'} dated ${dp.newestSignalDate} (${age} days old): ${dp.evidence || ''}`.trim(),
+          fromDeepPass: true,
+        };
+      } else {
+        d = {
+          decision: 'unproven',
+          reason: dp.status === 'open' && age === null
+            ? `a second look found no datable evidence: ${dp.evidence || ''}`.trim()
+            : `still unsettled after a second look${age !== null ? `, newest signal ${dp.newestSignalDate} is ${age} days old` : ''}: ${dp.evidence || ''}`.trim(),
+          fromDeepPass: true,
+        };
+      }
+    }
     return {
       ...(d.byHand ? { byHand: true } : {}),
       id: row.id,
@@ -191,6 +261,15 @@ function licences() {
       refuted: v ? v.refuted : null,
       verifyWhy: v ? v.why : null,
       ...(lic.get(row.id) || {}),
+      ...(dp ? {
+        deepStatus: dp.status,
+        deepIsCigarShop: dp.isCigarShop,
+        deepSignalDate: dp.newestSignalDate || null,
+        deepSignalWhat: dp.newestSignalWhat || null,
+        deepEvidence: dp.evidence || null,
+        deepSources: dp.sources || null,
+      } : {}),
+      ...(d.fromDeepPass ? { fromDeepPass: true } : {}),
     };
   });
 
