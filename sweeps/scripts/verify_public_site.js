@@ -16,6 +16,7 @@ const http = require('http');
 
 const BASE = (process.env.BASE || 'https://cigarmapsclaude-production.up.railway.app').replace(/\/+$/, '');
 const SAMPLE = Number(process.env.SAMPLE || 25);
+const CACHE_BUST = `${process.pid}${Math.floor(Math.random() * 1e6)}`;
 
 const get = (url, depth = 0) => new Promise(resolve => {
   if (depth > 4) return resolve({ status: 0, body: '', url });
@@ -37,6 +38,16 @@ const get = (url, depth = 0) => new Promise(resolve => {
 let problems = 0;
 const bad = (what, detail) => { problems++; console.log(`  PROBLEM  ${what}${detail ? ` — ${detail}` : ''}`); };
 const good = what => console.log(`  ok       ${what}`);
+
+/**
+ * The same fetch, but with a query the CDN has never seen, so it has to ask
+ * the origin. This exists because the check below spent a run reporting a
+ * problem the site did not have: Cloudflare was still serving a robots.txt it
+ * had cached 40 minutes earlier, from before the domain was wired up, with a
+ * four-hour max-age. A self-check that reads the CDN's cache is checking the
+ * CDN, not the site.
+ */
+const getFresh = url => get(`${url}${url.includes('?') ? '&' : '?'}_cb=${CACHE_BUST}`);
 
 /** Every <loc> in a sitemap. */
 const locs = xml => [...String(xml).matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
@@ -68,10 +79,17 @@ function checkHead(page, { url, expectCanonical, wantJsonLd }) {
   console.log(`checking ${BASE}\n`);
 
   // ── robots and the sitemaps ────────────────────────────────────────────────
+  const names = r => r.status === 200 && !/<html/i.test(r.body)
+    && r.body.includes(`Sitemap: ${BASE}/sitemap.xml`);
   const robots = await get(`${BASE}/robots.txt`);
   if (robots.status !== 200 || /<html/i.test(robots.body)) bad('robots.txt is not plain text');
-  else if (!robots.body.includes(`Sitemap: ${BASE}/sitemap.xml`)) bad('robots.txt does not name the sitemap');
-  else good('robots.txt names the sitemap');
+  else if (names(robots)) good('robots.txt names the sitemap');
+  else if (names(await getFresh(`${BASE}/robots.txt`))) {
+    // Worth separating: nothing needs fixing in the app, but a crawler
+    // arriving now still gets the wrong file, so it is not nothing either.
+    bad('robots.txt is right at the origin but the CDN is serving a stale copy',
+      'purge the cache for /robots.txt, or wait out its max-age');
+  } else bad('robots.txt does not name the sitemap');
 
   const index = await get(`${BASE}/sitemap.xml`);
   if (index.status !== 200 || !index.body.includes('<sitemapindex')) { bad('sitemap.xml is not a sitemap index'); }
