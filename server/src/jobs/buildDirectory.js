@@ -169,6 +169,9 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
   // Merge OSM into Overture twins; keep the rest as OSM records.
   const index = spatialIndex(overtureClean);
   let merged = 0;
+  // OSM records absorbed into an Overture row that had already taken one.
+  // Each of these used to become a duplicate listing.
+  let alsoAbsorbed = 0;
   const osmOnly = [];
   for (const o of osmFile.stores) {
     // Re-run classification so classifier improvements apply
@@ -180,10 +183,24 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
       // cannot stand as the thing the two records have in common: "Bellevue
       // Cigar" and "Tobacco Bellevue" are 42 m apart on Lincoln Ave and are
       // two different businesses.
-      !t.osm_id && haversineMeters(t.lat, t.lng, rec.lat, rec.lng) < 150
+      //
+      // There used to be a `!t.osm_id` here, which stopped an Overture record
+      // once it had absorbed one OSM record. But OpenStreetMap regularly holds
+      // more than one record for one shop — a node and a way for the same
+      // building, or two contributors who each mapped the same door — and the
+      // second one then fell through to osmOnly and became a second listing
+      // for a shop already in the file. Absorbing every match is the point:
+      // they are the same shop, and the test above is what decides that.
+      haversineMeters(t.lat, t.lng, rec.lat, rec.lng) < 150
       && namesMatch(t.name, rec.name, { town: rec.city || t.city }));
     if (twin) {
-      twin.osm_id = rec.source_id;
+      // The first id is the one the row carries. The rest are recorded so the
+      // importer can hide any older listing that was created from them.
+      if (!twin.osm_id) twin.osm_id = rec.source_id;
+      else {
+        twin.also_osm_ids = [...new Set([...(twin.also_osm_ids || []), rec.source_id])];
+        alsoAbsorbed++;
+      }
       fillMissing(twin, rec, ['address', 'city', 'zip', 'phone', 'website', 'instagram', 'hours', 'hours_raw']);
       twin.confidence = Math.max(twin.confidence, rec.confidence);
       if (rec.store_type === 'cigar_lounge' || (rec.store_type === 'cigar_shop' && twin.store_type === 'tobacco_shop')) twin.store_type = rec.store_type;
@@ -205,7 +222,7 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
     generated_at: new Date().toISOString(),
     sources: {
       overture: { release: process.env.OVERTURE_RELEASE || '2026-08-19.0', records: overtureClean.length, license: 'CDLA-Permissive-2.0' },
-      osm: { records: osmOnly.length, merged_into_overture: merged, states: Object.keys(osmFile.states || {}).length, license: 'ODbL' },
+      osm: { records: osmOnly.length, merged_into_overture: merged, also_absorbed: alsoAbsorbed, states: Object.keys(osmFile.states || {}).length, license: 'ODbL' },
     },
     stores,
   };
@@ -213,6 +230,7 @@ async function build({ overturePath = DEFAULT_OVERTURE, osmPath = DEFAULT_OSM } 
   fs.writeFileSync(OUT_PATH, zlib.gzipSync(Buffer.from(JSON.stringify(out)), { level: 9 }));
   const kb = Math.round(fs.statSync(OUT_PATH).size / 1024);
   console.log(`directory: ${stores.length} stores (${visible} public), ${merged} OSM records merged into Overture twins, ${osmOnly.length} OSM-only`);
+  console.log(`  of those merges, ${alsoAbsorbed} went into a row that had already absorbed one — each would have been a duplicate listing`);
   console.log(`public by type: ${JSON.stringify(byType)}`);
   console.log(`marked permanently closed at source: ${closed}`);
   console.log(`wrote ${OUT_PATH} (${kb} KB) in ${Math.round((Date.now() - t0) / 1000)}s`);
