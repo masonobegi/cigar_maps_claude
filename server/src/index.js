@@ -80,6 +80,7 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok', app: 'CigarBuddy' })
 app.get('/api/health/config', async (_, res) => {
   const db = require('./database/db');
   const { mailConfigured, mailStatus } = require('./utils/email');
+  const { httpProvider } = require('./utils/mailHttp');
   const { appUrl, onDefaultDomain } = require('./utils/appUrl');
   const env = process.env;
 
@@ -104,7 +105,14 @@ app.get('/api/health/config', async (_, res) => {
       // only until this host turned out not to route SMTP on any port.
       can_actually_send: mailStatus().ok,
       last_check: mailStatus().detail,
-      provider: env.SMTP_HOST ? 'a host of its own' : env.SMTP_SERVICE ? env.SMTP_SERVICE : mailConfigured() ? 'gmail' : null,
+      // HTTP first, because that is the path mail actually takes here — SMTP is
+      // not routed outbound at all. This read "gmail" whenever anything at all
+      // was configured, so a deployment sending over Resend was described as
+      // sending over Gmail. Naming the wrong provider is how an afternoon gets
+      // spent on the wrong credentials.
+      provider: httpProvider()
+        || (env.SMTP_HOST ? 'a host of its own' : env.SMTP_SERVICE ? env.SMTP_SERVICE : (env.SMTP_USER && env.SMTP_PASS) ? 'gmail' : null),
+      over: httpProvider() ? 'https' : (env.SMTP_USER && env.SMTP_PASS) ? 'smtp (not routed from this host)' : null,
       from_address_set: !!env.MAIL_FROM,
       postal_address_set: !!env.OUTREACH_POSTAL_ADDRESS,
     },
