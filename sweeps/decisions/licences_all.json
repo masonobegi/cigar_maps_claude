@@ -1,6 +1,6 @@
 {
  "note": "A lapsed licence is NOT evidence of closure — the audit measured it at roughly a coin flip. The lapsed list is a staff queue and nothing in it may be hidden on this signal alone.",
- "generated_at": "2026-09-13T17:20:57.610Z",
+ "generated_at": "2026-09-13T18:14:35.591Z",
  "verified": [
   {
    "id": 155,
@@ -48,9 +48,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Jens Cigar Bar",
-    "address": "17284 San Carlos Blvd",
-    "city": "Fort Myers Beach",
+    "name": "JENS CIGAR BAR",
+    "address": "17284 SAN CARLOS BLVD",
+    "city": "FORT MYERS BEACH",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -67,9 +67,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Estate Cigars & Social",
-    "address": "1201 4th St S",
-    "city": "St. Petersburg",
+    "name": "ESTATE CIGARS & SOCIAL",
+    "address": "1201 4TH ST S",
+    "city": "ST. PETERSBURG",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -86,9 +86,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Black Leaf Cigar And Wine Bar",
-    "address": "237 2nd Ave S",
-    "city": "St. Petersburg",
+    "name": "BLACK LEAF CIGAR AND WINE BAR",
+    "address": "237 2ND AVE S",
+    "city": "ST. PETERSBURG",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -105,9 +105,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "St Pete Cigar",
-    "address": "6125 9th Ave N",
-    "city": "St. Petersburg",
+    "name": "ST PETE CIGAR",
+    "address": "6125 9TH AVE N",
+    "city": "ST. PETERSBURG",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -124,9 +124,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Mardo Cigars",
-    "address": "4801 Tamiami Trl S",
-    "city": "Sarasota",
+    "name": "MARDO CIGARS",
+    "address": "4801 TAMIAMI TRL S",
+    "city": "SARASOTA",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -143,9 +143,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Blue Smoke Cigar",
-    "address": "2440 Sr 580 (Suite #13a)",
-    "city": "Clearwater",
+    "name": "BLUE SMOKE CIGAR",
+    "address": "2440 SR 580 (SUITE #13A)",
+    "city": "CLEARWATER",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -162,9 +162,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigars On The Boulevard",
-    "address": "1438 Apollo Beach Blvd.",
-    "city": "Apollo Beach",
+    "name": "CIGARS ON THE BOULEVARD",
+    "address": "1438 APOLLO BEACH BLVD.",
+    "city": "APOLLO BEACH",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -181,9 +181,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Corona Cigar Company",
-    "address": "22 N Lemon Ave",
-    "city": "Sarasota",
+    "name": "CORONA CIGAR COMPANY",
+    "address": "22 N LEMON AVE",
+    "city": "SARASOTA",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -200,9 +200,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Bennington Tobacconist INC",
-    "address": "5 Fillmore Dr",
-    "city": "Sarasota",
+    "name": "BENNINGTON TOBACCONIST INC",
+    "address": "5 FILLMORE DR",
+    "city": "SARASOTA",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -219,9 +219,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Fedoras Cigar & Wine Bar",
-    "address": "2117 Tamiami Trl",
-    "city": "Punta Gorda",
+    "name": "FEDORAS CIGAR & WINE BAR",
+    "address": "2117 TAMIAMI TRL",
+    "city": "PUNTA GORDA",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -238,9 +238,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cozy Cigars Lounge LLC",
-    "address": "198 W Bay Dr",
-    "city": "Largo",
+    "name": "COZY CIGARS LOUNGE LLC",
+    "address": "198 W BAY DR",
+    "city": "LARGO",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -257,9 +257,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Maduro Cigar INC",
-    "address": "7386 Tamiami Trl S",
-    "city": "Sarasota",
+    "name": "MADURO CIGAR INC",
+    "address": "7386 TAMIAMI TRL S",
+    "city": "SARASOTA",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -276,9 +276,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Toast Cigar Bar And Lounge",
-    "address": "3651 Evans Ave #105",
-    "city": "Fort Myers",
+    "name": "TOAST CIGAR BAR AND LOUNGE",
+    "address": "3651 EVANS AVE #105",
+    "city": "FORT MYERS",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -295,9 +295,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "King Corona Cigars",
-    "address": "1523 E 7th Ave",
-    "city": "Tampa",
+    "name": "KING CORONA CIGARS",
+    "address": "1523 E 7TH AVE",
+    "city": "TAMPA",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -314,9 +314,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Nicahabana Cigars, INC",
-    "address": "1605 E. 7th Avenue",
-    "city": "Tampa",
+    "name": "NICAHABANA CIGARS, INC",
+    "address": "1605 E. 7TH AVENUE",
+    "city": "TAMPA",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -333,9 +333,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Long Ash Cigars",
-    "address": "1728 E 7th Ave",
-    "city": "Tampa",
+    "name": "LONG ASH CIGARS",
+    "address": "1728 E 7TH AVE",
+    "city": "TAMPA",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -352,9 +352,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Ybor Cigars Plus",
-    "address": "1725 E 7th Ave",
-    "city": "Tampa",
+    "name": "YBOR CIGARS PLUS",
+    "address": "1725 E 7TH AVE",
+    "city": "TAMPA",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -371,9 +371,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Tampa Sweethearts Cigar Company",
-    "address": "1603 E. 6th Ave",
-    "city": "Tampa",
+    "name": "TAMPA SWEETHEARTS CIGAR COMPANY",
+    "address": "1603 E. 6TH AVE",
+    "city": "TAMPA",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -390,9 +390,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigar Room LLC",
-    "address": "5519 Gall Blvd",
-    "city": "Zephyrhills",
+    "name": "CIGAR ROOM LLC",
+    "address": "5519 GALL BLVD",
+    "city": "ZEPHYRHILLS",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -409,9 +409,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigar Cellar Of Miami",
-    "address": "1557 Sunset Dr",
-    "city": "Coral Gables",
+    "name": "CIGAR CELLAR OF MIAMI",
+    "address": "1557 SUNSET DR",
+    "city": "CORAL GABLES",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -428,9 +428,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Miami Tobacco Traders",
-    "address": "2918 Ponce De Leon Blvd.",
-    "city": "Coral Gables",
+    "name": "MIAMI TOBACCO TRADERS",
+    "address": "2918 PONCE DE LEON BLVD.",
+    "city": "CORAL GABLES",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -447,9 +447,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Vintino'S",
-    "address": "4424 Tamiami Trl E",
-    "city": "Naples",
+    "name": "VINTINO'S",
+    "address": "4424 TAMIAMI TRL E",
+    "city": "NAPLES",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -466,9 +466,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Freedom Fine Cigars LLC",
-    "address": "2260 Tamiami Trl E",
-    "city": "Naples",
+    "name": "FREEDOM FINE CIGARS LLC",
+    "address": "2260 TAMIAMI TRL E",
+    "city": "NAPLES",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -485,9 +485,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Casa Habano, Company",
-    "address": "1743 S.W. 8t 1743 S.W. 8th Street",
-    "city": "Miami",
+    "name": "CASA HABANO, COMPANY",
+    "address": "1743 S.W. 8t 1743 S.W. 8TH STREET",
+    "city": "MIAMI",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -504,9 +504,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigar State",
-    "address": "7991 Johnson Street",
-    "city": "Pembroke Pines",
+    "name": "CIGAR STATE",
+    "address": "7991 JOHNSON STREET",
+    "city": "PEMBROKE PINES",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -523,9 +523,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Royal Cigars",
-    "address": "501 S Federal Hwy, #1405",
-    "city": "Hallandale Beach",
+    "name": "ROYAL CIGARS",
+    "address": "501 S FEDERAL HWY, #1405",
+    "city": "HALLANDALE BEACH",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -542,9 +542,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Xaviers Cigar Lounge",
-    "address": "800 E Hallandale Beach Blvd",
-    "city": "Hallandale Beach",
+    "name": "XAVIERS CIGAR LOUNGE",
+    "address": "800 E HALLANDALE BEACH BLVD",
+    "city": "HALLANDALE BEACH",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -561,9 +561,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cuenca Cigars",
-    "address": "1928 Harrison Street   # B",
-    "city": "Hollywood",
+    "name": "CUENCA CIGARS",
+    "address": "1928 HARRISON STREET   # B",
+    "city": "HOLLYWOOD",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -580,9 +580,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Aficionado'S Premium Cigars & Wine II",
-    "address": "4678 Coral Ridge Dr",
-    "city": "Coral Springs",
+    "name": "AFICIONADO'S PREMIUM CIGARS & WINE II",
+    "address": "4678 CORAL RIDGE DR",
+    "city": "CORAL SPRINGS",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -599,9 +599,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "His And Hers Cigars",
-    "address": "412 Brevard Ave",
-    "city": "Cocoa",
+    "name": "HIS AND HERS CIGARS",
+    "address": "412 BREVARD AVE",
+    "city": "COCOA",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -618,9 +618,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Corona Cigar Company",
-    "address": "7792 W Sand Lake Road",
-    "city": "Orlando",
+    "name": "CORONA CIGAR COMPANY",
+    "address": "7792 W SAND LAKE ROAD",
+    "city": "ORLANDO",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -637,9 +637,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "St Lucie Smoke & Cigars",
-    "address": "914 SW Gatlin Blvd",
-    "city": "Port St Lucie",
+    "name": "ST LUCIE SMOKE & CIGARS",
+    "address": "914 SW GATLIN BLVD",
+    "city": "PORT ST LUCIE",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -656,9 +656,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Jimmys Cigar Lounge",
-    "address": "1220 W New Haven Ave, Ste 140",
-    "city": "Melbourne",
+    "name": "JIMMYS CIGAR LOUNGE",
+    "address": "1220 W NEW HAVEN AVE, STE 140",
+    "city": "MELBOURNE",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -675,9 +675,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Executive Cigar Shop And Lounge",
-    "address": "843 East New Haven Avenue",
-    "city": "Melbourne",
+    "name": "EXECUTIVE CIGAR SHOP AND LOUNGE",
+    "address": "843 EAST NEW HAVEN AVENUE",
+    "city": "MELBOURNE",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -694,9 +694,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Strikes Cigar Lounge",
-    "address": "514 Via De Palmas",
-    "city": "Boca Raton",
+    "name": "STRIKES CIGAR LOUNGE",
+    "address": "514 VIA DE PALMAS",
+    "city": "BOCA RATON",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -713,9 +713,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Black Dog Cigar Box",
-    "address": "3343 SE Federal Hwy",
-    "city": "Stuart",
+    "name": "BLACK DOG CIGAR BOX",
+    "address": "3343 SE FEDERAL HWY",
+    "city": "STUART",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -732,9 +732,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Cigars Of Wellington",
-    "address": "11924 Forest Hill Blvd Ste 7",
-    "city": "Village Of Wellingto",
+    "name": "CIGARS OF WELLINGTON",
+    "address": "11924 FOREST HILL BLVD STE 7",
+    "city": "VILLAGE OF WELLINGTO",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -752,8 +752,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1136 Loma Ave",
-    "city": "Coronado",
+    "address": "1136 LOMA AVE",
+    "city": "CORONADO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -771,8 +771,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "2737 San Diego Ave",
-    "city": "San Diego",
+    "address": "2737 SAN DIEGO AVE",
+    "city": "SAN DIEGO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1276,8 +1276,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1322 N La Brea Ave",
-    "city": "Inglewood",
+    "address": "1322 N LA BREA AVE",
+    "city": "INGLEWOOD",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1295,8 +1295,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "11127 Venice Blvd",
-    "city": "Los Angeles",
+    "address": "11127 VENICE BLVD",
+    "city": "LOS ANGELES",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1314,8 +1314,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1305 Sartori Ave",
-    "city": "Torrance",
+    "address": "1305 SARTORI AVE",
+    "city": "TORRANCE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1333,8 +1333,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1117 S Hope St",
-    "city": "Los Angeles",
+    "address": "1117 S HOPE ST",
+    "city": "LOS ANGELES",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1352,8 +1352,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "2470 Newport Blvd",
-    "city": "Costa Mesa",
+    "address": "2470 NEWPORT BLVD",
+    "city": "COSTA MESA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1371,8 +1371,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "783 E Thousand Oaks Blvd",
-    "city": "Thousand Oaks",
+    "address": "783 E THOUSAND OAKS BLVD",
+    "city": "THOUSAND OAKS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1390,8 +1390,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "3621 State St",
-    "city": "Santa Barbara",
+    "address": "3621 STATE ST",
+    "city": "SANTA BARBARA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1409,8 +1409,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "21900 Burbank Blvd",
-    "city": "Woodland Hills",
+    "address": "21900 BURBANK BLVD",
+    "city": "WOODLAND HILLS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1428,8 +1428,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "8851 W Sunset Blvd",
-    "city": "West Hollywood",
+    "address": "8851 W SUNSET BLVD",
+    "city": "WEST HOLLYWOOD",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1447,8 +1447,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "8733 Santa Monica Blvd",
-    "city": "West Hollywood",
+    "address": "8733 SANTA MONICA BLVD",
+    "city": "WEST HOLLYWOOD",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1466,8 +1466,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1824 E Main St",
-    "city": "Ventura",
+    "address": "1824 E MAIN ST",
+    "city": "VENTURA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1485,8 +1485,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1824 E Main St",
-    "city": "Ventura",
+    "address": "1824 E MAIN ST",
+    "city": "VENTURA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1504,8 +1504,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "10669 Lower Azusa Rd",
-    "city": "Temple City",
+    "address": "10669 LOWER AZUSA RD",
+    "city": "TEMPLE CITY",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1523,8 +1523,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "2371 E Colorado Blvd",
-    "city": "Pasadena",
+    "address": "2371 E COLORADO BLVD",
+    "city": "PASADENA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1614,8 +1614,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "42 Plaza Sq",
-    "city": "Orange",
+    "address": "42 PLAZA SQ",
+    "city": "ORANGE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1651,8 +1651,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "27701 Scott Rd",
-    "city": "Menifee",
+    "address": "27701 SCOTT RD",
+    "city": "MENIFEE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1670,8 +1670,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1249 Foothill Blvd",
-    "city": "La Verne",
+    "address": "1249 FOOTHILL BLVD",
+    "city": "LA VERNE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1689,8 +1689,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "261 S Thomas St",
-    "city": "Pomona",
+    "address": "261 S THOMAS ST",
+    "city": "POMONA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1708,8 +1708,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "12221 Poplar St",
-    "city": "Hesperia",
+    "address": "12221 POPLAR ST",
+    "city": "HESPERIA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1745,8 +1745,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "155 S Palm Canyon Dr",
-    "city": "Palm Springs",
+    "address": "155 S PALM CANYON DR",
+    "city": "PALM SPRINGS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -1764,8 +1764,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "200 N Palm Canyon Dr",
-    "city": "Palm Springs",
+    "address": "200 N PALM CANYON DR",
+    "city": "PALM SPRINGS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2196,9 +2196,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Garvinos",
-    "address": "1081 Canal Street",
-    "city": "The Villages",
+    "name": "GARVINOS",
+    "address": "1081 CANAL STREET",
+    "city": "THE VILLAGES",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -2215,9 +2215,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Legacy Cigar Bar & Lounge",
-    "address": "126 W Ruby Street",
-    "city": "Tavares",
+    "name": "LEGACY CIGAR BAR & LOUNGE",
+    "address": "126 W RUBY STREET",
+    "city": "TAVARES",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -2234,9 +2234,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Escape Cigar Lounge",
-    "address": "25327 Us Hwy 27 #201a",
-    "city": "Leesburg",
+    "name": "ESCAPE CIGAR LOUNGE",
+    "address": "25327 US HWY 27 #201A",
+    "city": "LEESBURG",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -2253,9 +2253,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Tobacco Cove",
-    "address": "3849 Baymeadows Rd",
-    "city": "Jacksonville",
+    "name": "TOBACCO COVE",
+    "address": "3849 BAYMEADOWS RD",
+    "city": "JACKSONVILLE",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -2272,9 +2272,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Cigar Hustler",
-    "address": "829 Deltona Blvd",
-    "city": "Deltona",
+    "name": "CIGAR HUSTLER",
+    "address": "829 DELTONA BLVD",
+    "city": "DELTONA",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -2291,9 +2291,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Historic Cigars Of Longwood",
-    "address": "321 N Ronald Reagan",
-    "city": "Longwood",
+    "name": "HISTORIC CIGARS OF LONGWOOD",
+    "address": "321 N RONALD REAGAN",
+    "city": "LONGWOOD",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -2310,9 +2310,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigars Of Tally",
-    "address": "1401 Market Street Unit 1",
-    "city": "Tallahassee",
+    "name": "CIGARS OF TALLY",
+    "address": "1401 MARKET STREET UNIT 1",
+    "city": "TALLAHASSEE",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -2329,9 +2329,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Jerry'S Cigar Shop Northeast LLC",
-    "address": "2910 Kerry Forest Parkway",
-    "city": "Tallahassee",
+    "name": "JERRY'S CIGAR SHOP NORTHEAST LLC",
+    "address": "2910 KERRY FOREST PARKWAY",
+    "city": "TALLAHASSEE",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -2348,9 +2348,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "850 Cigar Lounge",
-    "address": "106 E 7th Avenue",
-    "city": "Havana",
+    "name": "850 CIGAR LOUNGE",
+    "address": "106 E 7TH AVENUE",
+    "city": "HAVANA",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -2367,9 +2367,9 @@
    "why": "a current licence at this address, matched by the same door, and the names agree",
    "how": "the same door, and the names agree",
    "licence": {
-    "name": "Harbor Cigars",
-    "address": "4424 Commons Drive East",
-    "city": "Destin",
+    "name": "HARBOR CIGARS",
+    "address": "4424 COMMONS DRIVE EAST",
+    "city": "DESTIN",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -2386,9 +2386,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Gulf Winds Cigars, LLC",
-    "address": "4552 W. Us Highway 98",
-    "city": "Santa Rosa Beach",
+    "name": "GULF WINDS CIGARS, LLC",
+    "address": "4552 W. US HIGHWAY 98",
+    "city": "SANTA ROSA BEACH",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -2405,9 +2405,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Shore Thing Cigars LLC",
-    "address": "37 Hub Lane",
-    "city": "Watersound",
+    "name": "SHORE THING CIGARS LLC",
+    "address": "37 HUB LANE",
+    "city": "WATERSOUND",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -2424,9 +2424,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Second Wind Cigars",
-    "address": "3921 Hendricks Ave",
-    "city": "Jacksonville",
+    "name": "SECOND WIND CIGARS",
+    "address": "3921 HENDRICKS AVE",
+    "city": "JACKSONVILLE",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -2443,9 +2443,9 @@
    "why": "a current licence at this address, matched by the same house number, ZIP and street",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Ash Street Cigar Parlor LLC",
-    "address": "406 Ash Street",
-    "city": "Fernandina Beach",
+    "name": "ASH STREET CIGAR PARLOR LLC",
+    "address": "406 ASH STREET",
+    "city": "FERNANDINA BEACH",
     "status": "Active",
     "expires": "09/30/2026",
     "registry": "fl"
@@ -2571,8 +2571,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "471 Pine St",
-    "city": "San Francisco",
+    "address": "471 PINE ST",
+    "city": "SAN FRANCISCO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2590,8 +2590,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "850 Montgomery St",
-    "city": "San Francisco",
+    "address": "850 MONTGOMERY ST",
+    "city": "SAN FRANCISCO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2609,8 +2609,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1807 Santa Rita Rd Ste E",
-    "city": "Pleasanton",
+    "address": "1807 SANTA RITA RD STE E",
+    "city": "PLEASANTON",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2628,8 +2628,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "831 Union Ave",
-    "city": "Campbell",
+    "address": "831 UNION AVE",
+    "city": "CAMPBELL",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2647,8 +2647,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "565 W Alma Ave",
-    "city": "San Jose",
+    "address": "565 W ALMA AVE",
+    "city": "SAN JOSE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2666,8 +2666,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "1650 Almaden Rd",
-    "city": "San Jose",
+    "address": "1650 ALMADEN RD",
+    "city": "SAN JOSE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2685,8 +2685,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "950 The Alameda",
-    "city": "San Jose",
+    "address": "950 THE ALAMEDA",
+    "city": "SAN JOSE",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2704,8 +2704,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "2031 16th St",
-    "city": "Sacramento",
+    "address": "2031 16TH ST",
+    "city": "SACRAMENTO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2723,8 +2723,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "111 N Locust St",
-    "city": "Visalia",
+    "address": "111 N LOCUST ST",
+    "city": "VISALIA",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2742,8 +2742,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "729 E Olive Ave",
-    "city": "Fresno",
+    "address": "729 E OLIVE AVE",
+    "city": "FRESNO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2761,8 +2761,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "5160 N Palm Ave",
-    "city": "Fresno",
+    "address": "5160 N PALM AVE",
+    "city": "FRESNO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2780,8 +2780,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "5139 N Blackstone Ave",
-    "city": "Fresno",
+    "address": "5139 N BLACKSTONE AVE",
+    "city": "FRESNO",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2799,8 +2799,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "230 W Pine St",
-    "city": "Lodi",
+    "address": "230 W PINE ST",
+    "city": "LODI",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2818,8 +2818,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "7435 Madison Ave",
-    "city": "Citrus Heights",
+    "address": "7435 MADISON AVE",
+    "city": "CITRUS HEIGHTS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2837,8 +2837,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "307 Iron Point Rd",
-    "city": "Folsom",
+    "address": "307 IRON POINT RD",
+    "city": "FOLSOM",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2856,8 +2856,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "4364 Town Center Blvd",
-    "city": "El Dorado Hills",
+    "address": "4364 TOWN CENTER BLVD",
+    "city": "EL DORADO HILLS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2875,8 +2875,8 @@
    "how": "the same house number, ZIP and street",
    "licence": {
     "name": null,
-    "address": "3589 Taylor Rd # 3",
-    "city": "Loomis",
+    "address": "3589 TAYLOR RD # 3",
+    "city": "LOOMIS",
     "status": "Active",
     "expires": null,
     "registry": "ca"
@@ -2902,6 +2902,139 @@
    "moved_to": null
   },
   {
+   "id": 18542,
+   "name": "Christie's House of Pipes & Cigars",
+   "address": "56 W Main St",
+   "city": "Waynesboro",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CHRISTIES HOUSE OF PIPES",
+    "address": "56 W MAIN ST",
+    "city": "WAYNESBORO",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 18643,
+   "name": "Gettysburg Cigar Co.",
+   "address": "523 Baltimore St",
+   "city": "Gettysburg",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "GETTYSBURG CIGAR CO",
+    "address": "523 BALTIMORE ST",
+    "city": "GETTYSBURG",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19038,
+   "name": "Bellevue Cigar",
+   "address": "565 Lincoln Ave",
+   "city": "Bellevue",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BELLEVUE CIGAR",
+    "address": "565 LINCOLN AVE",
+    "city": "BELLEVUE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19052,
+   "name": "Cigars & Ash",
+   "address": "99 Ohio River Blvd",
+   "city": "Leetsdale",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGARS & ASH",
+    "address": "99 OHIO RIVER BLVD UNIT B",
+    "city": "LEETSDALE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19137,
+   "name": "The Cigar Vault Oakdale",
+   "address": "105 Seminary Ave",
+   "city": "Oakdale",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "THE CIGAR VAULT OAKDALE",
+    "address": "105 SEMINARY AVE STE 101",
+    "city": "OAKDALE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19302,
+   "name": "Butler Cigars & Smoking Lounge",
+   "address": "361 Pittsburgh Rd",
+   "city": "Butler",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BUTLER CIGARS & SMOKING LOUNGE",
+    "address": "361 PITTSBURGH RD",
+    "city": "BUTLER",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19423,
+   "name": "Millcreek Cigar Lounge",
+   "address": "3723 W 12th St Ste 3",
+   "city": "Erie",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "MILLCREEK CIGAR LOUNGE AND CLUB",
+    "address": "3723 W 12TH ST UNIT 3",
+    "city": "ERIE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
    "id": 19466,
    "name": "Nickel City Cigars",
    "address": "284 Franklin St",
@@ -2917,6 +3050,25 @@
     "status": "ACTIVE",
     "expires": null,
     "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 19506,
+   "name": "The Humidor Cigars & Lounge",
+   "address": "202 S 2nd St",
+   "city": "Jeannette",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE HUMIDOR CIGARS & LOUNGE LLC",
+    "address": "202 S 2ND ST",
+    "city": "JEANNETTE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
    },
    "moved_to": null
   },
@@ -2978,6 +3130,215 @@
    "moved_to": null
   },
   {
+   "id": 20304,
+   "name": "Cigar Authority of Chester",
+   "address": "3177 Limestone Rd",
+   "city": "West Fallowfield Twp",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR AUTHORITY OF CHESTER INC",
+    "address": "3177 LIMESTONE RD",
+    "city": "COCHRANVILLE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20307,
+   "name": "Delco 202 Cigar",
+   "address": "3911 Pyle Rd",
+   "city": "Chadds Ford",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "DELCO 202 CIGAR",
+    "address": "3911 PYLE RD",
+    "city": "CHADDS FORD",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20482,
+   "name": "Cigar Box Tobacconist and Vape Center",
+   "address": "400 Terry Rich Blvd #8",
+   "city": "St Clair",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGAR BOX",
+    "address": "400 TERRY RICH BLVD STE 8",
+    "city": "SAINT CLAIR",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20578,
+   "name": "Tinder Box Haverford",
+   "address": "391 W Lancaster Ave",
+   "city": "Haverford",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "TINDER BOX #364",
+    "address": "391 W LANCASTER AVE",
+    "city": "HAVERFORD",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20592,
+   "name": "Oscar's Cigar & Sports Lounge",
+   "address": "633 W Main St",
+   "city": "Palmyra",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "OSCAR'S CIGAR & SPORTS LOUNGE",
+    "address": "633 W MAIN ST",
+    "city": "PALMYRA",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20651,
+   "name": "Xhale Lounge",
+   "address": "453 E Girard Ave",
+   "city": "Philadelphia",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FISHTOWN XHALE LLC",
+    "address": "453 E GIRARD AVE",
+    "city": "PHILADELPHIA",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20676,
+   "name": "Chartwell Cigar Club",
+   "address": "2908 Conestoga Rd",
+   "city": "Glenmoore",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CHARTWELL CIGAR CLUB",
+    "address": "2908 CONESTOGA RD",
+    "city": "GLENMOORE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20716,
+   "name": "BNB Cigars",
+   "address": "7920 Germantown Ave",
+   "city": "Philadelphia",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BNB INTERNATIONAL CIG & ACCESSORIES",
+    "address": "7920 GERMANTOWN AVE",
+    "city": "PHILADELPHIA",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20760,
+   "name": "Cole's Tobacco",
+   "address": "215 E High St",
+   "city": "Pottstown",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "COLES TOBACCO INC",
+    "address": "215 E HIGH ST STE 1",
+    "city": "POTTSTOWN",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20880,
+   "name": "Legends Cigar Bar",
+   "address": "154 Northampton St",
+   "city": "Easton",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "LEGENDS CIGAR BAR",
+    "address": "154 NORTHAMPTON ST",
+    "city": "EASTON",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20926,
+   "name": "Sellersville Beverage & Cigar",
+   "address": "301 S Main St",
+   "city": "Sellersville",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "SELLERSVILLE BEVERAGES",
+    "address": "301 S MAIN ST",
+    "city": "SELLERSVILLE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
    "id": 21236,
    "name": "Martinez Handmade Cigars",
    "address": "171 W 29th St",
@@ -2993,6 +3354,25 @@
     "status": "ACTIVE",
     "expires": null,
     "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21344,
+   "name": "Breaker Cigars",
+   "address": "500 N 8th St",
+   "city": "Shamokin",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "BREAKER CIGARS LLC",
+    "address": "500 EAST 8TH STREET",
+    "city": "SHAMOKIN",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
    },
    "moved_to": null
   },
@@ -3031,6 +3411,44 @@
     "status": "ACTIVE",
     "expires": null,
     "registry": "ny_state"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21542,
+   "name": "The Tobacco Center",
+   "address": "21 W Church St",
+   "city": "Williamsport",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "THE TOBACCO CENTER",
+    "address": "21 W CHURCH ST",
+    "city": "WILLIAMSPORT",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21564,
+   "name": "Smoke Rings Cigar Bar",
+   "address": "1008 N Vine St",
+   "city": "Hazleton",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same house number, ZIP and street",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "SMOKE RINGS CIGAR BAR INC",
+    "address": "1008 N VINE ST",
+    "city": "HAZLETON",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
    },
    "moved_to": null
   },
@@ -3263,6 +3681,25 @@
    "moved_to": null
   },
   {
+   "id": 35932,
+   "name": "Just The Tip Cigars",
+   "address": "2550 Brownsville Rd",
+   "city": "South Park Township",
+   "state": "PA",
+   "verdict": "verified",
+   "why": "a current licence at this address, matched by the same door, and the names agree",
+   "how": "the same door, and the names agree",
+   "licence": {
+    "name": "JUST THE TIP CIGARS",
+    "address": "2550 BROWNSVILLE RD  1",
+    "city": "SOUTH PARK",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
    "id": 38236,
    "name": "The Welton Room.  A metropolitan cigar lounge.",
    "address": "492 Albany Shaker Rd",
@@ -3308,12 +3745,12 @@
    "city": "St Petersburg",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"Ccks LLC\"",
+   "why": "the current licence at this door is \"CCKS LLC\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Ccks LLC",
-    "address": "273 Central Avenue",
-    "city": "St. Petersburg",
+    "name": "CCKS LLC",
+    "address": "273 CENTRAL AVENUE",
+    "city": "ST. PETERSBURG",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -3327,12 +3764,12 @@
    "city": "New Port Richey",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"Friendship Wine & Liquor\"",
+   "why": "the current licence at this door is \"FRIENDSHIP WINE & LIQUOR\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Friendship Wine & Liquor",
-    "address": "7071 Mitchell Blvd",
-    "city": "New Port Richey",
+    "name": "FRIENDSHIP WINE & LIQUOR",
+    "address": "7071 MITCHELL BLVD",
+    "city": "NEW PORT RICHEY",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -3346,12 +3783,12 @@
    "city": "Valrico",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"Mc Cigar Shop And Lounge\"",
+   "why": "the current licence at this door is \"MC CIGAR SHOP AND LOUNGE\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Mc Cigar Shop And Lounge",
-    "address": "3331 Lithia Pinecrest Rd",
-    "city": "Valrico",
+    "name": "MC CIGAR SHOP AND LOUNGE",
+    "address": "3331 LITHIA PINECREST RD",
+    "city": "VALRICO",
     "status": "Active",
     "expires": "09/30/2027",
     "registry": "fl"
@@ -3365,12 +3802,12 @@
    "city": "Miami",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"My Tobacconist\"",
+   "why": "the current licence at this door is \"MY TOBACCONIST\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "My Tobacconist",
-    "address": "9869 E Fern St",
-    "city": "Palmetto Bay",
+    "name": "MY TOBACCONIST",
+    "address": "9869 E FERN ST",
+    "city": "PALMETTO BAY",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -3384,12 +3821,12 @@
    "city": "Hialeah",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"Toke Shack LLC\"",
+   "why": "the current licence at this door is \"TOKE SHACK LLC\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Toke Shack LLC",
-    "address": "18400 NW 75th Pl #123",
-    "city": "Hialeah",
+    "name": "TOKE SHACK LLC",
+    "address": "18400 NW 75TH PL #123",
+    "city": "HIALEAH",
     "status": "Active",
     "expires": "01/15/2027",
     "registry": "fl"
@@ -3403,12 +3840,12 @@
    "city": "Margate",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"Cigar & Wine Bar\"",
+   "why": "the current licence at this door is \"CIGAR & WINE BAR\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "Cigar & Wine Bar",
-    "address": "7328 Royal Palm Blvd",
-    "city": "Margate",
+    "name": "CIGAR & WINE BAR",
+    "address": "7328 ROYAL PALM BLVD",
+    "city": "MARGATE",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -3422,12 +3859,12 @@
    "city": "Palm Beach Gardens",
    "state": "FL",
    "verdict": "renamed",
-   "why": "the current licence at this door is \"E & E Cigars\"",
+   "why": "the current licence at this door is \"E & E CIGARS\"",
    "how": "the same house number, ZIP and street",
    "licence": {
-    "name": "E & E Cigars",
-    "address": "4530 Pga Blvd",
-    "city": "Palm Beach Gardens",
+    "name": "E & E CIGARS",
+    "address": "4530 PGA BLVD",
+    "city": "PALM BEACH GARDENS",
     "status": "Active",
     "expires": "03/31/2027",
     "registry": "fl"
@@ -3507,6 +3944,120 @@
    "moved_to": null
   },
   {
+   "id": 20575,
+   "name": "Cigars International",
+   "address": "1635 Mountain Rd",
+   "city": "Hamburg",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"CI HAMBURG SUPERSTORE LOUNGE\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CI HAMBURG SUPERSTORE LOUNGE",
+    "address": "1635 MOUNTAIN RD",
+    "city": "HAMBURG",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20659,
+   "name": "Black Cat Cigars II",
+   "address": "46 W Germantown Pike",
+   "city": "East Norriton Twp",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"CAPRICORN TOBACCO INC\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CAPRICORN TOBACCO INC",
+    "address": "46 W GERMANTOWN PIKE",
+    "city": "EAST NORRITON",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20743,
+   "name": "Cigars International",
+   "address": "535 Main St",
+   "city": "Bethlehem",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"CI DOWNTOWN STORE\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CI DOWNTOWN STORE",
+    "address": "535 MAIN ST",
+    "city": "BETHLEHEM",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20766,
+   "name": "Kay's Cigar Sensations",
+   "address": "280 N Keswick Ave",
+   "city": "Glenside",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"KESWICK AVE\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "KESWICK AVE",
+    "address": "280 N KESWICK AVE",
+    "city": "GLENSIDE",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 20875,
+   "name": "Leaf Cigar Bar",
+   "address": "90 Mort Dr",
+   "city": "Easton",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"FAMOUS SMOKE SHOP PA INC\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "FAMOUS SMOKE SHOP PA INC",
+    "address": "90 MORT DR",
+    "city": "EASTON",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
+   "id": 21368,
+   "name": "Cigar Box Premium Tobacconist",
+   "address": "200 Claremont Ave",
+   "city": "Tamaqua",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"HOMETOWN\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "HOMETOWN",
+    "address": "200 CLAREMONT AVE",
+    "city": "TAMAQUA",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
+  },
+  {
    "id": 21463,
    "name": "Jim's Stogies",
    "address": "220 Main St",
@@ -3543,6 +4094,25 @@
     "registry": "ny_state"
    },
    "moved_to": null
+  },
+  {
+   "id": 37832,
+   "name": "Emporium Cigars Llc",
+   "address": "209 S State St",
+   "city": "Clarks Summit",
+   "state": "PA",
+   "verdict": "renamed",
+   "why": "the current licence at this door is \"CIGARS ON STATE\"",
+   "how": "the same house number, ZIP and street",
+   "licence": {
+    "name": "CIGARS ON STATE",
+    "address": "209 S STATE ST",
+    "city": "CLARKS SUMMIT",
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "registry": "pa"
+   },
+   "moved_to": null
   }
  ],
  "moved": [
@@ -3553,14 +4123,14 @@
    "city": "Fort Myers",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 12951 Metro Pkwy, Fort Myers",
+   "why": "its licence is at 12951 METRO PKWY, FORT MYERS",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Kapua Kava Bar",
-    "owner": "Kapua Kava INC",
-    "address": "12951 Metro Pkwy",
-    "city": "Fort Myers",
+    "name": "KAPUA KAVA BAR",
+    "owner": "KAPUA KAVA INC",
+    "address": "12951 METRO PKWY",
+    "city": "FORT MYERS",
     "state": "FL",
     "zip": "33966",
     "phone": null,
@@ -3577,14 +4147,14 @@
    "city": "Tampa",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 1515 S Dale Mabry Hwy Ste 103, Tampa",
+   "why": "its licence is at 1515 S DALE MABRY HWY STE 103, TAMPA",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Tampa Vapor & Kava Bar",
-    "owner": "Tampa Vapor INC",
-    "address": "1515 S Dale Mabry Hwy Ste 103",
-    "city": "Tampa",
+    "name": "TAMPA VAPOR & KAVA BAR",
+    "owner": "TAMPA VAPOR INC",
+    "address": "1515 S DALE MABRY HWY STE 103",
+    "city": "TAMPA",
     "state": "FL",
     "zip": "33629",
     "phone": null,
@@ -3601,14 +4171,14 @@
    "city": "Miami",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 2100 NW 42nd Ave, Miami",
+   "why": "its licence is at 2100 NW 42ND AVE, MIAMI",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Cuban Crafters Mia LLC",
-    "owner": "Cuban Crafters Mia LLC",
-    "address": "2100 NW 42nd Ave",
-    "city": "Miami",
+    "name": "CUBAN CRAFTERS MIA LLC",
+    "owner": "CUBAN CRAFTERS MIA LLC",
+    "address": "2100 NW 42ND AVE",
+    "city": "MIAMI",
     "state": "FL",
     "zip": "33135",
     "phone": null,
@@ -3625,14 +4195,14 @@
    "city": "Miami",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 1895 NW 21 Street, Miami",
+   "why": "its licence is at 1895 NW 21 STREET, MIAMI",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Pita Cigars",
-    "owner": "Pita Cigars LLC",
-    "address": "1895 NW 21 Street",
-    "city": "Miami",
+    "name": "PITA CIGARS",
+    "owner": "PITA CIGARS LLC",
+    "address": "1895 NW 21 STREET",
+    "city": "MIAMI",
     "state": "FL",
     "zip": "33142",
     "phone": null,
@@ -3649,14 +4219,14 @@
    "city": "Miami",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 1067 SW 8th St, Miami",
+   "why": "its licence is at 1067 SW 8TH ST, MIAMI",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "El Titan De Bronze Cigar Mfg",
-    "owner": "El Titan De Bronze Corp",
-    "address": "1067 SW 8th St",
-    "city": "Miami",
+    "name": "EL TITAN DE BRONZE CIGAR MFG",
+    "owner": "EL TITAN DE BRONZE CORP",
+    "address": "1067 SW 8TH ST",
+    "city": "MIAMI",
     "state": "FL",
     "zip": "33130",
     "phone": null,
@@ -3673,14 +4243,14 @@
    "city": "Miami Beach",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 7309 Collins Ave, Miami Beach",
+   "why": "its licence is at 7309 COLLINS AVE, MIAMI BEACH",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Bikini Bar",
-    "owner": "Bikini Sport Bar And Lounge LLC",
-    "address": "7309 Collins Ave",
-    "city": "Miami Beach",
+    "name": "BIKINI BAR",
+    "owner": "BIKINI SPORT BAR AND LOUNGE LLC",
+    "address": "7309 COLLINS AVE",
+    "city": "MIAMI BEACH",
     "state": "FL",
     "zip": "33141",
     "phone": null,
@@ -3697,14 +4267,14 @@
    "city": "Miami",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 244 E Flagler St, Miami",
+   "why": "its licence is at 244 E FLAGLER ST, MIAMI",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "City Smokes",
-    "owner": "City Smokes LLC",
-    "address": "244 E Flagler St",
-    "city": "Miami",
+    "name": "CITY SMOKES",
+    "owner": "CITY SMOKES LLC",
+    "address": "244 E FLAGLER ST",
+    "city": "MIAMI",
     "state": "FL",
     "zip": "33131",
     "phone": null,
@@ -3721,14 +4291,14 @@
    "city": "Cocoa Beach",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 34/36/38 S Atlantic Avenue, Cocoa Beach",
+   "why": "its licence is at 34/36/38 S ATLANTIC AVENUE, COCOA BEACH",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Office",
-    "owner": "Office Cigar Lounge LLC",
-    "address": "34/36/38 S Atlantic Avenue",
-    "city": "Cocoa Beach",
+    "name": "OFFICE",
+    "owner": "OFFICE CIGAR LOUNGE LLC",
+    "address": "34/36/38 S ATLANTIC AVENUE",
+    "city": "COCOA BEACH",
     "state": "FL",
     "zip": "32931",
     "phone": null,
@@ -3745,14 +4315,14 @@
    "city": "Lake Wales",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 24174 Hwy 27 #500, Lake Wales",
+   "why": "its licence is at 24174 HWY 27 #500, LAKE WALES",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Low Ball Louies Tobacco Outlet #3",
-    "owner": "Rena Investments LLC",
-    "address": "24174 Hwy 27 #500",
-    "city": "Lake Wales",
+    "name": "LOW BALL LOUIES TOBACCO OUTLET #3",
+    "owner": "RENA INVESTMENTS LLC",
+    "address": "24174 HWY 27 #500",
+    "city": "LAKE WALES",
     "state": "FL",
     "zip": "33853",
     "phone": null,
@@ -3790,15 +4360,15 @@
    "city": "Austin",
    "state": "TX",
    "verdict": "moved",
-   "why": "its licence is at 11500 ROCK ROSE AVE STE 140, AUSTIN",
+   "why": "its licence is at 2707 ROGGE LN STE A, AUSTIN",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "ROSE ROOM/ 77 DEGREES",
-    "address": "11500 ROCK ROSE AVE STE 140",
+    "name": "SMOKING BURNOUTS",
+    "address": "2707 ROGGE LN STE A",
     "city": "AUSTIN",
     "state": "TX",
-    "zip": "78758",
+    "zip": "78723",
     "phone": null,
     "status": "ACTIVE",
     "registry": "tx"
@@ -3811,14 +4381,14 @@
    "city": "Lake Mary",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 1130 Town Park Avenue, Lake Mary",
+   "why": "its licence is at 1130 TOWN PARK AVENUE, LAKE MARY",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Corona Cigar Company",
-    "owner": "Corona Cigar Company",
-    "address": "1130 Town Park Avenue",
-    "city": "Lake Mary",
+    "name": "CORONA CIGAR COMPANY",
+    "owner": "CORONA CIGAR COMPANY",
+    "address": "1130 TOWN PARK AVENUE",
+    "city": "LAKE MARY",
     "state": "FL",
     "zip": "32746",
     "phone": null,
@@ -3835,14 +4405,14 @@
    "city": "Orlando",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 4697 Millenia Plaza Way, Orlando",
+   "why": "its licence is at 4697 MILLENIA PLAZA WAY, ORLANDO",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Bjs Wholesale Club # 130",
-    "owner": "Bj'S Wholesale Club INC",
-    "address": "4697 Millenia Plaza Way",
-    "city": "Orlando",
+    "name": "BJS WHOLESALE CLUB # 130",
+    "owner": "BJ'S WHOLESALE CLUB INC",
+    "address": "4697 MILLENIA PLAZA WAY",
+    "city": "ORLANDO",
     "state": "FL",
     "zip": "32839",
     "phone": null,
@@ -3859,14 +4429,14 @@
    "city": "St Augustine",
    "state": "FL",
    "verdict": "moved",
-   "why": "its licence is at 36 Charlotte St, St Augustine",
+   "why": "its licence is at 36 CHARLOTTE ST, ST AUGUSTINE",
    "how": null,
    "licence": null,
    "moved_to": {
-    "name": "Stogies Cigar Emporium",
-    "owner": "Holleran Jeffrey M",
-    "address": "36 Charlotte St",
-    "city": "St Augustine",
+    "name": "STOGIES CIGAR EMPORIUM",
+    "owner": "HOLLERAN JEFFREY M",
+    "address": "36 CHARLOTTE ST",
+    "city": "ST AUGUSTINE",
     "state": "FL",
     "zip": "32084",
     "phone": null,
@@ -3982,6 +4552,126 @@
     "status": "AAI",
     "expires": "2019-04-15T00:00:00.000",
     "registry": "chicago"
+   }
+  },
+  {
+   "id": 19014,
+   "name": "S & S Candy & Cigar Co",
+   "address": "2025 E Carson St",
+   "city": "Pittsburgh",
+   "state": "PA",
+   "verdict": "moved",
+   "why": "its licence is at 300 BROWNSVILLE RD, PITTSBURGH",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "CANDY SAFE SUPERMARKET",
+    "owner": "CANDY SAFE SUPERMARKET INC",
+    "address": "300 BROWNSVILLE RD",
+    "city": "PITTSBURGH",
+    "state": "PA",
+    "zip": "15210",
+    "phone": null,
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "licence_type": "Cigarette/OTP Retail",
+    "registry": "pa"
+   }
+  },
+  {
+   "id": 19398,
+   "name": "The Brig Cigar Lounge",
+   "address": "419 State St",
+   "city": "Erie",
+   "state": "PA",
+   "verdict": "moved",
+   "why": "its licence is at 5218 E LAKE RD, ERIE",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "THE BRIG",
+    "owner": "BRIG NIAGARA LLC",
+    "address": "5218 E LAKE RD",
+    "city": "ERIE",
+    "state": "PA",
+    "zip": "16511",
+    "phone": null,
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "licence_type": "Cigarette/OTP Retail",
+    "registry": "pa"
+   }
+  },
+  {
+   "id": 20612,
+   "name": "Ashton Cigar Bar",
+   "address": "1522 Walnut St",
+   "city": "Philadelphia",
+   "state": "PA",
+   "verdict": "moved",
+   "why": "its licence is at 1308 FRANKFORD AVE, PHILADELPHIA",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "BOTTLE BAR EAST",
+    "owner": "BHMK ENTERPRISES LLC",
+    "address": "1308 FRANKFORD AVE",
+    "city": "PHILADELPHIA",
+    "state": "PA",
+    "zip": "19125",
+    "phone": null,
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "licence_type": "Cigarette/OTP Retail",
+    "registry": "pa"
+   }
+  },
+  {
+   "id": 20633,
+   "name": "Cigar Plus",
+   "address": "4 Cheltenham Dr",
+   "city": "Reading",
+   "state": "PA",
+   "verdict": "moved",
+   "why": "its licence is at 1000 N 11TH ST FL 1, READING",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "LOS PRIMOS 99 PLUS LLC",
+    "owner": "LOS PRIMOS 99 PLUS LLC",
+    "address": "1000 N 11TH ST FL 1",
+    "city": "READING",
+    "state": "PA",
+    "zip": "19604",
+    "phone": null,
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "licence_type": "Cigarette Retail",
+    "registry": "pa"
+   }
+  },
+  {
+   "id": 20671,
+   "name": "Infusion Lounge - Philly's Best Cocktails, Hookahs & Cigars",
+   "address": "16 S 2nd St",
+   "city": "Philadelphia",
+   "state": "PA",
+   "verdict": "moved",
+   "why": "its licence is at 9827 BUSTLETON AVE, PHILADELPHIA",
+   "how": null,
+   "licence": null,
+   "moved_to": {
+    "name": "CLOUDY 7 VAPE & HOOKAH INC",
+    "owner": "CLOUDY 7 VAPE & HOOKAH INC",
+    "address": "9827 BUSTLETON AVE",
+    "city": "PHILADELPHIA",
+    "state": "PA",
+    "zip": "19115",
+    "phone": null,
+    "status": "Active",
+    "expires": "2027-02-28T00:00:00.000",
+    "licence_type": "Cigarette/OTP Retail",
+    "registry": "pa"
    }
   }
  ],
@@ -4383,11 +5073,107 @@
    "moved_to": null
   },
   {
+   "id": 18525,
+   "name": "Shamrock Whiskey & Cigar Bar, LLC",
+   "address": "624 Humbert School Rd",
+   "city": "Rockwood",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 19096,
+   "name": "Dirty Dog Cigar Shoppe",
+   "address": "4601 Walnut St",
+   "city": "Mckeesport",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 20479,
+   "name": "The Tobacco Company",
+   "address": "829 State St",
+   "city": "Lemoyne",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 20498,
+   "name": "JM Cigars",
+   "address": "19 Marchwood Rd",
+   "city": "Exton",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 20508,
+   "name": "D&S Cigar Lounge",
+   "address": "1623 Manheim Pike",
+   "city": "Lancaster",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 20786,
+   "name": "Tó Makao Fine Cigars Llc",
+   "address": "1829 Stefko Blvd",
+   "city": "Bethlehem",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 21508,
+   "name": "Best Cigar Pub",
+   "address": "3 Hillside Dr",
+   "city": "Drums",
+   "state": "PA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
    "id": 40094,
    "name": "Royal Cigar",
    "address": "7094 Miramar Road",
    "city": "San Diego",
    "state": "CA",
+   "verdict": "lapsed",
+   "why": "no current licence at this address in the registry",
+   "how": null,
+   "licence": null,
+   "moved_to": null
+  },
+  {
+   "id": 42086,
+   "name": "Leaf by Oscar",
+   "address": "2200 Penn Avenue",
+   "city": "Pittsburgh",
+   "state": "PA",
    "verdict": "lapsed",
    "why": "no current licence at this address in the registry",
    "how": null,

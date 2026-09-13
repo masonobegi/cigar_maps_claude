@@ -150,11 +150,28 @@ const REGISTRIES = [
   },
   {
     key: 'pa',
-    name: 'Pennsylvania Department of Revenue: cigarette dealer licences',
-    url: 'https://www.revenue.pa.gov/GeneralTaxInformation/Tax%20Types%20and%20Information/CigaretteTax/Pages/default.aspx',
+    name: 'Pennsylvania Department of Revenue: cigarette and OTP licences',
+    // Not manual either. The Revenue page that looked like the source is prose;
+    // the list itself is on Open Data Pennsylvania, rebuilt daily, and carries
+    // both the legal name and the trade name over the door plus a real expiry
+    // date — so both the `renamed` verdict and isCurrent() work properly here.
+    url: 'https://data.pa.gov/resource/ut72-sft8.json?$limit=50000',
     states: ['PA'],
-    format: 'manual',
-    note: 'Pennsylvania publishes a periodic list. Save it into the fetch directory as pa.csv.',
+    map: r => ({
+      name: r.trade_name || r.legal_name || null,
+      owner: r.legal_name || null,
+      address: r.street_address,
+      city: r.city,
+      state: r.state || 'PA',
+      zip: String(r.postal_code || '').split('-')[0],
+      phone: null,
+      // There is no status column: the dataset is the current licences, so a
+      // row being in it is the status. The expiry date is what isCurrent()
+      // actually judges on.
+      status: 'Active',
+      expires: r.expiration_date || null,
+      licence_type: r.license_type || null,
+    }),
   },
   {
     key: 'chicago',

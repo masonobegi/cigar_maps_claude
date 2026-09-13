@@ -101,7 +101,7 @@ are not there.
 | 3 | [Two environment variables](#3-two-environment-variables) | Mail still cannot leave the server, so no shop can claim a listing |
 | 4 | ~~[The pins nobody could settle](#4-the-pins-nobody-could-settle--closed-leave-them)~~ | **Closed 2026-09-13.** All 41 stay: no second opinion beats the pin already held |
 | 5 | ~~Licence renames and moves~~ | **Closed 2026-09-13.** All 19 addresses stay; the 13 renames are split and applied |
-| 6 | [The two remaining manual registries](#6-the-two-remaining-manual-registries) | Pennsylvania and Washington; California and Florida fetch themselves now |
+| 6 | [Washington, the one manual registry left](#6-washington-the-one-manual-registry-left) | CA, FL and PA all fetch themselves now. WA has no dataset at all |
 | 7 | ~~The Overture dedupe change~~ | **Done 2026-09-13.** The extract was there all along; the fix removes 2 duplicates |
 | 8 | ~~Watch the menu scanner~~ | **Done 2026-09-13.** Healthy against the live table; it surfaced two duplicate listings |
 
@@ -431,7 +431,7 @@ human, not a verdict.
 **A lapse is never a hide.** A self-test asserts there is no verdict in that job that
 hides a listing. Keep it that way.
 
-## 6. The two remaining manual registries
+## 6. Washington, the one manual registry left
 
 **California and Florida are no longer manual.** Both publish the whole file as
 plain CSV with no key and no form — the pages that made them look manual are
@@ -456,10 +456,17 @@ California withholds the licensee name under taxpayer confidentiality, so its
 rows are address-only and the `renamed` verdict cannot work there at all.
 Florida publishes both the owner and the DBA, so it can.
 
-**Still manual: Pennsylvania and Washington.** `licenceSync fetch` prints the
-URL for each; save the file into `sweeps/decisions/licences/` as `pa.csv` or
-`wa.csv` and re-run `match`. Washington genuinely has no dataset — the Business
-Lookup is a search form, and the list needs a public-records request.
+**Pennsylvania was not manual either.** The Revenue page that looked like the
+source is prose; the list is on Open Data Pennsylvania as `ut72-sft8`, rebuilt
+daily, 17,088 rows carrying the legal name, the trade name over the door and a
+real expiry date — so both the `renamed` verdict and `isCurrent()` work properly
+there. Adding it took listings backed by a current licence from 177 to **200**.
+
+**Washington is the only one left, and it really has no dataset.** Checked twice:
+data.wa.gov returns nothing for tobacco or cigarette licences, and its Business
+Lookup is a non-tabular table the API refuses to query. The list needs a
+public-records request. Save an export as `wa.csv` in `sweeps/decisions/licences/`
+and re-run `match`.
 
 The four that work are NYC (6,699 licences), New York State (22,091), Texas
 (59,603) and Chicago (59,414). **Their dataset ids move**: all four broke
