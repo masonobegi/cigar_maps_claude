@@ -4,8 +4,31 @@ import L from 'leaflet';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 
-const TILE_URL  = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+/*
+ * Tiles do not come from openstreetmap.org any more.
+ *
+ * They did, and OpenStreetMap blocked us for it — every tile on /stores came
+ * back as their "Access blocked" image. That was correct of them: those are
+ * volunteer-funded servers, and their tile usage policy asks that anything
+ * beyond light or experimental use go elsewhere. A public directory whose main
+ * page is a pannable map over 672 shops is not light use, and asking a
+ * charity to pay for our page views was never defensible.
+ *
+ * CARTO renders the same OpenStreetMap data on infrastructure meant to be
+ * pointed at, free at this size and with no key to manage. Both are credited
+ * below because both are owed it: OSM made the data, CARTO drew and serves it.
+ *
+ * The dark style is not only taste — the site is dark, and the old basemap put
+ * a bright white slab in the middle of every page it appeared on.
+ *
+ * If traffic ever outgrows this, the move is a keyed provider with a written
+ * free tier (MapTiler, Stadia, Protomaps), which is a change to these two
+ * lines and an API key.
+ */
+const TILE_URL  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+  + '&copy; <a href="https://carto.com/attributions">CARTO</a>';
+const TILE_SUBDOMAINS = 'abcd';
 
 const TYPE_LABEL = { cigar_lounge: 'Lounge', cigar_shop: 'Cigar shop', tobacco_shop: 'Tobacco shop', smoke_shop: 'Smoke shop' };
 
@@ -129,7 +152,8 @@ export default function StoreMap({ stores, mapData, userLocation, onClose, onBou
   return (
     <div className="relative w-full" style={{ height }}>
       <MapContainer center={center} zoom={zoom} style={{ width: '100%', height: '100%' }} scrollWheelZoom preferCanvas>
-        <TileLayer url={TILE_URL} attribution={TILE_ATTR} maxZoom={18} />
+        <TileLayer url={TILE_URL} attribution={TILE_ATTR} subdomains={TILE_SUBDOMAINS}
+          maxZoom={20} detectRetina />
         {onBoundsChange && <BoundsWatcher onChange={onBoundsChange} />}
 
         {saved && (
