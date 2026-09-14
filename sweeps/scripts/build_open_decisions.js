@@ -206,8 +206,27 @@ function licences() {
   // Fixed rather than read from the clock, so rebuilding the file twice cannot
   // produce two different answers for the same evidence.
   const NOW = new Date(process.env.AS_OF || '2026-09-13T00:00:00Z');
-  /** A dated signal this recent is a trading business. */
+  /** A dated signal this recent is a trading business, on its own. */
   const FRESH_DAYS = 250;
+  /**
+   * And this recent when a second, independent source agrees.
+   *
+   * 250 days is a reasonable bar and it decided 97 of the 104 unsettled
+   * listings correctly. But it was deciding seven of them on a cliff edge —
+   * Old Havana Cigar Shop failed it by a single day — and a one-day difference
+   * is not a judgement, it is an artifact of where the line happens to sit.
+   *
+   * Widening the bar for everything would just move the cliff. What actually
+   * distinguishes these cases is corroboration: a customer review is a person
+   * who physically went to the shop, and a current state tobacco licence is the
+   * state saying that door is licensed right now. Those are independent of each
+   * other and of us. Where both agree, a signal up to a year old is enough.
+   *
+   * Where there is no second source — a lapsed licence, or a state with no
+   * registry — the shorter bar stands, and a lone review eight months old does
+   * not make a listing public.
+   */
+  const FRESH_DAYS_CORROBORATED = 365;
 
   const decisions = all.map(row => {
     const r = research.get(row.id);
@@ -225,12 +244,14 @@ function licences() {
         d = { decision: 'closed', reason: `on a second look: ${dp.evidence || ''}`.trim(), fromDeepPass: true };
       } else if (dp.isCigarShop === 'no') {
         d = { decision: 'not_retail', reason: `on a second look: ${dp.shopKind || ''} — ${dp.evidence || ''}`.trim(), fromDeepPass: true };
-      } else if (dp.status === 'open' && age !== null && age <= FRESH_DAYS && dp.isCigarShop === 'yes') {
+      } else if (dp.status === 'open' && age !== null && dp.isCigarShop === 'yes'
+        && (age <= FRESH_DAYS
+          || (age <= FRESH_DAYS_CORROBORATED && (lic.get(row.id) || {}).licenceVerdict === 'verified'))) {
         // This is the only route by which a listing the first pass could not
         // settle becomes public again, and it requires a date.
         d = {
           decision: 'keep',
-          reason: `${dp.newestSignalWhat || 'a dated signal'} dated ${dp.newestSignalDate} (${age} days old): ${dp.evidence || ''}`.trim(),
+          reason: `${dp.newestSignalWhat || 'a dated signal'} dated ${dp.newestSignalDate} (${age} days old)${age > FRESH_DAYS ? ', and a current state licence at the same door' : ''}: ${dp.evidence || ''}`.trim(),
           fromDeepPass: true,
         };
       } else {
