@@ -1,5 +1,5 @@
 {
-  "approved": false,
+  "approved": true,
   "note": "Set approved: true only after reading the drop list. apply_open_sweep.js refuses to write without it.",
   "builtFrom": "C:/Users/mason/.claude/projects/c--Users-mason-OneDrive-Desktop-cigarApp/a956c8ab-bec6-4085-b83b-7fcd97853bc4/subagents/workflows/wf_5c807589-dc8/journal.jsonl",
   "counts": {
@@ -17633,5 +17633,6 @@
       ],
       "fromDeepPass": true
     }
-  ]
+  ],
+  "approved_by": "Mason, 2026-09-14: delegated the call after the list was built"
 }

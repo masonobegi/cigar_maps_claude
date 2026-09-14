@@ -461,7 +461,18 @@ function mount(app, { clientDist, db, log = console.log } = {}) {
         }
       } catch (err) { log(`[seo] place page failed: ${err.message}`); }
     }
-    res.type('html').send(render(html, metaFor({ pathname: req.path, store, place, shops, base })));
+    // A shop page whose shop is not public, or a place slug that names no
+    // place, is Not Found — say so in the status line and not only in what the
+    // app draws. Answering 200 with the generic head is a soft 404: the
+    // open/closed sweep took 184 shops off the map in one afternoon, and 184
+    // URLs that still answer 200 spend crawl budget and can be indexed on the
+    // strength of the site's own generic description.
+    //
+    // The body is still the app, so the client renders its own Not Found page.
+    // Only the status changes.
+    const missing = (m && !store) || (pm && !place);
+    res.type('html').status(missing ? 404 : 200)
+      .send(render(html, metaFor({ pathname: req.path, store, place, shops, base })));
   });
 }
 
